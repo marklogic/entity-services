@@ -1,0 +1,42 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {url "http://developer.marklogic.com/maven2/"}
+    maven {url "http://rjrudin.github.io/marklogic-java/releases"}
+  }
+  dependencies {
+    classpath "com.rjrudin:ml-gradle:2.0b11"
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'ml-gradle'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+repositories {
+  mavenCentral()
+  maven {url "http://developer.marklogic.com/maven2/"}
+  maven {url "http://rjrudin.github.io/marklogic-java/releases"}
+}
+
+dependencies {
+    compile gradleApi()
+	testCompile 'com.marklogic:java-client-api:3.0.4' {
+        exclude(group: 'org.slf4j')
+        exclude(group: 'ch.qos.logback')
+        exclude(group: 'log4j')
+    }
+	testCompile 'com.jayway.restassured:rest-assured:2.4.1'
+    testCompile 'junit:junit:4.11'
+}
+
+ext {
+    mlAppConfig {
+        modulePaths = ["ml-modules"]
+    }
+}

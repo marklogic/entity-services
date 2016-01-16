@@ -1,0 +1,50 @@
+{
+  "info": {
+    "title": "Order",
+    "version": "0.0.2"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "collation" : "...",
+          "entityServices": [
+            "primary-key",
+            "range-index"
+          ]
+        },
+        "orderDate": {
+          "type": "date"
+        },
+        "hasOrderDetails": {
+          "$ref": "#/definitions/OrderDetails"
+        },
+        "soldTo": {
+          "$ref": "#/definitions/Customer"
+        }
+      }
+    },
+    "Customer": {
+      "properties": {
+        "customerId": {
+          "type": "string"
+        },
+        "companyName": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "type": "integer"
+        },
+        "productName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,19 @@
+{
+  "info": {
+    "title": "OrderDetails",
+    "version": "0.0.3",
+    "description":"A part of an order that contains just details.  Without a primary Key, this entity type can only be materialized within a containing document. (It's a weak entity)"
+  },
+  "definitions": {
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "type": "integer"
+        },
+        "productName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

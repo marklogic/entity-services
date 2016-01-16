@@ -1,0 +1,28 @@
+{
+  "info": {
+    "title": "Order",
+    "version": "0.0.3",
+    "description":"An order schema that references details that are not themselves in this schema file"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "collation" : "...",
+          "entityServices": [
+            "primary-key",
+            "range-index"
+          ]
+        },
+        "orderDate": {
+          "type": "date"
+        },
+        "hasOrderDetails": {
+          "$ref": "OrderDetails/0.0.3/definitions/OrderDetails"
+        }
+      }
+    }
+  }
+}
+

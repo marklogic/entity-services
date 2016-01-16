@@ -1,0 +1,37 @@
+{
+  "info": {
+    "title": "Order",
+    "version": "0.0.1"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "collation" : "...",
+          "entityServices": [
+            "primary-key",
+            "range-index"
+          ]
+        },
+        "orderDate": {
+          "type": "date"
+        },
+        "hasOrderDetails": {
+          "$ref": "#/definitions/OrderDetails"
+        }
+      }
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "type": "integer"
+        },
+        "productName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+

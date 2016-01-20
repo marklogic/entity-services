@@ -29,6 +29,16 @@ declare function es:entity-type-from-node(
     $node as document-node()
 ) as json:object
 {
-    xdmp:from-json($node)
+    let $errors := esi:entity-type-validate($node)
+    return
+        if ($errors)
+        then fn:error( (), "ES-ENTITY-TYPE-INVALID", $errors)
+        else esi:extract($node)
 };
 
+declare function es:entity-type-as-triples(
+    $entity-type as document-node()
+) 
+{
+    esi:extract($entity-type)
+};

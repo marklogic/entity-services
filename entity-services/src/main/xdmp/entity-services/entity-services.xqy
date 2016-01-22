@@ -33,7 +33,7 @@ declare function es:entity-type-from-node(
     return
         if ($errors)
         then fn:error( (), "ES-ENTITY-TYPE-INVALID", $errors)
-        else esi:extract($node)
+        else xdmp:to-json($node)
 };
 
 declare function es:entity-type-as-triples(

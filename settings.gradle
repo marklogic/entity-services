@@ -1,3 +1,4 @@
 rootProject.name = 'entity-services-parent'
 include ':entity-services'
 include ':entity-services-functionaltests'
+include ':entity-services-examples'

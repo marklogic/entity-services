@@ -40,10 +40,14 @@ public class TestEntityTypes extends EntityServicesTestBase {
         Collection<File> files = FileUtils.listFiles(new File("src/test/resources/json-entity-types"), 
                 FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
         for (File f : files) {
+        	if (f.getName().startsWith(".")) { continue; };
+        	System.out.println(f.getPath());
+        	//docMgr.write(f.getPath(), new FileHandle(f));
             writeSet.add(f.getPath(), new FileHandle(f));
             entityTypeUris.add(f.getPath());
         }
-;       docMgr.write(writeSet);
+        docMgr.write(writeSet);
+        
     }
     
     @AfterClass
@@ -66,17 +70,27 @@ public class TestEntityTypes extends EntityServicesTestBase {
     @Test
     public void testEntityTypeParseJSON() {
         for (String entityTypeUri : entityTypeUris) {
-            EvalResultIterator results = eval("es:entity-type-from-node(fn:doc('"+ entityTypeUri  + "'))");
-            for (EvalResult result : results) {
-                JacksonHandle handle = new JacksonHandle();
-                handle = result.get(handle);
-                JsonNode jsonNode = handle.get();
-                JsonNode infoNode = jsonNode.get("info");
-                assertNotNull(infoNode);
-                
-                // each type must have a info
-               assertThat(infoNode.get("title").asText(), Matchers.not(Matchers.isEmptyOrNullString()));
-            }
+        	if (entityTypeUri.contains("invalid-")) {
+        		EvalResultIterator results = eval("es:entity-type-from-node(fn:doc('"+ entityTypeUri  + "'))");
+        		
+        	}
+        	else {
+        		EvalResultIterator results = eval("es:entity-type-from-node(fn:doc('"+ entityTypeUri  + "'))");
+        		for (EvalResult result : results) {
+	                JacksonHandle handle = new JacksonHandle();
+	                handle = result.get(handle);
+	                JsonNode jsonNode = handle.get();
+	                
+	                JsonNode infoNode = jsonNode.get("info");
+	                assertNotNull(infoNode);
+	                
+	                // each type must have a info
+	                assertThat(infoNode.get("title").asText(), Matchers.not(Matchers.isEmptyOrNullString()));
+	                
+	                // checking the validator positive cases basically.
+        		}
+        	}
         }
     }
+    
 }

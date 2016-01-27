@@ -7,8 +7,8 @@ plugins {
   id "com.marklogic.ml-gradle" version "2.0rc5"
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 repositories {
   jcenter()

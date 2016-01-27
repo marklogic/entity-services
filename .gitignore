@@ -1,3 +1,7 @@
 .*.sw?
 /build/
 /bin/
+.classpath
+.project
+.gradle
+.settings

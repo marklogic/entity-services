@@ -7,7 +7,7 @@
     "Order": {
       "properties": {
         "orderId": {
-          "datatype": "string",
+          "type": "string",
           "collation" : "...",
           "entityServices": [
             "primary-key",

@@ -1,0 +1,40 @@
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix doc: <http://marklogic.com/entity-services/> .
+@prefix type: <http://marklogic.com/entity-services/Person-0.0.2/> .
+@prefix prop: <http://marklogic.com/entity-services/Person-0.0.2/Person/> .
+
+doc:Person-0.0.2 a es:EntityTypeDoc ;
+    es:title "Person" ;
+    es:version "0.0.2" ;
+    es:definitions type:Person .
+type:Person a es:EntityType ;
+    es:version "0.0.2" ;
+    es:property 
+        prop:id,
+        prop:firstName,
+        prop:lastName,
+        prop:fullName,
+        prop:address,
+        prop:friendOf ;
+    es:primaryKey prop:id .
+prop:id a es:Property ;
+    es:title "id" ;
+    es:datatype "string";
+    a es:PrimaryKey .
+prop:firstName a es:Property ;
+    es:datatype "string";
+    es:title "firstName" .
+prop:lastName a es:Property ;
+    es:datatype "string";
+    es:title "lastName" .
+prop:fullName a es:Property ;
+    es:datatype "string";
+    es:title "fullName" .
+prop:address a es:Property ;
+    es:datatype "string";
+    es:title "address" .
+prop:friendOf a es:Property ;
+    es:ref type:Person ; 
+    es:title "friendOf" .
+
+

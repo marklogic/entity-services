@@ -1,0 +1,30 @@
+{
+  "info": {
+    "title": "Person",
+    "version": "0.0.2"
+  },
+  "definitions": {
+    "Person": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "friendOf": {
+          "$ref": "#/definitions"
+        }
+      },
+      "primary-key":["id"]
+    }
+}

@@ -20,4 +20,16 @@ subprojects {
         testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile 'org.apache.httpcomponents:httpclient:4.1.1'
     }
+    
+    
+    test {
+        systemProperties System.properties
+        testClassesDir file('build/classes/test')
+    }
+   
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
 }

@@ -1,7 +1,7 @@
 @prefix es: <http://marklogic.com/entity-services#> .
-@prefix doc: <http://marklogic.com/entity-services/> .
-@prefix type: <http://marklogic.com/entity-services/Person-0.0.2/> .
-@prefix prop: <http://marklogic.com/entity-services/Person-0.0.2/Person/> .
+@prefix doc: <http://example.org/mytypeschema/> .
+@prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
+@prefix prop: <http://example.org/mytypeschema/Person-0.0.2/Person/> .
 
 doc:Person-0.0.2 a es:EntityTypeDoc ;
     es:title "Person" ;

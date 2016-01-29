@@ -7,7 +7,7 @@
     "Order": {
       "properties": {
         "orderId": {
-          "type": "string",
+          "datatype": "string",
           "collation" : "...",
           "entityServices": [
             "primary-key",
@@ -15,7 +15,7 @@
           ]
         },
         "orderDate": {
-          "type": "date"
+          "datatype": "date"
         },
         "hasOrderDetails": {
           "$ref": "#/definitions/OrderDetails"

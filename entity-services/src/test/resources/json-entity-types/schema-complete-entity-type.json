@@ -2,7 +2,8 @@
   "info": {
     "title": "SchemaCompleteEntityType",
     "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "baseURI": "http://marklogic.com/testing-entity-type"
   },
   "definitions": {
     "Order": {
@@ -12,7 +13,7 @@
           "collation" : "http://marklogic.com/collation"
         },
         "base64BinaryKey": { "datatype": "base64Binary" },
-        "booleanKey": { "datatype": "booelan" },
+        "booleanKey": { "datatype": "boolean" },
         "byteKey" : { "datatype" : "byte"},
         "dateKey" : { "datatype" : "date"},
         "dateTimeKey" : { "datatype" : "dateTime"},

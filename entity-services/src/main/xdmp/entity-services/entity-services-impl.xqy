@@ -27,6 +27,7 @@ import module namespace validate = "http://marklogic.com/validate" at "/MarkLogi
 import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
 
 
+
 declare variable $esi:entity-services-prefix := "http://marklogic.com/entity-services#";
 
 declare variable $esi:entity-type-schematron :=
@@ -37,8 +38,21 @@ declare variable $esi:entity-type-schematron :=
           <iso:assert test="count(es:info|info) eq 1" id="ES-INFOKEY">Entity Type must contain exactly one info declaration.</iso:assert>
           <iso:assert test="count(es:definitions|definitions) eq 1" id="ES-DEFINITIONSKEY">Entity Type must contain exactly one definitions declaration.</iso:assert>
         </iso:rule>
-        <iso:rule context="es:info">
+        <iso:rule context="es:info|/info">
+          <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">Entity Type must contain exactly one title declaration.</iso:assert>
+          <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">Entity Type must contain exactly one version declaration.</iso:assert>
+<!--
           <iso:report test="description" id="ES-DEFINITION">Your entity type should have a description.</iso:report>
+-->
+        </iso:rule>
+        <iso:rule context="properties/object-node()">
+          <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except (items, description)) eq 1 else true()" id="ES-REF-ONLY">If using $ref, it must be the only key.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:property[es:ref]">
+          <iso:assert test="count(./*) eq 10" id="ES-REF-ONLY">If using es:ref, it must be the only child of es:property.</iso:assert>
+        </iso:rule>
+        <iso:rule context="datatype">
+         <iso:assert test=". = ('base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'int', 'integer', 'long', 'short', 'string', 'time', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'anySimpleType', 'anyURI', 'sem:iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>
@@ -69,6 +83,11 @@ declare function esi:entity-type-validate(
     $entity-type as document-node()
 ) as xs:string*
 {
+    let $props := $entity-type//properties/object-node()
+    let $_ := for $p in $props
+                return xdmp:log(("PROPS W REF", $p[*[local-name(.) eq '$ref']],
+              "COUNT", count($p/(* except description))))
+    return
     validate:schematron($entity-type, $esi:entity-type-schematron)
 };
 

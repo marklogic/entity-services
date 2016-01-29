@@ -1,14 +1,20 @@
 {
+  "info": {
+    "title":"Invalid-0.0.2",
+    "description":"This invalid document data type mixes scalar attributes with $ref",
+    "version": "0.0.2"
+  },
   "definitions": {
     "Order": {
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "http://marklogic.com/collation"
+          "collation" : "http://marklogic.com/collation",
+          "$ref":"#definitions/OrderDetails"
         },
         "base64BinaryKey": { "datatype": "base64Binary" }
       },
-      "primaryKey": ["orderId"]
+      "primaryKey": "orderId"
     },
     "OrderDetails": {
       "properties": {
@@ -22,4 +28,3 @@
     }
   }
 }
-

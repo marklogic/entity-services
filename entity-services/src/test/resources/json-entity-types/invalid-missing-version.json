@@ -1,4 +1,8 @@
 {
+  "info": {
+    "title" : "invalid-missing-version",
+    "description" : "This data type has a missing version"
+  },
   "definitions": {
     "Order": {
       "properties": {

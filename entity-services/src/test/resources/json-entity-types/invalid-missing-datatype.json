@@ -1,7 +1,7 @@
 {
   "info": {
-    "title": "InvlidMissingDatatype",
-    "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.",
+    "title": "invalid-missing-datatype",
+    "description":"Invalid document -- property with missing datatype",
     "version": "0.0.1"
   },
   "definitions": {

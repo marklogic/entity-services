@@ -1,12 +1,12 @@
 package com.marklogic.entityservices;
 
-import com.marklogic.client.DatabaseClient;
-import com.marklogic.client.DatabaseClientFactory;
-import com.marklogic.client.DatabaseClientFactory.Authentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class EntityServicesTestBase {
 
+	protected static Logger log = LoggerFactory.getLogger(EntityServicesTestBase.class);
    
 }
 

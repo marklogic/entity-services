@@ -1,0 +1,5 @@
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix doc: <http://marklogic.com/testing-entity-type/> .
+@prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
+@prefix prop: <http://example.org/mytypeschema/Person-0.0.2/Person/> .
+

@@ -1,4 +1,8 @@
 {
+  "info": {
+    "description":"This data type has a missing title",
+    "version": "0.0.1"
+  },
   "definitions": {
     "Order": {
       "properties": {

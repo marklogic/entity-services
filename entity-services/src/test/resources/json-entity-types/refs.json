@@ -1,0 +1,25 @@
+{
+    "info": {
+        "title": "SchemaCompleteEntityType",
+            "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.",
+            "version": "0.0.1",
+            "baseURI": "http://marklogic.com/testing-entity-type"
+    },
+    "definitions": {
+        "Order": {
+            "properties": {
+                "correctReference": {
+                    "$ref":"#definitions/Order"
+                },
+                "secondCorrectReference": {
+                    "$ref":"#definitions/Order"
+                },
+                "refWithDescription": {
+                    "$ref":"#definitions/Order",
+                    "description":"This reference has a description"
+                }
+            }
+        }
+    }
+}
+

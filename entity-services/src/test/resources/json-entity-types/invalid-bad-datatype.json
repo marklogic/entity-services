@@ -1,14 +1,18 @@
 {
+  "info": {
+    "title":"invalid-bad-datatype",
+    "description":"This invalid document has a datatype that is not XSD or sem:iri or a ref",
+    "version": "0.0.2"
+  },
   "definitions": {
     "Order": {
       "properties": {
         "orderId": {
-          "datatype": "string",
-          "collation" : "http://marklogic.com/collation"
+          "datatype": "botcheddt"
         },
         "base64BinaryKey": { "datatype": "base64Binary" }
       },
-      "primaryKey": ["orderId"]
+      "primaryKey": "orderId"
     },
     "OrderDetails": {
       "properties": {
@@ -22,4 +26,3 @@
     }
   }
 }
-

@@ -8,19 +8,19 @@
     "Person": {
       "properties": {
         "id": {
-          "type": "string"
+          "datatype": "string"
         },
         "firstName": {
-          "type": "string"
+          "datatype": "string"
         },
         "lastName": {
-          "type": "string"
+          "datatype": "string"
         },
         "fullName": {
-          "type": "string"
+          "datatype": "string"
         },
         "address": {
-          "type": "string"
+          "datatype": "string"
         },
         "friendOf": {
           "$ref": "#/definitions"

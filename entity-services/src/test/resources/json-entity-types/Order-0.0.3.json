@@ -8,20 +8,17 @@
     "Order": {
       "properties": {
         "orderId": {
-          "type": "string",
-          "collation" : "...",
-          "entityServices": [
-            "primary-key",
-            "range-index"
-          ]
+          "datatype": "string",
+          "collation" : "..."
         },
         "orderDate": {
-          "type": "date"
+          "datatype": "date"
         },
         "hasOrderDetails": {
           "$ref": "OrderDetails/0.0.3/definitions/OrderDetails"
         }
-      }
+      },
+      "primaryKey":"orderId"
     }
   }
 }

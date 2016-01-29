@@ -8,10 +8,10 @@
     "OrderDetails": {
       "properties": {
         "quantity": {
-          "type": "integer"
+          "datatype": "integer"
         },
         "productName": {
-          "type": "string"
+          "datatype": "string"
         }
       }
     }

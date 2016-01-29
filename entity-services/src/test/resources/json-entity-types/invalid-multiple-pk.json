@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title": "invalid-multiple-pk",
+    "version": "0.0.1",
+    "description":"Only one primary key allowed."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "string"
+        }
+      },
+      "primaryKey":["too","many","pk"]
+    }
+  }
+}

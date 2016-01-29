@@ -41,13 +41,15 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="es:info|/info">
           <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">Entity Type must contain exactly one title declaration.</iso:assert>
           <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">Entity Type must contain exactly one version declaration.</iso:assert>
-<!--
-          <iso:report test="description" id="ES-DEFINITION">Your entity type should have a description.</iso:report>
--->
+        </iso:rule>
+        <iso:rule context="object-node()/*[primaryKey]">
+          <iso:assert test="count(./primaryKey) eq 1" id="ES-PRIMARYKEY">Only one primary key allowed.</iso:assert>
         </iso:rule>
         <iso:rule context="properties/object-node()">
           <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except (items, description)) eq 1 else true()" id="ES-REF-ONLY">If using $ref, it must be the only key.</iso:assert>
+          <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">A non-reference property must have a datatype</iso:assert>
         </iso:rule>
+        <!-- xml version of properties -->
         <iso:rule context="es:property[es:ref]">
           <iso:assert test="count(./*) eq 10" id="ES-REF-ONLY">If using es:ref, it must be the only child of es:property.</iso:assert>
         </iso:rule>

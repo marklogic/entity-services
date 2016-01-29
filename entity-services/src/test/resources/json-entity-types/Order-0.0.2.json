@@ -8,11 +8,7 @@
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "...",
-          "entityServices": [
-            "primary-key",
-            "range-index"
-          ]
+          "collation" : "http://marklogic.com/collation/"
         },
         "orderDate": {
           "datatype": "date"
@@ -28,20 +24,20 @@
     "Customer": {
       "properties": {
         "customerId": {
-          "type": "string"
+          "datatype": "string"
         },
         "companyName": {
-          "type": "string"
+          "datatype": "string"
         }
       }
     },
     "OrderDetails": {
       "properties": {
         "quantity": {
-          "type": "integer"
+          "datatype": "integer"
         },
         "productName": {
-          "type": "string"
+          "datatype": "string"
         }
       }
     }

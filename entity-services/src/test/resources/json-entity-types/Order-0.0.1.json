@@ -10,7 +10,7 @@
           "datatype": "string"
         },
         "orderDate": {
-          "type": "date"
+          "datatype": "date"
         },
         "hasOrderDetails": {
           "$ref": "#/definitions/OrderDetails"
@@ -22,10 +22,10 @@
     "OrderDetails": {
       "properties": {
         "quantity": {
-          "type": "integer"
+          "datatype": "integer"
         },
         "productName": {
-          "type": "string"
+          "datatype": "string"
         }
       }
     }

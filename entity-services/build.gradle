@@ -28,7 +28,7 @@ dependencies {
     compile gradleApi()
 	testCompile('com.marklogic:marklogic-jena:1.0.0') {
         // exclude(group: 'org.slf4j')
-        // exclude(group: 'ch.qos.logback')
+        exclude(group: 'ch.qos.logback')
         exclude(group: 'log4j')
     }
 	testCompile 'com.jayway.restassured:rest-assured:2.4.1'

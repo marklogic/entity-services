@@ -1,8 +1,19 @@
 package com.marklogic.entityservices;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
+
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.Authentication;
+
 
 public class TestSetup extends EntityServicesTestBase {
     
@@ -14,10 +25,30 @@ public class TestSetup extends EntityServicesTestBase {
     }
 
     public synchronized static TestSetup getInstance() {
-        if (instance == null) {
+    	Properties prop = new Properties();
+    	InputStream input = null;
+
+    	try {
+
+    	    input = new FileInputStream("../gradle.properties");
+
+    	    // load a properties file
+    	    prop.load(input);
+
+    	} catch (IOException ex) {
+    	    ex.printStackTrace();
+    	    throw new RuntimeException(ex);
+    	}
+    	
+    	String host = prop.getProperty("mlHost");
+    	String username = prop.getProperty("mlUsername");
+    	String password = prop.getProperty("mlPassword");
+    	String port = prop.getProperty("mlRestPort");
+    	
+    	if (instance == null) {
             instance = new TestSetup();
             if (instance._client == null) {
-                instance._client = DatabaseClientFactory.newClient("localhost", 8000, "admin", "admin", Authentication.DIGEST);
+                instance._client = DatabaseClientFactory.newClient(host, Integer.parseInt(port), "admin", "admin", Authentication.DIGEST);
             }
         }
         return instance;

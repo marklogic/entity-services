@@ -60,26 +60,42 @@ declare variable $esi:entity-type-schematron :=
     </iso:schema>
 ;
 
-declare variable $esi:entity-type-extraction-template :=
+
+declare variable $esi:extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
 <!-- note vars doesn't seem to work yet, basically anywhere -->
     <context>/info</context>
+    <vars>
+        <var><name>esn</name><val>"http://marklogic.com/entity-services#"</val></var>
+        <var><name>subject-iri</name><val>sem:iri(concat(baseURI, title, "-", version))</val></var>
+        <var><name>propVersion</name><val>sem:iri('http://marklogic.com/entity-services#version')</val></var>
+        <var><name>propTitle</name><val>sem:iri('http://marklogic.com/entity-services#title')</val></var>
+    </vars>
     <triples>
         <triple>
           <subject>
-              <val>sem:iri(concat('http://marklogic.com/entity-services#', version,"/",title))</val>
+            <val>$subject-iri</val>
           </subject>
           <predicate>
-            <val>sem:iri(concat('http://marklogic.com/entity-services#','title'))</val>
+            <val>$propTitle</val>
           </predicate>
           <object>
             <val>xs:string(title)</val>
           </object>
         </triple>
+        <triple>
+          <subject><val>$subject-iri</val></subject>
+          <predicate>
+            <val>$propVersion</val>
+          </predicate>
+          <object>
+            <val>xs:string(version)</val>
+          </object>
+        </triple>
     </triples>
-</template>
-;
+</template>;
+
 
 declare function esi:entity-type-validate(
     $entity-type as document-node()
@@ -94,10 +110,13 @@ declare function esi:entity-type-validate(
 };
 
 
-declare function esi:extract(
+declare function esi:extract-triples(
     $entity-type as document-node()
-) 
+) as sem:triple*
 {
-    tde:document-data-extract($entity-type, $esi:entity-type-extraction-template)
+    (: TODO adjust for when TDE outputs triples :)
+    let $string-output := tde:document-data-extract($entity-type, $esi:extraction-template)
+    let $json-array := xdmp:from-json(xdmp:unquote($string-output))[1]
+    return json:array-values($json-array) ! sem:triple(.)
 };
 

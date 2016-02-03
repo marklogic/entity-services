@@ -25,6 +25,13 @@ declare variable $ENTITY-TYPES-IRI := "http://marklogic.com/entity-services#";
 
 declare option xdmp:mapping "false";
 
+(:~
+ : Creates an entity-type from a document node.
+ : For JSON documents, this is equivalent to xdmp:json with validation.
+ : For XML documents, we transform the input as well.
+ : 
+ : @param $node A JSON or XML document containing an entity type definition.
+ :)
 declare function es:entity-type-from-node(
     $node as document-node()
 ) as json:object
@@ -38,7 +45,7 @@ declare function es:entity-type-from-node(
 
 declare function es:entity-type-as-triples(
     $entity-type as document-node()
-) 
+) as sem:triple*
 {
-    esi:extract($entity-type)
+    esi:extract-triples($entity-type)
 };

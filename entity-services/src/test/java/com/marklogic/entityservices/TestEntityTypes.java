@@ -8,9 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotNotFoundException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +24,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.FailedRequestException;
 import com.marklogic.client.document.DocumentWriteSet;
@@ -27,8 +34,10 @@ import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.marker.AbstractReadHandle;
+import com.marklogic.client.semantics.GraphManager;
 
 public class TestEntityTypes extends EntityServicesTestBase {
 
@@ -46,7 +55,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         for (File f : files) {
         	if (f.getName().startsWith(".")) { continue; };
         	if (!f.getName().endsWith(".json")) { continue; };
-        	log.debug("Loading " + f.getPath());
+        	logger.info("Loading " + f.getPath());
         	//docMgr.write(f.getPath(), new FileHandle(f));
             writeSet.add(f.getPath(), new FileHandle(f));
             entityTypeUris.put(f, f.getPath());
@@ -63,7 +72,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
     public EvalResultIterator eval(String functionCall) throws TestEvalException {
         
         String entityServicesImport = 
-                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n";
+                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
+        		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
 
         ServerEvaluationCall call = 
                 client.newServerEval().xquery(entityServicesImport + functionCall);
@@ -101,9 +111,9 @@ public class TestEntityTypes extends EntityServicesTestBase {
         	String entityTypeUri = entityTypeUris.get(entityTypeFile);
         	ObjectMapper mapper = new ObjectMapper();
         	JsonNode original = mapper.readValue(entityTypeFile, JsonNode.class);
-        	log.error("Checking "+entityTypeUri);
+        	logger.info("Checking "+entityTypeUri);
         	if (entityTypeUri.contains("invalid-")) {
-        		log.error("Checking invalid: " + entityTypeUri);
+        		logger.info("Checking invalid: " + entityTypeUri);
         		JacksonHandle handle = null;
         		try {
         			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityTypeUri  + "'))", new JacksonHandle());	
@@ -118,10 +128,27 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		JsonNode actual = handle.get();
                 
                 checkRoundTrip("Original node should equal serialized retrieved one.", original, actual);
-        	}
-        	
+                
+                InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
+
+                Graph actualTriples = GraphFactory.createGraphMem();
+                RDFDataMgr.read(actualTriples, rdfHandle.get(), Lang.NTRIPLES);
+                
+                
+                Graph expectedTriples = GraphFactory.createGraphMem();
+                Pattern filePattern = Pattern.compile("(.*)/json-entity-types/(.*)\\.json$");
+                Matcher matcher = filePattern.matcher(entityTypeUri);
+                if (matcher.matches()) {
+                	String triplesFileUri = matcher.group(1) + "/triples-expected/" + matcher.group(2) + ".ttl";
+                	try {
+                		RDFDataMgr.read(expectedTriples, triplesFileUri, Lang.TURTLE);
+                		logger.debug("Actual triples returned: " + actualTriples);
+                    	assertTrue("Graph must match expected: " + entityTypeUri, expectedTriples.isIsomorphicWith(actualTriples));
+                	} catch (RiotNotFoundException e) {
+                		logger.info("No RDF verification for " + entityTypeUri);
+                	}
+                }
         }
     }
-    
-    
+    }
 }

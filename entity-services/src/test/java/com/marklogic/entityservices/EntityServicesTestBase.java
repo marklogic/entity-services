@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class EntityServicesTestBase {
 
-	protected static Logger log = LoggerFactory.getLogger(EntityServicesTestBase.class);
+	protected static Logger logger = LoggerFactory.getLogger(EntityServicesTestBase.class);
    
 }
 

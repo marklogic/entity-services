@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
-	testCompile('com.marklogic:java-client-api:3.0.4') {
+	testCompile('com.marklogic:marklogic-jena:1.0.0') {
         // exclude(group: 'org.slf4j')
         // exclude(group: 'ch.qos.logback')
         exclude(group: 'log4j')

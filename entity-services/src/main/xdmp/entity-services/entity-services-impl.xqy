@@ -68,32 +68,82 @@ declare variable $esi:extraction-template :=
     <context>/info</context>
     <vars>
         <var><name>esn</name><val>"http://marklogic.com/entity-services#"</val></var>
-        <var><name>subject-iri</name><val>sem:iri(concat(baseURI, title, "-", version))</val></var>
-        <var><name>propVersion</name><val>sem:iri('http://marklogic.com/entity-services#version')</val></var>
-        <var><name>propTitle</name><val>sem:iri('http://marklogic.com/entity-services#title')</val></var>
+        <var><name>rdf</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
+        <var><name>baseUriTmp</name><val>fn:head((./baseUri, "http://example.org/"))</val></var>
+        <var><name>baseUri</name><val>if (fn:matches($baseUriTmp, "#?/?$")) then $baseUriTmp else concat($baseUriTmp, "#")</val></var>
+ 
+        <var><name>doc-subject-iri</name><val>sem:iri(concat($baseUri, title, "-", version))</val></var>
+        <var><name>propVersion</name><val>sem:iri(concat($esn, 'version'))</val></var>
+        <var><name>propTitle</name><val>sem:iri(concat($esn, 'title'))</val></var>
     </vars>
     <triples>
         <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>$propTitle</val>
-          </predicate>
-          <object>
-            <val>xs:string(title)</val>
-          </object>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($rdf, "type"))</val></predicate>
+          <object><val>sem:iri(concat($esn, "EntityServicesDoc"))</val></object>
         </triple>
         <triple>
-          <subject><val>$subject-iri</val></subject>
-          <predicate>
-            <val>$propVersion</val>
-          </predicate>
-          <object>
-            <val>xs:string(version)</val>
-          </object>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$propTitle</val></predicate>
+          <object><val>xs:string(title)</val></object>
+        </triple>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$propVersion</val></predicate>
+          <object><val>xs:string(version)</val></object>
         </triple>
     </triples>
+    <templates>
+        <template>
+            <context>/definitions/*</context>
+            <vars>
+                <var><name>et-subject-iri</name><val>sem:iri(concat(../info/baseUri, ../info/title, "-", ../info/version, "/", local-name(.)))</val></var>
+            </vars>
+            <triples>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($rdf, "type"))</val></predicate>
+                  <object><val>sem:iri(concat($esn, "EntityType"))</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>$propVersion</val></predicate>
+                  <object><val>../info/version</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>concat($esn, "primaryKey")</val></predicate>
+                  <object><val>./primaryKey</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$doc-subject-iri</val></subject>
+                  <predicate><val>concat($esn, "defines")</val></predicate>
+                  <object><val>$et-subject-iri</val></object>
+                </triple>
+<!-- todo required, rangeIndex, wordLexicon-->
+            </triples>
+            <templates>
+                <template>
+                    <context>properties/*</context>
+                    <vars>
+                        <var><name>prop-subject-iri</name><val>sem:iri(concat($et-subject-iri, "/", local-name(.)))</val></var>
+                    </vars>
+                    <triples>
+                        <triple>
+                          <subject><val>$prop-subject-iri</val></subject>
+                          <predicate><val>sem:iri(concat($rdf, "type"))</val></predicate>
+                          <object><val>sem:iri(concat($esn, "Property"))</val></object>
+                        </triple>
+                        <triple>
+                          <subject><val>$et-subject-iri</val></subject>
+                          <predicate><val>sem:iri(concat($esn, "property"))</val></predicate>
+                          <object><val>$prop-subject-iri</val></object>
+                        </triple>
+                    </triples>
+                </template>
+            </templates>
+        </template>
+    </templates>
 </template>;
 
 

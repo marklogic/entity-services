@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotNotFoundException;
@@ -142,7 +143,9 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 	String triplesFileUri = matcher.group(1) + "/triples-expected/" + matcher.group(2) + ".ttl";
                 	try {
                 		RDFDataMgr.read(expectedTriples, triplesFileUri, Lang.TURTLE);
-                		logger.debug("Actual triples returned: " + actualTriples);
+                		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                		RDFDataMgr.write(baos, actualTriples, Lang.TURTLE);
+                		logger.debug("Actual triples returned: " + baos.toString());
                     	assertTrue("Graph must match expected: " + entityTypeUri, expectedTriples.isIsomorphicWith(actualTriples));
                 	} catch (RiotNotFoundException e) {
                 		logger.info("No RDF verification for " + entityTypeUri);

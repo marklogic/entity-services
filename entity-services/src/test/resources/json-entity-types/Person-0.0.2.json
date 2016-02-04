@@ -2,7 +2,7 @@
   "info": {
     "title": "Person",
     "version": "0.0.2",
-    "baseURI" : "http://example.org/mytypeschema"
+    "baseUri" : "http://example.org/mytypeschema"
   },
   "definitions": {
     "Person": {

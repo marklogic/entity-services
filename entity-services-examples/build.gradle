@@ -1,14 +1,4 @@
-buildscript {
-    repositories {
-        mavenLocal()
-    }
-    dependencies {
-        classpath("com.marklogic:ml-gradle:2.1-SNAPSHOT")
-    }
-}
-
 plugins {
-  //id "com.marklogic.ml-gradle" version "2.1-SNAPSHOT"
   id "java"
   id "maven-publish"
   id "eclipse"

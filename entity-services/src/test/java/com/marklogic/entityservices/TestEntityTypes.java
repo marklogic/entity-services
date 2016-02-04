@@ -130,28 +130,34 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 
                 checkRoundTrip("Original node should equal serialized retrieved one.", original, actual);
                 
-                InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
-
-                Graph actualTriples = GraphFactory.createGraphMem();
-                RDFDataMgr.read(actualTriples, rdfHandle.get(), Lang.NTRIPLES);
-                
-                
-                Graph expectedTriples = GraphFactory.createGraphMem();
-                Pattern filePattern = Pattern.compile("(.*)/json-entity-types/(.*)\\.json$");
-                Matcher matcher = filePattern.matcher(entityTypeUri);
-                if (matcher.matches()) {
-                	String triplesFileUri = matcher.group(1) + "/triples-expected/" + matcher.group(2) + ".ttl";
-                	try {
-                		RDFDataMgr.read(expectedTriples, triplesFileUri, Lang.TURTLE);
-                		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                		RDFDataMgr.write(baos, actualTriples, Lang.TURTLE);
-                		logger.debug("Actual triples returned: " + baos.toString());
-                    	assertTrue("Graph must match expected: " + entityTypeUri, expectedTriples.isIsomorphicWith(actualTriples));
-                	} catch (RiotNotFoundException e) {
-                		logger.info("No RDF verification for " + entityTypeUri);
-                	}
-                }
+                // future
+                // checkTriples(entityTypeUri);
+        	}
+        	
         }
     }
+    
+    private void checkTriples(String entityTypeUri) throws TestEvalException {
+        InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
+
+        Graph actualTriples = GraphFactory.createGraphMem();
+        RDFDataMgr.read(actualTriples, rdfHandle.get(), Lang.NTRIPLES);
+        
+        
+        Graph expectedTriples = GraphFactory.createGraphMem();
+        Pattern filePattern = Pattern.compile("(.*)/json-entity-types/(.*)\\.json$");
+        Matcher matcher = filePattern.matcher(entityTypeUri);
+        if (matcher.matches()) {
+        	String triplesFileUri = matcher.group(1) + "/triples-expected/" + matcher.group(2) + ".ttl";
+        	try {
+        		RDFDataMgr.read(expectedTriples, triplesFileUri, Lang.TURTLE);
+        		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        		RDFDataMgr.write(baos, actualTriples, Lang.TURTLE);
+        		logger.debug("Actual triples returned: " + baos.toString());
+            	assertTrue("Graph must match expected: " + entityTypeUri, expectedTriples.isIsomorphicWith(actualTriples));
+        	} catch (RiotNotFoundException e) {
+        		logger.info("No RDF verification for " + entityTypeUri);
+        	}
+        }
     }
 }

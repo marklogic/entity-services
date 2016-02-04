@@ -32,6 +32,7 @@ dependencies {
         exclude(group: 'log4j')
     }
 	testCompile 'com.jayway.restassured:rest-assured:2.4.1'
+	testCompile 'xmlunit:xmlunit:1.6'
     testCompile 'junit:junit:4.11'
 }
 

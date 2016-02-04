@@ -1,5 +1,180 @@
 @prefix es: <http://marklogic.com/entity-services#> .
-@prefix doc: <http://marklogic.com/testing-entity-type/> .
-@prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
-@prefix prop: <http://example.org/mytypeschema/Person-0.0.2/Person/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix type: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/> .
+@prefix order: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/> .
+@prefix orderdetails: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/> .
 
+order:shortKey
+        es:datatype xsd:short ;
+        es:ref "no ref" ;
+        es:title "shortKey" .
+
+order:decimalKey
+        es:datatype xsd:decimal ;
+        es:ref "no ref" ;
+        es:title "decimalKey" .
+
+order:anySimpleTypeKey
+        es:datatype xsd:anySimpleType ;
+        es:ref "no ref" ;
+        es:title "anySimpleTypeKey" .
+
+order:stringKey
+        es:datatype xsd:string ;
+        es:ref "no ref" ;
+        es:title "stringKey" .
+
+type:OrderDetails
+        a       es:EntityType ;
+        es:title "OrderDetails" ;
+        es:version "0.0.1"^^xsd:string ;
+        es:property
+                orderdetails:productName , 
+                orderdetails:quantity .
+
+order:iriKey
+        es:datatype <http://marklogic.com/semantics#iri> ;
+        es:ref "no ref" ;
+        es:title "iriKey" .
+
+order:unsignedLongKey
+        es:datatype xsd:unsignedLong ;
+        es:ref "no ref" ;
+        es:title "unsignedLongKey" .
+
+order:floatKey
+        es:datatype xsd:float ;
+        es:ref "no ref" ;
+        es:title "floatKey" .
+
+order:integerKey
+        es:datatype xsd:integer ;
+        es:ref "no ref" ;
+        es:title "integerKey" .
+
+order:yearMonthDurationKey
+        es:datatype xsd:yearMonthDuration ;
+        es:ref "no ref" ;
+        es:title "yearMonthDurationKey" .
+
+order:externalReference
+        es:datatype "" ;
+        es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> ;
+        es:title "externalReference" .
+
+type:Order
+        a       es:EntityType ;
+        es:title "Order" ;
+        es:version "0.0.1"^^xsd:string ;
+        es:property order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:anySimpleTypeKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey .
+
+order:byteKey
+        es:datatype xsd:byte ;
+        es:ref "no ref" ;
+        es:title "byteKey" .
+
+<http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
+        a       es:EntityServicesDoc ;
+        es:defines type:OrderDetails , type:Order ;
+        es:title "SchemaCompleteEntityType" ;
+        es:version "0.0.1" .
+
+order:orderId
+        es:datatype xsd:string ;
+        es:ref "no ref" ;
+        es:title "orderId" .
+
+order:base64BinaryKey
+        es:datatype xsd:base64Binary ;
+        es:ref "no ref" ;
+        es:title "base64BinaryKey" .
+
+order:dayTimeDurationKey
+        es:datatype xsd:dayTimeDuration ;
+        es:ref "no ref" ;
+        es:title "dayTimeDurationKey" .
+
+order:dateTimeKey
+        es:datatype xsd:dateTime ;
+        es:ref "no ref" ;
+        es:title "dateTimeKey" .
+
+order:longKey
+        es:datatype xsd:long ;
+        es:ref "no ref" ;
+        es:title "longKey" .
+
+order:arrayreferenceInThisFile
+        es:datatype <http://marklogic.com/json#array> ;
+        es:ref "no ref" ;
+        es:title "arrayreferenceInThisFile" .
+
+order:unsignedIntKey
+        es:datatype xsd:unsignedInt ;
+        es:ref "no ref" ;
+        es:title "unsignedIntKey" .
+
+orderdetails:quantity
+        es:datatype xsd:integer ;
+        es:ref "no ref" ;
+        es:title "quantity" .
+
+order:externalArrayReference
+        es:datatype <http://marklogic.com/json#array> ;
+        es:ref "no ref" ;
+        es:title "externalArrayReference" .
+
+order:doubleKey
+        es:datatype xsd:double ;
+        es:ref "no ref" ;
+        es:title "doubleKey" .
+
+order:arrayKey
+        es:datatype <http://marklogic.com/json#array> ;
+        es:ref "no ref" ;
+        es:title "arrayKey" .
+
+order:unsignedShortKey
+        es:datatype xsd:unsignedShort ;
+        es:ref "no ref" ;
+        es:title "unsignedShortKey" .
+
+order:timeKey
+        es:datatype xsd:time ;
+        es:ref "no ref" ;
+        es:title "timeKey" .
+
+order:anyURIKey
+        es:datatype xsd:anyURI ;
+        es:ref "no ref" ;
+        es:title "anyURIKey" .
+
+order:booleanKey
+        es:datatype xsd:boolean ;
+        es:ref "no ref" ;
+        es:title "booleanKey" .
+
+order:intKey
+        es:datatype xsd:int ;
+        es:ref "no ref" ;
+        es:title "intKey" .
+
+order:durationKey
+        es:datatype xsd:duration ;
+        es:ref "no ref" ;
+        es:title "durationKey" .
+
+order:dateKey
+        es:datatype xsd:date ;
+        es:ref "no ref" ;
+        es:title "dateKey" .
+
+orderdetails:productName
+        es:datatype xsd:string ;
+        es:ref "no ref" ;
+        es:title "productName" .
+
+order:referenceInThisFile
+        es:datatype "" ;
+        es:ref type:OrderDetails ;
+        es:title "referenceInThisFile" .

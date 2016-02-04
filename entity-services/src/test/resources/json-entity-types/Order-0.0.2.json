@@ -19,7 +19,10 @@
         "soldTo": {
           "$ref": "#/definitions/Customer"
         }
-      }
+      },
+      "primaryKey" : "orderId",
+      "required" : ["orderId", "orderDate"]
+     
     },
     "Customer": {
       "properties": {

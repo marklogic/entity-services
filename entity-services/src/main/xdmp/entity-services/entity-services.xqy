@@ -34,13 +34,17 @@ declare option xdmp:mapping "false";
  :)
 declare function es:entity-type-from-node(
     $node as document-node()
-) as json:object
+) as map:map
 {
     let $errors := esi:entity-type-validate($node)
+    let $root := $node/node()
     return
         if ($errors)
         then fn:error( (), "ES-ENTITY-TYPE-INVALID", $errors)
-        else xdmp:to-json($node)
+        else 
+            if ($root/object-node()) 
+            then xdmp:to-json($root)
+            else esi:entity-type-from-xml($root)
 };
 
 declare function es:entity-type-as-triples(
@@ -48,4 +52,24 @@ declare function es:entity-type-as-triples(
 ) as sem:triple*
 {
     esi:extract-triples($entity-type)
+};
+
+(:~
+ : Given an entity type, returns its XML representation
+ :)
+declare function es:entity-type-to-xml(
+    $entity-type as map:map
+) as element(es:entity-type)
+{
+    esi:entity-type-to-xml($entity-type)
+};
+
+(:~
+ : Given an entity type, returns its JSON representation
+ :)
+declare function es:entity-type-to-json(
+    $entity-type as map:map
+) as object-node()
+{
+    xdmp:to-json($entity-type)/node()
 };

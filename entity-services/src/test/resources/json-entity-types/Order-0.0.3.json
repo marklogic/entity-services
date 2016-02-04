@@ -9,7 +9,7 @@
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "..."
+          "collation" : "http://marklogic.com/collation/"
         },
         "orderDate": {
           "datatype": "date"

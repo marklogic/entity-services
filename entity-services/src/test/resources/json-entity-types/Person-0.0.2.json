@@ -2,7 +2,7 @@
   "info": {
     "title": "Person",
     "version": "0.0.2",
-    "baseUri" : "http://example.org/mytypeschema"
+    "baseUri" : "http://example.org/mytypeschema/"
   },
   "definitions": {
     "Person": {
@@ -23,10 +23,10 @@
           "datatype": "string"
         },
         "friendOf": {
-          "$ref": "#/definitions"
+          "$ref": "#/definitions/Person"
         }
       },
-      "primary-key":"id"
+      "primaryKey":"id"
     }
   }
 }

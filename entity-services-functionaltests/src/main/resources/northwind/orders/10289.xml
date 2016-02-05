@@ -1,0 +1,30 @@
+<Order OrderID="10289">
+	<CustomerID>BSBEV</CustomerID>
+	<EmployeeID>7</EmployeeID>
+	<OrderDate>1996-08-26T07:24:10</OrderDate>
+	<RequiredDate>1996-09-23T13:27:06</RequiredDate>
+	<ShippedDate>1996-08-28T19:15:26</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>22.7700</Freight>
+	<ShipName>B's Beverages</ShipName>
+	<ShipAddress>Fauntleroy Circus</ShipAddress>
+	<ShipCity>London</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>EC2 5NT</ShipPostalCode>
+	<ShipCountry>UK</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>3</ProductID>
+			<UnitPrice>8.0000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>64</ProductID>
+			<UnitPrice>26.6000</UnitPrice>
+			<Quantity>9</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

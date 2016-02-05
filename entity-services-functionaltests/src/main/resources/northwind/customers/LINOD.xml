@@ -1,0 +1,13 @@
+<Customer CustomerID="LINOD">
+	<CompanyName>LINO-Delicateses</CompanyName>
+	<ContactName>Felipe Izquierdo</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>Ave. 5 de Mayo Porlamar</Address>
+	<City>I. de Margarita</City>
+	<Region>Nueva Esparta</Region>
+	<PostalCode>4980</PostalCode>
+	<Country>Venezuela</Country>
+	<Phone>(8) 34-56-12</Phone>
+	<Fax>(8) 34-93-93</Fax>
+</Customer>
+

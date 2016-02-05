@@ -1,0 +1,30 @@
+<Order OrderID="10565">
+	<CustomerID>MEREP</CustomerID>
+	<EmployeeID>8</EmployeeID>
+	<OrderDate>1997-06-11T03:41:46</OrderDate>
+	<RequiredDate>1997-07-09T12:02:46</RequiredDate>
+	<ShippedDate>1997-06-18T11:17:16</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>7.1500</Freight>
+	<ShipName>Mère Paillarde</ShipName>
+	<ShipAddress>43 rue St. Laurent</ShipAddress>
+	<ShipCity>Montréal</ShipCity>
+	<ShipRegion>Québec</ShipRegion>
+	<ShipPostalCode>H1J 1C3</ShipPostalCode>
+	<ShipCountry>Canada</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>24</ProductID>
+			<UnitPrice>4.5000</UnitPrice>
+			<Quantity>25</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>64</ProductID>
+			<UnitPrice>33.2500</UnitPrice>
+			<Quantity>18</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

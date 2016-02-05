@@ -1,0 +1,30 @@
+<Order OrderID="11005">
+	<CustomerID>WILMK</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1998-04-07T06:24:31</OrderDate>
+	<RequiredDate>1998-05-05T04:03:33</RequiredDate>
+	<ShippedDate>1998-04-10T03:36:00</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>0.7500</Freight>
+	<ShipName>Wilman Kala</ShipName>
+	<ShipAddress>Keskuskatu 45</ShipAddress>
+	<ShipCity>Helsinki</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>21240</ShipPostalCode>
+	<ShipCountry>Finland</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>1</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>2</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>59</ProductID>
+			<UnitPrice>55.0000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

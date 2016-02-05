@@ -1,0 +1,36 @@
+<Order OrderID="10583">
+	<CustomerID>WARTH</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1997-06-30T03:23:46</OrderDate>
+	<RequiredDate>1997-07-28T17:56:38</RequiredDate>
+	<ShippedDate>1997-07-04T01:30:07</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>7.2800</Freight>
+	<ShipName>Wartian Herkku</ShipName>
+	<ShipAddress>Torikatu 38</ShipAddress>
+	<ShipCity>Oulu</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>90110</ShipPostalCode>
+	<ShipCountry>Finland</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>29</ProductID>
+			<UnitPrice>123.7900</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>60</ProductID>
+			<UnitPrice>34.0000</UnitPrice>
+			<Quantity>24</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>69</ProductID>
+			<UnitPrice>36.0000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

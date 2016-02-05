@@ -1,0 +1,42 @@
+<Order OrderID="10998">
+	<CustomerID>WOLZA</CustomerID>
+	<EmployeeID>8</EmployeeID>
+	<OrderDate>1998-04-03T01:44:36</OrderDate>
+	<RequiredDate>1998-04-17T03:24:51</RequiredDate>
+	<ShippedDate>1998-04-17T00:16:24</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>20.3100</Freight>
+	<ShipName>Wolski Zajazd</ShipName>
+	<ShipAddress>ul. Filtrowa 68</ShipAddress>
+	<ShipCity>Warszawa</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>01-012</ShipPostalCode>
+	<ShipCountry>Poland</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>24</ProductID>
+			<UnitPrice>4.5000</UnitPrice>
+			<Quantity>12</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>61</ProductID>
+			<UnitPrice>28.5000</UnitPrice>
+			<Quantity>7</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>74</ProductID>
+			<UnitPrice>10.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>75</ProductID>
+			<UnitPrice>7.7500</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

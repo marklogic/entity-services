@@ -1,0 +1,30 @@
+<Order OrderID="10822">
+	<CustomerID>TRAIH</CustomerID>
+	<EmployeeID>6</EmployeeID>
+	<OrderDate>1998-01-08T02:26:25</OrderDate>
+	<RequiredDate>1998-02-05T20:46:50</RequiredDate>
+	<ShippedDate>1998-01-16T20:56:11</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>7.0000</Freight>
+	<ShipName>Trail's Head Gourmet Provisioners</ShipName>
+	<ShipAddress>722 DaVinci Blvd.</ShipAddress>
+	<ShipCity>Kirkland</ShipCity>
+	<ShipRegion>WA</ShipRegion>
+	<ShipPostalCode>98034</ShipPostalCode>
+	<ShipCountry>USA</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>62</ProductID>
+			<UnitPrice>49.3000</UnitPrice>
+			<Quantity>3</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>15.0000</UnitPrice>
+			<Quantity>6</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

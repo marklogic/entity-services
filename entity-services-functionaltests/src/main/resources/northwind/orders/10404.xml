@@ -1,0 +1,36 @@
+<Order OrderID="10404">
+	<CustomerID>MAGAA</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1997-01-03T00:32:06</OrderDate>
+	<RequiredDate>1997-01-31T12:57:34</RequiredDate>
+	<ShippedDate>1997-01-08T07:44:52</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>155.9700</Freight>
+	<ShipName>Magazzini Alimentari Riuniti</ShipName>
+	<ShipAddress>Via Ludovico il Moro 22</ShipAddress>
+	<ShipCity>Bergamo</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>24100</ShipPostalCode>
+	<ShipCountry>Italy</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>26</ProductID>
+			<UnitPrice>24.9000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>42</ProductID>
+			<UnitPrice>11.2000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>49</ProductID>
+			<UnitPrice>16.0000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

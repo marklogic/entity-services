@@ -1,0 +1,24 @@
+<Order OrderID="10900">
+	<CustomerID>WELLI</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1998-02-20T05:20:07</OrderDate>
+	<RequiredDate>1998-03-20T06:54:41</RequiredDate>
+	<ShippedDate>1998-03-04T00:04:41</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>1.6600</Freight>
+	<ShipName>Wellington Importadora</ShipName>
+	<ShipAddress>Rua do Mercado, 12</ShipAddress>
+	<ShipCity>Resende</ShipCity>
+	<ShipRegion>SP</ShipRegion>
+	<ShipPostalCode>08737-363</ShipPostalCode>
+	<ShipCountry>Brazil</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>15.0000</UnitPrice>
+			<Quantity>3</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

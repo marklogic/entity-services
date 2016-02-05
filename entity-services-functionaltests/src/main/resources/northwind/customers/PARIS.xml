@@ -1,0 +1,13 @@
+<Customer CustomerID="PARIS">
+	<CompanyName>Paris spécialités</CompanyName>
+	<ContactName>Marie Bertrand</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>265, boulevard Charonne</Address>
+	<City>Paris</City>
+	<Region/>
+	<PostalCode>75012</PostalCode>
+	<Country>France</Country>
+	<Phone>(1) 42.34.22.66</Phone>
+	<Fax>(1) 42.34.22.77</Fax>
+</Customer>
+

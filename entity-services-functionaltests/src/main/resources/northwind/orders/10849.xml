@@ -1,0 +1,30 @@
+<Order OrderID="10849">
+	<CustomerID>KOENE</CustomerID>
+	<EmployeeID>9</EmployeeID>
+	<OrderDate>1998-01-23T15:47:06</OrderDate>
+	<RequiredDate>1998-02-20T13:43:51</RequiredDate>
+	<ShippedDate>1998-01-30T08:39:12</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>0.5600</Freight>
+	<ShipName>Königlich Essen</ShipName>
+	<ShipAddress>Maubelstr. 90</ShipAddress>
+	<ShipCity>Brandenburg</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>14776</ShipPostalCode>
+	<ShipCountry>Germany</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>3</ProductID>
+			<UnitPrice>10.0000</UnitPrice>
+			<Quantity>49</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>26</ProductID>
+			<UnitPrice>31.2300</UnitPrice>
+			<Quantity>18</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,30 @@
+<Order OrderID="10928">
+	<CustomerID>GALED</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1998-03-05T09:10:23</OrderDate>
+	<RequiredDate>1998-04-02T13:08:48</RequiredDate>
+	<ShippedDate>1998-03-18T09:13:08</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>1.3600</Freight>
+	<ShipName>Galería del gastronómo</ShipName>
+	<ShipAddress>Rambla de Cataluña, 23</ShipAddress>
+	<ShipCity>Barcelona</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>8022</ShipPostalCode>
+	<ShipCountry>Spain</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>47</ProductID>
+			<UnitPrice>9.5000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>76</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

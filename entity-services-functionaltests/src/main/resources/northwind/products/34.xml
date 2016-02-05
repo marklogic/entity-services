@@ -1,0 +1,12 @@
+<Product ProductID="34">
+	<ProductName>Sasquatch Ale</ProductName>
+	<SupplierID>16</SupplierID>
+	<CategoryID>1</CategoryID>
+	<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+	<UnitPrice>14.0000</UnitPrice>
+	<UnitsInStock>111</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>15</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

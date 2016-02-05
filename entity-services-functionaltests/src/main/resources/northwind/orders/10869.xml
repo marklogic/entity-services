@@ -1,0 +1,42 @@
+<Order OrderID="10869">
+	<CustomerID>SEVES</CustomerID>
+	<EmployeeID>5</EmployeeID>
+	<OrderDate>1998-02-04T01:03:20</OrderDate>
+	<RequiredDate>1998-03-04T01:33:17</RequiredDate>
+	<ShippedDate>1998-02-09T04:36:38</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>143.2800</Freight>
+	<ShipName>Seven Seas Imports</ShipName>
+	<ShipAddress>90 Wadhurst Rd.</ShipAddress>
+	<ShipCity>London</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>OX15 4NB</ShipPostalCode>
+	<ShipCountry>UK</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>1</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>11</ProductID>
+			<UnitPrice>21.0000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>23</ProductID>
+			<UnitPrice>9.0000</UnitPrice>
+			<Quantity>50</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>68</ProductID>
+			<UnitPrice>12.5000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,13 @@
+<Customer CustomerID="BONAP">
+	<CompanyName>Bon app'</CompanyName>
+	<ContactName>Laurence Lebihan</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>12, rue des Bouchers</Address>
+	<City>Marseille</City>
+	<Region/>
+	<PostalCode>13008</PostalCode>
+	<Country>France</Country>
+	<Phone>91.24.45.40</Phone>
+	<Fax>91.24.45.41</Fax>
+</Customer>
+

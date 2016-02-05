@@ -1,0 +1,13 @@
+<Customer CustomerID="QUEDE">
+	<CompanyName>Que Delícia</CompanyName>
+	<ContactName>Bernardo Batista</ContactName>
+	<ContactTitle>Accounting Manager</ContactTitle>
+	<Address>Rua da Panificadora, 12</Address>
+	<City>Rio de Janeiro</City>
+	<Region>RJ</Region>
+	<PostalCode>02389-673</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(21) 555-4252</Phone>
+	<Fax>(21) 555-4545</Fax>
+</Customer>
+

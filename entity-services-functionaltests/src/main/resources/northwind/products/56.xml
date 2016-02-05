@@ -1,0 +1,12 @@
+<Product ProductID="56">
+	<ProductName>Gnocchi di nonna Alice</ProductName>
+	<SupplierID>26</SupplierID>
+	<CategoryID>5</CategoryID>
+	<QuantityPerUnit>24 - 250 g pkgs.</QuantityPerUnit>
+	<UnitPrice>38.0000</UnitPrice>
+	<UnitsInStock>21</UnitsInStock>
+	<UnitsOnOrder>10</UnitsOnOrder>
+	<ReorderLevel>30</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

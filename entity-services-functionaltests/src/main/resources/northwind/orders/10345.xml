@@ -1,0 +1,36 @@
+<Order OrderID="10345">
+	<CustomerID>QUICK</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1996-11-04T11:57:26</OrderDate>
+	<RequiredDate>1996-12-02T10:06:41</RequiredDate>
+	<ShippedDate>1996-11-11T19:54:15</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>249.0600</Freight>
+	<ShipName>QUICK-Stop</ShipName>
+	<ShipAddress>Taucherstraße 10</ShipAddress>
+	<ShipCity>Cunewalde</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>01307</ShipPostalCode>
+	<ShipCountry>Germany</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>8</ProductID>
+			<UnitPrice>32.0000</UnitPrice>
+			<Quantity>70</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>19</ProductID>
+			<UnitPrice>7.3000</UnitPrice>
+			<Quantity>80</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>42</ProductID>
+			<UnitPrice>11.2000</UnitPrice>
+			<Quantity>9</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

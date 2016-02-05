@@ -1,0 +1,12 @@
+<Product ProductID="71">
+	<ProductName>Flotemysost</ProductName>
+	<SupplierID>15</SupplierID>
+	<CategoryID>4</CategoryID>
+	<QuantityPerUnit>10 - 500 g pkgs.</QuantityPerUnit>
+	<UnitPrice>21.5000</UnitPrice>
+	<UnitsInStock>26</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>0</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

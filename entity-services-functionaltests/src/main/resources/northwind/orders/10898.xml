@@ -1,0 +1,24 @@
+<Order OrderID="10898">
+	<CustomerID>OCEAN</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-02-20T03:20:44</OrderDate>
+	<RequiredDate>1998-03-20T09:09:46</RequiredDate>
+	<ShippedDate>1998-03-06T16:14:31</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>1.2700</Freight>
+	<ShipName>Océano Atlántico Ltda.</ShipName>
+	<ShipAddress>Ing. Gustavo Moncada 8585 Piso 20-A</ShipAddress>
+	<ShipCity>Buenos Aires</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>1010</ShipPostalCode>
+	<ShipCountry>Argentina</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>13</ProductID>
+			<UnitPrice>6.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,24 @@
+<Order OrderID="10584">
+	<CustomerID>BLONP</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1997-06-30T11:16:20</OrderDate>
+	<RequiredDate>1997-07-28T16:12:25</RequiredDate>
+	<ShippedDate>1997-07-04T11:34:35</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>59.1400</Freight>
+	<ShipName>Blondel père et fils</ShipName>
+	<ShipAddress>24, place Kléber</ShipAddress>
+	<ShipCity>Strasbourg</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>67000</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>31</ProductID>
+			<UnitPrice>12.5000</UnitPrice>
+			<Quantity>50</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

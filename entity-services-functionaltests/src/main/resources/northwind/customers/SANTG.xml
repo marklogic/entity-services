@@ -1,0 +1,13 @@
+<Customer CustomerID="SANTG">
+	<CompanyName>Santé Gourmet</CompanyName>
+	<ContactName>Jonas Bergulfsen</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>Erling Skakkes gate 78</Address>
+	<City>Stavern</City>
+	<Region/>
+	<PostalCode>4110</PostalCode>
+	<Country>Norway</Country>
+	<Phone>07-98 92 35</Phone>
+	<Fax>07-98 92 47</Fax>
+</Customer>
+

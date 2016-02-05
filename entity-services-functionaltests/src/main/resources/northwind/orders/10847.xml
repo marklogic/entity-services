@@ -1,0 +1,54 @@
+<Order OrderID="10847">
+	<CustomerID>SAVEA</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-01-22T18:56:44</OrderDate>
+	<RequiredDate>1998-02-05T12:01:20</RequiredDate>
+	<ShippedDate>1998-02-10T23:56:23</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>487.5700</Freight>
+	<ShipName>Save-a-lot Markets</ShipName>
+	<ShipAddress>187 Suffolk Ln.</ShipAddress>
+	<ShipCity>Boise</ShipCity>
+	<ShipRegion>ID</ShipRegion>
+	<ShipPostalCode>83720</ShipPostalCode>
+	<ShipCountry>USA</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>1</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>80</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>19</ProductID>
+			<UnitPrice>9.2000</UnitPrice>
+			<Quantity>12</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>37</ProductID>
+			<UnitPrice>26.0000</UnitPrice>
+			<Quantity>60</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>45</ProductID>
+			<UnitPrice>9.5000</UnitPrice>
+			<Quantity>36</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>60</ProductID>
+			<UnitPrice>34.0000</UnitPrice>
+			<Quantity>45</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>71</ProductID>
+			<UnitPrice>21.5000</UnitPrice>
+			<Quantity>55</Quantity>
+			<Discount>0.2</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

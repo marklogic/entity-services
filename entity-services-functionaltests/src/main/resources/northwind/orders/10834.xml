@@ -1,0 +1,30 @@
+<Order OrderID="10834">
+	<CustomerID>TRADH</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1998-01-15T14:56:24</OrderDate>
+	<RequiredDate>1998-02-12T07:58:25</RequiredDate>
+	<ShippedDate>1998-01-19T19:50:11</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>29.7800</Freight>
+	<ShipName>Tradiçao Hipermercados</ShipName>
+	<ShipAddress>Av. Inês de Castro, 414</ShipAddress>
+	<ShipCity>Sao Paulo</ShipCity>
+	<ShipRegion>SP</ShipRegion>
+	<ShipPostalCode>05634-030</ShipPostalCode>
+	<ShipCountry>Brazil</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>29</ProductID>
+			<UnitPrice>123.7900</UnitPrice>
+			<Quantity>8</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>30</ProductID>
+			<UnitPrice>25.8900</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

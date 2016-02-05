@@ -1,0 +1,12 @@
+<Product ProductID="23">
+	<ProductName>Tunnbröd</ProductName>
+	<SupplierID>9</SupplierID>
+	<CategoryID>5</CategoryID>
+	<QuantityPerUnit>12 - 250 g pkgs.</QuantityPerUnit>
+	<UnitPrice>9.0000</UnitPrice>
+	<UnitsInStock>61</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>25</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

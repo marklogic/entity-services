@@ -1,0 +1,12 @@
+<Product ProductID="69">
+	<ProductName>Gudbrandsdalsost</ProductName>
+	<SupplierID>15</SupplierID>
+	<CategoryID>4</CategoryID>
+	<QuantityPerUnit>10 kg pkg.</QuantityPerUnit>
+	<UnitPrice>36.0000</UnitPrice>
+	<UnitsInStock>26</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>15</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

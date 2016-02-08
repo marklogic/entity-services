@@ -1,0 +1,30 @@
+<Order OrderID="10901">
+	<CustomerID>HILAA</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-02-23T14:24:32</OrderDate>
+	<RequiredDate>1998-03-23T13:48:17</RequiredDate>
+	<ShippedDate>1998-02-26T15:57:45</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>62.0900</Freight>
+	<ShipName>HILARION-Abastos</ShipName>
+	<ShipAddress>Carrera 22 con Ave. Carlos Soublette #8-35</ShipAddress>
+	<ShipCity>San Cristóbal</ShipCity>
+	<ShipRegion>Táchira</ShipRegion>
+	<ShipPostalCode>5022</ShipPostalCode>
+	<ShipCountry>Venezuela</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>41</ProductID>
+			<UnitPrice>9.6500</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>71</ProductID>
+			<UnitPrice>21.5000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

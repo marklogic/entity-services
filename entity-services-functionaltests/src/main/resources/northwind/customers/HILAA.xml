@@ -1,0 +1,13 @@
+<Customer CustomerID="HILAA">
+	<CompanyName>HILARION-Abastos</CompanyName>
+	<ContactName>Carlos Hernández</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Carrera 22 con Ave. Carlos Soublette #8-35</Address>
+	<City>San Cristóbal</City>
+	<Region>Táchira</Region>
+	<PostalCode>5022</PostalCode>
+	<Country>Venezuela</Country>
+	<Phone>(5) 555-1340</Phone>
+	<Fax>(5) 555-1948</Fax>
+</Customer>
+

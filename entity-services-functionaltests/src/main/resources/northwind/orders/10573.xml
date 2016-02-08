@@ -1,0 +1,36 @@
+<Order OrderID="10573">
+	<CustomerID>ANTON</CustomerID>
+	<EmployeeID>7</EmployeeID>
+	<OrderDate>1997-06-19T15:38:37</OrderDate>
+	<RequiredDate>1997-07-17T20:54:22</RequiredDate>
+	<ShippedDate>1997-06-20T16:40:44</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>84.8400</Freight>
+	<ShipName>Antonio Moreno Taquería</ShipName>
+	<ShipAddress>Mataderos  2312</ShipAddress>
+	<ShipCity>México D.F.</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>05023</ShipPostalCode>
+	<ShipCountry>Mexico</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>17</ProductID>
+			<UnitPrice>39.0000</UnitPrice>
+			<Quantity>18</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>34</ProductID>
+			<UnitPrice>14.0000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>53</ProductID>
+			<UnitPrice>32.8000</UnitPrice>
+			<Quantity>25</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

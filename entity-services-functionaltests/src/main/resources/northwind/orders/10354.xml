@@ -1,0 +1,30 @@
+<Order OrderID="10354">
+	<CustomerID>PERIC</CustomerID>
+	<EmployeeID>8</EmployeeID>
+	<OrderDate>1996-11-14T13:27:18</OrderDate>
+	<RequiredDate>1996-12-12T19:13:44</RequiredDate>
+	<ShippedDate>1996-11-20T03:02:01</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>53.8000</Freight>
+	<ShipName>Pericles Comidas clásicas</ShipName>
+	<ShipAddress>Calle Dr. Jorge Cash 321</ShipAddress>
+	<ShipCity>México D.F.</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>05033</ShipPostalCode>
+	<ShipCountry>Mexico</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>1</ProductID>
+			<UnitPrice>14.4000</UnitPrice>
+			<Quantity>12</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>29</ProductID>
+			<UnitPrice>99.0000</UnitPrice>
+			<Quantity>4</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

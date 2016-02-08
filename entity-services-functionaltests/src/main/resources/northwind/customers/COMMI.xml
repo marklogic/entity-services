@@ -1,0 +1,13 @@
+<Customer CustomerID="COMMI">
+	<CompanyName>Comércio Mineiro</CompanyName>
+	<ContactName>Pedro Afonso</ContactName>
+	<ContactTitle>Sales Associate</ContactTitle>
+	<Address>Av. dos Lusíadas, 23</Address>
+	<City>Sao Paulo</City>
+	<Region>SP</Region>
+	<PostalCode>05432-043</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(11) 555-7647</Phone>
+	<Fax/>
+</Customer>
+

@@ -1,0 +1,12 @@
+<Product ProductID="10">
+	<ProductName>Ikura</ProductName>
+	<SupplierID>4</SupplierID>
+	<CategoryID>8</CategoryID>
+	<QuantityPerUnit>12 - 200 ml jars</QuantityPerUnit>
+	<UnitPrice>31.0000</UnitPrice>
+	<UnitsInStock>31</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>0</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

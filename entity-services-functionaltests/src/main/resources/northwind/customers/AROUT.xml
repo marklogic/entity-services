@@ -1,0 +1,13 @@
+<Customer CustomerID="AROUT">
+	<CompanyName>Around the Horn</CompanyName>
+	<ContactName>Thomas Hardy</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>120 Hanover Sq.</Address>
+	<City>London</City>
+	<Region/>
+	<PostalCode>WA1 1DP</PostalCode>
+	<Country>UK</Country>
+	<Phone>(171) 555-7788</Phone>
+	<Fax>(171) 555-6750</Fax>
+</Customer>
+

@@ -1,0 +1,30 @@
+<Order OrderID="10308">
+	<CustomerID>ANATR</CustomerID>
+	<EmployeeID>7</EmployeeID>
+	<OrderDate>1996-09-18T09:15:52</OrderDate>
+	<RequiredDate>1996-10-16T16:47:52</RequiredDate>
+	<ShippedDate>1996-09-24T23:25:41</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>1.6100</Freight>
+	<ShipName>Ana Trujillo Emparedados y helados</ShipName>
+	<ShipAddress>Avda. de la Constitución 2222</ShipAddress>
+	<ShipCity>México D.F.</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>05021</ShipPostalCode>
+	<ShipCountry>Mexico</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>69</ProductID>
+			<UnitPrice>28.8000</UnitPrice>
+			<Quantity>1</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>12.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,36 @@
+<Order OrderID="10291">
+	<CustomerID>QUEDE</CustomerID>
+	<EmployeeID>6</EmployeeID>
+	<OrderDate>1996-08-27T11:54:37</OrderDate>
+	<RequiredDate>1996-09-24T00:23:39</RequiredDate>
+	<ShippedDate>1996-09-04T10:46:26</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>6.4000</Freight>
+	<ShipName>Que Delícia</ShipName>
+	<ShipAddress>Rua da Panificadora, 12</ShipAddress>
+	<ShipCity>Rio de Janeiro</ShipCity>
+	<ShipRegion>RJ</ShipRegion>
+	<ShipPostalCode>02389-673</ShipPostalCode>
+	<ShipCountry>Brazil</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>13</ProductID>
+			<UnitPrice>4.8000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>44</ProductID>
+			<UnitPrice>15.5000</UnitPrice>
+			<Quantity>24</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>51</ProductID>
+			<UnitPrice>42.4000</UnitPrice>
+			<Quantity>2</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

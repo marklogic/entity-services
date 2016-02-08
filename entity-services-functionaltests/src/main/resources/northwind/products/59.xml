@@ -1,0 +1,12 @@
+<Product ProductID="59">
+	<ProductName>Raclette Courdavault</ProductName>
+	<SupplierID>28</SupplierID>
+	<CategoryID>4</CategoryID>
+	<QuantityPerUnit>5 kg pkg.</QuantityPerUnit>
+	<UnitPrice>55.0000</UnitPrice>
+	<UnitsInStock>79</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>0</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

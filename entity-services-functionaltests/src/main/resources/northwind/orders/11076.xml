@@ -1,0 +1,35 @@
+<Order OrderID="11076">
+	<CustomerID>BONAP</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-05-06T14:13:39</OrderDate>
+	<RequiredDate>1998-06-03T12:50:47</RequiredDate>
+	<ShipVia>2</ShipVia>
+	<Freight>38.2800</Freight>
+	<ShipName>Bon app'</ShipName>
+	<ShipAddress>12, rue des Bouchers</ShipAddress>
+	<ShipCity>Marseille</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>13008</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>6</ProductID>
+			<UnitPrice>25.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>14</ProductID>
+			<UnitPrice>23.2500</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>19</ProductID>
+			<UnitPrice>9.2000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

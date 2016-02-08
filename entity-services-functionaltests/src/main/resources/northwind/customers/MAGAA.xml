@@ -1,0 +1,13 @@
+<Customer CustomerID="MAGAA">
+	<CompanyName>Magazzini Alimentari Riuniti</CompanyName>
+	<ContactName>Giovanni Rovelli</ContactName>
+	<ContactTitle>Marketing Manager</ContactTitle>
+	<Address>Via Ludovico il Moro 22</Address>
+	<City>Bergamo</City>
+	<Region/>
+	<PostalCode>24100</PostalCode>
+	<Country>Italy</Country>
+	<Phone>035-640230</Phone>
+	<Fax>035-640231</Fax>
+</Customer>
+

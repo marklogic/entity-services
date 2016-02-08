@@ -1,0 +1,24 @@
+<Order OrderID="10683">
+	<CustomerID>DUMON</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1997-09-26T14:41:24</OrderDate>
+	<RequiredDate>1997-10-24T01:09:47</RequiredDate>
+	<ShippedDate>1997-10-01T15:20:20</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>4.4000</Freight>
+	<ShipName>Du monde entier</ShipName>
+	<ShipAddress>67, rue des Cinquante Otages</ShipAddress>
+	<ShipCity>Nantes</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>44000</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>52</ProductID>
+			<UnitPrice>7.0000</UnitPrice>
+			<Quantity>9</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,36 @@
+<Order OrderID="10370">
+	<CustomerID>CHOPS</CustomerID>
+	<EmployeeID>6</EmployeeID>
+	<OrderDate>1996-12-03T13:44:30</OrderDate>
+	<RequiredDate>1996-12-31T13:14:12</RequiredDate>
+	<ShippedDate>1996-12-27T11:29:16</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>1.1700</Freight>
+	<ShipName>Chop-suey Chinese</ShipName>
+	<ShipAddress>Hauptstr. 31</ShipAddress>
+	<ShipCity>Bern</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>3012</ShipPostalCode>
+	<ShipCountry>Switzerland</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>1</ProductID>
+			<UnitPrice>14.4000</UnitPrice>
+			<Quantity>15</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>64</ProductID>
+			<UnitPrice>26.6000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>74</ProductID>
+			<UnitPrice>8.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

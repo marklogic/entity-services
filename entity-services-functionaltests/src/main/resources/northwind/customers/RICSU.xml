@@ -1,0 +1,13 @@
+<Customer CustomerID="RICSU">
+	<CompanyName>Richter Supermarkt</CompanyName>
+	<ContactName>Michael Holz</ContactName>
+	<ContactTitle>Sales Manager</ContactTitle>
+	<Address>Grenzacherweg 237</Address>
+	<City>Genève</City>
+	<Region/>
+	<PostalCode>1203</PostalCode>
+	<Country>Switzerland</Country>
+	<Phone>0897-034214</Phone>
+	<Fax/>
+</Customer>
+

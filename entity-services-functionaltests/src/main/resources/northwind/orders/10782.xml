@@ -1,0 +1,24 @@
+<Order OrderID="10782">
+	<CustomerID>CACTU</CustomerID>
+	<EmployeeID>9</EmployeeID>
+	<OrderDate>1997-12-17T03:03:45</OrderDate>
+	<RequiredDate>1998-01-14T20:54:15</RequiredDate>
+	<ShippedDate>1997-12-22T00:08:21</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>1.1000</Freight>
+	<ShipName>Cactus Comidas para llevar</ShipName>
+	<ShipAddress>Cerrito 333</ShipAddress>
+	<ShipCity>Buenos Aires</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>1010</ShipPostalCode>
+	<ShipCountry>Argentina</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>31</ProductID>
+			<UnitPrice>12.5000</UnitPrice>
+			<Quantity>1</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

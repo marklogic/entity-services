@@ -1,0 +1,36 @@
+<Order OrderID="10909">
+	<CustomerID>SANTG</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1998-02-26T02:07:54</OrderDate>
+	<RequiredDate>1998-03-26T12:22:48</RequiredDate>
+	<ShippedDate>1998-03-10T22:43:48</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>53.0500</Freight>
+	<ShipName>Santé Gourmet</ShipName>
+	<ShipAddress>Erling Skakkes gate 78</ShipAddress>
+	<ShipCity>Stavern</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>4110</ShipPostalCode>
+	<ShipCountry>Norway</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>7</ProductID>
+			<UnitPrice>30.0000</UnitPrice>
+			<Quantity>12</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>16</ProductID>
+			<UnitPrice>17.4500</UnitPrice>
+			<Quantity>15</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>41</ProductID>
+			<UnitPrice>9.6500</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

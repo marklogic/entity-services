@@ -1,0 +1,13 @@
+<Customer CustomerID="SAVEA">
+	<CompanyName>Save-a-lot Markets</CompanyName>
+	<ContactName>Jose Pavarotti</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>187 Suffolk Ln.</Address>
+	<City>Boise</City>
+	<Region>ID</Region>
+	<PostalCode>83720</PostalCode>
+	<Country>USA</Country>
+	<Phone>(208) 555-8097</Phone>
+	<Fax/>
+</Customer>
+

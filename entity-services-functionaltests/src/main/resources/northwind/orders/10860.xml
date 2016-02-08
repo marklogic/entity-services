@@ -1,0 +1,30 @@
+<Order OrderID="10860">
+	<CustomerID>FRANR</CustomerID>
+	<EmployeeID>3</EmployeeID>
+	<OrderDate>1998-01-29T14:36:25</OrderDate>
+	<RequiredDate>1998-02-26T05:45:10</RequiredDate>
+	<ShippedDate>1998-02-04T16:49:26</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>19.2600</Freight>
+	<ShipName>France restauration</ShipName>
+	<ShipAddress>54, rue Royale</ShipAddress>
+	<ShipCity>Nantes</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>44000</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>51</ProductID>
+			<UnitPrice>53.0000</UnitPrice>
+			<Quantity>3</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>76</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

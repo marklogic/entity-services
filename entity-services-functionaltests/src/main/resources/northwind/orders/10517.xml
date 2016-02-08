@@ -1,0 +1,36 @@
+<Order OrderID="10517">
+	<CustomerID>NORTS</CustomerID>
+	<EmployeeID>3</EmployeeID>
+	<OrderDate>1997-04-24T15:40:56</OrderDate>
+	<RequiredDate>1997-05-22T13:41:49</RequiredDate>
+	<ShippedDate>1997-04-29T06:02:07</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>32.0700</Freight>
+	<ShipName>North/South</ShipName>
+	<ShipAddress>South House 300 Queensbridge</ShipAddress>
+	<ShipCity>London</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>SW7 1RZ</ShipPostalCode>
+	<ShipCountry>UK</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>52</ProductID>
+			<UnitPrice>7.0000</UnitPrice>
+			<Quantity>6</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>59</ProductID>
+			<UnitPrice>55.0000</UnitPrice>
+			<Quantity>4</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>15.0000</UnitPrice>
+			<Quantity>6</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

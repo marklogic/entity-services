@@ -1,0 +1,36 @@
+<Order OrderID="10997">
+	<CustomerID>LILAS</CustomerID>
+	<EmployeeID>8</EmployeeID>
+	<OrderDate>1998-04-03T06:50:38</OrderDate>
+	<RequiredDate>1998-05-15T03:15:19</RequiredDate>
+	<ShippedDate>1998-04-13T20:24:25</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>73.9100</Freight>
+	<ShipName>LILA-Supermercado</ShipName>
+	<ShipAddress>Carrera 52 con Ave. Bolívar #65-98 Llano Largo</ShipAddress>
+	<ShipCity>Barquisimeto</ShipCity>
+	<ShipRegion>Lara</ShipRegion>
+	<ShipPostalCode>3508</ShipPostalCode>
+	<ShipCountry>Venezuela</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>32</ProductID>
+			<UnitPrice>32.0000</UnitPrice>
+			<Quantity>50</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>46</ProductID>
+			<UnitPrice>12.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>52</ProductID>
+			<UnitPrice>7.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

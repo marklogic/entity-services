@@ -1,0 +1,30 @@
+<Order OrderID="10425">
+	<CustomerID>LAMAI</CustomerID>
+	<EmployeeID>6</EmployeeID>
+	<OrderDate>1997-01-24T19:31:16</OrderDate>
+	<RequiredDate>1997-02-21T01:33:14</RequiredDate>
+	<ShippedDate>1997-02-14T22:15:21</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>7.9300</Freight>
+	<ShipName>La maison d'Asie</ShipName>
+	<ShipAddress>1 rue Alsace-Lorraine</ShipAddress>
+	<ShipCity>Toulouse</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>31000</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>55</ProductID>
+			<UnitPrice>19.2000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>76</ProductID>
+			<UnitPrice>14.4000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

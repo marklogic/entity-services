@@ -1,0 +1,36 @@
+<Order OrderID="11018">
+	<CustomerID>LONEP</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-04-13T03:56:30</OrderDate>
+	<RequiredDate>1998-05-11T00:45:25</RequiredDate>
+	<ShippedDate>1998-04-16T04:35:38</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>11.6500</Freight>
+	<ShipName>Lonesome Pine Restaurant</ShipName>
+	<ShipAddress>89 Chiaroscuro Rd.</ShipAddress>
+	<ShipCity>Portland</ShipCity>
+	<ShipRegion>OR</ShipRegion>
+	<ShipPostalCode>97219</ShipPostalCode>
+	<ShipCountry>USA</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>12</ProductID>
+			<UnitPrice>38.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>18</ProductID>
+			<UnitPrice>62.5000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>56</ProductID>
+			<UnitPrice>38.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

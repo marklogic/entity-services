@@ -1,0 +1,24 @@
+<Order OrderID="10674">
+	<CustomerID>ISLAT</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1997-09-18T07:20:03</OrderDate>
+	<RequiredDate>1997-10-16T00:41:49</RequiredDate>
+	<ShippedDate>1997-09-30T02:28:34</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>0.9000</Freight>
+	<ShipName>Island Trading</ShipName>
+	<ShipAddress>Garden House Crowther Way</ShipAddress>
+	<ShipCity>Cowes</ShipCity>
+	<ShipRegion>Isle of Wight</ShipRegion>
+	<ShipPostalCode>PO31 7PJ</ShipPostalCode>
+	<ShipCountry>UK</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>23</ProductID>
+			<UnitPrice>9.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

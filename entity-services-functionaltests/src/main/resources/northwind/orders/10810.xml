@@ -1,0 +1,36 @@
+<Order OrderID="10810">
+	<CustomerID>LAUGB</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1998-01-01T19:07:51</OrderDate>
+	<RequiredDate>1998-01-29T22:57:22</RequiredDate>
+	<ShippedDate>1998-01-07T16:11:53</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>4.3300</Freight>
+	<ShipName>Laughing Bacchus Wine Cellars</ShipName>
+	<ShipAddress>2319 Elm St.</ShipAddress>
+	<ShipCity>Vancouver</ShipCity>
+	<ShipRegion>BC</ShipRegion>
+	<ShipPostalCode>V3F 2K1</ShipPostalCode>
+	<ShipCountry>Canada</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>13</ProductID>
+			<UnitPrice>6.0000</UnitPrice>
+			<Quantity>7</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>25</ProductID>
+			<UnitPrice>14.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>15.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,36 @@
+<Order OrderID="10546">
+	<CustomerID>VICTE</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1997-05-23T05:39:56</OrderDate>
+	<RequiredDate>1997-06-20T16:23:40</RequiredDate>
+	<ShippedDate>1997-05-27T10:46:43</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>194.7200</Freight>
+	<ShipName>Victuailles en stock</ShipName>
+	<ShipAddress>2, rue du Commerce</ShipAddress>
+	<ShipCity>Lyon</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>69004</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>7</ProductID>
+			<UnitPrice>30.0000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>35</ProductID>
+			<UnitPrice>18.0000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>62</ProductID>
+			<UnitPrice>49.3000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

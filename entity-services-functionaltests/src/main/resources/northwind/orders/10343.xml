@@ -1,0 +1,36 @@
+<Order OrderID="10343">
+	<CustomerID>LEHMS</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1996-10-31T11:40:27</OrderDate>
+	<RequiredDate>1996-11-28T14:28:54</RequiredDate>
+	<ShippedDate>1996-11-06T03:11:39</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>110.3700</Freight>
+	<ShipName>Lehmanns Marktstand</ShipName>
+	<ShipAddress>Magazinweg 7</ShipAddress>
+	<ShipCity>Frankfurt a.M.</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>60528</ShipPostalCode>
+	<ShipCountry>Germany</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>64</ProductID>
+			<UnitPrice>26.6000</UnitPrice>
+			<Quantity>50</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>68</ProductID>
+			<UnitPrice>10.0000</UnitPrice>
+			<Quantity>4</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>76</ProductID>
+			<UnitPrice>14.4000</UnitPrice>
+			<Quantity>15</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,13 @@
+<Customer CustomerID="SPLIR">
+	<CompanyName>Split Rail Beer &amp; Ale</CompanyName>
+	<ContactName>Art Braunschweiger</ContactName>
+	<ContactTitle>Sales Manager</ContactTitle>
+	<Address>P.O. Box 555</Address>
+	<City>Lander</City>
+	<Region>WY</Region>
+	<PostalCode>82520</PostalCode>
+	<Country>USA</Country>
+	<Phone>(307) 555-4680</Phone>
+	<Fax>(307) 555-6525</Fax>
+</Customer>
+

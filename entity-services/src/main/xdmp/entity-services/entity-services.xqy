@@ -19,6 +19,8 @@ module namespace es = "http://marklogic.com/entity-services";
 
 import module namespace esi = "http://marklogic.com/entity-services-impl" at "entity-services-impl.xqy";
 
+import module namespace es-codegen = "http://marklogic.com/entity-services-codegen" at "entity-services-codegen.xqy";
+
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare variable $ENTITY-TYPES-IRI := "http://marklogic.com/entity-services#";
@@ -72,4 +74,17 @@ declare function es:entity-type-to-json(
 ) as object-node()
 {
     xdmp:to-json($entity-type)/node()
+};
+
+(:~
+ : Generate a conversion module for a given entity type
+ :)
+declare function es:conversion-module-generate(
+    $entity-type as map:map
+) as document-node()
+{
+    document {
+        es-codegen:declarations($entity-type),
+        es-codegen:extract-instance($entity-type)
+    }
 };

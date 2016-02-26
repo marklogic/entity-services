@@ -171,7 +171,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		
         		// FIXME templates need to exclude triples
         		// TDE needs enhancement.
-        		//checkTriples(entityTypeUri);
+        		// checkTriples(entityTypeUri);
 
                 if ( entityTypeFile.getName().endsWith(".json")) {
                 	JsonNode original = mapper.readValue(entityTypeFile, JsonNode.class);
@@ -194,8 +194,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 	DOMHandle xmlhandle  = evalOneResult("es:entity-type-to-xml(es:entity-type-from-node(fn:doc('"+ entityTypeUri  + "')))", new DOMHandle());
             		Document xmlactual = xmlhandle.get();
             		
-            		debugOutput(xmloriginal);
-            		debugOutput(xmlactual);
+            		//debugOutput(xmloriginal);
+            		//debugOutput(xmlactual);
             		
             	    checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityTypeFile.getName(), xmloriginal, xmlactual);
             	       
@@ -229,8 +229,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
 		DOMHandle handle = evalOneResult(evalXML, new DOMHandle());
 		Document actualXML = handle.get();
 		XMLUnit.setIgnoreWhitespace(true);
-		debugOutput(expectedXML);
-		debugOutput(actualXML);
+		//debugOutput(expectedXML);
+		//debugOutput(actualXML);
 		
 		DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
 

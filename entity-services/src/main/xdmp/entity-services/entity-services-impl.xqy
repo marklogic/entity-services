@@ -67,7 +67,7 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="es:property[es:ref]">
           <iso:assert test="count(./*) eq 10" id="ES-REF-ONLY">If using es:ref, it must be the only child of es:property.</iso:assert>
         </iso:rule>
-        <iso:rule context="datatype">
+        <iso:rule context="es:datatype|datatype">
          <iso:assert test=". = ('base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'int', 'integer', 'long', 'short', 'string', 'time', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'anySimpleType', 'anyURI', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype.</iso:assert>
         </iso:rule>
       </iso:pattern>

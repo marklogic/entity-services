@@ -1,8 +1,8 @@
 {
   "info": {
     "title":"invalid-bad-datatype",
-    "description":"This invalid document has a datatype that is not XSD or sem:iri or a ref",
-    "version": "0.0.2"
+    "version": "0.0.2",
+    "description":"This invalid document has a datatype that is not XSD or sem:iri or a ref"
   },
   "definitions": {
     "Order": {

@@ -150,6 +150,17 @@ public class TestEntityTypes extends EntityServicesTestBase {
      * For each entity type in the test directory, verify that
      * it parses and that it matches the entity type parsed by
      * the server.
+     * 
+     * This test cycles through each test entity type.
+     * If the entity type file name contains "invalid-" then it must
+     * throw a validation exception.
+     * 
+     * Otherwise, the entity type is tested in comparison to an equivalent entity type in
+     * xml-entity-types
+     * 
+     * entity-type-from-node   Serialized JSON equal to JSON file
+     * entity-type-to-json     JSON equal to JSON file
+     * entity-type-to-xml       Serialization to XML.
      */
     public void testEntityTypeParse() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (File entityTypeFile : entityTypeUris.keySet()) {

@@ -12,7 +12,7 @@
         },
         "base64BinaryKey": { "datatype": "base64Binary" }
       },
-      "primaryKey": ["orderId"]
+      "primaryKey": "orderId"
     },
     "OrderDetails": {
       "properties": {

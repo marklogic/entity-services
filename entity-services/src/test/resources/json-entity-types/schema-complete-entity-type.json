@@ -1,9 +1,9 @@
 {
   "info": {
     "title": "SchemaCompleteEntityType",
-    "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.",
     "version": "0.0.1",
-    "baseURI": "http://marklogic.com/testing-entity-type"
+    "baseUri": "http://marklogic.com/testing-entity-type",
+    "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid."
   },
   "definitions": {
     "Order": {
@@ -34,29 +34,29 @@
         "yearMonthDurationKey" : { "datatype" : "yearMonthDuration"},
         "anySimpleTypeKey" : {"datatype":"anySimpleType"},
         "anyURIKey" : {"datatype":"anyURI"},
-        "iri": {"datatype":"sem:iri"},
+        "iriKey": {"datatype":"iri"},
         "arrayKey": {"datatype":"array","items":{"datatype":"long"}},
         "referenceInThisFile": { 
-            "description":"This property refers to OrderDetails with no array declaration.",
-           "$ref": "#/definitions/OrderDetails"
+             "$ref": "#/definitions/OrderDetails",
+             "description":"This property refers to OrderDetails with no array declaration."
         },
         "arrayreferenceInThisFile": { 
-            "description":"This property refers to OrderDetails with an array declaration.",
             "datatype":"array",
+            "description":"This property refers to OrderDetails with an array declaration.",
             "items":{"$ref": "#/definitions/OrderDetails"}
         },
         "externalReference": { 
-            "description":"This property refers to a type externally with no array declaration.",
-           "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails"
+           "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails",
+           "description":"This property refers to a type externally with no array declaration."
         },
         "externalArrayReference": { 
-            "description":"This property refers to OrderDetails with no array declaration.",
             "datatype":"array",
+            "description":"This property refers to OrderDetails with no array declaration.",
             "items":{ "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails"}
         }
       },
+      "primaryKey": "orderId",
       "required": ["orderId", "orderDate"],
-      "primaryKey": ["orderId"],
       "rangeIndex": ["unsignedShortKey", "stringKey"],
       "wordLexicon": ["stringKey"]
     },

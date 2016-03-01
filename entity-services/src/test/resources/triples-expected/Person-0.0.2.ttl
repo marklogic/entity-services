@@ -3,11 +3,12 @@
 @prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
 @prefix prop: <http://example.org/mytypeschema/Person-0.0.2/Person/> .
 
-doc:Person-0.0.2 a es:EntityTypeDoc ;
+doc:Person-0.0.2 a es:EntityServicesDoc ;
     es:title "Person" ;
     es:version "0.0.2" ;
     es:definitions type:Person .
 type:Person a es:EntityType ;
+    es:title "Person" ;
     es:version "0.0.2" ;
     es:property 
         prop:id,

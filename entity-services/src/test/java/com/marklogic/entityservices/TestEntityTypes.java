@@ -40,45 +40,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
-import com.marklogic.client.FailedRequestException;
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-import com.marklogic.client.io.marker.AbstractReadHandle;
 
 public class TestEntityTypes extends EntityServicesTestBase {
 
-    public EvalResultIterator eval(String functionCall) throws TestEvalException {
-        
-        String entityServicesImport = 
-                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
-        		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
-
-        ServerEvaluationCall call = 
-                client.newServerEval().xquery(entityServicesImport + functionCall);
-        EvalResultIterator results = null;
-        try {
-        	results = call.eval();
-        } catch (FailedRequestException e) {
-        	throw new TestEvalException(e);
-        }
-        return results;
-    }
-    
-    protected <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
-    	EvalResultIterator results =  eval(functionCall);
-    	EvalResult result = null;
-    	if (results.hasNext()) {
-    		result = results.next();
-    	}
-    	//results.close();
-    	return result.get(handle);
-    }
-   
     private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
     	assertEquals(message, original, actual);
     }
@@ -117,8 +85,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases." + entityType);
         		} catch (TestEvalException e) {
-        			//log.error(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
+        			assertTrue("Must contain invalidity message. Message was " + e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
         		}
         	}
         	else {
@@ -164,13 +131,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         }
     }
     
-    private void debugOutput(Document xmldoc) throws TransformerException {
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = tf.newTransformer();
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		transformer.transform(new DOMSource(xmldoc), new StreamResult(System.out));
-   }
+   
     /*
      * Checks parity of XML payload when retrieved from entity type.
      */

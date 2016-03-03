@@ -1,0 +1,19 @@
+<Person>
+	<id>some string</id>
+	<firstName>some string</firstName>
+	<lastName>some string</lastName>
+	<fullName>some string</fullName>
+	<address>some string</address>
+	<friendOf>
+		<Person>
+			<id>some string</id>
+			<firstName>some string</firstName>
+			<lastName>some string</lastName>
+			<fullName>some string</fullName>
+			<address>some string</address>
+			<friendOf>
+			     <es:cycle xmlns:es="http://marklogic.com/entity-services"/>
+			</friendOf>
+		</Person>
+	</friendOf>
+</Person>

@@ -27,6 +27,8 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
+declare variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
+
 declare variable $esi:keys-to-element-names as map:map := 
     let $m := map:map()
     let $_ := map:put($m, "primaryKey", xs:QName("es:primary-key"))
@@ -78,18 +80,37 @@ declare variable $esi:entity-type-schematron :=
 declare variable $esi:extraction-template-info := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
+<!-- collection -->
     <context>/info</context>
     <vars>
-        <var><name>esn</name><val>"http://marklogic.com/entity-services#"</val></var>
-        <var><name>rdf</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
-        <!-- baseUri is not required, there's a default (for non RDF use) -->
-        <var><name>baseUriCoalesce</name><val>if (./baseUri) then ./baseUri else "http://example.org/"</val></var>
-        <!-- baseUri appends # if doesn't end with # or / -->
-        <var><name>baseUri</name><val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val></var>
- 
-        <var><name>doc-subject-iri</name><val>sem:iri(concat($baseUri, xs:string(./title), "-", xs:string(./version)))</val></var>
-        <var><name>propVersion</name><val>sem:iri(concat($esn, 'version'))</val></var>
-        <var><name>propTitle</name><val>sem:iri(concat($esn, 'title'))</val></var>
+        <var>
+            <name>esn</name>
+            <val>"http://marklogic.com/entity-services#"</val>
+        </var>
+        <var>
+            <name>rdf</name>
+            <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+        </var>
+        <var>
+            <name>baseUriCoalesce</name>
+            <val>if (./baseUri) then ./baseUri else "http://example.org/"</val>
+        </var>
+        <var>
+            <name>baseUri</name>
+            <val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val>
+        </var>
+        <var>
+            <name>doc-subject-iri</name>
+            <val>sem:iri(concat($baseUri, xs:string(./title), "-", xs:string(./version)))</val>
+        </var>
+        <var>
+            <name>propVersion</name>
+            <val>sem:iri(concat($esn, 'version'))</val>
+        </var>
+        <var>
+            <name>propTitle</name>
+            <val>sem:iri(concat($esn, 'title'))</val>
+        </var>
     </vars>
     <triples>
         <triple>
@@ -169,7 +190,7 @@ declare variable $esi:shared-extraction-vars :=
     <vars xmlns="http://marklogic.com/xdmp/tde">
         <var><name>esn</name><val>"http://marklogic.com/entity-services#"</val></var>
         <var><name>rdf</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
-        <var><name>baseUriCoalesce</name><val>if(./root()/info/baseUri) then ./root()/info/baseUri else "http://example.org/"</val></var>
+        <var><name>baseUriCoalesce</name><val>if(../root()/info/baseUri) then ./root()/info/baseUri else "http://example.org/"</val></var>
         <var><name>baseUri</name><val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val></var>
         <var><name>baseUriPrefix</name><val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "/")</val></var>
         <var><name>version</name><val>xs:string(./root()/info/version)</val></var>
@@ -317,19 +338,12 @@ declare function esi:entity-type-validate(
 
 declare function esi:extract-triples(
     $entity-type as document-node()
-) as sem:triple*
+)
 {
     (: TODO adjust for when TDE outputs triples :)
-    let $info-array := (tde:document-data-extract($entity-type, $esi:extraction-template-info)
-          =>xdmp:unquote()
-          =>xdmp:from-json())[1]
-    let $definitions-array := (tde:document-data-extract($entity-type, $esi:extraction-template-definitions)
-          =>xdmp:unquote()
-          =>xdmp:from-json())[1]
-    return (
-            json:array-values($info-array), 
-            json:array-values($definitions-array)
-            ) ! sem:triple(.) 
+    let $info-array := tde:document-data-extract($entity-type, $esi:extraction-template-info)
+    let $definitions-array := tde:document-data-extract($entity-type, $esi:extraction-template-definitions) 
+    return ($info-array, $definitions-array)
 (:
     let $definitions-array := tde:document-data-extract($entity-type, $esi:extraction-template-definitions)
     let $definitions-json-array := xdmp:from-json(xdmp:unquote($definitions-string-output))[1]
@@ -493,4 +507,126 @@ declare function esi:entity-type-from-xml(
     let $_ := map:put($et, "definitions", $definitions)
     
     return $et
+};
+
+(: 
+ : Returns a constant value for each data type
+ : -- TODO make other value generator method
+ :)
+declare function esi:create-test-value-from-datatype(
+    $datatype as xs:string
+) as item() 
+{ 
+    switch ($datatype)
+    case "base64Binary"       return xs:base64Binary( "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz
+IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg
+dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu
+dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo
+ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=" ) 
+    case "boolean"            return true()  
+    case "byte"               return xs:byte( 123 ) 
+    case "date"               return xs:date( "2000-01-23" ) 
+    case "dateTime"           return xs:dateTime( "2000-01-23T17:00:26.789186-08:00" )
+    case "dayTimeDuration"    return xs:dayTimeDuration( "P1D" ) 
+    case "decimal"            return xs:decimal( 113 ) 
+    case "double"             return xs:double( 123 ) 
+    case "duration"           return xs:duration( "P1D" ) 
+    case "float"              return xs:float( 123 ) 
+    case "int"                return xs:int( 123 )
+    case "integer"            return xs:integer( 123 ) 
+    case "long"               return xs:long( 1355 ) 
+    case "short"              return xs:short( 343 ) 
+    case "string"             return xs:string( "some string" ) 
+    case "time"               return xs:time( "09:00:15" ) 
+    case "unsignedInt"        return xs:unsignedInt( 5555  ) 
+    case "unsignedLong"       return xs:unsignedLong( 999999999 ) 
+    case "unsignedShort"      return xs:unsignedShort( 324 ) 
+    case "yearMonthDuration"  return xs:yearMonthDuration( "P1Y" ) 
+    case "anySimpleType"      return xs:string( "some string" ) 
+    case "anyURI"             return xs:anyURI( "http://example.org/some-uri" ) 
+    case "iri"                return sem:iri( "http://example.org/some-iri" ) 
+    default return xs:string( " ")
+};
+
+declare private function esi:resolve-test-reference(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string,
+    $depth as xs:int)
+{
+    let $entity-definition := map:get(map:get($entity-type, "definitions"), $entity-type-name)
+    let $property-definition := map:get( map:get($entity-definition, "properties"), $property-name)
+    let $reference-value := 
+        head( (map:get($property-definition, "$ref"),
+               map:get(map:get($property-definition, "items"), "$ref") ) )
+    (: is the reference value in this entity type document :)
+    let $referenced-type :=
+        if (contains($reference-value, "#/definitions"))
+        then esi:create-test-instance($entity-type, replace($reference-value, "#/definitions/", ""), $depth + 1)
+        else "externally-referenced-instance"
+    return $referenced-type
+};
+
+
+declare function esi:create-test-value(
+    $entity-type as map:map,
+    $entity-name as xs:string,
+    $property-name as xs:string,
+    $property as map:map,
+    $depth as xs:int
+) as element()+
+{
+    let $datatype := map:get($property,"datatype")
+    let $items := map:get($property, "items")
+    let $ref := map:get($property,"$ref")
+    return
+        if (exists($datatype))
+        then
+            if ($datatype eq "array")
+            then 
+            (
+            esi:create-test-value($entity-type, $entity-name, $property-name, $items, $depth) ,
+            esi:create-test-value($entity-type, $entity-name, $property-name, $items, $depth) ,
+            esi:create-test-value($entity-type, $entity-name, $property-name, $items, $depth) 
+            )
+            else 
+            element { $property-name } {
+                esi:create-test-value-from-datatype($datatype)
+            }
+        else if (exists($ref))
+        then 
+            element { $property-name } { 
+                esi:resolve-test-reference($entity-type, $entity-name, $property-name, $depth) 
+        }
+        else 
+            element { $property-name } { "This should not be here" }
+};
+
+declare function esi:create-test-instance(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $depth as xs:int
+)
+{
+    let $definitions := map:get($entity-type, "definitions")
+    return
+    if ($depth lt $esi:MAX_TEST_INSTANCE_DEPTH)
+    then
+        element { $entity-type-name } {
+            let $properties := map:get(map:get($definitions, $entity-type-name),"properties")
+            let $property-keys := map:keys($properties)
+            for $property in $property-keys
+            return
+                esi:create-test-value($entity-type, $entity-type-name, $property, map:get($properties, $property), $depth)
+        }
+    (: open issue -- new element for cycle :)
+    else element es:cycle { }
+};
+
+declare function esi:create-test-instance(
+    $entity-type as map:map,
+    $entity-type-name as xs:string
+)
+{
+    esi:create-test-instance($entity-type, $entity-type-name, 0)
 };

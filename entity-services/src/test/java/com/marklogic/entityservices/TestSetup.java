@@ -19,6 +19,7 @@ public class TestSetup extends EntityServicesTestBase {
     
     private static TestSetup instance = null;
     private DatabaseClient _client;
+    private DatabaseClient _modulesClient;
 
     protected TestSetup() {
         // No instantiation allowed.
@@ -44,11 +45,15 @@ public class TestSetup extends EntityServicesTestBase {
     	String username = prop.getProperty("mlUsername");
     	String password = prop.getProperty("mlPassword");
     	String port = prop.getProperty("mlRestPort");
+    	String modulesDatabase = prop.getProperty("mlModulesDatabaseName");
     	
     	if (instance == null) {
             instance = new TestSetup();
             if (instance._client == null) {
-                instance._client = DatabaseClientFactory.newClient(host, Integer.parseInt(port), "admin", "admin", Authentication.DIGEST);
+                instance._client = DatabaseClientFactory.newClient(host, Integer.parseInt(port), username, password, Authentication.DIGEST);
+            }
+            if (instance._modulesClient == null) {
+            	instance._modulesClient = DatabaseClientFactory.newClient(host, Integer.parseInt(port), modulesDatabase,  username, password, Authentication.DIGEST );
             }
         }
         return instance;
@@ -56,6 +61,10 @@ public class TestSetup extends EntityServicesTestBase {
     
     public DatabaseClient getClient() {
         return _client;
+    }
+    
+    public DatabaseClient getModulesClient() {
+    	return _modulesClient;
     }
     
 }

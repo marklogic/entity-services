@@ -83,8 +83,20 @@ declare function es:conversion-module-generate(
     $entity-type as map:map
 ) as document-node()
 {
-    document {
-        es-codegen:declarations($entity-type),
-        es-codegen:extract-instance($entity-type)
-    }
+    es-codegen:conversion-module-generate($entity-type)
 };
+
+(:~
+ : Generate one test instance in XML for each entity type in the 
+ : entity type document payload.
+ :)
+declare function es:entity-type-get-test-instances(
+    $entity-type as map:map) 
+as element()*
+{
+    let $definitions := map:get($entity-type, "definitions")
+    let $definition-keys := map:keys($definitions)
+    for $entity-type-name in $definition-keys
+    return esi:create-test-instance($entity-type, $entity-type-name)
+};
+

@@ -36,8 +36,3 @@ dependencies {
     testCompile 'junit:junit:4.11'
 }
 
-ext {
-    mlAppConfig {
-        modulePaths = ["src/test/ml-modules"]
-    }
-}

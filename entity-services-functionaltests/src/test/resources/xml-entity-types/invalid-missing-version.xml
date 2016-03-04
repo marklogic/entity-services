@@ -1,0 +1,28 @@
+<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>Person</es:title>
+      <es:description>An incredibly trivial data integration declaration.</es:description>
+  </es:info>
+  <es:definitions>
+    <Person>
+     <es:properties>
+        <id>
+          <es:datatype>string</es:datatype>
+        </id>
+        <firstName>
+          <es:datatype>string</es:datatype>
+        </firstName>
+        <lastName>
+           <es:datatype>string</es:datatype>
+        </lastName>
+        <fullName>
+           <es:datatype>string</es:datatype>
+        </fullName>
+     </es:properties>
+     <es:primary-key>id</es:primary-key>
+     <es:range-index>firstName</es:range-index>
+     <es:range-index>lastName</es:range-index>
+     <es:range-index>fullName</es:range-index>
+   </Person>
+ </es:definitions>
+</es:entity-type>

@@ -117,7 +117,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases." + entityType);
         		} catch (TestEvalException e) {
-        			//log.error(e.getMessage());
+        			log.error(e.getMessage());
         			assertTrue("Must contain invalidity message", e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
         		}
         	}

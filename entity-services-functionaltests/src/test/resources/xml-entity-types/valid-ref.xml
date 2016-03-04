@@ -2,6 +2,7 @@
   <es:info>
       <es:title>Northwind</es:title>
       <es:version>0.0.1</es:version>
+      <es:base-uri/>
   </es:info>
   <es:definitions>
     <Customer>
@@ -15,9 +16,9 @@
         <Country>
            <es:datatype>string</es:datatype>
         </Country>
-        <ContactName>
-           <es:datatype>string</es:datatype>
-        </ContactName>
+        <fof>
+           <es:ref>#definitions/Customer</es:ref>
+        </fof>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
      </Customer>
@@ -37,7 +38,5 @@
          </Discontinued>
         </es:properties>
       </Product>
-      <Order>
-      </Order>
  </es:definitions>
 </es:entity-type>

@@ -1,7 +1,8 @@
 {
   "info": {
-    "title":"Northwind",
-    "version": "0.0.1"
+    "title": "Northwind",
+    "version": "0.0.1",
+    "baseUri": ""
   },
   "definitions": {
     "Customer": {
@@ -15,8 +16,8 @@
         "Country": {
           "datatype":"string" 
         },
-        "ContactName":{
-          "datatype":"string" 
+        "fof":{
+          "$ref":"#definitions/Customer" 
         }
       },
       "primaryKey" : "CustomerId"
@@ -36,7 +37,6 @@
           "datatype":"boolean"
         }
       }
-    },
-    "Order": {}
+    }
   }
 }

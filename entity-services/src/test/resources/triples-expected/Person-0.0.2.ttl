@@ -1,3 +1,4 @@
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
 @prefix es: <http://marklogic.com/entity-services#> .
 @prefix doc: <http://example.org/mytypeschema/> .
 @prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
@@ -20,19 +21,18 @@ type:Person a es:EntityType ;
     es:primaryKey prop:id .
 prop:id a es:Property ;
     es:title "id" ;
-    es:datatype "string";
-    a es:PrimaryKey .
+    es:datatype xs:string .
 prop:firstName a es:Property ;
-    es:datatype "string";
+    es:datatype xs:string ;
     es:title "firstName" .
 prop:lastName a es:Property ;
-    es:datatype "string";
+    es:datatype xs:string ;
     es:title "lastName" .
 prop:fullName a es:Property ;
-    es:datatype "string";
+    es:datatype xs:string ;
     es:title "fullName" .
 prop:address a es:Property ;
-    es:datatype "string";
+    es:datatype xs:string ;
     es:title "address" .
 prop:friendOf a es:Property ;
     es:ref type:Person ; 

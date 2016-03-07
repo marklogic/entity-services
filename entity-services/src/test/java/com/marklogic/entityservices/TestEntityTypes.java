@@ -6,20 +6,17 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
@@ -27,7 +24,6 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotNotFoundException;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
@@ -39,9 +35,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.compose.Difference;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
@@ -90,9 +86,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         	}
         	else {
         		
-        		// FIXME templates need to exclude triples
-        		// TDE needs enhancement.
-        		// checkTriples(entityTypeUri);
+        		checkTriples(entityType);
 
                 if ( entityType.toString().endsWith(".json")) {
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
@@ -175,34 +169,50 @@ public class TestEntityTypes extends EntityServicesTestBase {
 	}
     
 
-	private void checkTriples(String entityTypeUri) throws TestEvalException {
-        InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
+	private void checkTriples(String entityTypeUri) throws TestEvalException, IOException {
+        StringHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new StringHandle() );
 
         Graph actualTriples = GraphFactory.createGraphMem();
-        RDFDataMgr.read(actualTriples, rdfHandle.get(), Lang.NTRIPLES);
+        ByteArrayInputStream bis = new ByteArrayInputStream(rdfHandle.get().getBytes());
+        RDFDataMgr.read(actualTriples, bis, Lang.NTRIPLES);
         
         
         Graph expectedTriples = GraphFactory.createGraphMem();
-        Pattern filePattern = Pattern.compile("(.*)/json-entity-types/(.*)\\.json$");
+        Pattern filePattern = Pattern.compile("(.*)\\.(xml|json)$");
         Matcher matcher = filePattern.matcher(entityTypeUri);
         if (matcher.matches()) {
-        	String triplesFileUri = matcher.group(1) + "/triples-expected/" + matcher.group(2) + ".ttl";
+        	String triplesFileUri =  "/triples-expected/" + matcher.group(1) + ".ttl";
         	try {
-        		RDFDataMgr.read(expectedTriples, triplesFileUri, Lang.TURTLE);
+        		InputStream is = this.getClass().getResourceAsStream(triplesFileUri);
+        		RDFDataMgr.read(expectedTriples, is, Lang.TURTLE);
         		ByteArrayOutputStream baos = new ByteArrayOutputStream();
         		RDFDataMgr.write(baos, actualTriples, Lang.TURTLE);
-        		logger.debug("Actual triples returned: " + baos.toString());
         		logger.debug("Expected number of triples: " + expectedTriples.size());
         		logger.debug("Actual number of triples: " + actualTriples.size());
         		
         		// what a great function for debugging:
-        		// Graph diff = new Difference(actualTriples, expectedTriples);
-        		// RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+        		logger.debug("Difference, expected - actual");
+        		Graph diff = new Difference(expectedTriples, actualTriples);
+        		
+        		// more debug
+        		OutputStream os = new FileOutputStream(new File("/tmp/actual.ttl"));
+        		RDFDataMgr.write(os, actualTriples, Lang.TURTLE);
+        		os.close();
+        		os = new FileOutputStream(new File("/tmp/expected.ttl"));
+        		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
+        		os.close();
+        		
+        		logger.debug("Difference, actual - expected");
+        		Graph diff2 = new Difference(actualTriples, expectedTriples);
+        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
-        		assertTrue("Graph must match expected: " + entityTypeUri, expectedTriples.isIsomorphicWith(actualTriples));
-        	} catch (RiotNotFoundException e) {
+        		
+        		
+        		assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));
+        	} catch (NullPointerException e) {
         		logger.info("No RDF verification for " + entityTypeUri);
-        	}
+        	} 
+        	
         }
     }
 }

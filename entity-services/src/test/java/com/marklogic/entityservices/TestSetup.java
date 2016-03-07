@@ -19,7 +19,7 @@ public class TestSetup extends EntityServicesTestBase {
     
     private static TestSetup instance = null;
     private DatabaseClient _client;
-    private DatabaseClient _modulesClient;
+    private DatabaseClient _modulesClient, _schemasClient;
 
     protected TestSetup() {
         // No instantiation allowed.
@@ -31,7 +31,7 @@ public class TestSetup extends EntityServicesTestBase {
 
     	try {
 
-    	    input = new FileInputStream("../gradle.properties");
+    	    input = prop.getClass().getResourceAsStream("/gradle.properties");
 
     	    // load a properties file
     	    prop.load(input);
@@ -46,6 +46,8 @@ public class TestSetup extends EntityServicesTestBase {
     	String password = prop.getProperty("mlPassword");
     	String port = prop.getProperty("mlRestPort");
     	String modulesDatabase = prop.getProperty("mlModulesDatabaseName");
+    	String schemasDatabase = prop.getProperty("mlSchemasDatabaseName");
+
     	
     	if (instance == null) {
             instance = new TestSetup();
@@ -54,6 +56,9 @@ public class TestSetup extends EntityServicesTestBase {
             }
             if (instance._modulesClient == null) {
             	instance._modulesClient = DatabaseClientFactory.newClient(host, Integer.parseInt(port), modulesDatabase,  username, password, Authentication.DIGEST );
+            }
+            if (instance._schemasClient == null) {
+            	instance._schemasClient = DatabaseClientFactory.newClient(host, Integer.parseInt(port), schemasDatabase,  username, password, Authentication.DIGEST );
             }
         }
         return instance;
@@ -65,6 +70,10 @@ public class TestSetup extends EntityServicesTestBase {
     
     public DatabaseClient getModulesClient() {
     	return _modulesClient;
+    }
+    
+    public DatabaseClient getSchemasClient() {
+    	return _schemasClient;
     }
     
 }

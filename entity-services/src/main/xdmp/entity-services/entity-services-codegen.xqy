@@ -15,7 +15,12 @@
 :)
 xquery version "1.0-ml";
 
+
 module namespace es-codegen = "http://marklogic.com/entity-services-codegen";
+
+import module namespace esi = "http://marklogic.com/entity-services-impl"
+    at "entity-services-impl.xqy";
+
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
@@ -42,7 +47,7 @@ xquery version "1.0-ml";
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
-module namespace {$prefix} = "{$base-uri}/{$prefix}-{$version}";
+module namespace {$prefix} = "{$base-uri}{$prefix}-{$version}";
 
 import module namespace es = "http://marklogic.com/entity-services" 
     at "/MarkLogic/entity-services/entity-services.xqy";
@@ -80,7 +85,7 @@ declare function {$prefix}:instance-to-canonical-xml(
             element es:title {{ map:get($entity-instance, "info")=>map:get("title") }},
             element es:version {{ map:get($entity-instance, "info")=>map:get("version") }}
         }},
-        $entity-instance
+        {string-join( esi:entity-type-get-test-instances($entity-type) ! xdmp:quote(.) , ",")}
     }}
 }};
 

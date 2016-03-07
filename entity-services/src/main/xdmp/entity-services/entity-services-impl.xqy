@@ -77,70 +77,78 @@ declare variable $esi:entity-type-schematron :=
 ;
 
 
-declare variable $esi:extraction-template-info := 
+declare variable $esi:json-extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
 <!-- collection -->
-    <context>/info</context>
+    <context>/definitions/*</context>
     <vars>
-        <var>
-            <name>esn</name>
-            <val>"http://marklogic.com/entity-services#"</val>
-        </var>
-        <var>
-            <name>rdf</name>
-            <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
-        </var>
+        <!-- constants -->
+        <var><name>ESN</name><val>"http://marklogic.com/entity-services#"</val></var>
+        <var><name>RDF</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
+        <var><name>PROP_VERSION</name><val>sem:iri(concat($ESN, 'version'))</val></var>
+        <var><name>PROP_TITLE</name><val>sem:iri(concat($ESN, 'title'))</val></var>
+        <var><name>PROP_DEFINITIONS</name><val>sem:iri(concat($ESN, 'definitions'))</val></var>
+        <var><name>propPrimaryKey</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_DATATYPE</name><val>sem:iri(concat($ESN, 'datatype'))</val></var>
+        <var><name>PROP_REF</name><val>sem:iri(concat($ESN, 'ref'))</val></var>
+        <var><name>XSD</name><val>"http://www.w3.org/2001/XMLSchema#"</val></var>
+        <var><name>XSD_BASE64BINARY</name><val>sem:iri(concat($XSD, "base64Binary"))</val></var>
+        <var><name>XSD_BOOLEAN</name><val>sem:iri(concat($XSD, "boolean"))</val></var>
+        <var><name>XSD_BYTE</name><val>sem:iri(concat($XSD, "byte"))</val></var>
+        <var><name>XSD_DATE</name><val>sem:iri(concat($XSD, "date"))</val></var>
+        <var><name>XSD_DATETIME</name><val>sem:iri(concat($XSD, "dateTime"))</val></var>
+        <var><name>XSD_DAYTIMEDURATION</name><val>sem:iri(concat($XSD, "dayTimeDuration"))</val></var>
+        <var><name>XSD_DECIMAL</name><val>sem:iri(concat($XSD, "decimal"))</val></var>
+        <var><name>XSD_DOUBLE</name><val>sem:iri(concat($XSD, "double"))</val></var>
+        <var><name>XSD_DURATION</name><val>sem:iri(concat($XSD, "duration"))</val></var>
+        <var><name>XSD_FLOAT</name><val>sem:iri(concat($XSD, "float"))</val></var>
+        <var><name>XSD_INT</name><val>sem:iri(concat($XSD, "int"))</val></var>
+        <var><name>XSD_INTEGER</name><val>sem:iri(concat($XSD, "integer"))</val></var>
+        <var><name>XSD_LONG</name><val>sem:iri(concat($XSD, "long"))</val></var>
+        <var><name>XSD_SHORT</name><val>sem:iri(concat($XSD, "short"))</val></var>
+        <var><name>XSD_STRING</name><val>sem:iri(concat($XSD, "string"))</val></var>
+        <var><name>XSD_TIME</name><val>sem:iri(concat($XSD, "time"))</val></var>
+        <var><name>XSD_UNSIGNEDINT</name><val>sem:iri(concat($XSD, "unsignedInt"))</val></var>
+        <var><name>XSD_UNSIGNEDLONG</name><val>sem:iri(concat($XSD, "unsignedLong"))</val></var>
+        <var><name>XSD_UNSIGNEDSHORT</name><val>sem:iri(concat($XSD, "unsignedShort"))</val></var>
+        <var><name>XSD_YEARMONTHDURATION</name><val>sem:iri(concat($XSD, "yearMonthDuration"))</val></var>
+        <var><name>XSD_ANYSIMPLETYPE</name><val>sem:iri(concat($XSD, "anySimpleType"))</val></var>
+        <var><name>XSD_ANYURI</name><val>sem:iri(concat($XSD, "anyURI"))</val></var>
+        <var><name>SEM</name><val>"http://marklogic.com/semantics#"</val></var>
+        <var><name>SEM_IRI</name><val>sem:iri(concat($SEM, "iri"))</val></var>
+        <var><name>JSON</name><val>"http://marklogic.com/json#"</val></var>
+        <var><name>JSON_ARRAY</name><val>sem:iri(concat($JSON, "array"))</val></var>
+        <!-- metadata for entity type document iris -->
         <var>
             <name>baseUriCoalesce</name>
-            <val>if (./baseUri) then ./baseUri else "http://example.org/"</val>
+            <val>if (../../../info/baseUri) then ../../../info/baseUri else "http://example.org/"</val>
+        </var>
+        <var>
+            <name>baseUriPrefix</name>
+            <val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "/")</val>
         </var>
         <var>
             <name>baseUri</name>
             <val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val>
         </var>
         <var>
+            <name>title</name>
+            <val>xs:string(../../../info/title)</val>
+        </var>
+        <var>
+            <name>version</name>
+            <val>xs:string(../../../info/version)</val>
+        </var>
+        <var>
+            <name>doc-subject-prefix</name>
+            <val>sem:iri(concat($baseUriPrefix, $title, "-", $version, "/"))</val>
+        </var>
+        <var>
             <name>doc-subject-iri</name>
-            <val>sem:iri(concat($baseUri, xs:string(./title), "-", xs:string(./version)))</val>
+            <val>sem:iri(concat($baseUri, $title , "-", $version))</val>
         </var>
-        <var>
-            <name>propVersion</name>
-            <val>sem:iri(concat($esn, 'version'))</val>
-        </var>
-        <var>
-            <name>propTitle</name>
-            <val>sem:iri(concat($esn, 'title'))</val>
-        </var>
-    </vars>
-    <triples>
-        <triple>
-          <subject><val>$doc-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($rdf, "type"))</val></predicate>
-          <object><val>sem:iri(concat($esn, "EntityServicesDoc"))</val></object>
-        </triple>
-        <triple>
-          <subject><val>$doc-subject-iri</val></subject>
-          <predicate><val>$propTitle</val></predicate>
-          <object><val>xs:string(title)</val></object>
-        </triple>
-        <triple>
-          <subject><val>$doc-subject-iri</val></subject>
-          <predicate><val>$propVersion</val></predicate>
-          <object><val>xs:string(version)</val></object>
-        </triple>
-    </triples>
-</template>;
-
-declare variable $esi:extraction-template-definitions :=
-<template xmlns:es="http://marklogic.com/entity-services"
-     xmlns="http://marklogic.com/xdmp/tde">
-    <context>/definitions/*</context>
-    <vars>
-        {$esi:shared-extraction-vars/*}
-<!-- TDE doesn't accept node-name right now 
         <var><name>entityTypeName</name><val>fn:node-name(.)</val></var>
--->
-        <var><name>entityTypeName</name><val>"entitytypename"</val></var>
         <var>
             <name>et-subject-iri</name>
             <val>sem:iri(concat($doc-subject-prefix, $entityTypeName))</val>
@@ -148,28 +156,42 @@ declare variable $esi:extraction-template-definitions :=
     </vars>
     <triples>
         <triple>
-          <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($rdf, "type"))</val></predicate>
-          <object><val>sem:iri(concat($esn, "EntityType"))</val></object>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <object><val>sem:iri(concat($ESN, "EntityServicesDoc"))</val></object>
+        </triple>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$PROP_TITLE</val></predicate>
+          <object><val>$title</val></object>
+        </triple>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$PROP_VERSION</val></predicate>
+          <object><val>$version</val></object>
         </triple>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($esn, "title"))</val></predicate>
+          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <object><val>sem:iri(concat($ESN, "EntityType"))</val></object>
+        </triple>
+        <triple>
+          <subject><val>$et-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($ESN, "title"))</val></predicate>
           <object><val>xs:string($entityTypeName)</val></object>
         </triple>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>$propVersion</val></predicate>
-<!-- root is not supported right now -->
-          <object><val>"$version"</val></object>
+          <predicate><val>$PROP_VERSION</val></predicate>
+          <object><val>$version</val></object>
         </triple>
         <triple>
           <subject><val>$doc-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($esn, "definitions"))</val></predicate>
+          <predicate><val>$PROP_DEFINITIONS</val></predicate>
           <object><val>$et-subject-iri</val></object>
         </triple>
-<!-- todo required, rangeIndex, wordLexicon-->
     </triples>
+<!-- todo required, rangeIndex, wordLexicon-->
 <!-- come back when TDE progresses
     <templates>
         <template>
@@ -177,70 +199,27 @@ declare variable $esi:extraction-template-definitions :=
             <triples>
                 <triple>
                   <subject><val>$et-subject-iri</val></subject>
-                  <predicate><val>sem:iri(concat($esn, "primaryKey"))</val></predicate>
+                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
                   <object><val>.</val></object>
                 </triple>
             </triples>
         </template>
     </templates>
 -->
-</template>;
-
-declare variable $esi:shared-extraction-vars := 
-    <vars xmlns="http://marklogic.com/xdmp/tde">
-        <var><name>esn</name><val>"http://marklogic.com/entity-services#"</val></var>
-        <var><name>rdf</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
-        <var><name>baseUriCoalesce</name><val>if(../root()/info/baseUri) then ./root()/info/baseUri else "http://example.org/"</val></var>
-        <var><name>baseUri</name><val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val></var>
-        <var><name>baseUriPrefix</name><val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "/")</val></var>
-        <var><name>version</name><val>xs:string(./root()/info/version)</val></var>
-        <var><name>doc-subject-iri</name><val>sem:iri(concat($baseUri, ./root()/info/title, "-", $version))</val></var>
-        <var><name>doc-subject-prefix</name><val>sem:iri(concat($baseUriPrefix, ../info/title, "-", $version, "/"))</val></var>
-        <var><name>propVersion</name><val>sem:iri(concat($esn, 'version'))</val></var>
-        <var><name>propTitle</name><val>sem:iri(concat($esn, 'title'))</val></var>
-        <var><name>propDefines</name><val>sem:iri(concat($esn, 'definitions'))</val></var>
-        <var><name>propPrimaryKey</name><val>sem:iri(concat($esn, 'primaryKey'))</val></var>
-        <var><name>propDatatype</name><val>sem:iri(concat($esn, 'datatype'))</val></var>
-        <var><name>propRef</name><val>sem:iri(concat($esn, 'ref'))</val></var>
-        <var><name>xsd</name><val>"http://www.w3.org/2001/XMLSchema#"</val></var>
-        <var><name>XSD_BASE64BINARY</name><val>sem:iri(concat($xsd, "base64Binary"))</val></var>
-        <var><name>XSD_BOOLEAN</name><val>sem:iri(concat($xsd, "boolean"))</val></var>
-        <var><name>XSD_BYTE</name><val>sem:iri(concat($xsd, "byte"))</val></var>
-        <var><name>XSD_DATE</name><val>sem:iri(concat($xsd, "date"))</val></var>
-        <var><name>XSD_DATETIME</name><val>sem:iri(concat($xsd, "dateTime"))</val></var>
-        <var><name>XSD_DAYTIMEDURATION</name><val>sem:iri(concat($xsd, "dayTimeDuration"))</val></var>
-        <var><name>XSD_DECIMAL</name><val>sem:iri(concat($xsd, "decimal"))</val></var>
-        <var><name>XSD_DOUBLE</name><val>sem:iri(concat($xsd, "double"))</val></var>
-        <var><name>XSD_DURATION</name><val>sem:iri(concat($xsd, "duration"))</val></var>
-        <var><name>XSD_FLOAT</name><val>sem:iri(concat($xsd, "float"))</val></var>
-        <var><name>XSD_INT</name><val>sem:iri(concat($xsd, "int"))</val></var>
-        <var><name>XSD_INTEGER</name><val>sem:iri(concat($xsd, "integer"))</val></var>
-        <var><name>XSD_LONG</name><val>sem:iri(concat($xsd, "long"))</val></var>
-        <var><name>XSD_SHORT</name><val>sem:iri(concat($xsd, "short"))</val></var>
-        <var><name>XSD_STRING</name><val>sem:iri(concat($xsd, "string"))</val></var>
-        <var><name>XSD_TIME</name><val>sem:iri(concat($xsd, "time"))</val></var>
-        <var><name>XSD_UNSIGNEDINT</name><val>sem:iri(concat($xsd, "unsignedInt"))</val></var>
-        <var><name>XSD_UNSIGNEDLONG</name><val>sem:iri(concat($xsd, "unsignedLong"))</val></var>
-        <var><name>XSD_UNSIGNEDSHORT</name><val>sem:iri(concat($xsd, "unsignedShort"))</val></var>
-        <var><name>XSD_YEARMONTHDURATION</name><val>sem:iri(concat($xsd, "yearMonthDuration"))</val></var>
-        <var><name>XSD_ANYSIMPLETYPE</name><val>sem:iri(concat($xsd, "anySimpleType"))</val></var>
-        <var><name>XSD_ANYURI</name><val>sem:iri(concat($xsd, "anyURI"))</val></var>
-        <var><name>sem</name><val>"http://marklogic.com/semantics#"</val></var>
-        <var><name>SEM_IRI</name><val>sem:iri(concat($sem, "iri"))</val></var>
-        <var><name>json</name><val>"http://marklogic.com/json#"</val></var>
-        <var><name>JSON_ARRAY</name><val>sem:iri(concat($json, "array"))</val></var>
-    </vars> ;
-
-
-
-(: TODO items, arrays :)
-declare variable $esi:extraction-template-properties :=
-<template xmlns:es="http://marklogic.com/entity-services"
-     xmlns="http://marklogic.com/xdmp/tde">
-    <context>/definitions/*/properties/*</context>
-    <vars>
-        {$esi:shared-extraction-vars/*}
-        <var><name>entityTypeName</name><val>fn:node-name(../..)</val></var>
+    <templates>
+        <template>
+            <context>./primaryKey</context>
+            <triples>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
+                  <object><val>sem:iri(concat($et-subject-iri, "/", .))</val></object>
+                </triple>
+            </triples>
+        </template>
+        <template>
+        <context>./properties/*</context>
+        <vars>
         <var><name>propertyName</name><val>fn:node-name(.)</val></var>
         <var><name>datatype</name><val>
                 switch (xs:string(./datatype))
@@ -272,52 +251,287 @@ declare variable $esi:extraction-template-properties :=
                 default return ""</val>
         </var>
         <var>
-            <name>et-subject-iri</name>
-            <val>sem:iri(concat($doc-subject-prefix, $entityTypeName))</val>
-        </var>
-        <var>
             <name>property-subject-iri</name>
             <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
-        </var>
-        <var>
-            <name>relationship-reference</name>
-            <val>
-                if (./node("$ref"))
-                then if (fn:starts-with(./node("$ref"), "#/definitions/")) 
-                    then sem:iri(fn:replace(xs:string(./node("$ref")),"#/definitions/",$doc-subject-prefix))
-                    else sem:iri(xs:string(./node("$ref")))
-                else "no ref"</val>
         </var>
     </vars>
     <triples>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($esn, "property"))</val></predicate>
+          <predicate><val>sem:iri(concat($ESN, "property"))</val></predicate>
           <object><val>$property-subject-iri</val></object>
         </triple>
         <triple>
           <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>$propTitle</val></predicate>
+          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <object><val>sem:iri(concat($ESN, "Property"))</val></object>
+        </triple>
+        <triple>
+          <subject><val>$property-subject-iri</val></subject>
+          <predicate><val>$PROP_TITLE</val></predicate>
           <object><val>xs:string($propertyName)</val></object>
         </triple>
-        <triple>
-          <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>$propDatatype</val></predicate>
-          <object><val>$datatype</val></object>
-        </triple>
-        <triple>
-          <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>$propRef</val></predicate>
-          <object><val>$relationship-reference</val></object>
-        </triple>
-<!--  only if there is a datatype can we include one or the other 
-        <triple>
-          <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>$propRef</val></predicate>
-          <object><val>fn:head( ( ./node("$ref"), "scalar") )</val></object>
-        </triple>
-      TODO, make datatype into an IRI -->
     </triples>
+    <templates>
+        <template>
+        <context>./datatype</context>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_DATATYPE</val></predicate>
+              <object><val>$datatype </val></object>
+            </triple>
+        </triples>
+        </template>
+        <template>
+        <context>./node("$ref")</context>
+        <vars>
+            <var>
+                <name>relationship-reference</name>
+                <val>
+                    if (fn:starts-with(., "#/definitions/")) 
+                    then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
+                    else sem:iri(.)
+                    </val>
+            </var>
+        </vars>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_REF</val></predicate>
+              <object><val>$relationship-reference</val></object>
+            </triple>
+        </triples>
+        </template>
+    </templates>
+    </template>
+    </templates>
+</template>;
+
+declare variable $esi:xml-extraction-template := 
+<template xmlns:es="http://marklogic.com/entity-services"
+     xmlns="http://marklogic.com/xdmp/tde">
+<!-- collection -->
+    <context>/es:entity-type</context>
+    <vars>
+        <!-- constants -->
+        <var><name>ESN</name><val>"http://marklogic.com/entity-services#"</val></var>
+        <var><name>RDF</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
+        <var><name>PROP_VERSION</name><val>sem:iri(concat($ESN, 'version'))</val></var>
+        <var><name>PROP_TITLE</name><val>sem:iri(concat($ESN, 'title'))</val></var>
+        <var><name>PROP_DEFINITIONS</name><val>sem:iri(concat($ESN, 'definitions'))</val></var>
+        <var><name>propPrimaryKey</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_DATATYPE</name><val>sem:iri(concat($ESN, 'datatype'))</val></var>
+        <var><name>PROP_REF</name><val>sem:iri(concat($ESN, 'ref'))</val></var>
+        <var><name>XSD</name><val>"http://www.w3.org/2001/XMLSchema#"</val></var>
+        <var><name>XSD_BASE64BINARY</name><val>sem:iri(concat($XSD, "base64Binary"))</val></var>
+        <var><name>XSD_BOOLEAN</name><val>sem:iri(concat($XSD, "boolean"))</val></var>
+        <var><name>XSD_BYTE</name><val>sem:iri(concat($XSD, "byte"))</val></var>
+        <var><name>XSD_DATE</name><val>sem:iri(concat($XSD, "date"))</val></var>
+        <var><name>XSD_DATETIME</name><val>sem:iri(concat($XSD, "dateTime"))</val></var>
+        <var><name>XSD_DAYTIMEDURATION</name><val>sem:iri(concat($XSD, "dayTimeDuration"))</val></var>
+        <var><name>XSD_DECIMAL</name><val>sem:iri(concat($XSD, "decimal"))</val></var>
+        <var><name>XSD_DOUBLE</name><val>sem:iri(concat($XSD, "double"))</val></var>
+        <var><name>XSD_DURATION</name><val>sem:iri(concat($XSD, "duration"))</val></var>
+        <var><name>XSD_FLOAT</name><val>sem:iri(concat($XSD, "float"))</val></var>
+        <var><name>XSD_INT</name><val>sem:iri(concat($XSD, "int"))</val></var>
+        <var><name>XSD_INTEGER</name><val>sem:iri(concat($XSD, "integer"))</val></var>
+        <var><name>XSD_LONG</name><val>sem:iri(concat($XSD, "long"))</val></var>
+        <var><name>XSD_SHORT</name><val>sem:iri(concat($XSD, "short"))</val></var>
+        <var><name>XSD_STRING</name><val>sem:iri(concat($XSD, "string"))</val></var>
+        <var><name>XSD_TIME</name><val>sem:iri(concat($XSD, "time"))</val></var>
+        <var><name>XSD_UNSIGNEDINT</name><val>sem:iri(concat($XSD, "unsignedInt"))</val></var>
+        <var><name>XSD_UNSIGNEDLONG</name><val>sem:iri(concat($XSD, "unsignedLong"))</val></var>
+        <var><name>XSD_UNSIGNEDSHORT</name><val>sem:iri(concat($XSD, "unsignedShort"))</val></var>
+        <var><name>XSD_YEARMONTHDURATION</name><val>sem:iri(concat($XSD, "yearMonthDuration"))</val></var>
+        <var><name>XSD_ANYSIMPLETYPE</name><val>sem:iri(concat($XSD, "anySimpleType"))</val></var>
+        <var><name>XSD_ANYURI</name><val>sem:iri(concat($XSD, "anyURI"))</val></var>
+        <var><name>SEM</name><val>"http://marklogic.com/semantics#"</val></var>
+        <var><name>SEM_IRI</name><val>sem:iri(concat($SEM, "iri"))</val></var>
+        <var><name>JSON</name><val>"http://marklogic.com/json#"</val></var>
+        <var><name>JSON_ARRAY</name><val>sem:iri(concat($JSON, "array"))</val></var>
+        <!-- metadata for entity type document iris -->
+        <var>
+            <name>baseUriCoalesce</name>
+            <val>if (./*:info/*:base-uri) then ./*:info/*:base-uri else "http://example.org/"</val>
+        </var>
+        <var>
+            <name>baseUriPrefix</name>
+            <val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "/")</val>
+        </var>
+        <var>
+            <name>baseUri</name>
+            <val>if (fn:matches($baseUriCoalesce, "[#/]$")) then $baseUriCoalesce else concat($baseUriCoalesce, "#")</val>
+        </var>
+        <var>
+            <name>title</name>
+            <val>xs:string(./*:info/*:title)</val>
+        </var>
+        <var>
+            <name>version</name>
+            <val>xs:string(./*:info/*:version)</val>
+        </var>
+        <var>
+            <name>doc-subject-prefix</name>
+            <val>sem:iri(concat($baseUriPrefix, $title, "-", $version, "/"))</val>
+        </var>
+        <var>
+            <name>doc-subject-iri</name>
+            <val>sem:iri(concat($baseUri, $title , "-", $version))</val>
+        </var>
+    </vars>
+    <triples>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <object><val>sem:iri(concat($ESN, "EntityServicesDoc"))</val></object>
+        </triple>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$PROP_TITLE</val></predicate>
+          <object><val>$title</val></object>
+        </triple>
+        <triple>
+          <subject><val>$doc-subject-iri</val></subject>
+          <predicate><val>$PROP_VERSION</val></predicate>
+          <object><val>$version</val></object>
+        </triple>
+    </triples>
+
+    <templates>
+        <template>
+            <context>es:definitions/*</context>
+            <vars>
+                <var><name>entityTypeName</name><val>fn:node-name(.)</val></var>
+                <var>
+                    <name>et-subject-iri</name>
+                    <val>sem:iri(concat($doc-subject-prefix, $entityTypeName))</val>
+                </var>
+            </vars>
+            <triples>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+                  <object><val>sem:iri(concat($ESN, "EntityType"))</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($ESN, "title"))</val></predicate>
+                  <object><val>xs:string($entityTypeName)</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>$PROP_VERSION</val></predicate>
+                  <object><val>$version</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$doc-subject-iri</val></subject>
+                  <predicate><val>$PROP_DEFINITIONS</val></predicate>
+                  <object><val>$et-subject-iri</val></object>
+                </triple>
+            </triples>
+    <templates>
+        <template>
+            <context>./*:primary-key</context>
+            <triples>
+                <triple>
+                  <subject><val>$et-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
+                  <object><val>sem:iri(concat($et-subject-iri, "/", .))</val></object>
+                </triple>
+            </triples>
+        </template>
+        <template>
+        <context>./*:properties/*</context>
+        <vars>
+        <var><name>propertyName</name><val>fn:node-name(.)</val></var>
+        <var><name>datatype</name><val>
+                switch (xs:string(./*:datatype))
+                case "base64Binary"       return $XSD_BASE64BINARY
+                case "boolean"            return $XSD_BOOLEAN
+                case "byte"               return $XSD_BYTE
+                case "date"               return $XSD_DATE
+                case "dateTime"           return $XSD_DATETIME
+                case "dayTimeDuration"    return $XSD_DAYTIMEDURATION
+                case "decimal"            return $XSD_DECIMAL
+                case "double"             return $XSD_DOUBLE
+                case "duration"           return $XSD_DURATION
+                case "float"              return $XSD_FLOAT
+                case "int"                return $XSD_INT
+                case "integer"            return $XSD_INTEGER
+                case "long"               return $XSD_LONG
+                case "short"              return $XSD_SHORT
+                case "string"             return $XSD_STRING
+                case "time"               return $XSD_TIME
+                case "unsignedInt"        return $XSD_UNSIGNEDINT
+                case "unsignedLong"       return $XSD_UNSIGNEDLONG
+                case "unsignedShort"      return $XSD_UNSIGNEDSHORT
+                case "yearMonthDuration"  return $XSD_YEARMONTHDURATION
+                case "anySimpleType"      return $XSD_ANYSIMPLETYPE
+                case "anyURI"             return $XSD_ANYURI
+                case "iri"                return $SEM_IRI
+                case "array"              return $JSON_ARRAY
+                (: default case is unsupported, but for now "" to avoid using subcontext :)
+                default return ""</val>
+        </var>
+        <var>
+            <name>property-subject-iri</name>
+            <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
+        </var>
+    </vars>
+    <triples>
+        <triple>
+          <subject><val>$et-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($ESN, "property"))</val></predicate>
+          <object><val>$property-subject-iri</val></object>
+        </triple>
+        <triple>
+          <subject><val>$property-subject-iri</val></subject>
+          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <object><val>sem:iri(concat($ESN, "Property"))</val></object>
+        </triple>
+        <triple>
+          <subject><val>$property-subject-iri</val></subject>
+          <predicate><val>$PROP_TITLE</val></predicate>
+          <object><val>xs:string($propertyName)</val></object>
+        </triple>
+    </triples>
+    <templates>
+        <template>
+        <context>./es:datatype</context>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_DATATYPE</val></predicate>
+              <object><val>$datatype</val></object>
+            </triple>
+        </triples>
+        </template>
+        <template>
+        <context>./es:ref</context>
+        <vars>
+            <var>
+                <name>relationship-reference</name>
+                <val>
+                    if (fn:starts-with(., "#/definitions/")) 
+                    then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
+                    else sem:iri(.)
+                    </val>
+            </var>
+        </vars>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_REF</val></predicate>
+              <object><val>$relationship-reference</val></object>
+            </triple>
+        </triples>
+        </template>
+    </templates>
+    </template>
+    </templates>
+        </template>
+    </templates>
 </template>;
 
 
@@ -325,35 +539,20 @@ declare function esi:entity-type-validate(
     $entity-type as document-node()
 ) as xs:string*
 {
-(: for debugging 
-    let $props := $entity-type//properties/object-node()
-    let $_ := for $p in $props
-              return xdmp:log(("PROPS W REF", $p[*[local-name(.) eq '$ref']],
-                               "COUNT", count($p/(* except description))))
-    return
-:)
     validate:schematron($entity-type, $esi:entity-type-schematron)
 };
 
 
 declare function esi:extract-triples(
     $entity-type as document-node()
-)
+) as sem:triple*
 {
-    (: TODO adjust for when TDE outputs triples :)
-    let $info-array := tde:document-data-extract($entity-type, $esi:extraction-template-info)
-    let $definitions-array := tde:document-data-extract($entity-type, $esi:extraction-template-definitions) 
-    return ($info-array, $definitions-array)
-(:
-    let $definitions-array := tde:document-data-extract($entity-type, $esi:extraction-template-definitions)
-    let $definitions-json-array := xdmp:from-json(xdmp:unquote($definitions-string-output))[1]
-    let $properties-string-output := tde:document-data-extract($entity-type, $esi:extraction-template-properties)
-    let $properties-json-array := xdmp:from-json(xdmp:unquote($properties-string-output))[1]
+    let $extraction := tde:document-data-extract($entity-type, $esi:json-extraction-template)
+    let $xml-extraction := tde:document-data-extract($entity-type, $esi:xml-extraction-template)
     return (
-            json:array-values($info-json-array), 
-            json:array-values($definitions-json-array), 
-            json:array-values($properties-json-array)) ! sem:triple(.) 
-:)
+        json:array-values( map:get($extraction,  map:keys($extraction))),
+        json:array-values( map:get($xml-extraction,  map:keys($xml-extraction)))
+        )
 };
 
 
@@ -623,10 +822,13 @@ declare function esi:create-test-instance(
     else element es:cycle { }
 };
 
-declare function esi:create-test-instance(
-    $entity-type as map:map,
-    $entity-type-name as xs:string
-)
+
+declare function esi:entity-type-get-test-instances(
+    $entity-type as map:map
+) as element()*
 {
-    esi:create-test-instance($entity-type, $entity-type-name, 0)
+    let $definitions := map:get($entity-type, "definitions")
+    let $definition-keys := map:keys($definitions)
+    for $entity-type-name in $definition-keys
+    return esi:create-test-instance($entity-type, $entity-type-name, 0)
 };

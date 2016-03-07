@@ -26,7 +26,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 		
 		String instanceDocument = "Order-Source-1.xml";
 		
-		StringHandle handle = evalOneResult("import module namespace conv = \"/Order-0.0.1\" at \"/ext/conversion-module-Order-0.0.1.xqy\"; "+
+		StringHandle handle = evalOneResult("import module namespace conv = \"http:///Order-0.0.1\" at \"/ext/conversion-module-Order-0.0.1.xqy\"; "+
 		              "conv:extract-instance-Order( doc('"+instanceDocument+"') )", new StringHandle());
 		
 		String extractInstanceResult = handle.get();

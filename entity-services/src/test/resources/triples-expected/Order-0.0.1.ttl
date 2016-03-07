@@ -1,0 +1,47 @@
+@base <http:///> .
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix type: <Order-0.0.1/> .
+@prefix order: <Order-0.0.1/Order/> .
+@prefix orderdetails: <Order-0.0.1/OrderDetails/> .
+
+
+<Order-0.0.1>
+        a       es:EntityServicesDoc ;
+        es:definitions type:OrderDetails , type:Order ;
+        es:title "Order" ;
+        es:version "0.0.1" .
+        
+type:Order  a          es:EntityType ;
+        es:primaryKey  order:orderId ;
+        es:property    order:hasOrderDetails , order:orderDate , order:orderId ;
+        es:title       "Order" ;
+        es:version     "0.0.1" .
+
+order:orderDate  a   es:Property ;
+        es:datatype  xsd:date ;
+        es:title     "orderDate" .
+
+orderdetails:quantity
+        a            es:Property ;
+        es:datatype  xsd:integer ;
+        es:title     "quantity" .
+
+type:OrderDetails  a  es:EntityType ;
+        es:property  orderdetails:productName , orderdetails:quantity ;
+        es:title     "OrderDetails" ;
+        es:version   "0.0.1" .
+
+order:hasOrderDetails
+        a         es:Property ;
+        es:ref    type:OrderDetails ;
+        es:title  "hasOrderDetails" .
+
+order:orderId  a     es:Property ;
+        es:datatype  xsd:string ;
+        es:title     "orderId" .
+
+orderdetails:productName
+        a            es:Property ;
+        es:datatype  xsd:string ;
+        es:title     "productName".

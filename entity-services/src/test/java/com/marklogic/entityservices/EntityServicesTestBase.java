@@ -43,7 +43,7 @@ import com.marklogic.client.io.marker.AbstractReadHandle;
 public class EntityServicesTestBase {
 
 	protected static Logger logger = LoggerFactory.getLogger(EntityServicesTestBase.class);
-	protected static DatabaseClient client, modulesClient;
+	protected static DatabaseClient client, modulesClient, schemasClient;
 	protected static Set<String> entityTypes = new HashSet<String>();
 	protected static Set<String> sourceFilesUris = new HashSet<String>();
 
@@ -55,6 +55,7 @@ public class EntityServicesTestBase {
 	    TestSetup testSetup = TestSetup.getInstance();
 	    client = testSetup.getClient();
 	    modulesClient = testSetup.getModulesClient();
+	    schemasClient = testSetup.getSchemasClient();
 	    JSONDocumentManager docMgr = client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
 	    
@@ -80,8 +81,8 @@ public class EntityServicesTestBase {
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
-	    	//if (!f.getName().equals("Person-0.0.2.json")) {continue; };
-	    	// if (!f.getName().equals("schema-complete-entity-type.xml")) {continue; };
+	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
+	    	//.if (!f.getName().equals("schema-complete-entity-type.json")) {continue; };
 	    	//if (!f.getName().startsWith("refs")) {continue; };
 	    	logger.info("Loading " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));

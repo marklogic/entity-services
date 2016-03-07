@@ -2,7 +2,7 @@
   "info": {
     "title": "Order",
     "version": "0.0.1",
-    "baseUri": ""
+    "baseUri": "http:///"
   },
   "definitions": {
     "Order": {

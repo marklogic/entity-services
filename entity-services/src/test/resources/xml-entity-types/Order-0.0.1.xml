@@ -2,8 +2,7 @@
   <es:info>
       <es:title>Order</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri>http://marklogic.com/entity-services/test</es:base-uri>
-     <es:description>A version of Order that contains OrderDetails within an array, which will change the cardinality assumptions for the relationship of Order to OrderDetails.</es:description>
+      <es:base-uri>http:///</es:base-uri>
   </es:info>
   <es:definitions>
     <Order>

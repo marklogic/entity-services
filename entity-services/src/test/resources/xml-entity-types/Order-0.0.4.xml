@@ -4,7 +4,6 @@
       <es:version>0.0.4</es:version>
       <es:base-uri>http://marklogic.com/entity-services/test</es:base-uri>
       <es:description>A version of Order that contains OrderDetails within an array, which will change the cardinality assumptions for the relationship of Order to OrderDetails.</es:description>
-
   </es:info>
   <es:definitions>
     <Order>

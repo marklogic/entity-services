@@ -10,7 +10,7 @@
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "http://marklogic.com/collation"
+          "collation" : "http://marklogic.com/collation/"
         },
         "base64BinaryKey": { "datatype": "base64Binary" },
         "booleanKey": { "datatype": "boolean" },
@@ -36,6 +36,7 @@
         "anyURIKey" : {"datatype":"anyURI"},
         "iriKey": {"datatype":"iri"},
         "arrayKey": {"datatype":"array","items":{"datatype":"long"}},
+        "arrayStringKey": {"datatype":"array","items":{"datatype":"string","collation":"http://marklogic.com/collation/"}},
         "referenceInThisFile": { 
              "$ref": "#/definitions/OrderDetails",
              "description":"This property refers to OrderDetails with no array declaration."

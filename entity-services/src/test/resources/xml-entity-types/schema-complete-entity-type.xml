@@ -11,7 +11,7 @@
       <es:properties>
         <orderId>
           <es:datatype>string</es:datatype>
-          <es:collation>http://marklogic.com/collation</es:collation>
+          <es:collation>http://marklogic.com/collation/</es:collation>
         </orderId>
         <base64BinaryKey>
           <es:datatype>base64Binary</es:datatype>
@@ -88,6 +88,13 @@
             <es:datatype>long</es:datatype>
           </es:items>
         </arrayKey>
+        <arrayStringKey>
+          <es:datatype>array</es:datatype>
+          <es:items>
+            <es:datatype>string</es:datatype>
+            <es:collation>http://marklogic.com/collation/</es:collation>
+          </es:items>
+        </arrayStringKey>
         <referenceInThisFile>
           <es:ref>#/definitions/OrderDetails</es:ref>
           <es:description>This property refers to OrderDetails with no array declaration.</es:description>

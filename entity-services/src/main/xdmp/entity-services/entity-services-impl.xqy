@@ -28,6 +28,7 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
+declare variable $esi:ENTITY_TYPE_COLLECTION := "http://marklogic.com/entity-services/entity-types/";
 
 declare variable $esi:keys-to-element-names as map:map := 
     let $m := map:map()
@@ -80,17 +81,21 @@ declare variable $esi:entity-type-schematron :=
 declare variable $esi:json-extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
-<!-- collection -->
+<!-- TODO collection -->
     <context>/definitions/*</context>
     <vars>
         <!-- constants -->
         <var><name>ESN</name><val>"http://marklogic.com/entity-services#"</val></var>
         <var><name>RDF</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
+        <var><name>RDF_TYPE</name><val>sem:iri(concat($RDF, "type"))</val></var>
         <var><name>PROP_VERSION</name><val>sem:iri(concat($ESN, 'version'))</val></var>
         <var><name>PROP_TITLE</name><val>sem:iri(concat($ESN, 'title'))</val></var>
         <var><name>PROP_DEFINITIONS</name><val>sem:iri(concat($ESN, 'definitions'))</val></var>
-        <var><name>propPrimaryKey</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_PRIMARYKEY</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_PROPERTY</name><val>sem:iri(concat($ESN, 'property'))</val></var>
         <var><name>PROP_DATATYPE</name><val>sem:iri(concat($ESN, 'datatype'))</val></var>
+        <var><name>PROP_COLLATION</name><val>sem:iri(concat($ESN, 'collation'))</val></var>
+        <var><name>PROP_ITEMS</name><val>sem:iri(concat($ESN, 'items'))</val></var>
         <var><name>PROP_REF</name><val>sem:iri(concat($ESN, 'ref'))</val></var>
         <var><name>XSD</name><val>"http://www.w3.org/2001/XMLSchema#"</val></var>
         <var><name>XSD_BASE64BINARY</name><val>sem:iri(concat($XSD, "base64Binary"))</val></var>
@@ -157,7 +162,7 @@ declare variable $esi:json-extraction-template :=
     <triples>
         <triple>
           <subject><val>$doc-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <predicate><val>$RDF_TYPE</val></predicate>
           <object><val>sem:iri(concat($ESN, "EntityServicesDoc"))</val></object>
         </triple>
         <triple>
@@ -172,12 +177,12 @@ declare variable $esi:json-extraction-template :=
         </triple>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <predicate><val>$RDF_TYPE</val></predicate>
           <object><val>sem:iri(concat($ESN, "EntityType"))</val></object>
         </triple>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($ESN, "title"))</val></predicate>
+          <predicate><val>$PROP_TITLE</val></predicate>
           <object><val>xs:string($entityTypeName)</val></object>
         </triple>
         <triple>
@@ -191,28 +196,13 @@ declare variable $esi:json-extraction-template :=
           <object><val>$et-subject-iri</val></object>
         </triple>
     </triples>
-<!-- todo required, rangeIndex, wordLexicon-->
-<!-- come back when TDE progresses
-    <templates>
-        <template>
-            <context>primaryKey</context>
-            <triples>
-                <triple>
-                  <subject><val>$et-subject-iri</val></subject>
-                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
-                  <object><val>.</val></object>
-                </triple>
-            </triples>
-        </template>
-    </templates>
--->
     <templates>
         <template>
             <context>./primaryKey</context>
             <triples>
                 <triple>
                   <subject><val>$et-subject-iri</val></subject>
-                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
+                  <predicate><val>$PROP_PRIMARYKEY</val></predicate>
                   <object><val>sem:iri(concat($et-subject-iri, "/", .))</val></object>
                 </triple>
             </triples>
@@ -254,16 +244,17 @@ declare variable $esi:json-extraction-template :=
             <name>property-subject-iri</name>
             <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
         </var>
+        <var><name>collation</name><val>xs:string(head((.//collation, "")))</val></var>
     </vars>
     <triples>
         <triple>
           <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($ESN, "property"))</val></predicate>
+          <predicate><val>$PROP_PROPERTY</val></predicate>
           <object><val>$property-subject-iri</val></object>
         </triple>
         <triple>
           <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+          <predicate><val>$RDF_TYPE</val></predicate>
           <object><val>sem:iri(concat($ESN, "Property"))</val></object>
         </triple>
         <triple>
@@ -273,16 +264,6 @@ declare variable $esi:json-extraction-template :=
         </triple>
     </triples>
     <templates>
-        <template>
-        <context>./datatype</context>
-        <triples>
-            <triple>
-              <subject><val>$property-subject-iri</val></subject>
-              <predicate><val>$PROP_DATATYPE</val></predicate>
-              <object><val>$datatype </val></object>
-            </triple>
-        </triples>
-        </template>
         <template>
         <context>./node("$ref")</context>
         <vars>
@@ -303,6 +284,113 @@ declare variable $esi:json-extraction-template :=
             </triple>
         </triples>
         </template>
+        <template>
+        <context>./datatype</context>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_DATATYPE</val></predicate>
+              <object><val>$datatype </val></object>
+            </triple>
+        </triples>
+        </template>
+        <template>
+        <context>./collation</context>
+        <triples>
+            <triple>
+              <subject><val>$property-subject-iri</val></subject>
+              <predicate><val>$PROP_COLLATION</val></predicate>
+              <object><val>$collation</val></object>
+            </triple>
+        </triples>
+        </template>
+        <template>
+            <context>./items</context>
+            <vars>
+                <var>
+                    <name>items-iri</name>
+                    <val>sem:iri(concat($property-subject-iri, "/items"))</val>
+                </var>
+                <var><name>items-datatype</name><val>
+                        switch (xs:string(./datatype))
+                        case "base64Binary"       return $XSD_BASE64BINARY
+                        case "boolean"            return $XSD_BOOLEAN
+                        case "byte"               return $XSD_BYTE
+                        case "date"               return $XSD_DATE
+                        case "dateTime"           return $XSD_DATETIME
+                        case "dayTimeDuration"    return $XSD_DAYTIMEDURATION
+                        case "decimal"            return $XSD_DECIMAL
+                        case "double"             return $XSD_DOUBLE
+                        case "duration"           return $XSD_DURATION
+                        case "float"              return $XSD_FLOAT
+                        case "int"                return $XSD_INT
+                        case "integer"            return $XSD_INTEGER
+                        case "long"               return $XSD_LONG
+                        case "short"              return $XSD_SHORT
+                        case "string"             return $XSD_STRING
+                        case "time"               return $XSD_TIME
+                        case "unsignedInt"        return $XSD_UNSIGNEDINT
+                        case "unsignedLong"       return $XSD_UNSIGNEDLONG
+                        case "unsignedShort"      return $XSD_UNSIGNEDSHORT
+                        case "yearMonthDuration"  return $XSD_YEARMONTHDURATION
+                        case "anySimpleType"      return $XSD_ANYSIMPLETYPE
+                        case "anyURI"             return $XSD_ANYURI
+                        case "iri"                return $SEM_IRI
+                        case "array"              return $JSON_ARRAY
+                        (: default case is unsupported, but for now "" to avoid using subcontext :)
+                        default return ""</val>
+                </var>
+            </vars>
+            <triples>
+                <triple>
+                  <subject><val>$property-subject-iri</val></subject>
+                  <predicate><val>$PROP_ITEMS</val></predicate>
+                  <object><val>$items-iri</val></object>
+                </triple>
+            </triples>
+            <templates>
+                <template>
+                <context>./node("$ref")</context>
+                <vars>
+                    <var>
+                        <name>relationship-reference</name>
+                        <val>
+                            if (fn:starts-with(., "#/definitions/")) 
+                            then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
+                            else sem:iri(.)
+                            </val>
+                    </var>
+                </vars>
+                <triples>
+                    <triple>
+                      <subject><val>$items-iri</val></subject>
+                      <predicate><val>$PROP_REF</val></predicate>
+                      <object><val>$relationship-reference</val></object>
+                    </triple>
+                </triples>
+                </template>
+                <template>
+                <context>./datatype</context>
+                <triples>
+                    <triple>
+                      <subject><val>$items-iri</val></subject>
+                      <predicate><val>$PROP_DATATYPE</val></predicate>
+                      <object><val>$items-datatype </val></object>
+                    </triple>
+                </triples>
+                </template>
+                <template>
+                <context>./collation</context>
+                <triples>
+                    <triple>
+                      <subject><val>$items-iri</val></subject>
+                      <predicate><val>$PROP_COLLATION</val></predicate>
+                      <object><val>$collation</val></object>
+                    </triple>
+                </triples>
+                </template>
+            </templates>
+        </template>
     </templates>
     </template>
     </templates>
@@ -311,7 +399,6 @@ declare variable $esi:json-extraction-template :=
 declare variable $esi:xml-extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
-<!-- collection -->
     <context>/es:entity-type</context>
     <vars>
         <!-- constants -->
@@ -320,8 +407,11 @@ declare variable $esi:xml-extraction-template :=
         <var><name>PROP_VERSION</name><val>sem:iri(concat($ESN, 'version'))</val></var>
         <var><name>PROP_TITLE</name><val>sem:iri(concat($ESN, 'title'))</val></var>
         <var><name>PROP_DEFINITIONS</name><val>sem:iri(concat($ESN, 'definitions'))</val></var>
-        <var><name>propPrimaryKey</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_PRIMARYKEY</name><val>sem:iri(concat($ESN, 'primaryKey'))</val></var>
+        <var><name>PROP_PROPERTY</name><val>sem:iri(concat($ESN, 'property'))</val></var>
         <var><name>PROP_DATATYPE</name><val>sem:iri(concat($ESN, 'datatype'))</val></var>
+        <var><name>PROP_COLLATION</name><val>sem:iri(concat($ESN, 'collation'))</val></var>
+        <var><name>PROP_ITEMS</name><val>sem:iri(concat($ESN, 'items'))</val></var>
         <var><name>PROP_REF</name><val>sem:iri(concat($ESN, 'ref'))</val></var>
         <var><name>XSD</name><val>"http://www.w3.org/2001/XMLSchema#"</val></var>
         <var><name>XSD_BASE64BINARY</name><val>sem:iri(concat($XSD, "base64Binary"))</val></var>
@@ -416,7 +506,7 @@ declare variable $esi:xml-extraction-template :=
                 </triple>
                 <triple>
                   <subject><val>$et-subject-iri</val></subject>
-                  <predicate><val>sem:iri(concat($ESN, "title"))</val></predicate>
+                  <predicate><val>$PROP_TITLE</val></predicate>
                   <object><val>xs:string($entityTypeName)</val></object>
                 </triple>
                 <triple>
@@ -430,106 +520,204 @@ declare variable $esi:xml-extraction-template :=
                   <object><val>$et-subject-iri</val></object>
                 </triple>
             </triples>
-    <templates>
-        <template>
-            <context>./*:primary-key</context>
+            <templates>
+                <template>
+                    <context>./*:primary-key</context>
+                    <triples>
+                        <triple>
+                          <subject><val>$et-subject-iri</val></subject>
+                          <predicate><val>$PROP_PRIMARYKEY</val></predicate>
+                          <object><val>sem:iri(concat($et-subject-iri, "/", .))</val></object>
+                        </triple>
+                    </triples>
+                </template>
+                <template>
+                <context>./*:properties/*</context>
+                <vars>
+                <var><name>propertyName</name><val>fn:node-name(.)</val></var>
+                <var><name>datatype</name><val>
+                        switch (xs:string(./*:datatype))
+                        case "base64Binary"       return $XSD_BASE64BINARY
+                        case "boolean"            return $XSD_BOOLEAN
+                        case "byte"               return $XSD_BYTE
+                        case "date"               return $XSD_DATE
+                        case "dateTime"           return $XSD_DATETIME
+                        case "dayTimeDuration"    return $XSD_DAYTIMEDURATION
+                        case "decimal"            return $XSD_DECIMAL
+                        case "double"             return $XSD_DOUBLE
+                        case "duration"           return $XSD_DURATION
+                        case "float"              return $XSD_FLOAT
+                        case "int"                return $XSD_INT
+                        case "integer"            return $XSD_INTEGER
+                        case "long"               return $XSD_LONG
+                        case "short"              return $XSD_SHORT
+                        case "string"             return $XSD_STRING
+                        case "time"               return $XSD_TIME
+                        case "unsignedInt"        return $XSD_UNSIGNEDINT
+                        case "unsignedLong"       return $XSD_UNSIGNEDLONG
+                        case "unsignedShort"      return $XSD_UNSIGNEDSHORT
+                        case "yearMonthDuration"  return $XSD_YEARMONTHDURATION
+                        case "anySimpleType"      return $XSD_ANYSIMPLETYPE
+                        case "anyURI"             return $XSD_ANYURI
+                        case "iri"                return $SEM_IRI
+                        case "array"              return $JSON_ARRAY
+                        (: default case is unsupported, but for now "" to avoid using subcontext :)
+                        default return ""</val>
+                </var>
+                <var>
+                    <name>property-subject-iri</name>
+                    <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
+                </var>
+                <var><name>collation</name><val>xs:string(head((.//*:collation, "")))</val></var>
+            </vars>
             <triples>
                 <triple>
                   <subject><val>$et-subject-iri</val></subject>
-                  <predicate><val>sem:iri(concat($ESN, "primaryKey"))</val></predicate>
-                  <object><val>sem:iri(concat($et-subject-iri, "/", .))</val></object>
+                  <predicate><val>sem:iri(concat($ESN, "property"))</val></predicate>
+                  <object><val>$property-subject-iri</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$property-subject-iri</val></subject>
+                  <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
+                  <object><val>sem:iri(concat($ESN, "Property"))</val></object>
+                </triple>
+                <triple>
+                  <subject><val>$property-subject-iri</val></subject>
+                  <predicate><val>$PROP_TITLE</val></predicate>
+                  <object><val>xs:string($propertyName)</val></object>
                 </triple>
             </triples>
-        </template>
-        <template>
-        <context>./*:properties/*</context>
-        <vars>
-        <var><name>propertyName</name><val>fn:node-name(.)</val></var>
-        <var><name>datatype</name><val>
-                switch (xs:string(./*:datatype))
-                case "base64Binary"       return $XSD_BASE64BINARY
-                case "boolean"            return $XSD_BOOLEAN
-                case "byte"               return $XSD_BYTE
-                case "date"               return $XSD_DATE
-                case "dateTime"           return $XSD_DATETIME
-                case "dayTimeDuration"    return $XSD_DAYTIMEDURATION
-                case "decimal"            return $XSD_DECIMAL
-                case "double"             return $XSD_DOUBLE
-                case "duration"           return $XSD_DURATION
-                case "float"              return $XSD_FLOAT
-                case "int"                return $XSD_INT
-                case "integer"            return $XSD_INTEGER
-                case "long"               return $XSD_LONG
-                case "short"              return $XSD_SHORT
-                case "string"             return $XSD_STRING
-                case "time"               return $XSD_TIME
-                case "unsignedInt"        return $XSD_UNSIGNEDINT
-                case "unsignedLong"       return $XSD_UNSIGNEDLONG
-                case "unsignedShort"      return $XSD_UNSIGNEDSHORT
-                case "yearMonthDuration"  return $XSD_YEARMONTHDURATION
-                case "anySimpleType"      return $XSD_ANYSIMPLETYPE
-                case "anyURI"             return $XSD_ANYURI
-                case "iri"                return $SEM_IRI
-                case "array"              return $JSON_ARRAY
-                (: default case is unsupported, but for now "" to avoid using subcontext :)
-                default return ""</val>
-        </var>
-        <var>
-            <name>property-subject-iri</name>
-            <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
-        </var>
-    </vars>
-    <triples>
-        <triple>
-          <subject><val>$et-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($ESN, "property"))</val></predicate>
-          <object><val>$property-subject-iri</val></object>
-        </triple>
-        <triple>
-          <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>sem:iri(concat($RDF, "type"))</val></predicate>
-          <object><val>sem:iri(concat($ESN, "Property"))</val></object>
-        </triple>
-        <triple>
-          <subject><val>$property-subject-iri</val></subject>
-          <predicate><val>$PROP_TITLE</val></predicate>
-          <object><val>xs:string($propertyName)</val></object>
-        </triple>
-    </triples>
-    <templates>
-        <template>
-        <context>./es:datatype</context>
-        <triples>
-            <triple>
-              <subject><val>$property-subject-iri</val></subject>
-              <predicate><val>$PROP_DATATYPE</val></predicate>
-              <object><val>$datatype</val></object>
-            </triple>
-        </triples>
-        </template>
-        <template>
-        <context>./es:ref</context>
-        <vars>
-            <var>
-                <name>relationship-reference</name>
-                <val>
-                    if (fn:starts-with(., "#/definitions/")) 
-                    then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
-                    else sem:iri(.)
-                    </val>
-            </var>
-        </vars>
-        <triples>
-            <triple>
-              <subject><val>$property-subject-iri</val></subject>
-              <predicate><val>$PROP_REF</val></predicate>
-              <object><val>$relationship-reference</val></object>
-            </triple>
-        </triples>
-        </template>
-    </templates>
-    </template>
-    </templates>
+            <templates>
+                <template>
+                    <context>./es:ref</context>
+                    <vars>
+                        <var>
+                            <name>relationship-reference</name>
+                            <val>
+                                if (fn:starts-with(., "#/definitions/")) 
+                                then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
+                                else sem:iri(.)
+                                </val>
+                        </var>
+                    </vars>
+                    <triples>
+                        <triple>
+                          <subject><val>$property-subject-iri</val></subject>
+                          <predicate><val>$PROP_REF</val></predicate>
+                          <object><val>$relationship-reference</val></object>
+                        </triple>
+                    </triples>
+                </template>
+                <template>
+                    <context>./es:datatype</context>
+                    <triples>
+                        <triple>
+                          <subject><val>$property-subject-iri</val></subject>
+                          <predicate><val>$PROP_DATATYPE</val></predicate>
+                          <object><val>$datatype</val></object>
+                        </triple>
+                    </triples>
+                </template>
+                <template>
+                <context>./es:collation</context>
+                <triples>
+                    <triple>
+                      <subject><val>$property-subject-iri</val></subject>
+                      <predicate><val>$PROP_COLLATION</val></predicate>
+                      <object><val>$collation</val></object>
+                    </triple>
+                </triples>
+                </template>
+                <template>
+                    <context>./es:items</context>
+                    <vars>
+                        <var>
+                            <name>items-iri</name>
+                            <val>sem:iri(concat($property-subject-iri, "/items"))</val>
+                        </var>
+                        <var><name>items-datatype</name><val>
+                                switch (xs:string(./*:datatype))
+                                case "base64Binary"       return $XSD_BASE64BINARY
+                                case "boolean"            return $XSD_BOOLEAN
+                                case "byte"               return $XSD_BYTE
+                                case "date"               return $XSD_DATE
+                                case "dateTime"           return $XSD_DATETIME
+                                case "dayTimeDuration"    return $XSD_DAYTIMEDURATION
+                                case "decimal"            return $XSD_DECIMAL
+                                case "double"             return $XSD_DOUBLE
+                                case "duration"           return $XSD_DURATION
+                                case "float"              return $XSD_FLOAT
+                                case "int"                return $XSD_INT
+                                case "integer"            return $XSD_INTEGER
+                                case "long"               return $XSD_LONG
+                                case "short"              return $XSD_SHORT
+                                case "string"             return $XSD_STRING
+                                case "time"               return $XSD_TIME
+                                case "unsignedInt"        return $XSD_UNSIGNEDINT
+                                case "unsignedLong"       return $XSD_UNSIGNEDLONG
+                                case "unsignedShort"      return $XSD_UNSIGNEDSHORT
+                                case "yearMonthDuration"  return $XSD_YEARMONTHDURATION
+                                case "anySimpleType"      return $XSD_ANYSIMPLETYPE
+                                case "anyURI"             return $XSD_ANYURI
+                                case "iri"                return $SEM_IRI
+                                case "array"              return $JSON_ARRAY
+                                (: default case is unsupported, but for now "" to avoid using subcontext :)
+                                default return ""</val>
+                        </var>
+                    </vars>
+                    <triples>
+                        <triple>
+                          <subject><val>$property-subject-iri</val></subject>
+                          <predicate><val>$PROP_ITEMS</val></predicate>
+                          <object><val>$items-iri</val></object>
+                        </triple>
+                    </triples>
+                    <templates>
+                        <template>
+                        <context>./es:ref</context>
+                        <vars>
+                            <var>
+                                <name>relationship-reference</name>
+                                <val>
+                                    if (fn:starts-with(., "#/definitions/")) 
+                                    then sem:iri(fn:replace(.,"#/definitions/",$doc-subject-prefix))
+                                    else sem:iri(.)
+                                    </val>
+                            </var>
+                        </vars>
+                        <triples>
+                            <triple>
+                              <subject><val>$items-iri</val></subject>
+                              <predicate><val>$PROP_REF</val></predicate>
+                              <object><val>$relationship-reference</val></object>
+                            </triple>
+                        </triples>
+                        </template>
+                        <template>
+                        <context>./es:datatype</context>
+                        <triples>
+                            <triple>
+                              <subject><val>$items-iri</val></subject>
+                              <predicate><val>$PROP_DATATYPE</val></predicate>
+                              <object><val>$items-datatype </val></object>
+                            </triple>
+                        </triples>
+                        </template>
+                        <template>
+                        <context>./es:collation</context>
+                        <triples>
+                            <triple>
+                              <subject><val>$items-iri</val></subject>
+                              <predicate><val>$PROP_COLLATION</val></predicate>
+                              <object><val>$collation</val></object>
+                            </triple>
+                        </triples>
+                        </template>
+                    </templates>
+                </template>
+            </templates>
+            </template>
+            </templates>
         </template>
     </templates>
 </template>;
@@ -540,6 +728,42 @@ declare function esi:entity-type-validate(
 ) as xs:string*
 {
     validate:schematron($entity-type, $esi:entity-type-schematron)
+};
+
+
+declare function esi:entity-type-graph-iri(
+    $entity-type as map:map
+) as sem:iri
+{
+    let $info := map:get($entity-type, "info")
+    let $baseUri := fn:head( (
+        map:get($info, "baseUri"),
+        "http://example.org/") )
+    let $baseUriPrefix :=  
+        if (fn:matches($baseUri, "[#/]$")) 
+        then $baseUri
+        else concat($baseUri, "#")
+    return
+    sem:iri(
+        concat( $baseUriPrefix, 
+               map:get($info, "title"),
+               "-" ,
+               map:get($info, "version")))
+};
+(:
+ : TODO - remove storage.  put template in
+ : Config directory when implemented
+ : Permissions will not be an issue for 
+ : triples surfaced with TDE.
+ :)
+declare function esi:persist-triples(
+    $entity-type as document-node()
+) as empty-sequence()
+{
+    let $triples := esi:extract-triples($entity-type)
+    let $graph-name := esi:entity-type-graph-iri($entity-type)
+    return 
+        (sem:graph-insert($graph-name, $triples, xdmp:default-permissions(), $esi:ENTITY_TYPE_COLLECTION))[false()]
 };
 
 

@@ -1,27 +1,27 @@
 @prefix es: <http://marklogic.com/entity-services#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
 @prefix type: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/> .
 @prefix order: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/> .
 @prefix orderdetails: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/> .
 
 order:shortKey
         a es:Property ;
-        es:datatype xsd:short ;
+        es:datatype xs:short ;
         es:title "shortKey" .
 
 order:decimalKey
         a es:Property ;
-        es:datatype xsd:decimal ;
+        es:datatype xs:decimal ;
         es:title "decimalKey" .
 
 order:anySimpleTypeKey
         a es:Property ;
-        es:datatype xsd:anySimpleType ;
+        es:datatype xs:anySimpleType ;
         es:title "anySimpleTypeKey" .
 
 order:stringKey
         a es:Property ;
-        es:datatype xsd:string ;
+        es:datatype xs:string ;
         es:title "stringKey" .
 
 type:OrderDetails
@@ -39,22 +39,22 @@ order:iriKey
 
 order:unsignedLongKey
         a es:Property ;
-        es:datatype xsd:unsignedLong ;
+        es:datatype xs:unsignedLong ;
         es:title "unsignedLongKey" .
 
 order:floatKey
         a es:Property ;
-        es:datatype xsd:float ;
+        es:datatype xs:float ;
         es:title "floatKey" .
 
 order:integerKey
         a es:Property ;
-        es:datatype xsd:integer ;
+        es:datatype xs:integer ;
         es:title "integerKey" .
 
 order:yearMonthDurationKey
         a es:Property ;
-        es:datatype xsd:yearMonthDuration ;
+        es:datatype xs:yearMonthDuration ;
         es:title "yearMonthDurationKey" .
 
 order:externalReference
@@ -66,12 +66,12 @@ type:Order
         a       es:EntityType ;
         es:title "Order" ;
         es:version "0.0.1" ;
-        es:property order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:anySimpleTypeKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey ;
+        es:property order:arrayStringKey, order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:anySimpleTypeKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey ;
         es:primaryKey order:orderId .
 
 order:byteKey
         a es:Property ;
-        es:datatype xsd:byte ;
+        es:datatype xs:byte ;
         es:title "byteKey" .
 
 <http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
@@ -82,97 +82,121 @@ order:byteKey
 
 order:orderId
         a es:Property ;
-        es:datatype xsd:string ;
+        es:datatype xs:string ;
+        es:collation "http://marklogic.com/collation/" ;
         es:title "orderId" .
 
 order:base64BinaryKey
         a es:Property ;
-        es:datatype xsd:base64Binary ;
+        es:datatype xs:base64Binary ;
         es:title "base64BinaryKey" .
 
 order:dayTimeDurationKey
         a es:Property ;
-        es:datatype xsd:dayTimeDuration ;
+        es:datatype xs:dayTimeDuration ;
         es:title "dayTimeDurationKey" .
 
 order:dateTimeKey
         a es:Property ;
-        es:datatype xsd:dateTime ;
+        es:datatype xs:dateTime ;
         es:title "dateTimeKey" .
 
 order:longKey
         a es:Property ;
-        es:datatype xsd:long ;
+        es:datatype xs:long ;
         es:title "longKey" .
 
 order:arrayreferenceInThisFile
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
+        es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayreferenceInThisFile/items> ;
         es:title "arrayreferenceInThisFile" .
+
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayreferenceInThisFile/items>
+        es:ref type:OrderDetails .
 
 order:unsignedIntKey
         a es:Property ;
-        es:datatype xsd:unsignedInt ;
+        es:datatype xs:unsignedInt ;
         es:title "unsignedIntKey" .
 
 orderdetails:quantity
         a es:Property ;
-        es:datatype xsd:integer ;
+        es:datatype xs:integer ;
         es:title "quantity" .
 
 order:externalArrayReference
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/externalArrayReference/items> ;
         es:title "externalArrayReference" .
+
+        
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/externalArrayReference/items> 
+       es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> .
 
 order:doubleKey
         a es:Property ;
-        es:datatype xsd:double ;
+        es:datatype xs:double ;
         es:title "doubleKey" .
 
 order:arrayKey
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayKey/items> ;
         es:title "arrayKey" .
 
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayKey/items>
+       es:datatype xs:long .
+
+order:arrayStringKey
+        a es:Property ;
+        es:datatype <http://marklogic.com/json#array> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayStringKey/items> ;
+        es:title "arrayStringKey" .
+        
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayStringKey/items>
+        es:datatype xs:string ; 
+        es:collation "http://marklogic.com/collation/" .
+        
 order:unsignedShortKey
         a es:Property ;
-        es:datatype xsd:unsignedShort ;
+        es:datatype xs:unsignedShort ;
         es:title "unsignedShortKey" .
 
 order:timeKey
         a es:Property ;
-        es:datatype xsd:time ;
+        es:datatype xs:time ;
         es:title "timeKey" .
 
 order:anyURIKey
         a es:Property ;
-        es:datatype xsd:anyURI ;
+        es:datatype xs:anyURI ;
         es:title "anyURIKey" .
 
 order:booleanKey
         a es:Property ;
-        es:datatype xsd:boolean ;
+        es:datatype xs:boolean ;
         es:title "booleanKey" .
 
 order:intKey
         a es:Property ;
-        es:datatype xsd:int ;
+        es:datatype xs:int ;
         es:title "intKey" .
 
 order:durationKey
         a es:Property ;
-        es:datatype xsd:duration ;
+        es:datatype xs:duration ;
         es:title "durationKey" .
 
 order:dateKey
         a es:Property ;
-        es:datatype xsd:date ;
+        es:datatype xs:date ;
         es:title "dateKey" .
 
 orderdetails:productName
         a es:Property ;
-        es:datatype xsd:string ;
+        es:datatype xs:string ;
         es:title "productName" .
 
 order:referenceInThisFile

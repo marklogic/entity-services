@@ -56,7 +56,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 				DOMHandle handle = result.get(new DOMHandle());
 				Document actualDoc = handle.get();
 				
-				debugOutput(actualDoc);
+				//debugOutput(actualDoc);
 				
 // this is a one-time utility to auto-populate verification keys, not for checking them!
 //				File outputFile = new File("src/test/resources/test-instances/" + testInstanceName.replace(".json", "") + "-" + resultNumber + ".xml");

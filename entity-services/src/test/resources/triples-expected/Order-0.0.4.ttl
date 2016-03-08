@@ -1,0 +1,50 @@
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix doc: <http://marklogic.com/entity-services/test#> .
+@prefix type: <http://marklogic.com/entity-services/test/Order-0.0.4/> .
+@prefix order: <http://marklogic.com/entity-services/test/Order-0.0.4/Order/> .
+@prefix orderdetails: <http://marklogic.com/entity-services/test/Order-0.0.4/OrderDetails/> .
+@prefix json: <http://marklogic.com/json#> .
+
+doc:Order-0.0.4
+        a       es:EntityServicesDoc ;
+        es:definitions type:OrderDetails , type:Order ;
+        es:title "Order" ;
+        es:version "0.0.4" .
+        
+type:Order  a          es:EntityType ;
+        es:primaryKey  order:orderId ;
+        es:property    order:hasOrderDetails , order:orderDate , order:orderId ;
+        es:title       "Order" ;
+        es:version     "0.0.4" .
+
+order:orderDate  a   es:Property ;
+        es:datatype  xsd:date ;
+        es:title     "orderDate" .
+
+orderdetails:quantity
+        a            es:Property ;
+        es:datatype  xsd:integer ;
+        es:title     "quantity" .
+
+type:OrderDetails  a  es:EntityType ;
+        es:property  orderdetails:productName , orderdetails:quantity ;
+        es:title     "OrderDetails" ;
+        es:version   "0.0.4" .
+
+order:hasOrderDetails
+        a         es:Property ;
+        es:datatype json:array ;
+        es:items  <http://marklogic.com/entity-services/test/Order-0.0.4/Order/hasOrderDetails/items> ;
+        es:title  "hasOrderDetails" .
+
+<http://marklogic.com/entity-services/test/Order-0.0.4/Order/hasOrderDetails/items> es:ref  type:OrderDetails .
+
+order:orderId  a     es:Property ;
+        es:datatype  xsd:string ;
+        es:title     "orderId" .
+
+orderdetails:productName
+        a            es:Property ;
+        es:datatype  xsd:string ;
+        es:title     "productName".

@@ -26,6 +26,9 @@
 	<arrayKey>1355</arrayKey>
 	<arrayKey>1355</arrayKey>
 	<arrayKey>1355</arrayKey>
+    <arrayStringKey>some string</arrayStringKey>
+    <arrayStringKey>some string</arrayStringKey>
+    <arrayStringKey>some string</arrayStringKey>
 	<referenceInThisFile>
 		<OrderDetails>
 			<quantity>123</quantity>

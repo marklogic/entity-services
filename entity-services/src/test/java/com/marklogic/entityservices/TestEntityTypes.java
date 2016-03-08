@@ -21,7 +21,6 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,9 +35,9 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotNotFoundException;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
@@ -50,7 +49,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.compose.Difference;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.JacksonHandle;
@@ -205,9 +203,6 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		logger.debug("Expected number of triples: " + expectedTriples.size());
         		logger.debug("Actual number of triples: " + actualTriples.size());
         		
-        		// what a great function for debugging:
-        		logger.debug("Difference, expected - actual");
-        		Graph diff = new Difference(expectedTriples, actualTriples);
         		
         		// more debug
         		OutputStream os = new FileOutputStream(new File("/tmp/actual.ttl"));
@@ -217,8 +212,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
         		os.close();
         		
+        		// what a great function for debugging:
+        		logger.debug("Difference, expected - actual");
+        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+
         		logger.debug("Difference, actual - expected");
-        		Graph diff2 = new Difference(actualTriples, expectedTriples);
+        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
         		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
         		

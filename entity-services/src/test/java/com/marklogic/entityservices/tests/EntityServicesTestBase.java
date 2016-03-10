@@ -51,7 +51,9 @@ import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.Format;
 import com.marklogic.client.io.marker.AbstractReadHandle;
 
 
@@ -61,7 +63,7 @@ public class EntityServicesTestBase {
 	protected static DatabaseClient client, modulesClient, schemasClient;
 	protected static Set<String> entityTypes = new HashSet<String>();
 	protected static Set<String> sourceFilesUris = new HashSet<String>();
-
+	protected static Collection<File> files;
 	protected static DocumentBuilder builder;
 
 	@SuppressWarnings("unchecked")
@@ -73,12 +75,15 @@ public class EntityServicesTestBase {
 	    schemasClient = testSetup.getSchemasClient();
 	    JSONDocumentManager docMgr = client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
+	    DocumentWriteSet metadataWriteSet = docMgr.newWriteSet();
+	    
+	    tempBootstrapTemplates();
 	    
 		URL jsonFilesUrl = client.getClass().getResource("/json-entity-types");
 		URL xmlFilesUrl = client.getClass().getResource("/xml-entity-types");
 		URL sourcesFilesUrl = client.getClass().getResource("/source-documents");
 		
-		Collection<File> files = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
+		files = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	    Collection<File> xmlFiles = FileUtils.listFiles(new File(xmlFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
@@ -102,10 +107,18 @@ public class EntityServicesTestBase {
 	    	logger.info("Loading " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	        writeSet.add(f.getName(), new FileHandle(f));
+	       
+	        
+	        DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+	        metadata.getCollections().add("http://marklogic.com/entity-services/entity-types");
+	        metadata.setFormat(Format.XML);
+	        metadataWriteSet.add(f.getName(), metadata);
+	       
 	        entityTypes.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    
+	    docMgr.write(metadataWriteSet);
+
 	    for (File f : sourceFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
@@ -113,15 +126,31 @@ public class EntityServicesTestBase {
 	    	logger.info("Loading " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	        writeSet.add(f.getName(), new FileHandle(f));
+	        
 	        sourceFilesUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
 
 	}
 
-	@AfterClass
+	/*
+	 * this function goes away once templates move to config directory.
+	 */
+	private static void tempBootstrapTemplates() {
+		String importString = "import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
+		String functionCall = "esi:templates-bootstrap()";
+	    ServerEvaluationCall call = 
+	            schemasClient.newServerEval().xquery(importString + functionCall);
+	   
+	}
+
+	//@AfterClass
 	public static void teardownClass() {
-	    // teardown.
+		JSONDocumentManager docMgr = client.newJSONDocumentManager();
+	    for (File f : files) {
+	    	logger.info("Removing " + f.getName());
+		    docMgr.delete(f.getName());
+	    }
 	}
 
 	public EvalResultIterator eval(String functionCall) throws TestEvalException {

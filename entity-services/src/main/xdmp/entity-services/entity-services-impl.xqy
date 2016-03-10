@@ -756,33 +756,41 @@ declare function esi:entity-type-graph-iri(
                "-" ,
                map:get($info, "version")))
 };
-(:
- : TODO - remove storage.  put template in
- : Config directory when implemented
- : Permissions will not be an issue for 
- : triples surfaced with TDE.
+
+
+
+(: this funcion stores the two templates in the schemas db.
+ : once Config is supported, remove this function
  :)
-declare function esi:persist-triples(
-    $entity-type as document-node()
-) as empty-sequence()
+declare function esi:bootstrap-entity-services()
 {
-    let $triples := esi:extract-triples($entity-type)
-    let $graph-name := esi:entity-type-graph-iri($entity-type)
-    return 
-        (sem:graph-insert($graph-name, $triples, xdmp:default-permissions(), $esi:ENTITY_TYPE_COLLECTION))[false()]
+    xdmp:document-insert("json-entity-services.tde", $json-extraction-template,
+                                xdmp:default-permissions(),
+                                "http://marklogic.com/xdmp/tde"),
+    xdmp:document-insert("xml-entity-services.tde", $xml-extraction-template,
+                                xdmp:default-permissions(),
+                                "http://marklogic.com/xdmp/tde")
 };
 
-
+(: 
+ : This function is useful for debugging
+ : and testing, but preferred access to triples
+ : is via the triples index.
+ :)
 declare function esi:extract-triples(
-    $entity-type as document-node()
+    $entity-type-uri as xs:string
 ) as sem:triple*
 {
+(: the old extraction using tde.
+   TODO remove
     let $extraction := tde:document-data-extract($entity-type, $esi:json-extraction-template)
     let $xml-extraction := tde:document-data-extract($entity-type, $esi:xml-extraction-template)
     return (
         json:array-values( map:get($extraction,  map:keys($extraction))),
         json:array-values( map:get($xml-extraction,  map:keys($xml-extraction)))
         )
+ :)
+    sem:graph($entity-type-uri)
 };
 
 

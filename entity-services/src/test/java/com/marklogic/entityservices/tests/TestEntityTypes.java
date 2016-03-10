@@ -25,7 +25,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +68,23 @@ public class TestEntityTypes extends EntityServicesTestBase {
     	XMLAssert.assertXMLEqual(message, original, actual);
     }
     
+    private static Map<String, String> invalidMessages = new HashMap<String, String>();
+    static {
+    	invalidMessages.put("invalid-bad-datatype.json", "");
+        invalidMessages.put("invalid-missing-datatype.json", "");
+        invalidMessages.put("invalid-missing-info.json", "Entity Type must contain exactly one info declaration.");
+        invalidMessages.put("invalid-missing-title.json", "");
+        invalidMessages.put("invalid-missing-version.json", "Entity Type must contain exactly one version declaration.");
+        invalidMessages.put("invalid-property-ref-with-others.json", "");
+        invalidMessages.put("invalid-multiple-pk.json", "");
+    	invalidMessages.put("invalid-bad-datatype.xml", "");
+        invalidMessages.put("invalid-missing-datatype.xml", "");
+        invalidMessages.put("invalid-missing-info.xml", "Entity Type must contain exactly one info declaration.");
+        invalidMessages.put("invalid-missing-title.xml", "");
+        invalidMessages.put("invalid-missing-version.xml", "Entity Type must contain exactly one version declaration.");
+        invalidMessages.put("invalid-multiple-pk.xml", "");
+        invalidMessages.put("invalid-property-ref-with-others.xml", "");
+    }
     @Test
     /*
      * For each entity type in the test directory, verify that
@@ -94,7 +113,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
         			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases." + entityType);
         		} catch (TestEvalException e) {
-        			assertTrue("Must contain invalidity message. Message was " + e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
+        			assertTrue("Must contain invalidity message. Message was " + e.getMessage(), 
+        					e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
+        			
+        			// finish structure above for message checks (to be finished) TODO
+        			assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
         		}
         	}
         	else {
@@ -205,21 +228,21 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		
         		
         		// more debug
-        		OutputStream os = new FileOutputStream(new File("/tmp/actual.ttl"));
-        		RDFDataMgr.write(os, actualTriples, Lang.TURTLE);
-        		os.close();
-        		os = new FileOutputStream(new File("/tmp/expected.ttl"));
-        		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
-        		os.close();
+//        		OutputStream os = new FileOutputStream(new File("/tmp/actual.ttl"));
+//        		RDFDataMgr.write(os, actualTriples, Lang.TURTLE);
+//        		os.close();
+//        		os = new FileOutputStream(new File("/tmp/expected.ttl"));
+//        		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
+//        		os.close();
         		
         		// what a great function for debugging:
-        		logger.debug("Difference, expected - actual");
-        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
-        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-
-        		logger.debug("Difference, actual - expected");
-        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
-        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
+//        		logger.debug("Difference, expected - actual");
+//        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+//        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+//
+//        		logger.debug("Difference, actual - expected");
+//        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
         		
         		

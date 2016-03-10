@@ -400,6 +400,12 @@ declare variable $esi:xml-extraction-template :=
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
     <context>/es:entity-type</context>
+    <path-namespaces>
+        <path-namespace>
+            <prefix>es</prefix>
+            <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+        </path-namespace>
+    </path-namespaces>
     <vars>
         <!-- constants -->
         <var><name>ESN</name><val>"http://marklogic.com/entity-services#"</val></var>
@@ -443,7 +449,7 @@ declare variable $esi:xml-extraction-template :=
         <!-- metadata for entity type document iris -->
         <var>
             <name>baseUriCoalesce</name>
-            <val>if (./*:info/*:base-uri) then ./*:info/*:base-uri else "http://example.org/"</val>
+            <val>if (./es:info/es:base-uri) then ./es:info/es:base-uri else "http://example.org/"</val>
         </var>
         <var>
             <name>baseUriPrefix</name>
@@ -455,11 +461,11 @@ declare variable $esi:xml-extraction-template :=
         </var>
         <var>
             <name>title</name>
-            <val>xs:string(./*:info/*:title)</val>
+            <val>xs:string(./es:info/es:title)</val>
         </var>
         <var>
             <name>version</name>
-            <val>xs:string(./*:info/*:version)</val>
+            <val>xs:string(./es:info/es:version)</val>
         </var>
         <var>
             <name>doc-subject-prefix</name>
@@ -522,7 +528,7 @@ declare variable $esi:xml-extraction-template :=
             </triples>
             <templates>
                 <template>
-                    <context>./*:primary-key</context>
+                    <context>./es:primary-key</context>
                     <triples>
                         <triple>
                           <subject><val>$et-subject-iri</val></subject>
@@ -532,11 +538,11 @@ declare variable $esi:xml-extraction-template :=
                     </triples>
                 </template>
                 <template>
-                <context>./*:properties/*</context>
+                <context>./es:properties/*</context>
                 <vars>
                 <var><name>propertyName</name><val>fn:node-name(.)</val></var>
                 <var><name>datatype</name><val>
-                        switch (xs:string(./*:datatype))
+                        switch (xs:string(./es:datatype))
                         case "base64Binary"       return $XSD_BASE64BINARY
                         case "boolean"            return $XSD_BOOLEAN
                         case "byte"               return $XSD_BYTE
@@ -568,7 +574,7 @@ declare variable $esi:xml-extraction-template :=
                     <name>property-subject-iri</name>
                     <val>sem:iri(concat($et-subject-iri, "/", $propertyName))</val>
                 </var>
-                <var><name>collation</name><val>xs:string(head((.//*:collation, "")))</val></var>
+                <var><name>collation</name><val>xs:string(head((.//es:collation, "")))</val></var>
             </vars>
             <triples>
                 <triple>
@@ -636,7 +642,7 @@ declare variable $esi:xml-extraction-template :=
                             <val>sem:iri(concat($property-subject-iri, "/items"))</val>
                         </var>
                         <var><name>items-datatype</name><val>
-                                switch (xs:string(./*:datatype))
+                                switch (xs:string(./es:datatype))
                                 case "base64Binary"       return $XSD_BASE64BINARY
                                 case "boolean"            return $XSD_BOOLEAN
                                 case "byte"               return $XSD_BYTE

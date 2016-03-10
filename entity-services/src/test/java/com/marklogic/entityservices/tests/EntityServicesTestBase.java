@@ -101,7 +101,7 @@ public class EntityServicesTestBase {
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
-	    	//.if (!f.getName().equals("schema-complete-entity-type.json")) {continue; };
+	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
 	    	//if (!f.getName().startsWith("refs")) {continue; };
 	    	logger.info("Loading " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));

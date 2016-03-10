@@ -214,8 +214,8 @@ declare variable $esi:json-extraction-template :=
         <context>./properties/*</context>
         <vars>
         <var><name>propertyName</name><val>fn:node-name(.)</val></var>
-        <var><name>datatype</name><val>
-                switch (xs:string(../datatype))
+        <var><name>datatype-value</name><val>
+                switch (xs:string(./datatype))
                 case "base64Binary"       return $XSD_BASE64BINARY
                 case "boolean"            return $XSD_BOOLEAN
                 case "byte"               return $XSD_BYTE
@@ -293,7 +293,7 @@ declare variable $esi:json-extraction-template :=
             <triple>
               <subject><val>$property-subject-iri</val></subject>
               <predicate><val>$PROP_DATATYPE</val></predicate>
-              <object><val>$datatype</val></object>
+              <object><val>$datatype-value</val></object>
             </triple>
         </triples>
         </template>
@@ -548,7 +548,7 @@ declare variable $esi:xml-extraction-template :=
                 <context>./es:properties/*</context>
                 <vars>
                 <var><name>propertyName</name><val>fn:node-name(.)</val></var>
-                <var><name>datatype</name><val>
+                <var><name>datatype-value</name><val>
                         switch (xs:string(./es:datatype))
                         case "base64Binary"       return $XSD_BASE64BINARY
                         case "boolean"            return $XSD_BOOLEAN
@@ -627,7 +627,7 @@ declare variable $esi:xml-extraction-template :=
                         <triple>
                           <subject><val>$property-subject-iri</val></subject>
                           <predicate><val>$PROP_DATATYPE</val></predicate>
-                          <object><val>$datatype</val></object>
+                          <object><val>$datatype-value</val></object>
                         </triple>
                     </triples>
                 </template>
@@ -785,19 +785,10 @@ declare function esi:templates-bootstrap()
  : is via the triples index.
  :)
 declare function esi:extract-triples(
-    $entity-type-uri as xs:string
+    $entity-type-graph-iri as xs:string
 ) as sem:triple*
 {
-(: the old extraction using tde.
-   TODO remove
-    let $extraction := tde:document-data-extract($entity-type, $esi:json-extraction-template)
-    let $xml-extraction := tde:document-data-extract($entity-type, $esi:xml-extraction-template)
-    return (
-        json:array-values( map:get($extraction,  map:keys($extraction))),
-        json:array-values( map:get($xml-extraction,  map:keys($xml-extraction)))
-        )
- :)
-    sem:graph(sem:iri($entity-type-uri))
+    sem:graph(sem:iri($entity-type-graph-iri))
 };
 
 
@@ -815,7 +806,6 @@ declare private function esi:key-convert-to-xml(
     $key as item()
 ) as element()*
 {
-    xdmp:log(("CONV", $key)),
     if (map:contains($map, $key))
     then 
         let $element-qname := 

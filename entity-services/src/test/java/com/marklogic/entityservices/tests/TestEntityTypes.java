@@ -206,7 +206,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
 
 	private void checkTriples(String entityTypeUri) throws TestEvalException, IOException {
-        StringHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new StringHandle() );
+        StringHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples('"+entityTypeUri + "'))", new StringHandle() );
 
         Graph actualTriples = GraphFactory.createGraphMem();
         ByteArrayInputStream bis = new ByteArrayInputStream(rdfHandle.get().getBytes());
@@ -236,13 +236,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
 //        		os.close();
         		
         		// what a great function for debugging:
-//        		logger.debug("Difference, expected - actual");
-//        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
-//        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-//
-//        		logger.debug("Difference, actual - expected");
-//        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
-//        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
+        		logger.debug("Difference, expected - actual");
+        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+
+        		logger.debug("Difference, actual - expected");
+        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
+        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
         		
         		

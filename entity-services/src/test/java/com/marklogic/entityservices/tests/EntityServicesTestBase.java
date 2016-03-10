@@ -75,7 +75,6 @@ public class EntityServicesTestBase {
 	    schemasClient = testSetup.getSchemasClient();
 	    JSONDocumentManager docMgr = client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
-	    DocumentWriteSet metadataWriteSet = docMgr.newWriteSet();
 	    
 	    tempBootstrapTemplates();
 	    
@@ -106,18 +105,16 @@ public class EntityServicesTestBase {
 	    	//if (!f.getName().startsWith("refs")) {continue; };
 	    	logger.info("Loading " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
-	        writeSet.add(f.getName(), new FileHandle(f));
-	       
+	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+	        metadata.getCollections().addAll(
+	        		"http://marklogic.com/entity-services/entity-types",
+	        		f.getName());
 	        
-	        DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-	        metadata.getCollections().add("http://marklogic.com/entity-services/entity-types");
-	        metadata.setFormat(Format.XML);
-	        metadataWriteSet.add(f.getName(), metadata);
+	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
 	       
 	        entityTypes.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    docMgr.write(metadataWriteSet);
 
 	    for (File f : sourceFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
@@ -130,7 +127,6 @@ public class EntityServicesTestBase {
 	        sourceFilesUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-
 	}
 
 	/*
@@ -141,7 +137,7 @@ public class EntityServicesTestBase {
 		String functionCall = "esi:templates-bootstrap()";
 	    ServerEvaluationCall call = 
 	            schemasClient.newServerEval().xquery(importString + functionCall);
-	   
+	    call.eval();
 	}
 
 	//@AfterClass

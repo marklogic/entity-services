@@ -81,7 +81,10 @@ declare variable $esi:entity-type-schematron :=
 declare variable $esi:json-extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
-<!-- TODO collection -->
+    <description>Extracts triples from JSON entity type documents which project an RDF model of entity types</description>
+    <collections>
+        <collection>http://marklogic.com/entity-services/entity-types</collection>
+    </collections>
     <context>/definitions/*</context>
     <vars>
         <!-- constants -->
@@ -212,7 +215,7 @@ declare variable $esi:json-extraction-template :=
         <vars>
         <var><name>propertyName</name><val>fn:node-name(.)</val></var>
         <var><name>datatype</name><val>
-                switch (xs:string(./datatype))
+                switch (xs:string(../datatype))
                 case "base64Binary"       return $XSD_BASE64BINARY
                 case "boolean"            return $XSD_BOOLEAN
                 case "byte"               return $XSD_BYTE
@@ -290,7 +293,7 @@ declare variable $esi:json-extraction-template :=
             <triple>
               <subject><val>$property-subject-iri</val></subject>
               <predicate><val>$PROP_DATATYPE</val></predicate>
-              <object><val>$datatype </val></object>
+              <object><val>$datatype</val></object>
             </triple>
         </triples>
         </template>
@@ -399,6 +402,10 @@ declare variable $esi:json-extraction-template :=
 declare variable $esi:xml-extraction-template := 
 <template xmlns:es="http://marklogic.com/entity-services"
      xmlns="http://marklogic.com/xdmp/tde">
+    <description>Extracts triples from XML entity type documents which project an RDF model of entity types</description>
+    <collections>
+        <collection>http://marklogic.com/entity-services/entity-types</collection>
+    </collections>
     <context>/es:entity-type</context>
     <path-namespaces>
         <path-namespace>
@@ -762,7 +769,7 @@ declare function esi:entity-type-graph-iri(
 (: this funcion stores the two templates in the schemas db.
  : once Config is supported, remove this function
  :)
-declare function esi:bootstrap-entity-services()
+declare function esi:templates-bootstrap()
 {
     xdmp:document-insert("json-entity-services.tde", $json-extraction-template,
                                 xdmp:default-permissions(),
@@ -790,7 +797,7 @@ declare function esi:extract-triples(
         json:array-values( map:get($xml-extraction,  map:keys($xml-extraction)))
         )
  :)
-    sem:graph($entity-type-uri)
+    sem:graph(sem:iri($entity-type-uri))
 };
 
 

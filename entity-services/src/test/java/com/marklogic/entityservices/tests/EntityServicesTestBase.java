@@ -63,7 +63,7 @@ public class EntityServicesTestBase {
 	protected static DatabaseClient client, modulesClient, schemasClient;
 	protected static Set<String> entityTypes = new HashSet<String>();
 	protected static Set<String> sourceFilesUris = new HashSet<String>();
-	protected static Collection<File> files;
+	protected static Collection<File> testCaseFiles;
 	protected static DocumentBuilder builder;
 
 	@SuppressWarnings("unchecked")
@@ -82,11 +82,11 @@ public class EntityServicesTestBase {
 		URL xmlFilesUrl = client.getClass().getResource("/xml-entity-types");
 		URL sourcesFilesUrl = client.getClass().getResource("/source-documents");
 		
-		files = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
+		testCaseFiles = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	    Collection<File> xmlFiles = FileUtils.listFiles(new File(xmlFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
-	    files.addAll(xmlFiles);
+	    testCaseFiles.addAll(xmlFiles);
 	    
 	    Collection<File> sourceFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
@@ -95,7 +95,7 @@ public class EntityServicesTestBase {
 		factory.setNamespaceAware(true);
 		builder = factory.newDocumentBuilder();
 		
-	    for (File f : files) {
+	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
@@ -143,7 +143,7 @@ public class EntityServicesTestBase {
 	//@AfterClass
 	public static void teardownClass() {
 		JSONDocumentManager docMgr = client.newJSONDocumentManager();
-	    for (File f : files) {
+	    for (File f : testCaseFiles) {
 	    	logger.info("Removing " + f.getName());
 		    docMgr.delete(f.getName());
 	    }

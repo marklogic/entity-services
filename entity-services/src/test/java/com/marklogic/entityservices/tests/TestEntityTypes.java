@@ -25,15 +25,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -52,7 +58,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
+import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
@@ -85,6 +95,55 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-multiple-pk.xml", "");
         invalidMessages.put("invalid-property-ref-with-others.xml", "");
     }
+    
+    @Test
+    public void testInvalidEntityTypes() {
+    	
+    	URL sourcesFilesUrl = client.getClass().getResource("/invalid-entity-types");
+    	
+    	@SuppressWarnings("unchecked")
+		Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()), 
+            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+    	Set<String> invalidEntityTypes = new HashSet<String>();
+    	
+    	
+    	JSONDocumentManager docMgr = client.newJSONDocumentManager();
+	    DocumentWriteSet writeSet = docMgr.newWriteSet();
+	    
+    	for (File f : invalidEntityTypeFiles) {
+	    	if (f.getName().startsWith(".")) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+	    	logger.info("Loading " + f.getName());
+	    	
+	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+	        metadata.getCollections().addAll(
+	        		"http://marklogic.com/entity-services/entity-types",
+	        		f.getName());
+	        
+	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
+	       
+	        invalidEntityTypes.add(f.getName());
+	    }
+    	docMgr.write(writeSet);
+    	
+    	for (String entityType : invalidEntityTypes) {
+	    	logger.info("Checking invalid: " + entityType);
+	    	JacksonHandle handle;
+			try {
+				handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+	    		fail("eval should throw an exception for invalid cases." + entityType);
+			} catch (TestEvalException e) {
+				assertTrue("Must contain invalidity message. Message was " + e.getMessage(), 
+						e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
+				
+				// finish structure above for message checks (to be finished) TODO
+				assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
+			}
+    	}
+    	
+    }
+    
+    
     @Test
     /*
      * For each entity type in the test directory, verify that
@@ -106,59 +165,42 @@ public class TestEntityTypes extends EntityServicesTestBase {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
-        	if (entityType.toString().contains("invalid-")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			assertTrue("Must contain invalidity message. Message was " + e.getMessage(), 
-        					e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
-        			
-        			// finish structure above for message checks (to be finished) TODO
-        			assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
-        		}
-        	}
-        	else {
-        		
-        		checkTriples(entityType);
-
-                if ( entityType.toString().endsWith(".json")) {
-                	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
-                	JsonNode original = mapper.readValue(is, JsonNode.class);
-                	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
-            		JsonNode actual = handle.get();
-                    
-                    checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
-                    
-                	checkEntityTypeToXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
-                } else {
-                	String jsonFileName = entityType.toString().replace(".xml", ".json");
-                	
-                	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
-
-                	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
-                	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
-            		JsonNode jsonActual = handle.get();
-                    checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
-            		
-                    InputStream xmlControl = this.getClass().getResourceAsStream("/xml-entity-types/"+entityType);
-                	Document xmloriginal = builder.parse(xmlControl);
-                	DOMHandle xmlhandle  = evalOneResult("es:entity-type-to-xml(es:entity-type-from-node(fn:doc('"+ entityType  + "')))", new DOMHandle());
-            		Document xmlactual = xmlhandle.get();
-            		
-            		//debugOutput(xmloriginal);
-            		//debugOutput(xmlactual);
-            		
-            	    checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
-            	       
-            	    checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
-            		
-                }	
-        	}
         	
-        }
+    		checkTriples(entityType);
+
+            if ( entityType.toString().endsWith(".json")) {
+            	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
+            	JsonNode original = mapper.readValue(is, JsonNode.class);
+            	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+        		JsonNode actual = handle.get();
+                
+                checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
+                
+            	checkEntityTypeToXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
+            } else {
+            	String jsonFileName = entityType.toString().replace(".xml", ".json");
+            	
+            	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
+
+            	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
+            	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+        		JsonNode jsonActual = handle.get();
+                checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
+        		
+                InputStream xmlControl = this.getClass().getResourceAsStream("/xml-entity-types/"+entityType);
+            	Document xmloriginal = builder.parse(xmlControl);
+            	DOMHandle xmlhandle  = evalOneResult("es:entity-type-to-xml(es:entity-type-from-node(fn:doc('"+ entityType  + "')))", new DOMHandle());
+        		Document xmlactual = xmlhandle.get();
+        		
+        		//debugOutput(xmloriginal);
+        		//debugOutput(xmlactual);
+        		
+        	    checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
+        	       
+        	    checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
+        		
+            }	
+    	}
     }
     
    

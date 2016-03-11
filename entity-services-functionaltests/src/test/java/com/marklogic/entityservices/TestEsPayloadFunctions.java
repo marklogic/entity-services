@@ -110,15 +110,49 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
-        	if (entityType.toString().contains("invalid-")) {
+        	if (entityType.toString().contains("invalid-bad-datatype")) {
         		logger.info("Checking invalid: " + entityType);
         		JacksonHandle handle = null;
         		try {
         			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases." + entityType);
         		} catch (TestEvalException e) {
-        			log.error(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
+        		}
+        	}
+        	else if (entityType.toString().contains("invalid-datatype-ref-together")) {
+        		logger.info("Checking invalid: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("If using $ref, it must be the only key."));
+        		}
+        	}
+        	else if (entityType.toString().contains("invalid-missing-definitions")) {
+        		
+        		logger.info("Checking invalid: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one definitions declaration."));
+        		}
+        	}
+        	else if (entityType.toString().contains("invalid-missing-version")) {
+        		logger.info("Checking invalid: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one version declaration."));
         		}
         	}
         	else {

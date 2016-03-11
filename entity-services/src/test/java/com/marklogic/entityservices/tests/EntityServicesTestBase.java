@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -57,97 +59,42 @@ import com.marklogic.client.io.Format;
 import com.marklogic.client.io.marker.AbstractReadHandle;
 
 
-public class EntityServicesTestBase {
+public abstract class EntityServicesTestBase {
+
+	protected static DatabaseClient client, modulesClient, schemasClient;
+	protected static Set<String> entityTypes;
+	protected static Set<String> sourceFileUris;
 
 	protected static Logger logger = LoggerFactory.getLogger(EntityServicesTestBase.class);
-	protected static DatabaseClient client, modulesClient, schemasClient;
-	protected static Set<String> entityTypes = new HashSet<String>();
-	protected static Set<String> sourceFilesUris = new HashSet<String>();
-	protected static Collection<File> testCaseFiles;
 	protected static DocumentBuilder builder;
 
-	@SuppressWarnings("unchecked")
+
 	@BeforeClass
 	public static void setupClass() throws IOException, ParserConfigurationException {
 	    TestSetup testSetup = TestSetup.getInstance();
 	    client = testSetup.getClient();
 	    modulesClient = testSetup.getModulesClient();
 	    schemasClient = testSetup.getSchemasClient();
-	    JSONDocumentManager docMgr = client.newJSONDocumentManager();
-	    DocumentWriteSet writeSet = docMgr.newWriteSet();
-	    
-	    tempBootstrapTemplates();
-	    
-		URL jsonFilesUrl = client.getClass().getResource("/json-entity-types");
-		URL xmlFilesUrl = client.getClass().getResource("/xml-entity-types");
-		URL sourcesFilesUrl = client.getClass().getResource("/source-documents");
-		
-		testCaseFiles = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
-	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
-	    Collection<File> xmlFiles = FileUtils.listFiles(new File(xmlFilesUrl.getPath()), 
-	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
-	    testCaseFiles.addAll(xmlFiles);
-	    
-	    Collection<File> sourceFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
-	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
-	    
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		builder = factory.newDocumentBuilder();
 		
-	    for (File f : testCaseFiles) {
-	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
-	    	
-	    	// uncomment for quick iteration on TDE.
-	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
-	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
-	    	//if (!f.getName().startsWith("refs")) {continue; };
-	    	logger.info("Loading " + f.getName());
-	    	//docMgr.write(f.getPath(), new FileHandle(f));
-	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-	        metadata.getCollections().addAll(
-	        		"http://marklogic.com/entity-services/entity-types",
-	        		f.getName());
-	        
-	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
-	       
-	        entityTypes.add(f.getName());
-	    }
-	    docMgr.write(writeSet);
-
-	    for (File f : sourceFiles) {
-	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
-	    	
-	    	logger.info("Loading " + f.getName());
-	    	//docMgr.write(f.getPath(), new FileHandle(f));
-	        writeSet.add(f.getName(), new FileHandle(f));
-	        
-	        sourceFilesUris.add(f.getName());
-	    }
-	    docMgr.write(writeSet);
+	    entityTypes = loadEntityTypes();
+	
+	    sourceFileUris = loadExtraFiles();
 	}
-
-	/*
-	 * this function goes away once templates move to config directory.
-	 */
-	private static void tempBootstrapTemplates() {
-		String importString = "import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
-		String functionCall = "esi:templates-bootstrap()";
-	    ServerEvaluationCall call = 
-	            schemasClient.newServerEval().xquery(importString + functionCall);
-	    call.eval();
+	
+	protected static Set<String> loadEntityTypes() throws ParserConfigurationException {
+	    TestSetup testSetup = TestSetup.getInstance();
+	    return testSetup.loadEntityTypes();
 	}
-
-	//@AfterClass
-	public static void teardownClass() {
-		JSONDocumentManager docMgr = client.newJSONDocumentManager();
-	    for (File f : testCaseFiles) {
-	    	logger.info("Removing " + f.getName());
-		    docMgr.delete(f.getName());
-	    }
+	
+	protected static Set<String> loadExtraFiles() {
+		return TestSetup.getInstance().loadExtraFiles();
 	}
+	
+
+	
 
 	public EvalResultIterator eval(String functionCall) throws TestEvalException {
 	    

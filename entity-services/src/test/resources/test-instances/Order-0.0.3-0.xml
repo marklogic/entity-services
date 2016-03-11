@@ -1,5 +1,5 @@
 <Order>
-	<orderId>some string</orderId>
-	<orderDate>2000-01-23</orderDate>
-	<hasOrderDetails>externally-referenced-instance</hasOrderDetails>
+<orderId>some string</orderId>
+<orderDate>2000-01-23</orderDate>
+<hasOrderDetails>externally-referenced-instance</hasOrderDetails>
 </Order>

@@ -12,7 +12,7 @@
                 <es:collation>http://marklogic.com/collation</es:collation>
             </orderId>
             <base64BinaryKey>
-                <es:datatype>#/definitions/OrderDetails</es:datatype>
+                <es:datatype>base64Binary</es:datatype>
             </base64BinaryKey>
         </es:properties>
         <es:primary-key>orderId</es:primary-key>

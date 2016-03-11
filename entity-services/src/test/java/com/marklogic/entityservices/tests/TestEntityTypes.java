@@ -80,20 +80,20 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
     static {
-    	invalidMessages.put("invalid-bad-datatype.json", "");
-        invalidMessages.put("invalid-missing-datatype.json", "");
+    	invalidMessages.put("invalid-bad-datatype.json", "Unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.json", "A non-reference property must have a datatype");
         invalidMessages.put("invalid-missing-info.json", "Entity Type must contain exactly one info declaration.");
-        invalidMessages.put("invalid-missing-title.json", "");
+        invalidMessages.put("invalid-missing-title.json", "Entity Type must contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.json", "Entity Type must contain exactly one version declaration.");
-        invalidMessages.put("invalid-property-ref-with-others.json", "");
-        invalidMessages.put("invalid-multiple-pk.json", "");
-    	invalidMessages.put("invalid-bad-datatype.xml", "");
-        invalidMessages.put("invalid-missing-datatype.xml", "");
+        invalidMessages.put("invalid-property-ref-with-others.json", "If using $ref, it must be the only key.");
+        invalidMessages.put("invalid-multiple-pk.json", "Only one primary key allowed.");
+    	invalidMessages.put("invalid-bad-datatype.xml", "Unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.xml", "A non-reference property must have a datatype");
         invalidMessages.put("invalid-missing-info.xml", "Entity Type must contain exactly one info declaration.");
-        invalidMessages.put("invalid-missing-title.xml", "");
+        invalidMessages.put("invalid-missing-title.xml", "Entity Type must contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.xml", "Entity Type must contain exactly one version declaration.");
-        invalidMessages.put("invalid-multiple-pk.xml", "");
-        invalidMessages.put("invalid-property-ref-with-others.xml", "");
+        invalidMessages.put("invalid-multiple-pk.xml", "Only one primary key allowed");
+        invalidMessages.put("invalid-property-ref-with-others.xml", "If using es:ref, it must be the only child of es:property.");
     }
     
     @Test
@@ -278,17 +278,17 @@ public class TestEntityTypes extends EntityServicesTestBase {
 //        		os.close();
         		
         		// what a great function for debugging:
-        		logger.debug("Difference, expected - actual");
-        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
-        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+//        		logger.debug("Difference, expected - actual");
+//        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+//        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);
 
-        		logger.debug("Difference, actual - expected");
-        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
-        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
+//        		logger.debug("Difference, actual - expected");
+//        		Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
         		
         		// FIXME - failing because of pending question.
-        	//	assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));
+        		//assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));
         	} catch (NullPointerException e) {
         		logger.info("No RDF verification for " + entityTypeUri);
         	} 

@@ -6,19 +6,19 @@
       <es:description>All kinds of refs in one file.</es:description>
   </es:info>
   <es:definitions>
-    <Order>
+    <Refs>
         <es:properties>
             <correctReference>
-                <es:ref>#definitions/Order</es:ref>
+                <es:ref>#definitions/Refs</es:ref>
             </correctReference>
             <secondCorrectReference>
-                <es:ref>#definitions/Order</es:ref>
+                <es:ref>#definitions/Refs</es:ref>
             </secondCorrectReference>
             <refWithDescription>
-                <es:ref>#definitions/Order</es:ref>
+                <es:ref>#definitions/Refs</es:ref>
                 <es:description>This reference has a description</es:description>
             </refWithDescription>
         </es:properties>
-    </Order>
+    </Refs>
   </es:definitions>
 </es:entity-type>

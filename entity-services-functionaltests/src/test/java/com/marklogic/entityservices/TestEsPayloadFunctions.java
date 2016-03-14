@@ -155,6 +155,28 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one version declaration."));
         		}
         	}
+        	else if (entityType.toString().contains("invalid-info-notobject")) {
+        		logger.info("Checking invalid: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one title declaration."));
+        		}
+        	}
+        	else if (entityType.toString().contains("invalid-casesensitive-datatype")) {
+        		logger.info("Checking invalid: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
+        		}
+        	}
         	else {
         		
         		// FIXME templates need to exclude triples

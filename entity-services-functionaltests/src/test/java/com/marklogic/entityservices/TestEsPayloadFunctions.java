@@ -110,7 +110,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
-        	if (entityType.toString().contains("pdf")) {
+        	if (entityType.toString().contains("jpg")) {
         		logger.info("Checking binary: " + entityType);
         		JacksonHandle handle = null;
         		try {

@@ -287,8 +287,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
 //        		RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
             	
         		
-        		// FIXME - failing because of pending question.
-        		//assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));
+        		assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));
         	} catch (NullPointerException e) {
         		logger.info("No RDF verification for " + entityTypeUri);
         	} 

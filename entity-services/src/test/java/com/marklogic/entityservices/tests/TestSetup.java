@@ -52,8 +52,17 @@ public class TestSetup {
     private DatabaseClient _modulesClient, _schemasClient;
     protected static Collection<File> testCaseFiles;
 	protected static DocumentBuilder builder;
-	
-    protected TestSetup() {
+	private Set<String> entityTypes, sourceFileUris;
+			
+    public Set<String> getEntityTypes() {
+		return entityTypes;
+	}
+
+	public Set<String> getSourceFileUris() {
+		return sourceFileUris;
+	}
+
+	protected TestSetup() {
         // No instantiation allowed.
     }
 
@@ -93,6 +102,10 @@ public class TestSetup {
             	instance._schemasClient = DatabaseClientFactory.newClient(host, Integer.parseInt(port), schemasDatabase,  username, password, Authentication.DIGEST );
             }
         }
+        
+        
+        instance.loadEntityTypes();
+        instance.loadExtraFiles();
         return instance;
     }
     
@@ -118,14 +131,14 @@ public class TestSetup {
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	
-	Set<String> loadEntityTypes() throws ParserConfigurationException {
+	private void loadEntityTypes() {
 		
 	    JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
 	    
 		testCaseFiles = getTestResources("/json-entity-types");
 		testCaseFiles.addAll(getTestResources("/xml-entity-types"));
-		Set<String> entityTypes = new HashSet<String>();
+		entityTypes = new HashSet<String>();
 		
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
@@ -147,11 +160,10 @@ public class TestSetup {
 	        entityTypes.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    return entityTypes;
 	}
 
-	Set<String> loadExtraFiles() {
-		Set<String> sourceFilesUris = new HashSet<String>();
+	private void loadExtraFiles() {
+		sourceFileUris = new HashSet<String>();
 	    
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -170,10 +182,9 @@ public class TestSetup {
 	    	
 	    	logger.info("Loading " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));
-	        sourceFilesUris.add(f.getName());
+	        sourceFileUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    return sourceFilesUris;
 	}
 	
 	//@AfterClass

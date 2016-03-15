@@ -62,22 +62,10 @@ public abstract class EntityServicesTestBase {
 		factory.setNamespaceAware(true);
 		builder = factory.newDocumentBuilder();
 		
-	    entityTypes = loadEntityTypes();
-	    sourceFileUris = loadExtraFiles();
+	    entityTypes = testSetup.getEntityTypes();
+	    sourceFileUris = testSetup.getSourceFileUris();
 	}
 	
-	protected static Set<String> loadEntityTypes() throws ParserConfigurationException {
-	    TestSetup testSetup = TestSetup.getInstance();
-	    return testSetup.loadEntityTypes();
-	}
-	
-	protected static Set<String> loadExtraFiles() {
-		return TestSetup.getInstance().loadExtraFiles();
-	}
-	
-
-	
-
 	public EvalResultIterator eval(String functionCall) throws TestEvalException {
 	    
 	    String entityServicesImport = 

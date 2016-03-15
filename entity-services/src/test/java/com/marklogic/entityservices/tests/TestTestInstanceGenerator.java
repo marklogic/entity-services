@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.marklogic.entityservices;
+package com.marklogic.entityservices.tests;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,12 +43,13 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
 			String entityTypeLocation = null;
-			if (entityType.contains("invalid")) { continue; };
 			
-			String testInstanceName = entityType.replaceAll("(.json|.xml)$", ".json");
+			// we test that xml and json are equivalent elsewhere, so only test half.
+			if (entityType.contains(".json")) { continue; }
+			
 			String generateTestInstances = "es:entity-type-get-test-instances( es:entity-type-from-node( fn:doc('"+entityType+"') ) )";
 			
-			Log.info("Creating test instances from " + testInstanceName);
+			Log.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);
 			int resultNumber = 0;
 			while (results.hasNext()) {
@@ -57,14 +58,17 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 				Document actualDoc = handle.get();
 				
 				//debugOutput(actualDoc);
-				
+				String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
+
 // this is a one-time utility to auto-populate verification keys, not for checking them!
-//				File outputFile = new File("src/test/resources/test-instances/" + testInstanceName.replace(".json", "") + "-" + resultNumber + ".xml");
+//				File outputFile = new File("src/test/resources/test-instances/" + entityTypeFileName );
 //				FileOutputStream os = new FileOutputStream(outputFile);
 //				debugOutput(actualDoc, os);
+//				logger.debug("Saved file to " + outputFile.getName());
 //				os.close();
 				
-				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName.replace(".json", "") + "-" + resultNumber + ".xml");
+				logger.debug("Control document: " + entityTypeFileName);
+				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
 				Document controlDoc = builder.parse(is);
 				
 				XMLUnit.setIgnoreWhitespace(true);

@@ -49,13 +49,6 @@ declare function es:entity-type-from-node(
             else esi:entity-type-from-xml($root)
 };
 
-declare function es:entity-type-as-triples(
-    $entity-type as document-node()
-) as sem:triple*
-{
-    esi:extract-triples($entity-type)
-};
-
 (:~
  : Given an entity type, returns its XML representation
  :)

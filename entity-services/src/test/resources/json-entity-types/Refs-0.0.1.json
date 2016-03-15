@@ -6,16 +6,16 @@
         "description":"All kinds of refs in one file."
     },
     "definitions": {
-        "Order": {
+        "Refs": {
             "properties": {
                 "correctReference": {
-                    "$ref":"#definitions/Order"
+                    "$ref":"#definitions/Refs"
                 },
                 "secondCorrectReference": {
-                    "$ref":"#definitions/Order"
+                    "$ref":"#definitions/Refs"
                 },
                 "refWithDescription": {
-                    "$ref":"#definitions/Order",
+                    "$ref":"#definitions/Refs",
                     "description":"This reference has a description"
                 }
             }

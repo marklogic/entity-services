@@ -34,6 +34,10 @@ declare function es-codegen:conversion-module-generate(
     let $prefix := map:get($info, "title")
     let $version:= map:get($info, "version")
     let $base-uri := fn:head((map:get($info, "baseUri"), $default-base-uri))
+    let $base-uri := 
+            if (fn:matches($base-uri, "[#/]$")) 
+            then $base-uri 
+            else concat($base-uri, "#")
     return
 document {
 <conversion-module>

@@ -1,0 +1,60 @@
+<Order>
+<orderId>some string</orderId>
+<base64BinaryKey>TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=</base64BinaryKey>
+<booleanKey>true</booleanKey>
+<byteKey>123</byteKey>
+<dateKey>2000-01-23</dateKey>
+<dateTimeKey>2000-01-23T17:00:26.789186-08:00</dateTimeKey>
+<dayTimeDurationKey>P1D</dayTimeDurationKey>
+<decimalKey>113</decimalKey>
+<doubleKey>123</doubleKey>
+<durationKey>P1D</durationKey>
+<floatKey>123</floatKey>
+<intKey>123</intKey>
+<integerKey>123</integerKey>
+<longKey>1355</longKey>
+<shortKey>343</shortKey>
+<stringKey>some string</stringKey>
+<timeKey>09:00:15</timeKey>
+<unsignedIntKey>5555</unsignedIntKey>
+<unsignedLongKey>999999999</unsignedLongKey>
+<unsignedShortKey>324</unsignedShortKey>
+<yearMonthDurationKey>P1Y</yearMonthDurationKey>
+<anySimpleTypeKey>some string</anySimpleTypeKey>
+<anyURIKey>http://example.org/some-uri</anyURIKey>
+<iriKey>http://example.org/some-iri</iriKey>
+<arrayKey>1355</arrayKey>
+<arrayKey>1355</arrayKey>
+<arrayKey>1355</arrayKey>
+<arrayStringKey>some string</arrayStringKey>
+<arrayStringKey>some string</arrayStringKey>
+<arrayStringKey>some string</arrayStringKey>
+<referenceInThisFile>
+<OrderDetails>
+<quantity>123</quantity>
+<productName>some string</productName>
+</OrderDetails>
+</referenceInThisFile>
+<arrayreferenceInThisFile>
+<OrderDetails>
+<quantity>123</quantity>
+<productName>some string</productName>
+</OrderDetails>
+</arrayreferenceInThisFile>
+<arrayreferenceInThisFile>
+<OrderDetails>
+<quantity>123</quantity>
+<productName>some string</productName>
+</OrderDetails>
+</arrayreferenceInThisFile>
+<arrayreferenceInThisFile>
+<OrderDetails>
+<quantity>123</quantity>
+<productName>some string</productName>
+</OrderDetails>
+</arrayreferenceInThisFile>
+<externalReference>externally-referenced-instance</externalReference>
+<externalArrayReference>externally-referenced-instance</externalArrayReference>
+<externalArrayReference>externally-referenced-instance</externalArrayReference>
+<externalArrayReference>externally-referenced-instance</externalArrayReference>
+</Order>

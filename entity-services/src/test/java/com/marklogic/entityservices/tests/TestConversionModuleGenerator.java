@@ -15,18 +15,27 @@
  */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.transform.TransformerException;
+
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.client.document.TextDocumentManager;
+import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.StringHandle;
 
 /**
@@ -72,9 +81,10 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	 * work out-of-the-box, and handle an identity transform from test instances.
 	 * @throws IOException 
 	 * @throws JsonProcessingException 
+	 * @throws TransformerException 
 	 */
 	@Test
-	public void defaultModuleExtractsIdentity() throws TestEvalException, JsonProcessingException, IOException {
+	public void defaultModuleExtractsIdentity() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
 		
 		for (String entityType : entityTypes) {
 			
@@ -104,13 +114,33 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
 			
 			try {
-			StringHandle handle = evalOneResult(
+				
+				DOMHandle handle = evalOneResult(
 					"import module namespace conv = \""+uriPrefix + entityTypeName +"\" at \""+moduleName+"\"; "+
-		            "conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') )", new StringHandle());
+					"conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )/"+entityTypeNoVersion, new DOMHandle());
+				
+				// dom returned from extraction must equal test instance.
+				String controlFilePath = "/test-instances/" + entityTypeTestFileName;
+				Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
+				
+				Document actualInstance = handle.get();
+				assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
+				Element actualDocumentElement = actualInstance.getDocumentElement();
+				
+//				logger.debug("Control doc");
+//				debugOutput(controlDom);
+//				logger.debug("Actual doc wrapped");
+//				debugOutput(actualInstance);
+				
+				XMLUnit.setIgnoreWhitespace(true);
+				XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
+				
+				
 			} catch (TestEvalException e) {
 				logger.warn("Exception thrown validating conversion module.  Maybe test conversion module cannot test " + entityTypeNoVersion);
+				//e.printStackTrace();
 			}
-		}
+			}
 		
 	}
 	

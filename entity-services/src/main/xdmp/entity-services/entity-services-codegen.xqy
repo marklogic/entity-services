@@ -33,6 +33,7 @@ declare function es-codegen:conversion-module-generate(
     let $info := map:get($entity-type, "info")
     let $prefix := map:get($info, "title")
     let $version:= map:get($info, "version")
+    let $definitions := map:get($entity-type, "definitions")
     let $base-uri := fn:head((map:get($info, "baseUri"), $default-base-uri))
     let $base-uri := 
             if (fn:matches($base-uri, "[#/]$")) 
@@ -61,16 +62,24 @@ import module namespace es = "http://marklogic.com/entity-services"
  : extract values.  Edit each function to create a valid entity instance.
  :)
 { (: iterate over entity types to make extract instance stubs :)
-    for $individual-entity-type in map:keys(map:get($entity-type, "definitions"))
+    for $entity-type-key in map:keys(map:get($entity-type, "definitions"))
     return 
     <extract-instance>
-declare function {$prefix}:extract-instance-{$individual-entity-type}(
+declare function {$prefix}:extract-instance-{$entity-type-key}(
     $source-document as node()
 ) as map:map
 {{
-    let $m := map:map()
-    let $_ := map:put($m, "big", "deal")
-    return $m
+    let $instance := map:map()
+    let $_ := map:put($instance, "$type", "{$entity-type-key}")
+    {
+    let $this-type := map:get($definitions, $entity-type-key)
+    let $properties-map := map:get($this-type, "properties")
+    let $properties-keys := map:keys($properties-map)
+    for $property-key in map:keys($properties-map)
+    return
+    concat("let $_ := map:put($instance, '", $property-key, "', data($source-document/", $entity-type-key, "/", $property-key, "))&#10;    ")
+    }
+    return $instance
 }};
     </extract-instance>/text()
 }
@@ -84,13 +93,28 @@ declare function {$prefix}:instance-to-canonical-xml(
     $entity-instance as map:map
 ) as element(es:instance)
 {{
-    element es:instance {{
-        element es:info {{
-            element es:title {{ map:get($entity-instance, "info")=>map:get("title") }},
-            element es:version {{ map:get($entity-instance, "info")=>map:get("version") }}
-        }},
-        {string-join( esi:entity-type-get-test-instances($entity-type) ! xdmp:quote(.) , ",")}
-    }}
+    let $title := "{$prefix}"
+    let $version := "{$version}"
+    let $instance-properties := map:keys($entity-instance)
+    let $instance-node :=
+        element es:instance {{
+            element es:info {{
+                element es:title {{ $title }},
+                element es:version {{ $version }}
+                (: id :)
+            }},
+            element {{ map:get($entity-instance, "$type") }}  {{
+                for $key in $instance-properties
+                where ($key castable as xs:NCName)
+                return element {{ $key }} {{
+                    typeswitch (map:get($entity-instance, $key))
+                    case json:array return "array"
+                    case map:map return "ref"
+                    default return map:get($entity-instance, $key)
+                }}
+            }}
+        }}
+    return (xdmp:log($instance-node), $instance-node)
 }};
 
 

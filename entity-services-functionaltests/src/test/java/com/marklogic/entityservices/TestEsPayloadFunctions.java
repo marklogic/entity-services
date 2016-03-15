@@ -110,7 +110,19 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
-        	if (entityType.toString().contains("invalid-bad-datatype")) {
+        	if (entityType.toString().contains("pdf")) {
+        		logger.info("Checking binary: " + entityType);
+        		JacksonHandle handle = null;
+        		try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + entityType);
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			
+        			assertTrue("Must throw XDMP-AS error",e.getMessage().contains("Invalid coercion"));
+        		}
+        	}
+        	else if (entityType.toString().contains("invalid-bad-datatype")) {
         		logger.info("Checking invalid: " + entityType);
         		JacksonHandle handle = null;
         		try {
@@ -196,7 +208,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
                 	String jsonFileName = entityType.toString().replace(".xml", ".json");
                 	
                 	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
-
+                   
                 	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
                 	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
             		JsonNode jsonActual = handle.get();
@@ -218,6 +230,15 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         	}
         	
         }
+   
+        logger.info("Checking for no arg");
+		JacksonHandle handle = null;
+        try {
+			handle = evalOneResult("es:entity-type-from-node(fn:doc(''))", new JacksonHandle());	
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+		    assertTrue("XDMP-ARGTYPE",e.getMessage().contains("XDMP-URI"));
+		}
     }
     
     private void debugOutput(Document xmldoc) throws TransformerException {

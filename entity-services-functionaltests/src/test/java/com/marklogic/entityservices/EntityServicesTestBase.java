@@ -44,12 +44,16 @@ public class EntityServicesTestBase {
 	    
 		URL jsonFilesUrl = client.getClass().getResource("/json-entity-types");
 		URL xmlFilesUrl = client.getClass().getResource("/xml-entity-types");
+		URL binaryFilesUrl = client.getClass().getResource("/binary");
 		
 		Collection<File> files = FileUtils.listFiles(new File(jsonFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	    Collection<File> xmlFiles = FileUtils.listFiles(new File(xmlFilesUrl.getPath()), 
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+	    Collection<File> binaryFiles = FileUtils.listFiles(new File(binaryFilesUrl.getPath()), 
+	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	    files.addAll(xmlFiles);
+	    files.addAll(binaryFiles);
 	    
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -57,7 +61,7 @@ public class EntityServicesTestBase {
 		
 	    for (File f : files) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+	    	//if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	//if (!f.getName().equals("Person-0.0.2.json")) {continue; };

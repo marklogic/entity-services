@@ -7,7 +7,7 @@
     <es:description>All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.</es:description>
   </es:info>
   <es:definitions>
-    <Order>
+    <SchemaCompleteEntityType>
       <es:properties>
         <orderId>
           <es:datatype>string</es:datatype>
@@ -124,7 +124,7 @@
       <es:range-index>unsignedShortKey</es:range-index>
       <es:range-index>stringKey</es:range-index>
       <es:word-lexicon>stringKey</es:word-lexicon>
-    </Order>
+    </SchemaCompleteEntityType>
     <OrderDetails>
       <es:properties>
         <quantity>

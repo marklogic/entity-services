@@ -66,20 +66,55 @@ import module namespace es = "http://marklogic.com/entity-services"
     return 
     <extract-instance>
 declare function {$prefix}:extract-instance-{$entity-type-key}(
-    $source-document as node()
+    $source-node as node()
 ) as map:map
 {{
-    let $instance := map:map()
+    let $instance := json:object()
     let $_ := map:put($instance, "$type", "{$entity-type-key}")
     {
     let $this-type := map:get($definitions, $entity-type-key)
     let $properties-map := map:get($this-type, "properties")
     let $properties-keys := map:keys($properties-map)
     for $property-key in map:keys($properties-map)
+    let $is-array := map:get(map:get($properties-map, $property-key), "datatype") eq "array"
+    let $ref :=
+        if ($is-array)
+        then map:get(map:get(map:get($properties-map, $property-key), "items"), "$ref")
+        else map:get(map:get($properties-map, $property-key), "$ref")
+    let $path-to-property := concat("$source-node/", $entity-type-key, "/", $property-key)
+    let $value := 
+        if (empty($ref))
+        then 
+            concat($path-to-property, "! data(.)")
+        else 
+            if(contains($ref, "#definitions"))
+            then
+            concat("if (not(",
+                    $path-to-property,
+                    "/element())) &#10;then ",
+                    "data(", $path-to-property, ")",
+                    "&#10;else ",
+                    $path-to-property,
+                    " ! ",
+                    $prefix,
+                    ":extract-instance-",
+                    replace($ref, "#definitions/", ""),
+                    "(.)"
+                    )
+            else
+               concat($path-to-property, " ! data(.)")
+                
+    let $_ := xdmp:log(("ET", $prefix, $version, "PK", $property-key, "REF", $ref))
     return
-    concat("let $_ := map:put($instance, '", $property-key, "', data($source-document/", $entity-type-key, "/", $property-key, "))&#10;    ")
+    
+    concat("let $_ := if (empty( (",
+            $value,
+            ")))&#10;",
+            "         then () &#10;",
+            "         else map:put($instance, '", $property-key, "', ",$value, ")&#10;   "
+          )
     }
-    return $instance
+        return $instance
 }};
     </extract-instance>/text()
 }
@@ -95,7 +130,7 @@ declare function {$prefix}:instance-to-canonical-xml(
 {{
     let $title := "{$prefix}"
     let $version := "{$version}"
-    let $instance-properties := map:keys($entity-instance)
+    let $instance-keys := map:keys($entity-instance)
     let $instance-node :=
         element es:instance {{
             element es:info {{
@@ -104,17 +139,27 @@ declare function {$prefix}:instance-to-canonical-xml(
                 (: id :)
             }},
             element {{ map:get($entity-instance, "$type") }}  {{
-                for $key in $instance-properties
-                where ($key castable as xs:NCName)
-                return element {{ $key }} {{
-                    typeswitch (map:get($entity-instance, $key))
-                    case json:array return "array"
-                    case map:map return "ref"
-                    default return map:get($entity-instance, $key)
-                }}
+                for $key in $instance-keys
+                let $instance-property := map:get($entity-instance, $key)
+                where ($key castable as xs:NCName and $key ne "$type")
+                return
+                    typeswitch ($instance-property)
+                    case json:object+ 
+                        return
+                            for $prop in $instance-property
+                            return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop)/(*[exists(./*)] except es:info) }}
+                    case item()+
+                        return 
+                            for $val in $instance-property
+                            return element {{ $key }} {{ $val }}
+                    case json:array
+                        return 
+                            for $val in json:array-values($instance-property)
+                            return element {{ $key }} {{ $val }}
+                    default return element {{ $key }} {{ $instance-property }}
             }}
         }}
-    return (xdmp:log($instance-node), $instance-node)
+    return $instance-node
 }};
 
 

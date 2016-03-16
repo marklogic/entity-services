@@ -91,6 +91,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			// just test JSON ones here.
 			if (entityType.contains(".xml")) {continue; };
 			
+			//if (!entityType.equals("SchemaCompleteEntityType-0.0.1.json")) {continue;}
 			storeConversionModule(entityType);
 			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
 			
@@ -138,7 +139,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 				
 			} catch (TestEvalException e) {
 				logger.warn("Exception thrown validating conversion module.  Maybe test conversion module cannot test " + entityTypeNoVersion);
-				//e.printStackTrace();
+				fail("Evaluation exception thrown during conversion module testing." + e.getMessage());
 			}
 			}
 		

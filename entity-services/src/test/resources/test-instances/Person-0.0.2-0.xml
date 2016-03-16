@@ -11,9 +11,7 @@
 <lastName>some string</lastName>
 <fullName>some string</fullName>
 <address>some string</address>
-<friendOf>
-<es:cycle xmlns:es="http://marklogic.com/entity-services"/>
-</friendOf>
+<friendOf/>
 </Person>
 </friendOf>
 </Person>

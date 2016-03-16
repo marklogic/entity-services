@@ -6,7 +6,7 @@
     "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid."
   },
   "definitions": {
-    "Order": {
+    "SchemaCompleteEntityType": {
       "properties": {
         "orderId": {
           "datatype": "string",

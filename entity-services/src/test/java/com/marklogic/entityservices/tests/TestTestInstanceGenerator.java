@@ -40,7 +40,7 @@ import com.marklogic.client.io.DOMHandle;
 public class TestTestInstanceGenerator extends EntityServicesTestBase {
 
 	@Test
-	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
+	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
 			String entityTypeLocation = null;
 			
@@ -57,7 +57,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 				DOMHandle handle = result.get(new DOMHandle());
 				Document actualDoc = handle.get();
 				
-				//debugOutput(actualDoc);
+				debugOutput(actualDoc);
 				String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
 
 // this is a one-time utility to auto-populate verification keys, not for checking them!

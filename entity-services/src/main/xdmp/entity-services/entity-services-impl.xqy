@@ -344,8 +344,8 @@ declare private function esi:resolve-test-reference(
                map:get(map:get($property-definition, "items"), "$ref") ) )
     (: is the reference value in this entity type document :)
     let $referenced-type :=
-        if (contains($reference-value, "#/definitions"))
-        then esi:create-test-instance($entity-type, replace($reference-value, "#/definitions/", ""), $depth + 1)
+        if (contains($reference-value, "#definitions"))
+        then esi:create-test-instance($entity-type, replace($reference-value, "#definitions/", ""), $depth + 1)
         else "externally-referenced-instance"
     return $referenced-type
 };
@@ -402,8 +402,7 @@ declare function esi:create-test-instance(
             return
                 esi:create-test-value($entity-type, $entity-type-name, $property, map:get($properties, $property), $depth)
         }
-    (: open issue -- new element for cycle :)
-    else element es:cycle { }
+    else ()
 };
 
 

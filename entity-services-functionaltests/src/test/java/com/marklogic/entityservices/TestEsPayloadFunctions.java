@@ -318,11 +318,25 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 
     @Test
     /* testing entity-type-to-json with a document node */
-    public void testToJsonWithDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    public void testToJsonWithXmlDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with a document node");
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+    				fail("eval should throw an Invalid Coercion exception for entity-type-to-json() with a document node");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-to-json with a document node */
+    public void testToJsonWithJsonDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking entity-type-to-json() with a document node");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
     				fail("eval should throw an Invalid Coercion exception for entity-type-to-json() with a document node");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -350,7 +364,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking entity-type-to-json() with too many args");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.json')))", new JacksonHandle());	
+    				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
     				fail("eval should throw XDMP-TOOMANYARGS exception for entity-type-to-json() with no args");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -368,7 +382,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw ES-ENTITY-TYPE-INVALID  exception for entity-type-to-json() with schematron error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain ES-ENTITY-TYPE-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID (err:FOER0000): Entity Type must contain exactly one version declaration."));
+    				assertTrue("Must contain ES-ENTITY-TYPE-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one version declaration."));
     	}
     }
     

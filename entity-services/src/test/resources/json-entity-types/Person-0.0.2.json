@@ -23,7 +23,7 @@
           "datatype": "string"
         },
         "friendOf": {
-          "$ref": "#/definitions/Person"
+          "$ref": "#definitions/Person"
         }
       },
       "primaryKey":"id"

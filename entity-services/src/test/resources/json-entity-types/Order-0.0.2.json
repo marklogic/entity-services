@@ -14,10 +14,10 @@
           "datatype": "date"
         },
         "hasOrderDetails": {
-          "$ref": "#/definitions/OrderDetails"
+          "$ref": "#definitions/OrderDetails"
         },
         "soldTo": {
-          "$ref": "#/definitions/Customer"
+          "$ref": "#definitions/Customer"
         }
       },
       "primaryKey" : "orderId",

@@ -17,7 +17,7 @@
             <hasOrderDetails>
                 <es:datatype>array</es:datatype>
                 <es:items>
-                  <es:ref>#/definitions/OrderDetails</es:ref>
+                  <es:ref>#definitions/OrderDetails</es:ref>
                 </es:items>
             </hasOrderDetails>
         </es:properties>

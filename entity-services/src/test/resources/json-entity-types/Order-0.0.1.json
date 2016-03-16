@@ -14,7 +14,7 @@
           "datatype": "date"
         },
         "hasOrderDetails": {
-          "$ref": "#/definitions/OrderDetails"
+          "$ref": "#definitions/OrderDetails"
         }
       },
       "primaryKey" : "orderId",

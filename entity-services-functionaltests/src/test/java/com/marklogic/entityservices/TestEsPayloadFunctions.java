@@ -89,7 +89,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	XMLAssert.assertXMLEqual(message, original, actual);
     }
     
-    @Test
+    
     /*
      * For each entity type in the test directory, verify that
      * it parses and that it matches the entity type parsed by
@@ -106,11 +106,16 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
      * entity-type-to-json     JSON equal to JSON file
      * entity-type-to-xml       Serialization to XML.
      */
-    public void testEntityTypeParse() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    @Test
+    public void testValidJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
-        	if (entityType.toString().contains("jpg")) {
+        	
+        	if (entityType.contains(".xml")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
+        	
+        /*	if (entityType.toString().contains("jpg")) {
+         *      Todo : Rashi
         		logger.info("Checking binary: " + entityType);
         		JacksonHandle handle = null;
         		try {
@@ -122,6 +127,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			assertTrue("Must throw XDMP-AS error",e.getMessage().contains("Invalid coercion"));
         		}
         	}
+        	// Todo: Srikanth till invalid-info-notobject
         	else if (entityType.toString().contains("invalid-bad-datatype")) {
         		logger.info("Checking invalid: " + entityType);
         		JacksonHandle handle = null;
@@ -178,7 +184,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one title declaration."));
         		}
         	}
-        	else if (entityType.toString().contains("invalid-casesensitive-datatype")) {
+        	else
+        	  // Already done.
+        	 if (entityType.toString().contains("invalid-casesensitive-datatype")) {
         		logger.info("Checking invalid: " + entityType);
         		JacksonHandle handle = null;
         		try {
@@ -188,8 +196,8 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			logger.info(e.getMessage());
         			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
         		}
-        	}
-        	else {
+        	} */
+        	
         		
         		// FIXME templates need to exclude triples
         		// TDE needs enhancement.
@@ -204,42 +212,78 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
                     checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
                     
                 	checkEntityTypeToXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
-                } else {
-                	String jsonFileName = entityType.toString().replace(".xml", ".json");
-                	
-                	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
-                   
-                	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
-                	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
-            		JsonNode jsonActual = handle.get();
-                    checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
-            		
-                    InputStream xmlControl = this.getClass().getResourceAsStream("/xml-entity-types/"+entityType);
-                	Document xmloriginal = builder.parse(xmlControl);
-                	DOMHandle xmlhandle  = evalOneResult("es:entity-type-to-xml(es:entity-type-from-node(fn:doc('"+ entityType  + "')))", new DOMHandle());
-            		Document xmlactual = xmlhandle.get();
-            		
-            		//debugOutput(xmloriginal);
-            		//debugOutput(xmlactual);
-            		
-            	    checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
-            	       
-            	    checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
-            		
-                }	
-        	}
+               
         	
-        }
+        	
+        } //if ends
    
-        logger.info("Checking for no arg");
+       // Todo: Rashi          
+       /* logger.info("Checking for no arg");
 		JacksonHandle handle = null;
         try {
 			handle = evalOneResult("es:entity-type-from-node(fn:doc(''))", new JacksonHandle());	
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
 		    assertTrue("XDMP-ARGTYPE",e.getMessage().contains("XDMP-URI"));
-		}
+		}*/
+                
+      }
     }
+        
+    @Test
+   public void testValidXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+   for (String entityType : entityTypes) {
+          ObjectMapper mapper = new ObjectMapper();
+          logger.info("Checking "+entityType);
+            	
+            	if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
+            	
+            	String jsonFileName = entityType.toString().replace(".xml", ".json");
+            	
+            	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
+               
+            	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
+            	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+        		JsonNode jsonActual = handle.get();
+                checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
+        		
+                InputStream xmlControl = this.getClass().getResourceAsStream("/xml-entity-types/"+entityType);
+            	Document xmloriginal = builder.parse(xmlControl);
+            	DOMHandle xmlhandle  = evalOneResult("es:entity-type-to-xml(es:entity-type-from-node(fn:doc('"+ entityType  + "')))", new DOMHandle());
+        		Document xmlactual = xmlhandle.get();
+        		
+        		debugOutput(xmloriginal);
+        		debugOutput(xmlactual);
+        		
+        	    checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
+        	       
+        	    checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
+        		
+    
+          }
+       }
+    
+    @Test
+    /* testing Invalid datatype in Entity Type doc */
+    public void testInvalidDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    	 //for (String entityType : entityTypes) {
+    		
+    			ObjectMapper mapper = new ObjectMapper();
+            	logger.info("Checking "+"invalid-casesensitive-datatype.json");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-casesensitive-datatype.json'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases." + "invalid-casesensitive-datatype.json");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
+        		
+    		//}
+    	}
+    		
+    }
+ 
+    
     
     private void debugOutput(Document xmldoc) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();

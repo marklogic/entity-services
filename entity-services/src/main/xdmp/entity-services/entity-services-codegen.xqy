@@ -104,7 +104,6 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             else
                concat($path-to-property, " ! data(.)")
                 
-    let $_ := xdmp:log(("ET", $prefix, $version, "PK", $property-key, "REF", $ref))
     return
     
     concat("let $_ := if (empty( (",

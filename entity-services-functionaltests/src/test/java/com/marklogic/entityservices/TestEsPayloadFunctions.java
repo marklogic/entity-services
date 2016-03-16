@@ -113,95 +113,6 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         	logger.info("Checking "+entityType);
         	
         	if (entityType.contains(".xml")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
-        	
-        /*	if (entityType.toString().contains("jpg")) {
-         *      Todo : Rashi
-        		logger.info("Checking binary: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			
-        			assertTrue("Must throw XDMP-AS error",e.getMessage().contains("Invalid coercion"));
-        		}
-        	}
-        	// Todo: Srikanth till invalid-info-notobject
-        	else if (entityType.toString().contains("invalid-bad-datatype")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
-        		}
-        	}
-        	else if (entityType.toString().contains("invalid-datatype-ref-together")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("If using $ref, it must be the only key."));
-        		}
-        	}
-        	else if (entityType.toString().contains("invalid-missing-definitions")) {
-        		
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one definitions declaration."));
-        		}
-        	}
-        	else if (entityType.toString().contains("invalid-missing-version")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one version declaration."));
-        		}
-        	}
-        	else if (entityType.toString().contains("invalid-info-notobject")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("Entity Type must contain exactly one title declaration."));
-        		}
-        	}
-        	else
-        	  // Already done.
-        	 if (entityType.toString().contains("invalid-casesensitive-datatype")) {
-        		logger.info("Checking invalid: " + entityType);
-        		JacksonHandle handle = null;
-        		try {
-        			handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-            		fail("eval should throw an exception for invalid cases." + entityType);
-        		} catch (TestEvalException e) {
-        			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
-        		}
-        	} */
-        	
-        		
-        		// FIXME templates need to exclude triples
-        		// TDE needs enhancement.
-        		// checkTriples(entityTypeUri);
 
                 if ( entityType.toString().endsWith(".json")) {
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
@@ -212,21 +123,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
                     checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
                     
                 	checkEntityTypeToXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
-               
-        	
-        	
-        } //if ends
-   
-       // Todo: Rashi          
-       /* logger.info("Checking for no arg");
-		JacksonHandle handle = null;
-        try {
-			handle = evalOneResult("es:entity-type-from-node(fn:doc(''))", new JacksonHandle());	
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-		    assertTrue("XDMP-ARGTYPE",e.getMessage().contains("XDMP-URI"));
-		}*/
-                
+                }         
       }
     }
         
@@ -266,9 +163,8 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     @Test
     /* testing Invalid datatype in Entity Type doc */
     public void testInvalidDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
-    	 //for (String entityType : entityTypes) {
+    	
     		
-    			ObjectMapper mapper = new ObjectMapper();
             	logger.info("Checking "+"invalid-casesensitive-datatype.json");
             	JacksonHandle handle = null;
             	try {
@@ -278,12 +174,40 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         			logger.info(e.getMessage());
         			assertTrue("Must contain invalidity message", e.getMessage().contains("Unsupported datatype."));
         		
-    		//}
+    		
     	}
     		
     }
- 
     
+    @Test
+    /* testing Invalid datatype in Entity Type doc */
+    public void testFromNodeNoArg() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    	        	logger.info("Checking for no arg");
+        			JacksonHandle handle = null;
+        	        try {
+        				handle = evalOneResult("es:entity-type-from-node(fn:doc(''))", new JacksonHandle());	
+        			} catch (TestEvalException e) {
+        				logger.info(e.getMessage());
+        			    assertTrue("XDMP-ARGTYPE",e.getMessage().contains("XDMP-URI"));
+        			}		
+    }
+    
+    @Test
+    /* testing Invalid datatype in Entity Type doc */
+    public void testFromNodeBinaryDoc() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+            	
+            	
+                   		logger.info("Checking binary: " + "New-Year-Sayings.jpg" );
+                   		JacksonHandle handle = null;
+                   		try {
+                   			handle = evalOneResult("es:entity-type-from-node(fn:doc('New-Year-Sayings.jpg'))", new JacksonHandle());	
+                       		fail("eval should throw an exception for invalid cases." + "New-Year-Sayings.jpg");
+                   		} catch (TestEvalException e) {
+                   			logger.info(e.getMessage());
+                   			
+                   			assertTrue("Must throw XDMP-AS error",e.getMessage().contains("Invalid coercion"));
+                   		}
+                   	}
     
     private void debugOutput(Document xmldoc) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -334,7 +258,6 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		
 	}
     
-
 	private void checkTriples(String entityTypeUri) throws TestEvalException {
         InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
 

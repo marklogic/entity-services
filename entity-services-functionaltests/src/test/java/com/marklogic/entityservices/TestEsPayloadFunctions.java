@@ -110,11 +110,11 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testFromNodeValidJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
+        	logger.info("Checking "+entityType);
         	
         	if (entityType.contains(".xml")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
 
                 if ( entityType.toString().endsWith(".json")) {
-                	logger.info("Checking "+entityType);
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
                 	JsonNode original = mapper.readValue(is, JsonNode.class);
                 	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
@@ -131,9 +131,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testFromNodeValidXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     	for (String entityType : entityTypes) {
           ObjectMapper mapper = new ObjectMapper();
+          logger.info("Checking "+entityType);
             	
             	if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
-            	logger.info("Checking "+entityType);
             	
             	String jsonFileName = entityType.toString().replace(".xml", ".json");
             	

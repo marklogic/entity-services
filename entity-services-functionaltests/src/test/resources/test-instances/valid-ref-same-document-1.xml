@@ -1,7 +1,7 @@
 <Product>
-<ProductName>some string</ProductName>
-<ProductID>123</ProductID>
-<UnitPrice>123</UnitPrice>
-<SupplierID>123</SupplierID>
-<Discontinued>true</Discontinued>
+    <ProductName>some string</ProductName>
+    <ProductID>123</ProductID>
+    <UnitPrice>123</UnitPrice>
+    <SupplierID>123</SupplierID>
+    <Discontinued>true</Discontinued>
 </Product>

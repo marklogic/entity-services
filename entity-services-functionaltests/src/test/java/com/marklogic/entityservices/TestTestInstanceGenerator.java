@@ -61,11 +61,11 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 				String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
 
 // this is a one-time utility to auto-populate verification keys, not for checking them!
-//				File outputFile = new File("src/test/resources/test-instances/" + entityTypeFileName );
-//				FileOutputStream os = new FileOutputStream(outputFile);
-//				debugOutput(actualDoc, os);
-//				logger.debug("Saved file to " + outputFile.getName());
-//				os.close();
+	/*		File outputFile = new File("src/test/resources/test-instances/" + entityTypeFileName );
+				FileOutputStream os = new FileOutputStream(outputFile);
+				debugOutput(actualDoc, os);
+				logger.debug("Saved file to " + outputFile.getName());
+				os.close(); */
 				
 				logger.debug("Control document: " + entityTypeFileName);
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);

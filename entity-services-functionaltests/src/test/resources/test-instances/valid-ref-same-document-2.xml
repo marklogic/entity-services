@@ -23,5 +23,5 @@
               <UnitPrice>123</UnitPrice>
               <Quantity>123</Quantity>
           </OrderDetail>
-      </hasOrderDetails>
+      </hasOrderDetails> 
 </Order>

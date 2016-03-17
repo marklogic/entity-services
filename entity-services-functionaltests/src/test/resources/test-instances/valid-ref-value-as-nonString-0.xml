@@ -1,6 +1,13 @@
 <Customer>
+<<<<<<< HEAD
     <CustomerId>some string</CustomerId>
     <CompanyName>some string</CompanyName>
     <Country>some string</Country>
     <fof>externally-referenced-instance</fof>
+=======
+<CustomerId>some string</CustomerId>
+<CompanyName>some string</CompanyName>
+<Country>some string</Country>
+<fof>externally-referenced-instance</fof>
+>>>>>>> Checking in some reference files for Test instances 
 </Customer>

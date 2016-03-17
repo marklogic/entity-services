@@ -387,13 +387,13 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	}
     }
     
-    private void debugOutput(Document xmldoc) throws TransformerException {
+/*    private void debugOutput(Document xmldoc) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.transform(new DOMSource(xmldoc), new StreamResult(System.out));
-   }
+   }*/
     /*
      * Checks parity of XML payload when retrieved from entity type.
      */

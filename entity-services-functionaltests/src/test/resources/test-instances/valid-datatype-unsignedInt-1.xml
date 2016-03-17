@@ -1,0 +1,6 @@
+<Product>
+<ProductName>some string</ProductName>
+<UnitPrice>123</UnitPrice>
+<SupplierID>123</SupplierID>
+<Discontinued>5555</Discontinued>
+</Product>

@@ -125,11 +125,12 @@ public class TestSetup {
 	    
 		testCaseFiles = getTestResources("/json-entity-types");
 		testCaseFiles.addAll(getTestResources("/xml-entity-types"));
+		testCaseFiles.addAll(getTestResources("/binary"));
 		Set<String> entityTypes = new HashSet<String>();
 		
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")|| f.getName().endsWith(".jpg"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };

@@ -329,9 +329,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
     	}
     }
-    
+  
+    /*
     @Test
-    /* testing entity-type-to-json with a document node */
+     testing entity-type-to-json with a document node 
     public void testToJsonWithJsonDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with a document node");
     			JacksonHandle handle = null;
@@ -343,7 +344,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
     	}
     }
-    
+    */
     @Test
     /* testing entity-type-to-json with no args */
     public void testToJsonNoArgs() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       

@@ -54,7 +54,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 			int resultNumber = 0;
 			while (results.hasNext()) {
 				EvalResult result =  results.next();
-				DOMHandle handle = result.get(new DOMHandle());
+				DOMHandle handle = result.get(new DOMHandle());              
 				Document actualDoc = handle.get();
 				
 				debugOutput(actualDoc);

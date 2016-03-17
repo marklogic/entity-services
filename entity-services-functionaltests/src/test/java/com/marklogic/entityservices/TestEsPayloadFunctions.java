@@ -333,6 +333,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 /* 
     @Test
     /* testing entity-type-to-json with a document node 
+    
     public void testToJsonWithJsonDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with a document node");
     			JacksonHandle handle = null;

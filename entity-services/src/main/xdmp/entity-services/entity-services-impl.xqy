@@ -76,7 +76,7 @@ declare variable $esi:entity-type-schematron :=
           <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">A non-reference property must have a datatype</iso:assert>
         </iso:rule>
         <iso:rule context="es:ref">
-          <iso:assert test="( starts-with(xs:string(.),'#definitions/') or ( xs:string(.) castable as sem:iri) )" id="ES-REF-VALUE">es:ref must start with "#definitions/" or be an absolute IRI.</iso:assert>
+          <iso:assert test="( starts-with(xs:string(.),'#/definitions/') or ( xs:string(.) castable as sem:iri) )" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>
         </iso:rule>
         <iso:rule context="es:datatype|datatype">
          <iso:assert test=". = ('base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'int', 'integer', 'long', 'short', 'string', 'time', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'anySimpleType', 'anyURI', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype.</iso:assert>
@@ -344,8 +344,8 @@ declare private function esi:resolve-test-reference(
                map:get(map:get($property-definition, "items"), "$ref") ) )
     (: is the reference value in this entity type document :)
     let $referenced-type :=
-        if (contains($reference-value, "#definitions"))
-        then esi:create-test-instance($entity-type, replace($reference-value, "#definitions/", ""), $depth + 1)
+        if (contains($reference-value, "#/definitions"))
+        then esi:create-test-instance($entity-type, replace($reference-value, "#/definitions/", ""), $depth + 1)
         else "externally-referenced-instance"
     return $referenced-type
 };

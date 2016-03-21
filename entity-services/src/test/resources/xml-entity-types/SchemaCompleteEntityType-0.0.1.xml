@@ -96,14 +96,14 @@
           </es:items>
         </arrayStringKey>
         <referenceInThisFile>
-          <es:ref>#definitions/OrderDetails</es:ref>
+          <es:ref>#/definitions/OrderDetails</es:ref>
           <es:description>This property refers to OrderDetails with no array declaration.</es:description>
         </referenceInThisFile>
         <arrayreferenceInThisFile>
           <es:datatype>array</es:datatype>
           <es:description>This property refers to OrderDetails with an array declaration.</es:description>
           <es:items>
-            <es:ref>#definitions/OrderDetails</es:ref>
+            <es:ref>#/definitions/OrderDetails</es:ref>
           </es:items>
         </arrayreferenceInThisFile>
         <externalReference>

@@ -7,7 +7,7 @@
 @prefix json: <http://marklogic.com/json#> .
 
 doc:Order-0.0.4
-        a       es:EntityServicesDoc ;
+        a       es:EntityServicesDocument ;
         es:definitions type:OrderDetails , type:Order ;
         es:title "Order" ;
         es:version "0.0.4" .

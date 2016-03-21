@@ -9,13 +9,13 @@
     <Refs>
         <es:properties>
             <correctReference>
-                <es:ref>#definitions/Refs</es:ref>
+                <es:ref>#/definitions/Refs</es:ref>
             </correctReference>
             <secondCorrectReference>
-                <es:ref>#definitions/Refs</es:ref>
+                <es:ref>#/definitions/Refs</es:ref>
             </secondCorrectReference>
             <refWithDescription>
-                <es:ref>#definitions/Refs</es:ref>
+                <es:ref>#/definitions/Refs</es:ref>
                 <es:description>This reference has a description</es:description>
             </refWithDescription>
         </es:properties>

@@ -9,13 +9,13 @@
         "Refs": {
             "properties": {
                 "correctReference": {
-                    "$ref":"#definitions/Refs"
+                    "$ref":"#/definitions/Refs"
                 },
                 "secondCorrectReference": {
-                    "$ref":"#definitions/Refs"
+                    "$ref":"#/definitions/Refs"
                 },
                 "refWithDescription": {
-                    "$ref":"#definitions/Refs",
+                    "$ref":"#/definitions/Refs",
                     "description":"This reference has a description"
                 }
             }

@@ -40,9 +40,16 @@ import com.marklogic.client.io.StringHandle;
 
 /**
  * Tests server function es:conversion-module-generate
- * Stub.
  * 
- * TODO - test generated functions.
+ * Covered so far: validity of XQuery module generation
+ * 
+ * extract-instance-Order
+ * 
+ * The default extraction model is valid, and each function runs as though
+ * the source for an entity is the same as its model.  That is, 
+ * if you extract an instance using extract-instance-Order() the original
+ * generated function expects an input that corresponds exactly to the persisted
+ * output of an Order.
  */
 public class TestConversionModuleGenerator extends EntityServicesTestBase {
 

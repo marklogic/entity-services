@@ -14,7 +14,7 @@
                 <es:datatype>date</es:datatype>
             </orderDate>
             <hasOrderDetails>
-                <es:ref>#definitions/OrderDetails</es:ref>
+                <es:ref>#/definitions/OrderDetails</es:ref>
             </hasOrderDetails>
         </es:properties>
         <es:primary-key>orderId</es:primary-key>

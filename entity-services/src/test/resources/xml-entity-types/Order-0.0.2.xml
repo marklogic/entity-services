@@ -14,10 +14,10 @@
                 <es:datatype>date</es:datatype>
             </orderDate>
             <hasOrderDetails>
-                <es:ref>#definitions/OrderDetails</es:ref>
+                <es:ref>#/definitions/OrderDetails</es:ref>
             </hasOrderDetails>
             <soldTo>
-                <es:ref>#definitions/Customer</es:ref>
+                <es:ref>#/definitions/Customer</es:ref>
             </soldTo>
         </es:properties>
         <es:primary-key>orderId</es:primary-key>

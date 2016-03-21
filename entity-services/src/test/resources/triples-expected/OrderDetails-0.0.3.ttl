@@ -6,7 +6,7 @@
 
 
 <OrderDetails-0.0.3>
-        a       es:EntityServicesDoc ;
+        a       es:EntityServicesDocument ;
         es:definitions type:OrderDetails ;
         es:title "OrderDetails" ;
         es:version "0.0.3" .

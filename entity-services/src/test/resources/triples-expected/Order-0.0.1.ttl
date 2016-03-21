@@ -7,7 +7,7 @@
 
 
 <Order-0.0.1>
-        a       es:EntityServicesDoc ;
+        a       es:EntityServicesDocument ;
         es:definitions type:OrderDetails , type:Order ;
         es:title "Order" ;
         es:version "0.0.1" .

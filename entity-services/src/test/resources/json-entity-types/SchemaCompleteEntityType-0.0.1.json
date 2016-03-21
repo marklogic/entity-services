@@ -38,13 +38,13 @@
         "arrayKey": {"datatype":"array","items":{"datatype":"long"}},
         "arrayStringKey": {"datatype":"array","items":{"datatype":"string","collation":"http://marklogic.com/collation/"}},
         "referenceInThisFile": { 
-             "$ref": "#definitions/OrderDetails",
+             "$ref": "#/definitions/OrderDetails",
              "description":"This property refers to OrderDetails with no array declaration."
         },
         "arrayreferenceInThisFile": { 
             "datatype":"array",
             "description":"This property refers to OrderDetails with an array declaration.",
-            "items":{"$ref": "#definitions/OrderDetails"}
+            "items":{"$ref": "#/definitions/OrderDetails"}
         },
         "externalReference": { 
            "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails",

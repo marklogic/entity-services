@@ -23,7 +23,7 @@
            <es:datatype>string</es:datatype>      
        </address>
        <friendOf>
-           <es:ref>#definitions/Person</es:ref>
+           <es:ref>#/definitions/Person</es:ref>
        </friendOf>
      </es:properties>
      <es:primary-key>id</es:primary-key>

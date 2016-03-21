@@ -85,9 +85,9 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     let $value := 
         if (empty($ref))
         then 
-            concat($path-to-property, "! data(.)")
+            concat($path-to-property, " ! data(.)")
         else 
-            if(contains($ref, "#definitions"))
+            if(contains($ref, "#/definitions"))
             then
             concat("if (not(",
                     $path-to-property,
@@ -98,16 +98,16 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
                     " ! ",
                     $prefix,
                     ":extract-instance-",
-                    replace($ref, "#definitions/", ""),
+                    replace($ref, "#/definitions/", ""),
                     "(.)"
                     )
             else
-               concat($path-to-property, " ! data(.)")
+               concat($path-to-property, "/node()")
                 
     return
     
     concat("let $_ := if (empty( (",
-            $value,
+            $path-to-property,
             ")))&#10;",
             "         then () &#10;",
             "         else map:put($instance, '", $property-key, "', ",$value, ")&#10;   "
@@ -131,26 +131,33 @@ declare function {$prefix}:instance-to-canonical-xml(
     let $version := "{$version}"
     let $instance-keys := map:keys($entity-instance)
     let $instance-node :=
+        (: Construct the instance wrapper element itself :)
         element es:instance {{
+            (: Construct the metadata for the instance :)
             element es:info {{
                 element es:title {{ $title }},
                 element es:version {{ $version }}
-                (: id :)
+                (: TODO id :)
             }},
+            (: Construct an element that is named the same as the Entity Type :)
             element {{ map:get($entity-instance, "$type") }}  {{
                 for $key in $instance-keys
                 let $instance-property := map:get($entity-instance, $key)
                 where ($key castable as xs:NCName and $key ne "$type")
                 return
                     typeswitch ($instance-property)
+                    (: This branch handles embedded objects.  You can choose to prune
+                       an entity's representation of extend it with lookups here. :)
                     case json:object+ 
                         return
                             for $prop in $instance-property
                             return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop)/(*[exists(./*)] except es:info) }}
+                    (: A sequence of values should be simply treated as multiple elements :)
                     case item()+
                         return 
                             for $val in $instance-property
                             return element {{ $key }} {{ $val }}
+                    (: An array by convention can also treated as multiple elements :)
                     case json:array
                         return 
                             for $val in json:array-values($instance-property)

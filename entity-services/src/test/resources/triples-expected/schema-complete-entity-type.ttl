@@ -75,7 +75,7 @@ order:byteKey
         es:title "byteKey" .
 
 <http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
-        a       es:EntityServicesDoc ;
+        a       es:EntityServicesDocument ;
         es:definitions type:OrderDetails , type:Order ;
         es:title "SchemaCompleteEntityType" ;
         es:version "0.0.1" .

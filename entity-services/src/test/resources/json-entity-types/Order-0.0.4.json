@@ -17,7 +17,7 @@
         "hasOrderDetails": {
           "datatype": "array",
           "items" : {
-              "$ref": "#definitions/OrderDetails"
+              "$ref": "#/definitions/OrderDetails"
            }
         }
       },

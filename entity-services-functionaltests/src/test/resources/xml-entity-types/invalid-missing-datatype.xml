@@ -1,0 +1,18 @@
+<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+    <es:info>
+        <es:title>invalid-missing-datatype</es:title>
+        <es:version>0.0.2</es:version>
+        <es:description>This invalid document has a missing datatype</es:description>
+    </es:info>
+    <es:definitions>
+        <Order>
+            <es:properties>
+                <orderId/>
+                <base64BinaryKey>
+                    <es:datatype>base64Binary</es:datatype>
+                </base64BinaryKey>
+            </es:properties>
+            <es:primaryKey>orderId</es:primaryKey>
+        </Order>
+    </es:definitions>
+</es:entity-type>

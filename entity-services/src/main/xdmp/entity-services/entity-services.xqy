@@ -93,6 +93,22 @@ declare function es:entity-type-get-test-instances(
 
 
 (:~
+ : Generate a JSON node that can be used with the Management Client API
+ : to configure a database for this entity type.
+ : Portions of this complete database properties file can be used 
+ : as building-blocks for the completed database properties 
+ : index configuration.
+ :)
+declare function es:database-properties-generate(
+    $entity-type as map:map
+) as document-node()
+{
+    esi:database-properties-generate($entity-type)
+};
+
+
+
+(:~
  : Generate a schema that can validate entity instance documents
  :)
 declare function es:schema-generate(

@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerException;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mortbay.log.Log;
 import org.w3c.dom.Document;
@@ -39,6 +40,13 @@ import com.marklogic.client.io.DOMHandle;
  */
 public class TestTestInstanceGenerator extends EntityServicesTestBase {
 
+	@BeforeClass
+	public static void setupTestInstances() {
+		setupClients();
+		loadEntityTypes();
+		loadSourceFiles();
+	}
+	
 	@Test
 	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
@@ -57,7 +65,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 				DOMHandle handle = result.get(new DOMHandle());
 				Document actualDoc = handle.get();
 				
-				debugOutput(actualDoc);
+				//debugOutput(actualDoc);
 				String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
 
 // this is a one-time utility to auto-populate verification keys, not for checking them!

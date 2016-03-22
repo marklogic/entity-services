@@ -21,10 +21,8 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +46,7 @@ import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -68,6 +67,12 @@ import com.marklogic.client.io.StringHandle;
 
 public class TestEntityTypes extends EntityServicesTestBase {
 
+	@BeforeClass
+	public static void setupEntityTypes() {
+		setupClients();
+		loadEntityTypes();
+	}
+	
     private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
     	assertEquals(message, original, actual);
     }

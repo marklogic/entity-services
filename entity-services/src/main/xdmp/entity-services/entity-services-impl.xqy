@@ -417,3 +417,49 @@ declare function esi:entity-type-get-test-instances(
 };
 
 
+declare function esi:database-properties-generate(
+    $entity-type as map:map
+) as document-node()
+{
+    let $definitions := map:get($entity-type, "definitions")
+    let $definition-keys := map:keys($definitions)
+    let $range-path-indexes := json:array()
+    let $word-lexicons := json:array()
+    let $_ := 
+        for $entity-type-name in $definition-keys
+        let $entity-type-map := map:get($definitions, $entity-type-name)
+        return
+        (
+        let $range-index-properties := map:get($entity-type-map, "rangeIndexed")
+        for $range-index-property in json:array-values($range-index-properties)
+        let $ri-map := map:map()
+        let $property := map:get($entity-type-map, $range-index-property)
+        let $datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
+        let $_ := map:put($ri-map, "collation", $collation)
+        let $_ := map:put($ri-map, "invalid-values", "reject")
+        let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
+        let $_ := map:put($ri-map, "range-value-positions", false)
+        let $_ := map:put($ri-map, "scalar-type", $datatype)
+        return json:array-push($range-path-indexes, $ri-map)
+        ,
+        let $word-lexicon-properties := map:get(map:get($definitions, $entity-type-name), "wordLexicon")
+        for $word-lexicon-property in json:array-values($word-lexicon-properties)
+        let $wl-map := map:map()
+        let $property := map:get($entity-type-map, $word-lexicon-property)
+        let $datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
+        let $_ := map:put($wl-map, "collation", $collation)
+        let $_ := map:put($wl-map, "local-name", $property)
+        let $_ := map:put($wl-map, "namespace-uri", "")
+        return json:array-push($word-lexicons, $wl-map)
+        )
+    let $database-properties := map:map()
+    let $_ := map:put($database-properties, "database-name", "%%DATABASE%%")
+    let $_ := map:put($database-properties, "schema-database", "%%SCHEMAS_DATABASE%%")
+    let $_ := map:put($database-properties, "triple-index", true())
+    let $_ := map:put($database-properties, "collection-lexicon", true())
+    let $_ := map:put($database-properties, "range-path-index", $range-path-indexes)
+    let $_ := map:put($database-properties, "word-lexicon", $word-lexicons)
+    return xdmp:to-json($database-properties)
+};

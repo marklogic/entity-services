@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerException;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,6 +54,12 @@ import com.marklogic.client.io.StringHandle;
  */
 public class TestConversionModuleGenerator extends EntityServicesTestBase {
 
+	@BeforeClass
+	public static void setupClass() {
+		setupClients();
+		loadEntityTypes();
+		loadSourceFiles();
+	}
 	
 	private void storeConversionModule(String entityTypeName) throws TestEvalException {
 		StringHandle xqueryModule = new StringHandle();

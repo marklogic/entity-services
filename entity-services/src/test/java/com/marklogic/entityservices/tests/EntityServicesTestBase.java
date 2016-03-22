@@ -15,7 +15,6 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -51,19 +49,28 @@ public abstract class EntityServicesTestBase {
 	protected static Logger logger = LoggerFactory.getLogger(EntityServicesTestBase.class);
 	protected static DocumentBuilder builder;
 
-
-	@BeforeClass
-	public static void setupClass() throws IOException, ParserConfigurationException {
+	protected static void setupClients() {
 	    TestSetup testSetup = TestSetup.getInstance();
 	    client = testSetup.getClient();
 	    modulesClient = testSetup.getModulesClient();
 	    schemasClient = testSetup.getSchemasClient();
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
-		builder = factory.newDocumentBuilder();
-		
-	    entityTypes = testSetup.getEntityTypes();
-	    sourceFileUris = testSetup.getSourceFileUris();
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	protected static void loadEntityTypes() {
+		TestSetup testSetup = TestSetup.getInstance();
+		entityTypes = testSetup.getEntityTypes();
+	}
+	
+	protected static void loadSourceFiles() {
+		TestSetup testSetup = TestSetup.getInstance();
+		sourceFileUris = testSetup.getSourceFileUris();	
 	}
 	
 	public EvalResultIterator eval(String functionCall) throws TestEvalException {

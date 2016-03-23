@@ -1,6 +1,6 @@
 <Customer>
-    <CustomerId>some string</CustomerId>
-    <CompanyName>some string</CompanyName>
-    <Country>some string</Country>
-    <Address>some string</Address>
+<CustomerId>some string</CustomerId>
+<CompanyName>some string</CompanyName>
+<Country>some string</Country>
+<Address>some string</Address>
 </Customer>

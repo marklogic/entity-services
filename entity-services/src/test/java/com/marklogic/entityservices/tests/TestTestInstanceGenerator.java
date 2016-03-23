@@ -15,8 +15,6 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -43,8 +41,6 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupTestInstances() {
 		setupClients();
-		loadEntityTypes();
-		loadSourceFiles();
 	}
 	
 	@Test

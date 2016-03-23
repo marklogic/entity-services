@@ -417,6 +417,20 @@ declare function esi:entity-type-get-test-instances(
 };
 
 
+declare function esi:indexable-datatype(
+    $datatype as xs:string
+) as xs:string
+{
+    switch ($datatype)
+    case "boolean" return "string"
+    case "base64Binary" return "string"
+    case "duration" return "dayTimeDuration"
+    case "byte" return "short"
+    case "unsignedByte" return "unsignedInt"
+    case "unsignedShort" return "unsignedInt"
+    default return $datatype
+};
+
 declare function esi:database-properties-generate(
     $entity-type as map:map
 ) as document-node()
@@ -430,36 +444,42 @@ declare function esi:database-properties-generate(
         let $entity-type-map := map:get($definitions, $entity-type-name)
         return
         (
-        let $range-index-properties := map:get($entity-type-map, "rangeIndexed")
+        let $range-index-properties := map:get($entity-type-map, "rangeIndex")
         for $range-index-property in json:array-values($range-index-properties)
-        let $ri-map := map:map()
-        let $property := map:get($entity-type-map, $range-index-property)
-        let $datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $ri-map := json:object()
+        let $property := map:get(map:get($entity-type-map, "properties"), $range-index-property)
+        let $specified-datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $datatype := esi:indexable-datatype($specified-datatype)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
         let $_ := map:put($ri-map, "collation", $collation)
         let $_ := map:put($ri-map, "invalid-values", "reject")
         let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
-        let $_ := map:put($ri-map, "range-value-positions", false)
+        let $_ := map:put($ri-map, "range-value-positions", false())
         let $_ := map:put($ri-map, "scalar-type", $datatype)
         return json:array-push($range-path-indexes, $ri-map)
         ,
         let $word-lexicon-properties := map:get(map:get($definitions, $entity-type-name), "wordLexicon")
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
-        let $wl-map := map:map()
-        let $property := map:get($entity-type-map, $word-lexicon-property)
-        let $datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $wl-map := json:object()
+        let $property := map:get(map:get($entity-type-map, "properties"), $word-lexicon-property)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
         let $_ := map:put($wl-map, "collation", $collation)
-        let $_ := map:put($wl-map, "local-name", $property)
+        let $_ := map:put($wl-map, "localname", $word-lexicon-property)
         let $_ := map:put($wl-map, "namespace-uri", "")
         return json:array-push($word-lexicons, $wl-map)
         )
-    let $database-properties := map:map()
+    let $path-namespaces := json:array()
+    let $pn := json:object()
+    let $_ := map:put($pn, "prefix", "es")
+    let $_ := map:put($pn, "namespace-uri", "http://marklogic.com/entity-services")
+    let $_ := json:array-push($path-namespaces, $pn)
+    let $database-properties := json:object()
     let $_ := map:put($database-properties, "database-name", "%%DATABASE%%")
     let $_ := map:put($database-properties, "schema-database", "%%SCHEMAS_DATABASE%%")
+    let $_ := map:put($database-properties, "path-namespace", $path-namespaces)
+    let $_ := map:put($database-properties, "element-word-lexicon", $word-lexicons)
+    let $_ := map:put($database-properties, "range-path-index", $range-path-indexes)
     let $_ := map:put($database-properties, "triple-index", true())
     let $_ := map:put($database-properties, "collection-lexicon", true())
-    let $_ := map:put($database-properties, "range-path-index", $range-path-indexes)
-    let $_ := map:put($database-properties, "word-lexicon", $word-lexicons)
     return xdmp:to-json($database-properties)
 };

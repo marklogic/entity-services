@@ -15,14 +15,11 @@
  */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.StringHandle;
 
 /**
  * Tests the server-side function
@@ -33,7 +30,11 @@ import com.marklogic.client.io.StringHandle;
  */
 public class TestSchemaGeneration extends EntityServicesTestBase {
 
-
+	@BeforeClass
+	public static void setupClass() {
+		setupClients();
+	}
+	
 	@Test
 	public void verifySchemaGeneration() throws TestEvalException {
 		String initialTest = "Order-0.0.1.xml";

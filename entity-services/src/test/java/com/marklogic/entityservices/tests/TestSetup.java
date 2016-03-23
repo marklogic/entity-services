@@ -26,8 +26,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -187,12 +185,21 @@ public class TestSetup {
 	    docMgr.write(writeSet);
 	}
 	
-	//@AfterClass
 	public void teardownClass() {
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    for (File f : testCaseFiles) {
 	    	logger.info("Removing " + f.getName());
 		    docMgr.delete(f.getName());
+	    }
+
+	    Collection<File> sourceFiles = getTestResources("/source-documents");
+	    Collection<File> testDocuments = getTestResources("/test-instances");
+	    Collection<File> extraDocuments = new ArrayList<File>();
+	    extraDocuments.addAll(testDocuments);
+	    extraDocuments.addAll(sourceFiles);
+	    
+	    for (File f : extraDocuments) {
+	    	docMgr.delete(f.getName());
 	    }
 	}
 }

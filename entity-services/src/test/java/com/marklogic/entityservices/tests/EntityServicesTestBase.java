@@ -61,16 +61,15 @@ public abstract class EntityServicesTestBase {
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
 		}
-	}
-	
-	protected static void loadEntityTypes() {
-		TestSetup testSetup = TestSetup.getInstance();
 		entityTypes = testSetup.getEntityTypes();
+		sourceFileUris = testSetup.getSourceFileUris();
 	}
 	
-	protected static void loadSourceFiles() {
+	
+	//@AfterClass
+	public static void removeContent() {
 		TestSetup testSetup = TestSetup.getInstance();
-		sourceFileUris = testSetup.getSourceFileUris();	
+		testSetup.teardownClass();
 	}
 	
 	public EvalResultIterator eval(String functionCall) throws TestEvalException {

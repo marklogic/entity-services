@@ -15,7 +15,7 @@
     "invalid-values" : "reject",
     "path-expression" : "//es:instance/SchemaCompleteEntityType/unsignedShortKey",
     "range-value-positions" : false,
-    "scalar-type" : "unsignedLong"
+    "scalar-type" : "unsignedInt"
   }, {
     "collation" : "http://marklogic.com/collation/",
     "invalid-values" : "reject",

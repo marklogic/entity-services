@@ -70,7 +70,6 @@ public class TestEntityTypes extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupEntityTypes() {
 		setupClients();
-		loadEntityTypes();
 	}
 	
     private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
@@ -133,7 +132,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
     	
     	for (String entityType : invalidEntityTypes) {
 	    	logger.info("Checking invalid: " + entityType);
-	    	JacksonHandle handle;
+	    	@SuppressWarnings("unused")
+			JacksonHandle handle = null;
 			try {
 				handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
 	    		fail("eval should throw an exception for invalid cases." + entityType);
@@ -146,6 +146,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
 			}
     	}
     	
+    	for (File f : invalidEntityTypeFiles) {
+    	    logger.info("Removing invalid: " + f.getName());
+    	    docMgr.delete(f.getName());
+    	}
     }
     
     
@@ -227,6 +231,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
 		
 		DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
 
+		@SuppressWarnings("unchecked")
 		List<Difference> l = diff.getAllDifferences();
 		for (Difference d : l) {
 			System.out.println(d.toString());

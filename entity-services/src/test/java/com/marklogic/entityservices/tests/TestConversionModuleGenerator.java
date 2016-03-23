@@ -15,10 +15,14 @@
  */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
@@ -27,14 +31,13 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.StringHandle;
@@ -53,32 +56,36 @@ import com.marklogic.client.io.StringHandle;
  * output of an Order.
  */
 public class TestConversionModuleGenerator extends EntityServicesTestBase {
-
+	
+	private static TextDocumentManager docMgr;
+	
 	@BeforeClass
 	public static void setupClass() {
 		setupClients();
-		loadEntityTypes();
-		loadSourceFiles();
+		// save xquery module to modules database
+		docMgr = modulesClient.newTextDocumentManager();	
 	}
 	
-	private void storeConversionModule(String entityTypeName) throws TestEvalException {
-		StringHandle xqueryModule = new StringHandle();
+	private void storeConversionModules(Map<String, StringHandle> moduleMap) throws TestEvalException {
+		DocumentWriteSet writeSet = docMgr.newWriteSet();
 		
-		xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityTypeName+"')))", xqueryModule);
-	
-		// save xquery module to modules database
-		TextDocumentManager docMgr = modulesClient.newTextDocumentManager();
-		String moduleName = "/ext/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
-		docMgr.write(moduleName, xqueryModule);
+		for (String entityTypeName : moduleMap.keySet()) {
+			
+			String moduleName = "/ext/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
+			writeSet.add(moduleName, moduleMap.get(entityTypeName));
+		}
+		docMgr.write(writeSet);
 	}
 	
 	@Test
 	public void verifyCreateValidModule() throws TestEvalException {
 		
 		String initialTest = "Order-0.0.1.xml";
-		
+		StringHandle moduleHandle =  evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+initialTest+"')))", new StringHandle());
+		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
+		m.put(initialTest, moduleHandle);
 		// save conversion module into modules database
-		storeConversionModule(initialTest);
+		storeConversionModules(m);
 		
 		String instanceDocument = "Order-Source-1.xml";
 		
@@ -100,13 +107,12 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	@Test
 	public void defaultModuleExtractsIdentity() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
 		
-		for (String entityType : entityTypes) {
+		Map<String, StringHandle> conversionModules = generateConversionModules();
+		storeConversionModules(conversionModules);
+		
+		// test them all adn remove
+		for (String entityType : conversionModules.keySet()) {
 			
-			// just test JSON ones here.
-			if (entityType.contains(".xml")) {continue; };
-			
-			//if (!entityType.equals("SchemaCompleteEntityType-0.0.1.json")) {continue;}
-			storeConversionModule(entityType);
 			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
 			
 			String entityTypeName = entityType.replace(".json",  "");
@@ -140,7 +146,6 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 				
 				Document actualInstance = handle.get();
 				assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
-				Element actualDocumentElement = actualInstance.getDocumentElement();
 				
 //				logger.debug("Control doc");
 //				debugOutput(controlDom);
@@ -155,10 +160,29 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 				logger.warn("Exception thrown validating conversion module.  Maybe test conversion module cannot test " + entityTypeNoVersion);
 				fail("Evaluation exception thrown during conversion module testing." + e.getMessage());
 			}
-			}
+		}
 		
+	
+		for (String entityType : conversionModules.keySet()) {
+			
+			String moduleName = "/ext/" + entityType.replaceAll("\\.(xml|json)", ".xqy");
+			
+			docMgr.delete(moduleName);
+		}
+	
 	}
-	
-	
-	
+
+	private Map<String, StringHandle> generateConversionModules() throws TestEvalException {
+		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
+		
+		for (String entityType : entityTypes) {
+			if (entityType.contains(".xml")) {continue; };
+			
+			logger.info("Generating conversion module: " + entityType);
+			StringHandle xqueryModule = new StringHandle();
+			xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
+			map.put(entityType, xqueryModule);
+		}
+		return map;
+	}
 }

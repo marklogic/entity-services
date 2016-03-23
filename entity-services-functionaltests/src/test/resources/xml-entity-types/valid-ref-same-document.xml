@@ -2,7 +2,7 @@
   <es:info>
       <es:title>Northwind-Ref-Same-Document</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri>/refSameDocument</es:base-uri>
+      <es:base-uri>http://refSameDocument</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>
@@ -58,7 +58,7 @@
 	 <hasOrderDetails>
              <es:datatype>array</es:datatype>
              <es:items>
-		<es:ref>#definitions/OrderDetail</es:ref>
+		<es:ref>#/definitions/OrderDetail</es:ref>
 	     </es:items>
 	 </hasOrderDetails>
 	</es:properties>
@@ -66,7 +66,7 @@
     <OrderDetail>
         <es:properties>
 	 <ProductID>
-             <es:ref>#definitions/Product</es:ref>
+             <es:ref>#/definitions/Product</es:ref>
 	 </ProductID>
 	 <UnitPrice>
              <es:datatype>integer</es:datatype>

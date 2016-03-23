@@ -1,9 +1,9 @@
 <Order>
-    <OrderID>123</OrderID>
-    <CustomerID>123</CustomerID>
-    <OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
-    <ShipAddress>some string</ShipAddress>
-    <hasOrderDetails>externally-referenced-instance</hasOrderDetails>
-    <hasOrderDetails>externally-referenced-instance</hasOrderDetails>
-    <hasOrderDetails>externally-referenced-instance</hasOrderDetails>
+<OrderID>123</OrderID>
+<CustomerID>123</CustomerID>
+<OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
+<ShipAddress>some string</ShipAddress>
+<hasOrderDetails>externally-referenced-instance</hasOrderDetails>
+<hasOrderDetails>externally-referenced-instance</hasOrderDetails>
+<hasOrderDetails>externally-referenced-instance</hasOrderDetails>
 </Order>

@@ -1,5 +1,4 @@
 <OrderDetail>
-<<<<<<< HEAD
   <ProductID>
     <Product>
         <ProductName>some string</ProductName>
@@ -11,17 +10,4 @@
   </ProductID>
   <UnitPrice>123</UnitPrice>
   <Quantity>123</Quantity>
-=======
-<ProductID>
-<Product>
-<ProductName>some string</ProductName>
-<ProductID>123</ProductID>
-<UnitPrice>123</UnitPrice>
-<SupplierID>123</SupplierID>
-<Discontinued>true</Discontinued>
-</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
-<Quantity>123</Quantity>
->>>>>>> Checking in some reference files for Test instances 
 </OrderDetail>

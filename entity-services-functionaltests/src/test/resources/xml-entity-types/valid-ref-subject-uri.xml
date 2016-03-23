@@ -2,7 +2,7 @@
     <es:info>
         <es:title>Northwind-Ref-Subject-Uri</es:title>
         <es:version>0.0.1</es:version>
-        <es:base-uri>/refSubjectUri</es:base-uri>
+        <es:base-uri>http://refSubjectUri</es:base-uri>
     </es:info>
     <es:definitions>
         <Customer>

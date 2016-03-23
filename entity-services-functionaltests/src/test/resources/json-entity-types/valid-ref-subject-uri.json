@@ -2,7 +2,7 @@
    "info":{  
       "title":"Northwind-Ref-Subject-Uri",
       "version":"0.0.1",
-      "baseUri":"/refSubjectUri"
+      "baseUri":"http://refSubjectUri"
    },
    "definitions":{  
       "Customer":{  

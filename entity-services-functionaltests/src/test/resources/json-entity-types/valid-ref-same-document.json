@@ -2,7 +2,7 @@
    "info":{  
       "title":"Northwind-Ref-Same-Document",
       "version":"0.0.1",
-      "baseUri":"/refSameDocument"
+      "baseUri":"http://refSameDocument"
    },
    "definitions":{  
       "Customer":{  
@@ -58,7 +58,7 @@
             "hasOrderDetails":{  
                "datatype":"array",
                "items":{  
-                  "$ref":"#definitions/OrderDetail"
+                  "$ref":"#/definitions/OrderDetail"
                }
             }
          }
@@ -66,7 +66,7 @@
       "OrderDetail":{  
          "properties":{  
             "ProductID":{  
-               "$ref":"#definitions/Product"
+               "$ref":"#/definitions/Product"
             },
             "UnitPrice":{  
                "datatype":"integer"

@@ -205,7 +205,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for unsupported datatype */
+    /* testing entity-type-from-node Json for missing datatype */
     public void testFromNodeJsonMissingdDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     			logger.info("Checking invalid-missing-datatype.json");
     			JacksonHandle handle = null;
@@ -219,7 +219,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for unsupported datatype */
+    /* testing entity-type-from-node Xml for missing datatype */
     public void testFromNodeXmlMissingdDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     			logger.info("Checking invalid-missing-datatype.xml");
     			JacksonHandle handle = null;
@@ -233,7 +233,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for unsupported datatype */
+    /* testing entity-type-from-node Xml for unsupported datatype */
     public void testFromNodeXmlUnsupportedDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
 				logger.info("Checking invalid-bad-datatype.xml");
 				JacksonHandle handle = null;
@@ -247,7 +247,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for unsupported datatype */
+    /* testing entity-type-from-node Xml for missing info */
     public void testFromNodeXmlMissingInfo() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
 				logger.info("Checking invalid-missing-info.xml");
 				JacksonHandle handle = null;
@@ -261,7 +261,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for unsupported datatype */
+    /* testing entity-type-from-node Json for missing info */
     public void testFromNodeJsonMissingInfo() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
 				logger.info("Checking invalid-missing-info.json");
 				JacksonHandle handle = null;
@@ -303,7 +303,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
 	}
     
     @Test
-    /* testing entity-type-from-node for missing definitions */
+    /* testing entity-type-from-node Json for missing title */
     public void testFromNodeJsonMissingTitle() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-title.json");
     			JacksonHandle handle = null;
@@ -317,7 +317,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing definitions */
+    /* testing entity-type-from-node Xml for missing title */
     public void testFromNodeXmlMissingTitle() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-title.xml");
     			JacksonHandle handle = null;
@@ -331,7 +331,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing definitions */
+    /* testing entity-type-from-node Json for missing definitions */
     public void testFromNodeJsonMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-definitions.json");
     			JacksonHandle handle = null;
@@ -345,7 +345,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing definitions */
+    /* testing entity-type-from-node Xml for missing definitions */
     public void testFromNodeXmlMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-definitions.xml");
     			JacksonHandle handle = null;
@@ -359,7 +359,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
 
     @Test
-    /* testing entity-type-from-node for missing version */
+    /* testing entity-type-from-node Xml for missing version */
     public void testFromNodeXmlMissingVersion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-version.xml");
     			JacksonHandle handle = null;
@@ -373,7 +373,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing version */
+    /* testing entity-type-from-node Json for missing version */
     public void testFromNodeJsonMissingVersion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-version.json");
     			JacksonHandle handle = null;
@@ -387,7 +387,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing version */
+    /* testing entity-type-from-node Xml for multiple primary key */
     public void testFromNodeXmlMultiplePrimaryKey() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-multiple-primarykey.xml");
     			JacksonHandle handle = null;
@@ -401,7 +401,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-from-node for missing version */
+    /* testing entity-type-from-node Json for multiple primary key */
     public void testFromNodeJsonMultiplePrimaryKey() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-multiple-pkey.json");
     			JacksonHandle handle = null;
@@ -444,7 +444,7 @@ public EvalResultIterator eval(String functionCall) throws TestEvalException {
     }
     
     @Test
-    /* testing entity-type-to-json with a document node */
+    /* testing entity-type-to-xml with a document node */
     public void testToXmlWithDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-xml() with a document node");
     			JacksonHandle handle = null;

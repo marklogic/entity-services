@@ -1,8 +1,8 @@
 {  
    "info":{  
-      "title":"Northwind-Ref-Same-Document",
+      "title":"Northwind-Ref-Combo-SameDocument-SubjectIri",
       "version":"0.0.1",
-      "baseUri":"http://refSameDocument"
+      "baseUri":"http://refCombo"
    },
    "definitions":{  
       "Customer":{  
@@ -48,7 +48,7 @@
                "datatype":"integer"
             },
             "CustomerID":{  
-               "datatype":"integer"
+               "$ref":"#/definitions/Customer"
             },
             "OrderDate":{  
                "datatype":"dateTime"
@@ -59,7 +59,7 @@
             "OrderDetails":{  
                "datatype":"array",
                "items":{  
-                  "$ref":"#/definitions/OrderDetail"
+                  "$ref":"http://refSubjectUri/Northwind-Ref-Subject-Uri-0.0.1/Order/OrderDetails"
                }
             }
          }

@@ -52,7 +52,7 @@ import com.marklogic.client.io.marker.AbstractReadHandle;
 
 public class TestEsPayloadFunctions extends EntityServicesTestBase {
 
-    public EvalResultIterator eval(String functionCall) throws TestEvalException {
+public EvalResultIterator eval(String functionCall) throws TestEvalException {
         
         String entityServicesImport = 
                 "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
@@ -206,16 +206,72 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     @Test
     /* testing entity-type-from-node for unsupported datatype */
-    public void testFromNodeUnsupportedDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
-    			logger.info("Checking invalid-bad-datatype");
+    public void testFromNodeJsonMissingdDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    			logger.info("Checking invalid-missing-datatype.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-bad-datatype.json'))", new JacksonHandle());	
-    				fail("eval should throw an exception for invalid/unsupported datatypes");
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-datatype.json'))", new JacksonHandle());	
+    				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Unsupported datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("A non-reference property must have a datatype"));
     	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for unsupported datatype */
+    public void testFromNodeXmlMissingdDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    			logger.info("Checking invalid-missing-datatype.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-datatype.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for missing datatype");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("A non-reference property must have a datatype"));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for unsupported datatype */
+    public void testFromNodeXmlUnsupportedDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+				logger.info("Checking invalid-bad-datatype.xml");
+				JacksonHandle handle = null;
+				try {
+					handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-bad-datatype.xml'))", new JacksonHandle());	
+					fail("eval should throw an exception for invalid/unsupported datatypes");
+				} catch (TestEvalException e) {
+					logger.info(e.getMessage());
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Unsupported datatype."));
+		}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for unsupported datatype */
+    public void testFromNodeXmlMissingInfo() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+				logger.info("Checking invalid-missing-info.xml");
+				JacksonHandle handle = null;
+				try {
+					handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-info.xml'))", new JacksonHandle());	
+					fail("eval should throw an exception for missing info");
+				} catch (TestEvalException e) {
+					logger.info(e.getMessage());
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one info declaration."));
+		}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for unsupported datatype */
+    public void testFromNodeJsonMissingInfo() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+				logger.info("Checking invalid-missing-info.json");
+				JacksonHandle handle = null;
+				try {
+					handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-info.json'))", new JacksonHandle());	
+					fail("eval should throw an exception for missing info");
+				} catch (TestEvalException e) {
+					logger.info(e.getMessage());
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one info declaration."));
+		}
     }
     
     @Test
@@ -248,7 +304,35 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     @Test
     /* testing entity-type-from-node for missing definitions */
-    public void testFromNodeMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    public void testFromNodeJsonMissingTitle() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-title.json");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-title.json'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-title.json");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one title declaration."));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for missing definitions */
+    public void testFromNodeXmlMissingTitle() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-title.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-title.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-title.xml");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one title declaration."));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for missing definitions */
+    public void testFromNodeJsonMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-definitions.json");
     			JacksonHandle handle = null;
     			try {
@@ -259,10 +343,24 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one definitions declaration."));
     	}
     }
+    
+    @Test
+    /* testing entity-type-from-node for missing definitions */
+    public void testFromNodeXmlMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-definitions.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-definitions.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.xml");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one definitions declaration."));
+    	}
+    }
 
     @Test
     /* testing entity-type-from-node for missing version */
-    public void testFromNodeMissingVersion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    public void testFromNodeXmlMissingVersion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-version.xml");
     			JacksonHandle handle = null;
     			try {
@@ -273,7 +371,50 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one version declaration."));
     	}
     }
- 
+    
+    @Test
+    /* testing entity-type-from-node for missing version */
+    public void testFromNodeJsonMissingVersion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-version.json");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-version.json'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-version.json");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one version declaration."));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for missing version */
+    public void testFromNodeXmlMultiplePrimaryKey() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-multiple-primarykey.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-multiple-primarykey.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-multiple-primarykey.xml");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Only one primary key allowed."));
+    	}
+    }
+    
+    @Test
+    /* testing entity-type-from-node for missing version */
+    public void testFromNodeJsonMultiplePrimaryKey() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-multiple-pkey.json");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-multiple-pkey.json'))", new JacksonHandle());	
+    				logger.info("After eval");
+    				fail("eval should throw an exception for invalid cases: invalid-multiple-pkey.json");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Only one primary key allowed."));
+    	}
+    }
+     
     @Test
     /* testing entity-type-from-node for a json entity type where info is not an object */
     public void testFromNodeJsonInfoNotObject() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
@@ -287,7 +428,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Entity Type must contain exactly one title declaration. Entity Type must contain exactly one version declaration."));
     	}
     }
- 
+    
     @Test
     /* testing entity-type-from-node for an xml entity type where info is not an object */
     public void testFromNodeXmlInfoNotObject() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
@@ -332,8 +473,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
    
 /* 
     @Test
-    /* testing entity-type-to-json with a document node 
-    
+
+     testing entity-type-to-json with a document node 
+     COMMENTED UNTIL OPEN BUG 38517 IS FIXED
+
     public void testToJsonWithJsonDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with a document node");
     			JacksonHandle handle = null;
@@ -345,8 +488,8 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
     	}
     }
- */   
-    @Test
+    */
+  @Test
     /* testing entity-type-to-json with no args */
     public void testToJsonNoArgs() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with no args");

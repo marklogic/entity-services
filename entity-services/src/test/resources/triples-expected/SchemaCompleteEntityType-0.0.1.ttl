@@ -1,7 +1,7 @@
 @prefix es: <http://marklogic.com/entity-services#> .
 @prefix xs: <http://www.w3.org/2001/XMLSchema#> .
 @prefix type: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/> .
-@prefix order: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/> .
+@prefix order: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/> .
 @prefix orderdetails: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/> .
 
 order:shortKey
@@ -13,11 +13,6 @@ order:decimalKey
         a es:Property ;
         es:datatype xs:decimal ;
         es:title "decimalKey" .
-
-order:anySimpleTypeKey
-        a es:Property ;
-        es:datatype xs:anySimpleType ;
-        es:title "anySimpleTypeKey" .
 
 order:stringKey
         a es:Property ;
@@ -52,6 +47,26 @@ order:integerKey
         es:datatype xs:integer ;
         es:title "integerKey" .
 
+order:negativeIntegerKey
+        a es:Property ;
+        es:datatype xs:negativeInteger ;
+        es:title "negativeIntegerKey" .
+
+order:nonNegativeIntegerKey
+        a es:Property ;
+        es:datatype xs:nonNegativeInteger ;
+        es:title "nonNegativeIntegerKey" .
+
+order:positiveIntegerKey
+        a es:Property ;
+        es:datatype xs:positiveInteger ;
+        es:title "positiveIntegerKey" .
+
+order:nonPositiveIntegerKey
+        a es:Property ;
+        es:datatype xs:nonPositiveInteger ;
+        es:title "nonPositiveIntegerKey" .
+
 order:yearMonthDurationKey
         a es:Property ;
         es:datatype xs:yearMonthDuration ;
@@ -62,11 +77,11 @@ order:externalReference
         es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> ;
         es:title "externalReference" .
 
-type:Order
+type:SchemaCompleteEntityType
         a       es:EntityType ;
-        es:title "Order" ;
+        es:title "SchemaCompleteEntityType" ;
         es:version "0.0.1" ;
-        es:property order:arrayStringKey, order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:anySimpleTypeKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey ;
+        es:property order:arrayStringKey, order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:gDayKey, order:gMonthKey, order:gMonthDayKey, order:gYearKey, order:gYearMonthKey, order:hexBinaryKey, order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey, order:negativeIntegerKey, order:nonNegativeIntegerKey, order:positiveIntegerKey, order:nonPositiveIntegerKey, order:unsignedByteKey ;
         es:primaryKey order:orderId .
 
 order:byteKey
@@ -74,9 +89,39 @@ order:byteKey
         es:datatype xs:byte ;
         es:title "byteKey" .
 
+order:gDayKey
+        a es:Property ;
+        es:datatype xs:gDay ;
+        es:title "gDayKey" .
+
+order:gMonthDayKey
+        a es:Property ;
+        es:datatype xs:gMonthDay ;
+        es:title "gMonthDayKey" .
+
+order:gMonthKey
+        a es:Property ;
+        es:datatype xs:gMonth ;
+        es:title "gMonthKey" .
+
+order:gYearKey
+        a es:Property ;
+        es:datatype xs:gYear ;
+        es:title "gYearKey" .
+
+order:gYearMonthKey
+        a es:Property ;
+        es:datatype xs:gYearMonth ;
+        es:title "gYearMonthKey" .
+
+order:hexBinaryKey
+        a es:Property ;
+        es:datatype xs:hexBinary ;
+        es:title "hexBinaryKey" .
+
 <http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
         a       es:EntityServicesDocument ;
-        es:definitions type:OrderDetails , type:Order ;
+        es:definitions type:OrderDetails , type:SchemaCompleteEntityType ;
         es:title "SchemaCompleteEntityType" ;
         es:version "0.0.1" .
 
@@ -109,16 +154,21 @@ order:longKey
 order:arrayreferenceInThisFile
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
-        es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayreferenceInThisFile/items> ;
+        es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items> ;
         es:title "arrayreferenceInThisFile" .
 
-<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayreferenceInThisFile/items>
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items>
         es:ref type:OrderDetails .
 
 order:unsignedIntKey
         a es:Property ;
         es:datatype xs:unsignedInt ;
         es:title "unsignedIntKey" .
+
+order:unsignedByteKey
+        a es:Property ;
+        es:datatype xs:unsignedByte ;
+        es:title "unsignedByteKey" .
 
 orderdetails:quantity
         a es:Property ;
@@ -128,11 +178,11 @@ orderdetails:quantity
 order:externalArrayReference
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
-        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/externalArrayReference/items> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/externalArrayReference/items> ;
         es:title "externalArrayReference" .
 
         
-<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/externalArrayReference/items> 
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/externalArrayReference/items> 
        es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> .
 
 order:doubleKey
@@ -143,19 +193,19 @@ order:doubleKey
 order:arrayKey
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
-        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayKey/items> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayKey/items> ;
         es:title "arrayKey" .
 
-<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayKey/items>
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayKey/items>
        es:datatype xs:long .
 
 order:arrayStringKey
         a es:Property ;
         es:datatype <http://marklogic.com/json#array> ;
-        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayStringKey/items> ;
+        es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayStringKey/items> ;
         es:title "arrayStringKey" .
         
-<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/Order/arrayStringKey/items>
+<http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayStringKey/items>
         es:datatype xs:string ; 
         es:collation "http://marklogic.com/collation/" .
         

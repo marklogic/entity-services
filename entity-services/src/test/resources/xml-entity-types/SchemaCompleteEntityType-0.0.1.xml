@@ -13,6 +13,9 @@
           <es:datatype>string</es:datatype>
           <es:collation>http://marklogic.com/collation/</es:collation>
         </orderId>
+        <anyURIKey>
+          <es:datatype>anyURI</es:datatype>
+        </anyURIKey>
         <base64BinaryKey>
           <es:datatype>base64Binary</es:datatype>
         </base64BinaryKey>
@@ -43,12 +46,42 @@
         <floatKey>
           <es:datatype>float</es:datatype>
         </floatKey>
+        <gDayKey>
+          <es:datatype>gDay</es:datatype>
+        </gDayKey>
+        <gMonthKey>
+          <es:datatype>gMonth</es:datatype>
+        </gMonthKey>
+        <gMonthDayKey>
+          <es:datatype>gMonthDay</es:datatype>
+        </gMonthDayKey>
+        <gYearKey>
+          <es:datatype>gYear</es:datatype>
+        </gYearKey>
+        <gYearMonthKey>
+          <es:datatype>gYearMonth</es:datatype>
+        </gYearMonthKey>
+        <hexBinaryKey>
+          <es:datatype>hexBinary</es:datatype>
+        </hexBinaryKey>
         <intKey>
           <es:datatype>int</es:datatype>
         </intKey>
         <integerKey>
           <es:datatype>integer</es:datatype>
         </integerKey>
+        <negativeIntegerKey>
+          <es:datatype>negativeInteger</es:datatype>
+        </negativeIntegerKey>
+        <nonNegativeIntegerKey>
+          <es:datatype>nonNegativeInteger</es:datatype>
+        </nonNegativeIntegerKey>
+        <positiveIntegerKey>
+          <es:datatype>positiveInteger</es:datatype>
+        </positiveIntegerKey>
+        <nonPositiveIntegerKey>
+          <es:datatype>nonPositiveInteger</es:datatype>
+        </nonPositiveIntegerKey>
         <longKey>
           <es:datatype>long</es:datatype>
         </longKey>
@@ -61,6 +94,9 @@
         <timeKey>
           <es:datatype>time</es:datatype>
         </timeKey>
+        <unsignedByteKey>
+          <es:datatype>unsignedByte</es:datatype>
+        </unsignedByteKey>
         <unsignedIntKey>
           <es:datatype>unsignedInt</es:datatype>
         </unsignedIntKey>
@@ -73,12 +109,6 @@
         <yearMonthDurationKey>
           <es:datatype>yearMonthDuration</es:datatype>
         </yearMonthDurationKey>
-        <anySimpleTypeKey>
-          <es:datatype>anySimpleType</es:datatype>
-        </anySimpleTypeKey>
-        <anyURIKey>
-          <es:datatype>anyURI</es:datatype>
-        </anyURIKey>
         <iriKey>
           <es:datatype>iri</es:datatype>
         </iriKey>

@@ -48,38 +48,43 @@ declare variable $esi:element-names-to-keys as map:map :=
 declare variable $esi:entity-services-prefix := "http://marklogic.com/entity-services#";
 
 declare variable $esi:entity-type-schematron :=
-    <iso:schema xmlns:iso="http://purl.oclc.org/dsdl/schematron">
+    <iso:schema xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:xsl="http://www.w3.org/1999/XSL/not-Transform">
       <iso:ns prefix="es" uri="http://marklogic.com/entity-services"/>
       <iso:pattern>
         <iso:rule context="es:entity-type|/object-node()">
-          <iso:assert test="count(es:info|info) eq 1" id="ES-INFOKEY">Entity Type must contain exactly one info declaration.</iso:assert>
-          <iso:assert test="count(es:definitions|definitions) eq 1" id="ES-DEFINITIONSKEY">Entity Type must contain exactly one definitions declaration.</iso:assert>
+          <iso:assert test="count(es:info|info) eq 1" id="ES-INFOKEY">Entity Type Document must contain exactly one info section.</iso:assert>
+          <iso:assert test="count(es:definitions|definitions) eq 1" id="ES-DEFINITIONSKEY">Entity Type Document must contain exactly one definitions section.</iso:assert>
         </iso:rule>
         <iso:rule context="es:info|/info">
-          <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">Entity Type must contain exactly one title declaration.</iso:assert>
-          <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">Entity Type must contain exactly one version declaration.</iso:assert>
+          <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">"info" section must be an object and contain exactly one title declaration.</iso:assert>
+          <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">"info" section must be an object and contain exactly one version declaration.</iso:assert>
         </iso:rule>
         <iso:rule context="es:definitions/node()[es:primary-key]">
-          <iso:assert test="count(./es:primary-key) eq 1" id="ES-PRIMARYKEY">Only one primary key allowed.</iso:assert>
+          <iso:assert test="count(./es:primary-key) eq 1" id="ES-PRIMARYKEY">For each Entity Type, only one primary key allowed.</iso:assert>
         </iso:rule>
         <iso:rule context="object-node()/*[primaryKey]">
-          <iso:assert test="count(./primaryKey) eq 1" id="ES-PRIMARYKEY">Only one primary key allowed.</iso:assert>
+          <iso:assert test="count(./primaryKey) eq 1" id="ES-PRIMARYKEY">For each Entity Type, only one primary key allowed.</iso:assert>
         </iso:rule>
         <iso:rule context="properties/object-node()">
-          <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">If using $ref, it must be the only key.</iso:assert>
-          <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">A non-reference property must have a datatype</iso:assert>
+          <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">If a property has $ref as a child, then it cannot have a datatype.</iso:assert>
+          <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
         </iso:rule>
         <!-- XML version of primary key rule -->
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">
-          <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If using es:ref, it must be the only child of es:property.</iso:assert>
-          <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">A non-reference property must have a datatype</iso:assert>
+          <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If a property has es:ref as a child, then it cannot have a datatype.</iso:assert>
+          <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
         </iso:rule>
         <iso:rule context="es:ref">
           <iso:assert test="( starts-with(xs:string(.),'#/definitions/') or ( xs:string(.) castable as sem:iri) )" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>
         </iso:rule>
-        <iso:rule context="es:datatype|datatype">
-         <iso:assert test=". = ('base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'int', 'integer', 'long', 'short', 'string', 'time', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'anySimpleType', 'anyURI', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype.</iso:assert>
+        <iso:rule context="es:datatype">
+         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth') and local-name(..) = ../../../es:range-index/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
+        </iso:rule>
+        <iso:rule context="datatype">
+         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth') and node-name(..) = ../../../rangeIndex)"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>
@@ -301,6 +306,7 @@ declare function esi:create-test-value-from-datatype(
 ) as item() 
 { 
     switch ($datatype)
+    case "anyURI"             return xs:anyURI( "http://example.org/some-uri" ) 
     case "base64Binary"       return xs:base64Binary( "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz
 IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg
 dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu
@@ -315,18 +321,27 @@ ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=" )
     case "double"             return xs:double( 123 ) 
     case "duration"           return xs:duration( "P1D" ) 
     case "float"              return xs:float( 123 ) 
+    case "gDay"               return xs:gDay( "---22" ) 
+    case "gMonth"             return xs:gMonth("--03") 
+    case "gMonthDay"          return xs:gMonthDay("--02-01")
+    case "gYear"              return xs:gYear("-2001")
+    case "gYearMonth"         return xs:gYearMonth("2001-01")
+    case "hexBinary"          return xs:hexBinary("3f3c6d78206c657673726f693d6e3122302e20226e656f636964676e223d54552d4622383e3f")
     case "int"                return xs:int( 123 )
     case "integer"            return xs:integer( 123 ) 
     case "long"               return xs:long( 1355 ) 
+    case "negativeInteger"    return xs:integer( -123 ) 
+    case "nonNegativeInteger" return xs:integer( 123 ) 
+    case "positiveInteger"    return xs:integer( 123 ) 
+    case "nonPositiveInteger" return xs:integer( -123 ) 
     case "short"              return xs:short( 343 ) 
     case "string"             return xs:string( "some string" ) 
     case "time"               return xs:time( "09:00:15" ) 
+    case "unsignedByte"       return xs:unsignedByte( 2  ) 
     case "unsignedInt"        return xs:unsignedInt( 5555  ) 
     case "unsignedLong"       return xs:unsignedLong( 999999999 ) 
     case "unsignedShort"      return xs:unsignedShort( 324 ) 
     case "yearMonthDuration"  return xs:yearMonthDuration( "P1Y" ) 
-    case "anySimpleType"      return xs:string( "some string" ) 
-    case "anyURI"             return xs:anyURI( "http://example.org/some-uri" ) 
     case "iri"                return sem:iri( "http://example.org/some-iri" ) 
     default return xs:string( " ")
 };
@@ -423,10 +438,9 @@ declare function esi:indexable-datatype(
 {
     switch ($datatype)
     case "boolean" return "string"
-    case "base64Binary" return "string"
     case "duration" return "dayTimeDuration"
-    case "byte" return "short"
-    case "unsignedByte" return "unsignedInt"
+    case "byte" return "int"
+    case "short" return "int"
     case "unsignedShort" return "unsignedInt"
     default return $datatype
 };
@@ -482,4 +496,55 @@ declare function esi:database-properties-generate(
     let $_ := map:put($database-properties, "triple-index", true())
     let $_ := map:put($database-properties, "collection-lexicon", true())
     return xdmp:to-json($database-properties)
+};
+
+declare function esi:schema-generate(
+    $entity-type as map:map
+) as element()*
+{
+    let $definitions := map:get($entity-type, "definitions")
+    let $definition-keys := map:keys($definitions)
+    return
+    <xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+        xmlns:sem="http://marklogic.com/semantics"
+        elementFormDefault="qualified" 
+        xmlns:es="http://marklogic.com/entity-services">
+    {
+        for $entity-type-name in $definition-keys
+        let $entity-type-map := map:get($definitions, $entity-type-name)
+        let $properties-map := map:get($entity-type-map, "properties")
+        let $property-keys := map:keys($properties-map)
+        return
+        (
+        <xs:complexType name="{$entity-type-name}ContainerType" mixed="true">
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="{$entity-type-name}" />
+            </xs:sequence>
+        </xs:complexType>,
+        <xs:complexType name="{$entity-type-name}Type">
+            <xs:sequence>
+        {
+            for $property-name in $property-keys
+            return
+                <xs:element ref="{$property-name}"/>
+        }
+            </xs:sequence>
+        </xs:complexType>,
+        <xs:element name="{$entity-type-name}" type="{$entity-type-name}Type"/>,
+        for $property-name in $property-keys
+        let $property-map := map:get($properties-map, $property-name)
+        return
+            if (map:contains($property-map, "$ref"))
+            then 
+                let $ref := replace(map:get($property-map, "$ref"), "#/definitions/", "")
+                return <xs:element name="{$property-name}" type="{$ref}ContainerType"/>
+            else if (map:contains($property-map, "datatype"))
+            then
+                let $datatype := map:get($property-map, "datatype")
+                return <xs:element name="{$property-name}" type="xs:{$datatype}"/>
+            else ()
+        )
+    }
+    </xs:schema>
 };

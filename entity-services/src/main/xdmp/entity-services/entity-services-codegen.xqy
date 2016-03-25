@@ -25,6 +25,12 @@ declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
 
+(:~
+ : Generates an XQuery module that can be customized and used
+ : to support transforms associated with an entity type
+ : @param $entity-type  An entity type object.
+ : @return An XQuery module (text) that can be edited and installed in a modules database.
+ :)
 declare function es-codegen:conversion-module-generate(
     $entity-type as map:map
 ) as document-node()
@@ -57,10 +63,8 @@ module namespace {$prefix} = "{$base-uri}{$prefix}-{$version}";
 import module namespace es = "http://marklogic.com/entity-services" 
     at "/MarkLogic/entity-services/entity-services.xqy";
 
-(: extract-instance-{{entity-type}} Functions
- : The following functions take as input some source document from which to
- : extract values.  Edit each function to create a valid entity instance.
- :)
+(: extract-instance-{{entity-type}} Functions :)
+(: These functions can be customized to reflect a data source for an entity type :)
 { (: iterate over entity types to make extract instance stubs :)
     for $entity-type-key in map:keys(map:get($entity-type, "definitions"))
     return 
@@ -71,6 +75,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
 {{
     let $instance := json:object()
     let $_ := map:put($instance, "$type", "{$entity-type-key}")
+    let $_ := map:put($instance, "$attachments", $source-node)
     {
     let $this-type := map:get($definitions, $entity-type-key)
     let $properties-map := map:get($this-type, "properties")
@@ -175,12 +180,12 @@ declare function {$prefix}:instance-to-canonical-xml(
  :)
 declare function {$prefix}:instance-to-envelope(
     $entity-instance as map:map
-) as text()
+) as element(es:envelope)
 {{
     element es:envelope {{
         {$prefix}:instance-to-canonical-xml($entity-instance),
-        element es:constrained {{
-            map:get($entity-instance, "$sources") 
+        element es:attachments {{
+            map:get($entity-instance, "$attachments") 
         }}
     }}
 }};
@@ -192,28 +197,65 @@ declare function {$prefix}:instance-to-envelope(
  :)
 declare function {$prefix}:instance-from-document(
     $document as document-node()
-) as map:map
+) as map:map*
 {{
     let $xml-from-document := {$prefix}:instance-xml-from-document($document)
-    let $instance := map:map()
-    let $_ := map:put($instance, "key", "val")
-    return $instance
+    for $root-instance in $xml-from-document
+        let $instance := map:map()
+        let $_ :=
+            for $property in $root-instance/*
+            return
+                if ($property/element())
+                then map:put($instance, local-name($property), $property/* ! {$prefix}:child-instance(.))
+                else map:put($instance, local-name($property), data($property))
+        return $instance
+}};
+
+declare function {$prefix}:child-instance(
+    $element as element()
+) as map:map*
+{{
+    let $child := map:map()
+    let $_ := 
+        for $property in $element/*
+        return
+            if ($property/element())
+            then map:put($child, local-name($property), {$prefix}:child-instance($property))
+            else map:put($child, local-name($property), data($property))
+    return $child
 }};
 
 
+(:~
+ : Returns all XML from within a document envelope except the es:info.
+ : This function is generic enough not to require customization for
+ : most entity type implementations.
+ :)
 declare function {$prefix}:instance-xml-from-document(
     $document as document-node()
 ) as element()
 {{
-    $document//es:entity/(* except es:info)[es:info/es:version eq "{$version}"]
+    $document//es:instance/(* except es:info)
 }};
 
 declare function {$prefix}:instance-json-from-document(
     $document as document-node()
 ) as object-node()
 {{
-    xdmp:to-json( {$prefix}:instance-from-document($document) )
+    let $instance := {$prefix}:instance-from-document($document)
+    return xdmp:to-json($instance)/node()
 }};
+
+
+declare function {$prefix}:instance-get-attachments(
+    $document as document-node()
+) as element()*
+{{
+    $document//es:attachments/*
+}};
+
 </conversion-module>/text()
 }
+
+
 };

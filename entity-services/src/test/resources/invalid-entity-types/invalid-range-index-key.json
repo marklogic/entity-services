@@ -1,0 +1,29 @@
+{
+  "info": {
+    "title":"invalid-range-index-key",
+    "version": "0.0.3",
+    "description":"This invalid document has a range index definition for base64Binary, for which there is no range index type."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        },
+        "base64BinaryKey": { "datatype": "base64Binary" }
+      },
+      "primaryKey": "orderId",
+      "rangeIndex": ["orderId", "base64BinaryKey"]
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "datatype": "int"
+        },
+        "productName": {
+          "datatype": "string"
+        }
+      }
+    }
+  }
+}

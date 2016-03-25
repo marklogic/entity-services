@@ -110,54 +110,11 @@ declare function es:database-properties-generate(
 
 (:~
  : Generate a schema that can validate entity instance documents
+ : TODO -- stub only, not implemented
  :)
 declare function es:schema-generate(
     $entity-type as map:map)
 as element()*
 {
-    let $definitions := map:get($entity-type, "definitions")
-    let $definition-keys := map:keys($definitions)
-    return
-    <xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-        xmlns:sem="http://marklogic.com/semantics"
-        elementFormDefault="qualified" 
-        xmlns:es="http://marklogic.com/entity-services">
-    {
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $properties-map := map:get($entity-type-map, "properties")
-        let $property-keys := map:keys($properties-map)
-        return
-        (
-        <xs:complexType name="{$entity-type-name}ContainerType">
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="{$entity-type-name}" />
-            </xs:sequence>
-        </xs:complexType>,
-        <xs:complexType name="{$entity-type-name}Type">
-            <xs:sequence>
-        {
-            for $property-name in $property-keys
-            return
-                <xs:element ref="{$property-name}"/>
-        }
-            </xs:sequence>
-        </xs:complexType>,
-        <xs:element name="{$entity-type-name}" type="{$entity-type-name}Type"/>,
-        for $property-name in $property-keys
-        let $property-map := map:get($properties-map, $property-name)
-        return
-            if (map:contains($property-map, "$ref"))
-            then 
-                let $ref := replace(map:get($property-map, "$ref"), "#/definitions/", "")
-                return <xs:element name="{$property-name}" type="{$ref}ContainerType"/>
-            else if (map:contains($property-map, "datatype"))
-            then
-                let $datatype := map:get($property-map, "datatype")
-                return <xs:element name="{$property-name}" type="xs:{$datatype}"/>
-            else ()
-        )
-    }
-    </xs:schema>
+    esi:schema-generate($entity-type)
 };

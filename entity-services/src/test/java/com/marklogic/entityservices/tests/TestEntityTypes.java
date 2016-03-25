@@ -85,19 +85,21 @@ public class TestEntityTypes extends EntityServicesTestBase {
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
     static {
     	invalidMessages.put("invalid-bad-datatype.json", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.json", "A non-reference property must have a datatype");
-        invalidMessages.put("invalid-missing-info.json", "Entity Type must contain exactly one info declaration.");
-        invalidMessages.put("invalid-missing-title.json", "Entity Type must contain exactly one title declaration.");
-        invalidMessages.put("invalid-missing-version.json", "Entity Type must contain exactly one version declaration.");
-        invalidMessages.put("invalid-property-ref-with-others.json", "If using $ref, it must be the only key.");
-        invalidMessages.put("invalid-multiple-pk.json", "Only one primary key allowed.");
-    	invalidMessages.put("invalid-bad-datatype.xml", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.xml", "A non-reference property must have a datatype");
-        invalidMessages.put("invalid-missing-info.xml", "Entity Type must contain exactly one info declaration.");
-        invalidMessages.put("invalid-missing-title.xml", "Entity Type must contain exactly one title declaration.");
-        invalidMessages.put("invalid-missing-version.xml", "Entity Type must contain exactly one version declaration.");
-        invalidMessages.put("invalid-multiple-pk.xml", "Only one primary key allowed");
-        invalidMessages.put("invalid-property-ref-with-others.xml", "If using es:ref, it must be the only child of es:property.");
+        invalidMessages.put("invalid-missing-datatype.json", "If a property is not a reference, then it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.json", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-missing-title.json",   "section must be an object and contain exactly one title declaration.");
+        invalidMessages.put("invalid-missing-version.json", "section must be an object and contain exactly one version declaration.");
+        invalidMessages.put("invalid-property-ref-with-others.json", "If a property has $ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-multiple-pk.json", "only one primary key allowed.");
+        invalidMessages.put("invalid-range-index-key.json", "unsupported for a range index.");
+        invalidMessages.put("invalid-bad-datatype.xml", "Unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.xml", "If a property is not a reference, then it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.xml", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-missing-title.xml", "section must be an object and contain exactly one title declaration.");
+        invalidMessages.put("invalid-missing-version.xml", "section must be an object and contain exactly one version declaration.");
+        invalidMessages.put("invalid-multiple-pk.xml", "only one primary key allowed");
+        invalidMessages.put("invalid-property-ref-with-others.xml", "If a property has es:ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-range-index-key.xml", "unsupported for a range index.");
     }
     
     @Test
@@ -287,6 +289,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
 //        		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
 //        		os.close();
         		
+        		//RDFDataMgr.write(System.out, actualTriples, Lang.TURTLE);
         		// what a great function for debugging:
 //        		logger.debug("Difference, expected - actual");
 //        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);

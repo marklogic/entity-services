@@ -1,0 +1,13 @@
+<Customer CustomerID="VICTE">
+	<CompanyName>Victuailles en stock</CompanyName>
+	<ContactName>Mary Saveley</ContactName>
+	<ContactTitle>Sales Agent</ContactTitle>
+	<Address>2, rue du Commerce</Address>
+	<City>Lyon</City>
+	<Region/>
+	<PostalCode>69004</PostalCode>
+	<Country>France</Country>
+	<Phone>78.32.54.86</Phone>
+	<Fax>78.32.54.87</Fax>
+</Customer>
+

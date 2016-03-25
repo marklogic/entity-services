@@ -36,7 +36,7 @@
             "ShipAddress":{  
                "datatype":"string"
             },
-            "hasOrderDetails":{  
+            "OrderDetails":{  
                "datatype":"array",
                "items":{  
                   "$ref":"http://refSameDocument/Northwind-Ref-Same-Document-0.0.1/OrderDetail"

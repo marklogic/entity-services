@@ -1,0 +1,13 @@
+<Customer CustomerID="FOLKO">
+	<CompanyName>Folk och fä HB</CompanyName>
+	<ContactName>Maria Larsson</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>Åkergatan 24</Address>
+	<City>Bräcke</City>
+	<Region/>
+	<PostalCode>S-844 67</PostalCode>
+	<Country>Sweden</Country>
+	<Phone>0695-34 67 21</Phone>
+	<Fax/>
+</Customer>
+

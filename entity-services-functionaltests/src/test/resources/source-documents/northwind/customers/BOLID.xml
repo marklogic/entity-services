@@ -1,0 +1,13 @@
+<Customer CustomerID="BOLID">
+	<CompanyName>Bólido Comidas preparadas</CompanyName>
+	<ContactName>Martín Sommer</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>C/ Araquil, 67</Address>
+	<City>Madrid</City>
+	<Region/>
+	<PostalCode>28023</PostalCode>
+	<Country>Spain</Country>
+	<Phone>(91) 555 22 82</Phone>
+	<Fax>(91) 555 91 99</Fax>
+</Customer>
+

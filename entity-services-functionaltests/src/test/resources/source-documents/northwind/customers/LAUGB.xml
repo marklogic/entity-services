@@ -1,0 +1,13 @@
+<Customer CustomerID="LAUGB">
+	<CompanyName>Laughing Bacchus Wine Cellars</CompanyName>
+	<ContactName>Yoshi Tannamuri</ContactName>
+	<ContactTitle>Marketing Assistant</ContactTitle>
+	<Address>1900 Oak St.</Address>
+	<City>Vancouver</City>
+	<Region>BC</Region>
+	<PostalCode>V3F 2K1</PostalCode>
+	<Country>Canada</Country>
+	<Phone>(604) 555-3392</Phone>
+	<Fax>(604) 555-7293</Fax>
+</Customer>
+

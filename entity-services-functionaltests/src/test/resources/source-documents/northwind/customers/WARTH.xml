@@ -1,0 +1,13 @@
+<Customer CustomerID="WARTH">
+	<CompanyName>Wartian Herkku</CompanyName>
+	<ContactName>Pirkko Koskitalo</ContactName>
+	<ContactTitle>Accounting Manager</ContactTitle>
+	<Address>Torikatu 38</Address>
+	<City>Oulu</City>
+	<Region/>
+	<PostalCode>90110</PostalCode>
+	<Country>Finland</Country>
+	<Phone>981-443655</Phone>
+	<Fax>981-443655</Fax>
+</Customer>
+

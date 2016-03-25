@@ -36,12 +36,12 @@
                 <ShipAddress>
                     <es:datatype>string</es:datatype>
                 </ShipAddress>
-                <hasOrderDetails>
+                <OrderDetails>
                     <es:datatype>array</es:datatype>
                     <es:items>
                        <es:ref>http://refSameDocument/Northwind-Ref-Same-Document-0.0.1/OrderDetail</es:ref>
         	    </es:items>
-            	</hasOrderDetails>
+            	</OrderDetails>
             </es:properties>
 	</Order>
     </es:definitions>

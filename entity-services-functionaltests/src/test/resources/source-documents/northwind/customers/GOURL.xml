@@ -1,0 +1,13 @@
+<Customer CustomerID="GOURL">
+	<CompanyName>Gourmet Lanchonetes</CompanyName>
+	<ContactName>André Fonseca</ContactName>
+	<ContactTitle>Sales Associate</ContactTitle>
+	<Address>Av. Brasil, 442</Address>
+	<City>Campinas</City>
+	<Region>SP</Region>
+	<PostalCode>04876-786</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(11) 555-9482</Phone>
+	<Fax/>
+</Customer>
+

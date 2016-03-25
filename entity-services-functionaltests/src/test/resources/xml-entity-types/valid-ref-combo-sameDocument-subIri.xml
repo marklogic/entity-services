@@ -1,8 +1,8 @@
 <es:entity-type xmlns:es="http://marklogic.com/entity-services">
   <es:info>
-      <es:title>Northwind-Ref-Same-Document</es:title>
+      <es:title>Northwind-Ref-Combo-SameDocument-SubjectIri</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri>http://refSameDocument</es:base-uri>
+      <es:base-uri>http://refCombo</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>
@@ -48,7 +48,7 @@
              <es:datatype>integer</es:datatype>
 	 </OrderID>
 	 <CustomerID>
-             <es:datatype>integer</es:datatype>
+             <es:ref>#/definitions/Customer</es:ref>
 	 </CustomerID>
 	 <OrderDate>
              <es:datatype>dateTime</es:datatype>
@@ -59,7 +59,7 @@
 	 <OrderDetails>
              <es:datatype>array</es:datatype>
              <es:items>
-		<es:ref>#/definitions/OrderDetail</es:ref>
+		<es:ref>http://refSubjectUri/Northwind-Ref-Subject-Uri-0.0.1/Order/OrderDetails</es:ref>
 	     </es:items>
 	 </OrderDetails>
 	</es:properties>

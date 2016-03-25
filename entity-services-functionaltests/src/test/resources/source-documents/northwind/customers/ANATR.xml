@@ -1,0 +1,13 @@
+<Customer CustomerID="ANATR">
+	<CompanyName>Ana Trujillo Emparedados y helados</CompanyName>
+	<ContactName>Ana Trujillo</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>Avda. de la Constitución 2222</Address>
+	<City>México D.F.</City>
+	<Region/>
+	<PostalCode>05021</PostalCode>
+	<Country>Mexico</Country>
+	<Phone>(5) 555-4729</Phone>
+	<Fax>(5) 555-3745</Fax>
+</Customer>
+

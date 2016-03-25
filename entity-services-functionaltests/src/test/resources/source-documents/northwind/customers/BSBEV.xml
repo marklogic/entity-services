@@ -1,0 +1,13 @@
+<Customer CustomerID="BSBEV">
+	<CompanyName>B's Beverages</CompanyName>
+	<ContactName>Victoria Ashworth</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Fauntleroy Circus</Address>
+	<City>London</City>
+	<Region/>
+	<PostalCode>EC2 5NT</PostalCode>
+	<Country>UK</Country>
+	<Phone>(171) 555-1212</Phone>
+	<Fax/>
+</Customer>
+

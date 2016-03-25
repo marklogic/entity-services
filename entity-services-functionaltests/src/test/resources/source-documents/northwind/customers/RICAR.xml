@@ -1,0 +1,13 @@
+<Customer CustomerID="RICAR">
+	<CompanyName>Ricardo Adocicados</CompanyName>
+	<ContactName>Janete Limeira</ContactName>
+	<ContactTitle>Assistant Sales Agent</ContactTitle>
+	<Address>Av. Copacabana, 267</Address>
+	<City>Rio de Janeiro</City>
+	<Region>RJ</Region>
+	<PostalCode>02389-890</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(21) 555-3412</Phone>
+	<Fax/>
+</Customer>
+

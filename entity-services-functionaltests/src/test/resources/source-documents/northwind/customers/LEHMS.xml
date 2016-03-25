@@ -1,0 +1,13 @@
+<Customer CustomerID="LEHMS">
+	<CompanyName>Lehmanns Marktstand</CompanyName>
+	<ContactName>Renate Messner</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Magazinweg 7</Address>
+	<City>Frankfurt a.M.</City>
+	<Region/>
+	<PostalCode>60528</PostalCode>
+	<Country>Germany</Country>
+	<Phone>069-0245984</Phone>
+	<Fax>069-0245874</Fax>
+</Customer>
+

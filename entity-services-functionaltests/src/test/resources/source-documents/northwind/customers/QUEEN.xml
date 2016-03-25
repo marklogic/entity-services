@@ -1,0 +1,13 @@
+<Customer CustomerID="QUEEN">
+	<CompanyName>Queen Cozinha</CompanyName>
+	<ContactName>Lúcia Carvalho</ContactName>
+	<ContactTitle>Marketing Assistant</ContactTitle>
+	<Address>Alameda dos Canàrios, 891</Address>
+	<City>Sao Paulo</City>
+	<Region>SP</Region>
+	<PostalCode>05487-020</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(11) 555-1189</Phone>
+	<Fax/>
+</Customer>
+

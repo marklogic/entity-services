@@ -1,0 +1,13 @@
+<Customer CustomerID="GROSR">
+	<CompanyName>GROSELLA-Restaurante</CompanyName>
+	<ContactName>Manuel Pereira</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>5ª Ave. Los Palos Grandes</Address>
+	<City>Caracas</City>
+	<Region>DF</Region>
+	<PostalCode>1081</PostalCode>
+	<Country>Venezuela</Country>
+	<Phone>(2) 283-2951</Phone>
+	<Fax>(2) 283-3397</Fax>
+</Customer>
+

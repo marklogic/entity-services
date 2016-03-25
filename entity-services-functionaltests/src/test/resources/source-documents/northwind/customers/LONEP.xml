@@ -1,0 +1,13 @@
+<Customer CustomerID="LONEP">
+	<CompanyName>Lonesome Pine Restaurant</CompanyName>
+	<ContactName>Fran Wilson</ContactName>
+	<ContactTitle>Sales Manager</ContactTitle>
+	<Address>89 Chiaroscuro Rd.</Address>
+	<City>Portland</City>
+	<Region>OR</Region>
+	<PostalCode>97219</PostalCode>
+	<Country>USA</Country>
+	<Phone>(503) 555-9573</Phone>
+	<Fax>(503) 555-9646</Fax>
+</Customer>
+

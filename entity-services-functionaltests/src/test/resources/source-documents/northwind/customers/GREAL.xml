@@ -1,0 +1,13 @@
+<Customer CustomerID="GREAL">
+	<CompanyName>Great Lakes Food Market</CompanyName>
+	<ContactName>Howard Snyder</ContactName>
+	<ContactTitle>Marketing Manager</ContactTitle>
+	<Address>2732 Baker Blvd.</Address>
+	<City>Eugene</City>
+	<Region>OR</Region>
+	<PostalCode>97403</PostalCode>
+	<Country>USA</Country>
+	<Phone>(503) 555-7555</Phone>
+	<Fax/>
+</Customer>
+

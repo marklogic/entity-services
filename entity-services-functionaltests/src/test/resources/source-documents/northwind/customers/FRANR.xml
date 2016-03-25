@@ -1,0 +1,13 @@
+<Customer CustomerID="FRANR">
+	<CompanyName>France restauration</CompanyName>
+	<ContactName>Carine Schmitt</ContactName>
+	<ContactTitle>Marketing Manager</ContactTitle>
+	<Address>54, rue Royale</Address>
+	<City>Nantes</City>
+	<Region/>
+	<PostalCode>44000</PostalCode>
+	<Country>France</Country>
+	<Phone>40.32.21.21</Phone>
+	<Fax>40.32.21.20</Fax>
+</Customer>
+

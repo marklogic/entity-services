@@ -1,0 +1,13 @@
+<Customer CustomerID="BOTTM">
+	<CompanyName>Bottom-Dollar Markets</CompanyName>
+	<ContactName>Elizabeth Lincoln</ContactName>
+	<ContactTitle>Accounting Manager</ContactTitle>
+	<Address>23 Tsawassen Blvd.</Address>
+	<City>Tsawassen</City>
+	<Region>BC</Region>
+	<PostalCode>T2F 8M4</PostalCode>
+	<Country>Canada</Country>
+	<Phone>(604) 555-4729</Phone>
+	<Fax>(604) 555-3745</Fax>
+</Customer>
+

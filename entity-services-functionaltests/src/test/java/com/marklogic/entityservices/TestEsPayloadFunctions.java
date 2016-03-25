@@ -228,7 +228,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Unsupported datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("A non-reference property must have a datatype"));
     	}
     }
     

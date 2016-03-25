@@ -42,7 +42,7 @@ public class TestInstanceGenerator extends EntityServicesTestBase {
 	@Test
 	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
-			String entityTypeLocation = null;
+			//String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
 			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }

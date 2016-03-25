@@ -26,8 +26,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -52,8 +50,17 @@ public class TestSetup {
     private DatabaseClient _modulesClient, _schemasClient;
     protected static Collection<File> testCaseFiles;
 	protected static DocumentBuilder builder;
-	
-    protected TestSetup() {
+	private Set<String> entityTypes, sourceFileUris;
+			
+    public Set<String> getEntityTypes() {
+		return entityTypes;
+	}
+
+	public Set<String> getSourceFileUris() {
+		return sourceFileUris;
+	}
+
+	protected TestSetup() {
         // No instantiation allowed.
     }
 
@@ -93,6 +100,10 @@ public class TestSetup {
             	instance._schemasClient = DatabaseClientFactory.newClient(host, Integer.parseInt(port), schemasDatabase,  username, password, Authentication.DIGEST );
             }
         }
+        
+        
+        instance.loadEntityTypes();
+        instance.loadExtraFiles();
         return instance;
     }
     
@@ -118,7 +129,7 @@ public class TestSetup {
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	
-	Set<String> loadEntityTypes() throws ParserConfigurationException {
+	private void loadEntityTypes() {
 		
 	    JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -126,14 +137,11 @@ public class TestSetup {
 		testCaseFiles = getTestResources("/json-entity-types");
 		testCaseFiles.addAll(getTestResources("/xml-entity-types"));
 		testCaseFiles.addAll(getTestResources("/binary"));
-		Set<String> entityTypes = new HashSet<String>();
+		entityTypes = new HashSet<String>();
 		
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
-
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")|| f.getName().endsWith(".jpg"))) { continue; };
-
-
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
@@ -151,11 +159,10 @@ public class TestSetup {
 	        entityTypes.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    return entityTypes;
 	}
 
-	Set<String> loadExtraFiles() {
-		Set<String> sourceFilesUris = new HashSet<String>();
+	private void loadExtraFiles() {
+		sourceFileUris = new HashSet<String>();
 	    
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -170,22 +177,30 @@ public class TestSetup {
 	    
 	    for (File f : extraDocuments) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml") || f.getName().endsWith(".jpg"))) { continue; };
 	    	
 	    	logger.info("Loading " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));
-	        sourceFilesUris.add(f.getName());
+	        sourceFileUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
-	    return sourceFilesUris;
 	}
 	
-	//@AfterClass
 	public void teardownClass() {
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();
 	    for (File f : testCaseFiles) {
 	    	logger.info("Removing " + f.getName());
 		    docMgr.delete(f.getName());
+	    }
+
+	    Collection<File> sourceFiles = getTestResources("/source-documents");
+	    Collection<File> testDocuments = getTestResources("/test-instances");
+	    Collection<File> extraDocuments = new ArrayList<File>();
+	    extraDocuments.addAll(testDocuments);
+	    extraDocuments.addAll(sourceFiles);
+	    
+	    for (File f : extraDocuments) {
+	    	docMgr.delete(f.getName());
 	    }
 	}
 }

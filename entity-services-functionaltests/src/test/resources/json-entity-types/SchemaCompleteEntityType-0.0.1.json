@@ -1,0 +1,76 @@
+{
+  "info": {
+    "title": "SchemaCompleteEntityType",
+    "version": "0.0.1",
+    "baseUri": "http://marklogic.com/testing-entity-type",
+    "description":"All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid."
+  },
+  "definitions": {
+    "SchemaCompleteEntityType": {
+      "properties": {
+        "orderId": {
+          "datatype": "string",
+          "collation" : "http://marklogic.com/collation/"
+        },
+        "base64BinaryKey": { "datatype": "base64Binary" },
+        "booleanKey": { "datatype": "boolean" },
+        "byteKey" : { "datatype" : "byte"},
+        "dateKey" : { "datatype" : "date"},
+        "dateTimeKey" : { "datatype" : "dateTime"},
+        "dayTimeDurationKey" : { "datatype" : "dayTimeDuration"},
+        "decimalKey" : { "datatype" : "decimal"},
+        "doubleKey" : { "datatype" : "double"},
+        "durationKey" : { "datatype" : "duration"},
+        "floatKey" : { "datatype" : "float"},
+        "intKey" : { "datatype" : "int"},
+        "integerKey" : { "datatype" : "integer"},
+        "longKey" : { "datatype" : "long"},
+        "shortKey" : { "datatype" : "short"},
+        "stringKey" : { "datatype" : "string"},
+        "timeKey" : { "datatype" : "time"},
+        "unsignedIntKey" : { "datatype" : "unsignedInt"},
+        "unsignedLongKey" : { "datatype" : "unsignedLong"},
+        "unsignedShortKey" : { "datatype" : "unsignedShort"},
+        "yearMonthDurationKey" : { "datatype" : "yearMonthDuration"},
+        "anySimpleTypeKey" : {"datatype":"anySimpleType"},
+        "anyURIKey" : {"datatype":"anyURI"},
+        "iriKey": {"datatype":"iri"},
+        "arrayKey": {"datatype":"array","items":{"datatype":"long"}},
+        "arrayStringKey": {"datatype":"array","items":{"datatype":"string","collation":"http://marklogic.com/collation/"}},
+        "referenceInThisFile": { 
+             "$ref": "#/definitions/OrderDetails",
+             "description":"This property refers to OrderDetails with no array declaration."
+        },
+        "arrayreferenceInThisFile": { 
+            "datatype":"array",
+            "description":"This property refers to OrderDetails with an array declaration.",
+            "items":{"$ref": "#/definitions/OrderDetails"}
+        },
+        "externalReference": { 
+           "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails",
+           "description":"This property refers to a type externally with no array declaration."
+        },
+        "externalArrayReference": { 
+            "datatype":"array",
+            "description":"This property refers to OrderDetails with no array declaration.",
+            "items":{ "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails"}
+        }
+      },
+      "primaryKey": "orderId",
+      "required": ["orderId", "orderDate"],
+      "rangeIndex": ["unsignedShortKey", "stringKey"],
+      "wordLexicon": ["stringKey"]
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "datatype": "integer"
+        },
+        "productName": {
+          "datatype": "string"
+        }
+      }
+    }
+  }
+}
+

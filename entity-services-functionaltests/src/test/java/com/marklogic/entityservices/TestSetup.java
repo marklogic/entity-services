@@ -136,7 +136,7 @@ public class TestSetup {
 	    
 		testCaseFiles = getTestResources("/json-entity-types");
 		testCaseFiles.addAll(getTestResources("/xml-entity-types"));
-		testCaseFiles.addAll(getTestResources("/binary"));
+		
 		entityTypes = new HashSet<String>();
 		
 	    for (File f : testCaseFiles) {
@@ -170,10 +170,11 @@ public class TestSetup {
 	    Collection<File> sourceFiles = getTestResources("/source-documents");
 	    
 	    Collection<File> testDocuments = getTestResources("/test-instances");
-	    
-	    	    Collection<File> extraDocuments = new ArrayList<File>();
+	    Collection<File> testBinary = getTestResources("/binary");
+	    Collection<File> extraDocuments = new ArrayList<File>();
 	    extraDocuments.addAll(testDocuments);
 	    extraDocuments.addAll(sourceFiles);
+	    extraDocuments.addAll(testBinary);
 	    
 	    for (File f : extraDocuments) {
 	    	if (f.getName().startsWith(".")) { continue; };

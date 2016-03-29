@@ -151,8 +151,19 @@
       <es:primary-key>orderId</es:primary-key>
       <es:required>orderId</es:required>
       <es:required>orderDate</es:required>
+      <es:range-index>byteKey</es:range-index>
+      <es:range-index>shortKey</es:range-index>
+      <es:range-index>unsignedByteKey</es:range-index>
       <es:range-index>unsignedShortKey</es:range-index>
       <es:range-index>stringKey</es:range-index>
+      <es:range-index>iriKey</es:range-index>
+      <es:range-index>anyURIKey</es:range-index>
+      <es:range-index>booleanKey</es:range-index>
+      <es:range-index>integerKey</es:range-index>
+      <es:range-index>negativeIntegerKey</es:range-index>
+      <es:range-index>nonNegativeIntegerKey</es:range-index>
+      <es:range-index>positiveIntegerKey</es:range-index>
+      <es:range-index>nonPositiveIntegerKey</es:range-index>
       <es:word-lexicon>stringKey</es:word-lexicon>
     </SchemaCompleteEntityType>
     <OrderDetails>

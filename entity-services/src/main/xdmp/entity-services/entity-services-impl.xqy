@@ -438,10 +438,17 @@ declare function esi:indexable-datatype(
 {
     switch ($datatype)
     case "boolean" return "string"
-    case "duration" return "dayTimeDuration"
+    case "anyURI" return "string"
+    case "iri" return "string"
     case "byte" return "int"
     case "short" return "int"
     case "unsignedShort" return "unsignedInt"
+    case "unsignedByte" return "unsignedInt"
+    case "integer" return "decimal"
+    case "negativeInteger" return "decimal"
+    case "nonNegativeInteger" return "decimal"
+    case "positiveInteger" return "decimal"
+    case "nonPositiveInteger" return "decimal"
     default return $datatype
 };
 

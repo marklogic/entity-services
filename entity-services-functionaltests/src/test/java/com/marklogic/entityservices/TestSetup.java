@@ -137,11 +137,11 @@ public class TestSetup {
 		testCaseFiles = getTestResources("/json-entity-types");
 		testCaseFiles.addAll(getTestResources("/xml-entity-types"));
 		testCaseFiles.addAll(getTestResources("/binary"));
-		Set<String> entityTypes = new HashSet<String>();
+		entityTypes = new HashSet<String>();
 		
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")|| f.getName().endsWith(".jpg"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")||f.getName().endsWith(".jpg"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
@@ -170,15 +170,14 @@ public class TestSetup {
 	    Collection<File> sourceFiles = getTestResources("/source-documents");
 	    
 	    Collection<File> testDocuments = getTestResources("/test-instances");
-	    Collection<File> testBinary = getTestResources("/binary");
-	    Collection<File> extraDocuments = new ArrayList<File>();
+	    
+	    	    Collection<File> extraDocuments = new ArrayList<File>();
 	    extraDocuments.addAll(testDocuments);
 	    extraDocuments.addAll(sourceFiles);
-	    extraDocuments.addAll(testBinary);
 	    
 	    for (File f : extraDocuments) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml") || f.getName().endsWith(".jpg"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
 	    	logger.info("Loading " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));

@@ -72,7 +72,7 @@ public abstract class EntityServicesTestBase {
 		testSetup.teardownClass();
 	}
 	
-	public EvalResultIterator eval(String functionCall) throws TestEvalException {
+	public static EvalResultIterator eval(String functionCall) throws TestEvalException {
 	    
 	    String entityServicesImport = 
 	            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
@@ -89,7 +89,7 @@ public abstract class EntityServicesTestBase {
 	    return results;
 	}
 
-	protected <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
+	protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
 		EvalResultIterator results =  eval(functionCall);
 		EvalResult result = null;
 		if (results.hasNext()) {

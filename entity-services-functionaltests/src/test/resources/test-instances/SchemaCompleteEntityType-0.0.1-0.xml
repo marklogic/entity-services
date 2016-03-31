@@ -1,5 +1,6 @@
 <SchemaCompleteEntityType>
 <orderId>some string</orderId>
+<anyURIKey>http://example.org/some-uri</anyURIKey>
 <base64BinaryKey>TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=</base64BinaryKey>
 <booleanKey>true</booleanKey>
 <byteKey>123</byteKey>
@@ -10,18 +11,27 @@
 <doubleKey>123</doubleKey>
 <durationKey>P1D</durationKey>
 <floatKey>123</floatKey>
+<gDayKey>---22</gDayKey>
+<gMonthKey>--03</gMonthKey>
+<gMonthDayKey>--02-01</gMonthDayKey>
+<gYearKey>-2001</gYearKey>
+<gYearMonthKey>2001-01</gYearMonthKey>
+<hexBinaryKey>3F3C6D78206C657673726F693D6E3122302E20226E656F636964676E223D54552D4622383E3F</hexBinaryKey>
 <intKey>123</intKey>
 <integerKey>123</integerKey>
+<negativeIntegerKey>-123</negativeIntegerKey>
+<nonNegativeIntegerKey>123</nonNegativeIntegerKey>
+<positiveIntegerKey>123</positiveIntegerKey>
+<nonPositiveIntegerKey>-123</nonPositiveIntegerKey>
 <longKey>1355</longKey>
 <shortKey>343</shortKey>
 <stringKey>some string</stringKey>
 <timeKey>09:00:15</timeKey>
+<unsignedByteKey>2</unsignedByteKey>
 <unsignedIntKey>5555</unsignedIntKey>
 <unsignedLongKey>999999999</unsignedLongKey>
 <unsignedShortKey>324</unsignedShortKey>
 <yearMonthDurationKey>P1Y</yearMonthDurationKey>
-<anySimpleTypeKey>some string</anySimpleTypeKey>
-<anyURIKey>http://example.org/some-uri</anyURIKey>
 <iriKey>http://example.org/some-iri</iriKey>
 <arrayKey>1355</arrayKey>
 <arrayKey>1355</arrayKey>

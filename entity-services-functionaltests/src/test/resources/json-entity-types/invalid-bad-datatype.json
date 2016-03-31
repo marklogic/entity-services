@@ -8,7 +8,7 @@
     "Order": {
       "properties": {
         "orderId": {
-          "datatype": "botcheddt"
+          "datatype": "anySimpleType"
         },
         "base64BinaryKey": { "datatype": "base64Binary" }
       },

@@ -51,6 +51,7 @@ declare function es:entity-type-from-node(
 
 (:~
  : Given an entity type, returns its XML representation
+ : @param An entity type document.
  :)
 declare function es:entity-type-to-xml(
     $entity-type as map:map
@@ -61,6 +62,7 @@ declare function es:entity-type-to-xml(
 
 (:~
  : Given an entity type, returns its JSON representation
+ : @param An entity type document.
  :)
 declare function es:entity-type-to-json(
     $entity-type as map:map
@@ -71,6 +73,7 @@ declare function es:entity-type-to-json(
 
 (:~
  : Generate a conversion module for a given entity type
+ : @param An entity type document.
  :)
 declare function es:conversion-module-generate(
     $entity-type as map:map
@@ -82,6 +85,7 @@ declare function es:conversion-module-generate(
 (:~
  : Generate one test instance in XML for each entity type in the 
  : entity type document payload.
+ : @param An entity type document.
  :)
 declare function es:entity-type-get-test-instances(
     $entity-type as map:map
@@ -98,6 +102,7 @@ declare function es:entity-type-get-test-instances(
  : Portions of this complete database properties file can be used 
  : as building-blocks for the completed database properties 
  : index configuration.
+ : @param An entity type document.
  :)
 declare function es:database-properties-generate(
     $entity-type as map:map
@@ -111,6 +116,7 @@ declare function es:database-properties-generate(
 (:~
  : Generate a schema that can validate entity instance documents
  : TODO -- stub only, not implemented
+ : @param An entity type document.
  :)
 declare function es:schema-generate(
     $entity-type as map:map)
@@ -118,3 +124,31 @@ as element()*
 {
     esi:schema-generate($entity-type)
 };
+
+
+
+(:~
+ : Generates an extraction template that can surface the entity
+ : instance as a view in the rows index.
+ : @param An entity type document.
+ :)
+declare function es:extraction-template-generate(
+    $entity-type as map:map
+) as document-node()
+{
+    document {
+        esi:extraction-template-generate($entity-type) 
+    }
+};
+
+
+
+(: validating versions of above generation functions (TODO for EA-3)
+ : pending WG review
+declare function es:extraction-template-generate(
+    $entity-type-document as document-node()
+) as document-node()
+{  
+    es:extraction-template-generate(es:entity-type-from-node($entity-type-document))
+};
+ :)

@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerException;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -253,7 +254,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	
 	}
 	
-	//@AfterClass
+	@AfterClass
 	public static void removeConversions() {
 		for (String entityType : conversionModules.keySet()) {
 			

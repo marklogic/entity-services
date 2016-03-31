@@ -201,7 +201,7 @@ declare function {$prefix}:instance-from-document(
 {{
     let $xml-from-document := {$prefix}:instance-xml-from-document($document)
     for $root-instance in $xml-from-document
-        let $instance := map:map()
+        let $instance := json:object()
         let $_ :=
             for $property in $root-instance/*
             return
@@ -215,7 +215,7 @@ declare function {$prefix}:child-instance(
     $element as element()
 ) as map:map*
 {{
-    let $child := map:map()
+    let $child := json:object()
     let $_ := 
         for $property in $element/*
         return

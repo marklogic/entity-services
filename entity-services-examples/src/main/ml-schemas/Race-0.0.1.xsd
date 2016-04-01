@@ -1,0 +1,58 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+  <xs:complexType name="RaceContainerType" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Race"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RaceType">
+    <xs:sequence>
+      <xs:element ref="name"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="comprisedOfRuns"/>
+      <xs:element ref="wonByRunner"/>
+      <xs:element ref="courseLength"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Race" type="RaceType"/>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="comprisedOfRuns" type="RunContainerType"/>
+  <xs:element name="wonByRunner" type="xs:anyURI"/>
+  <xs:element name="courseLength" type="xs:decimal"/>
+  <xs:complexType name="RunContainerType" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Run"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RunType">
+    <xs:sequence>
+      <xs:element ref="id"/>
+      <xs:element ref="date"/>
+      <xs:element ref="distance"/>
+      <xs:element ref="distanceLabel"/>
+      <xs:element ref="duration"/>
+      <xs:element ref="runByRunner"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Run" type="RunType"/>
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="date" type="xs:date"/>
+  <xs:element name="distance" type="xs:decimal"/>
+  <xs:element name="distanceLabel" type="xs:string"/>
+  <xs:element name="duration" type="xs:dayTimeDuration"/>
+  <xs:element name="runByRunner" type="RunnerContainerType"/>
+  <xs:complexType name="RunnerContainerType" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Runner"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RunnerType">
+    <xs:sequence>
+      <xs:element ref="name"/>
+      <xs:element ref="age"/>
+      <xs:element ref="gender"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Runner" type="RunnerType"/>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="age" type="xs:int"/>
+  <xs:element name="gender" type="xs:string"/>
+</xs:schema>

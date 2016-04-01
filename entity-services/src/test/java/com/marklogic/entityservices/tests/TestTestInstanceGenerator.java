@@ -46,7 +46,6 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	@Test
 	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
-			String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
 			if (entityType.contains(".json")) { continue; }
@@ -58,7 +57,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 			int resultNumber = 0;
 			while (results.hasNext()) {
 				EvalResult result =  results.next();
-				DOMHandle handle = result.get(new DOMHandle());              
+				DOMHandle handle = result.get(new DOMHandle());
 				Document actualDoc = handle.get();
 				
 				//debugOutput(actualDoc);

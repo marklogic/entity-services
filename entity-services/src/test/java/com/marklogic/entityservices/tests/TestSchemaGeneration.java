@@ -15,40 +15,112 @@
  */
 package com.marklogic.entityservices.tests;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.StringHandle;
 
 /**
- * Tests the server-side function
- * es:echema-generate($entity-type) as element(xsd:schema)
+ * Tests the server-side function es:echema-generate($entity-type) as
+ * element(xsd:schema)
  * 
  * Stub - TODO implmement.
  *
  */
 public class TestSchemaGeneration extends EntityServicesTestBase {
 
+	private static XMLDocumentManager docMgr;
+	private static Map<String, StringHandle> schemas;
+
 	@BeforeClass
 	public static void setupClass() {
 		setupClients();
-	}
-	
-	@Test
-	public void verifySchemaGeneration() throws TestEvalException {
-		String initialTest = "Order-0.0.1.xml";
-		
-		// save conversion module into modules database
-		DOMHandle schemaXML = new DOMHandle();
-		
-		schemaXML = evalOneResult("es:schema-generate( es:entity-type-from-node( fn:doc( '"+initialTest+"')))", schemaXML);
-	
-		// save schema module to schemas database
-		XMLDocumentManager docMgr = schemasClient.newXMLDocumentManager();
-		docMgr.write("Order-0.0.1.xml", schemaXML);
-		
-	}
-		
 
+		docMgr = schemasClient.newXMLDocumentManager();
+		schemas = generateSchemas();
+	}
+
+	private static void storeSchema(String entityTypeName, StringHandle schemaHandle) {
+		logger.debug("Loading schema " + entityTypeName);
+		String moduleName = entityTypeName.replaceAll("\\.(xml|json)", ".xsd");
+		docMgr.write(moduleName, schemaHandle);
+	}
+
+	private static void removeSchema(String entityTypeName) {
+		logger.debug("Removing schema " + entityTypeName);
+		String moduleName = entityTypeName.replaceAll("\\.(xml|json)", ".xsd");
+		docMgr.delete(moduleName);
+	}
+
+	private static Map<String, StringHandle> generateSchemas() {
+		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
+
+		for (String entityType : entityTypes) {
+			if (entityType.contains(".xml")) {
+				continue;
+			}
+			;
+
+			logger.info("Generating schema: " + entityType);
+			StringHandle schema = new StringHandle();
+			try {
+				schema = evalOneResult("es:schema-generate( es:entity-type-from-node( fn:doc( '" + entityType + "')))",
+						schema);
+			} catch (TestEvalException e) {
+				throw new RuntimeException(e);
+			}
+			map.put(entityType, schema);
+		}
+		return map;
+	}
+
+	@Test
+	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
+
+		for (String entityType : entityTypes) {
+			if (entityType.contains(".xml")) {
+				continue;
+			}
+
+			String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-0.xml");
+
+			storeSchema(entityType, schemas.get(entityType));
+			DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
+					new DOMHandle());
+
+			InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
+			Document filesystemXML = builder.parse(is);
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					validateResult.get());
+			removeSchema(entityType);
+		}
+
+	}
+
+	@AfterClass
+	public static void cleanupSchemas() {
+		for (String entityType : schemas.keySet()) {
+
+			String moduleName = "/ext/" + entityType.replaceAll("\\.(xml|json)", ".xsd");
+
+			docMgr.delete(moduleName);
+		}
+	}
 }

@@ -534,8 +534,12 @@ declare function esi:schema-generate(
             <xs:sequence>
         {
             for $property-name in $property-keys
+            let $property-map := map:get($properties-map, $property-name)
+            let $datatype := map:get($property-map, "datatype")
             return
-                <xs:element ref="{ $property-name }"/>
+                if ($datatype eq "array")
+                then <xs:element minOccurs="0" maxOccurs="unbounded" ref="{ $property-name }"/>
+                else <xs:element ref="{ $property-name }"/>
         }
             </xs:sequence>
         </xs:complexType>,
@@ -545,12 +549,34 @@ declare function esi:schema-generate(
         return
             if (map:contains($property-map, "$ref"))
             then 
-                let $ref := replace(map:get($property-map, "$ref"), "#/definitions/", "")
-                return <xs:element name="{ $property-name }" type="{ $ref }ContainerType"/>
+                let $ref-value := map:get($property-map, "$ref")
+                return
+                if (contains($ref-value, "#/definitions/"))
+                then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
+                else <xs:element name="{ $property-name }" type="xs:anyURI"/>
             else if (map:contains($property-map, "datatype"))
             then
                 let $datatype := map:get($property-map, "datatype")
-                return <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+                let $items-map := map:get($property-map, "items")
+                return
+                    if ($datatype eq "array")
+                    then 
+                        if (map:contains($items-map, "$ref"))
+                        then
+                            let $ref-value := map:get($items-map, "$ref")
+                            return
+                            if (contains($ref-value, "#/definitions/"))
+                            then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
+                            else <xs:element name="{ $property-name }" type="xs:anyURI"/>
+                        else
+                            let $datatype := map:get($items-map, "datatype")
+                            return
+                                if ($datatype eq "iri")
+                                then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
+                                else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+                    else if ($datatype eq "iri")
+                    then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
+                    else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
             else ()
         )
     }

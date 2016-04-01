@@ -1,0 +1,32 @@
+{
+    "name":"Half Marathon One",
+    "comprisedOfRuns":[
+        "half1-10",
+        "half1-11",
+        "half1-12",
+        "half1-13",
+        "half1-14",
+        "half1-15",
+        "half1-16",
+        "half1-17",
+        "half1-18",
+        "half1-19",
+        "half1-1",
+        "half1-20",
+        "half1-21",
+        "half1-22",
+        "half1-23",
+        "half1-24",
+        "half1-25",
+        "half1-2",
+        "half1-3",
+        "half1-4",
+        "half1-5",
+        "half1-6",
+        "half1-7",
+        "half1-8",
+        "half1-9"
+    ],
+    "wonByRunner":"Tristan",
+    "courseLength":13.1
+}

@@ -1,0 +1,4 @@
+<es:instance xmlns:es="http://marklogic.com/entity-services"><es:info>
+    <es:title>Northwind-Ref-Same-Document</es:title>
+    <es:version>0.0.1</es:version>
+  </es:info><Customer><CompanyName>Alfreds Futterkiste</CompanyName><Country>Germany</Country><Address>Obere Str. 57</Address></Customer></es:instance>

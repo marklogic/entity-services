@@ -38,7 +38,7 @@ import com.marklogic.client.io.DOMHandle;
  * Tests server function es:entity-type-get-test-instances( $entity-type )
  *
  */
-public class TestInstanceGenerator extends EntityServicesTestBase {
+public class TestEsInstanceGenerator extends EntityServicesTestBase {
 
 	@BeforeClass
 	public static void setupTestInstances() {

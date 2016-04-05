@@ -500,8 +500,43 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		}
 		transformer.transform(domSource, result);
 				
-		logger.info("XML IN String format is: \n" + writer.toString()); 
-		logger.info("actualDoc now ::::" + actualDoc);
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
+	
+	@Test
+	public void testInstanceToEnvelope2() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "10249.xml";
+		String ns = getNameSpace(entityType);
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-to-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+		
+		String actualDoc = handle.get();              
+		
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-envelope/" + "valid-ref-same-document-2.xml");
+		Document controlDoc = builder.parse(is);
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
 	}

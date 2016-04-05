@@ -141,7 +141,7 @@ public class TestSetup {
 		
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")||f.getName().endsWith(".jpg"))) { continue; };
 	    	
 	    	// uncomment for quick iteration on TDE.
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
@@ -177,7 +177,7 @@ public class TestSetup {
 	    
 	    for (File f : extraDocuments) {
 	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml") || f.getName().endsWith(".jpg"))) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
 	    	logger.info("Loading " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));

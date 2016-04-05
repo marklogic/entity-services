@@ -2,6 +2,5 @@
 <CustomerId>some string</CustomerId>
 <CompanyName>some string</CompanyName>
 <Country>some string</Country>
-<ContactName>some string</ContactName>
+<Address>some string</Address>
 </Customer>
-

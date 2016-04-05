@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerException;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mortbay.log.Log;
 import org.w3c.dom.Document;
@@ -39,10 +40,15 @@ import com.marklogic.client.io.DOMHandle;
  */
 public class TestInstanceGenerator extends EntityServicesTestBase {
 
+	@BeforeClass
+	public static void setupTestInstances() {
+		setupClients();
+	}
+	
 	@Test
 	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
-			//String entityTypeLocation = null;
+			String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
 			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }

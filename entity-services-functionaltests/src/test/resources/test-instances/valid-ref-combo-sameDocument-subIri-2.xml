@@ -1,0 +1,16 @@
+<Order>
+<OrderID>123</OrderID>
+<CustomerID>
+<Customer>
+<CustomerId>some string</CustomerId>
+<CompanyName>some string</CompanyName>
+<Country>some string</Country>
+<Address>some string</Address>
+</Customer>
+</CustomerID>
+<OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
+<ShipAddress>some string</ShipAddress>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+</Order>

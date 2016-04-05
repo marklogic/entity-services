@@ -21,17 +21,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mortbay.log.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -41,6 +47,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.function.library.e;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
@@ -259,7 +266,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
-	public void testExtractInstance() throws IOException, TestEvalException {
+	public void testExtractInstance() throws IOException, TestEvalException, SAXException, TransformerException {
 		
 		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
 		String sourceDocument = "10248.xml";
@@ -274,6 +281,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 	}
 	
+
 	@Test
 	public void testExtInstWithMalformedDoc() throws IOException, TestEvalException {
 		
@@ -391,6 +399,146 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 	} */
 	
+	@Test
+	public void testInstanceToCanonicalXml() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
+		String sourceDocument = "10248.xml";
+		String ns = getNameSpace(entityType);
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-to-canonical-xml(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+		
+		String actualDoc = handle.get();              
+		
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-canonical/" + entityType);
+		Document controlDoc = builder.parse(is);
+				
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString());
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
 	
+	@Test
+	public void testInstanceToCanonicalXml2() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "ALFKI.xml";
+		String ns = getNameSpace(entityType);
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-to-canonical-xml(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+		
+		String actualDoc = handle.get();              
+		
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-canonical/" + entityType);
+		Document controlDoc = builder.parse(is);
+				
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
 	
+	@Test
+	public void testInstanceToEnvelope() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "ALFKI.xml";
+		String ns = getNameSpace(entityType);
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+		
+		String actualDoc = handle.get();              
+		
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-envelope/" + entityType);
+		Document controlDoc = builder.parse(is);
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		logger.info("XML IN String format is: \n" + writer.toString()); 
+		logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
+	
+	@Test
+	public void testInstanceGetAttachments() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "ALFKI.xml";
+		String ns = getNameSpace(entityType);
+		String envelopeDoc = "valid-ref-combo-sameDocument-subIri-envelope.xml";
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "xdmp:document-insert('valid-ref-combo-sameDocument-subIri-envelope.xml', ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') )))", new StringHandle());
+		StringHandle handle2 = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-get-attachments(doc('"+envelopeDoc+"'))", new StringHandle());
+		String actualDoc = handle2.get();
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-attachments/" + entityType);
+		Document controlDoc = builder.parse(is);
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
 }

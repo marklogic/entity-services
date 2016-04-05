@@ -181,12 +181,13 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			String entityTypeName = entityType.replace(".json",  "");
 			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
 			
+			logger.debug("Checking canonical and envelope: " + entityType);
 				
 			DOMHandle handle = evalOneResult(
 				moduleImport(entityType) +
 				"let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
 				+"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
-				+"return (xdmp:document-insert('"+entityTypeTestFileName+"-envelope.xml', $envelope), $canonical/"+entityTypeNoVersion +")", new DOMHandle());
+				+"return (xdmp:document-insert('"+entityTypeTestFileName+"-envelope.xml', $envelope), $canonical)", new DOMHandle());
 			Document actualInstance = handle.get();
 			assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
 			

@@ -88,8 +88,8 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 	
 	
 
-	//@AfterClass
-	public static void removeConversions() {
+	@AfterClass
+	public static void removeTemplates() {
 		for (String template : extractionTemplates.keySet()) {
 			
 			String templateName = template.replaceAll("\\.(xml|json)", ".tdex");

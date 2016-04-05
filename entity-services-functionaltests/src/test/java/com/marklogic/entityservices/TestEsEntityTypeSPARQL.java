@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.semantics.SPARQLQueryManager;
 
-public class TestEntityTypeSPARQL extends EntityServicesTestBase {
+public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 
     private static SPARQLQueryManager queryMgr;
 	

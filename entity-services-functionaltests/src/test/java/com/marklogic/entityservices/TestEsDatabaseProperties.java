@@ -42,7 +42,23 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 		//logger.debug(databaseConfiguration.toString());
 
 		ObjectMapper mapper = new ObjectMapper();
-		InputStream is = this.getClass().getResourceAsStream("/expected-database-properties/content-database.json");
+		InputStream is = this.getClass().getResourceAsStream("/test-database-properties/content-database.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
+	}
+	
+	@Test
+	public void testDBpropRangeIndexandwordLexicon() throws IOException, TestEvalException {
+		String entityType = "valid-db-prop-et.json";
+		
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JsonNode databaseConfiguration = handle.get();
+		
+		//logger.debug(databaseConfiguration.toString());
+
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-database-properties/content-database2.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
 		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(databaseConfiguration));

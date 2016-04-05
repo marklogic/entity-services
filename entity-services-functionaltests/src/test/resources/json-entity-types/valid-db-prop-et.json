@@ -1,0 +1,44 @@
+{
+  "info": {
+    "title": "Lets test DB prop generate",
+    "version": "0.0.1",
+    "baseUri": ""
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype": "string"
+        },
+        "CompanyName": {
+          "datatype": "string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        }
+      },
+      "primaryKey" : "CustomerId",
+      "rangeIndex" : ["CompanyName","Country"],
+      "wordLexicon" : ["CustomerId"]
+    },
+    "Product": {
+      "properties": {
+        "ProductName": {
+          "datatype": "string"
+        },
+        "UnitPrice": {
+          "datatype": "integer"
+        },
+        "SupplierID":{
+          "datatype":"integer"
+        },
+        "Discontinued":{
+          "datatype":"boolean"
+        }
+      }
+    }
+  }
+}

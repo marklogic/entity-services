@@ -50,7 +50,7 @@ public class TestSetup {
     private DatabaseClient _modulesClient, _schemasClient;
     protected static Collection<File> testCaseFiles;
 	protected static DocumentBuilder builder;
-	private Set<String> entityTypes, sourceFileUris;
+	private Set<String> entityTypes, sourceFileUris, invalidFileUris;
 			
     public Set<String> getEntityTypes() {
 		return entityTypes;
@@ -103,6 +103,7 @@ public class TestSetup {
         
         
         instance.loadEntityTypes();
+        instance.loadInvalidEntityTypes();
         instance.loadExtraFiles();
         return instance;
     }
@@ -129,6 +130,33 @@ public class TestSetup {
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	
+	private void loadInvalidEntityTypes() {
+		
+	    JSONDocumentManager docMgr = _client.newJSONDocumentManager();
+	    DocumentWriteSet writeSet = docMgr.newWriteSet();
+	    
+		Collection<File> testInvalidFiles = getTestResources("/invalid-entity-types");
+		invalidFileUris = new HashSet<String>();
+		
+	    for (File f : testInvalidFiles) {
+	    	if (f.getName().startsWith(".")) { continue; };
+	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")||f.getName().endsWith(".jpg"))) { continue; };
+	    	
+	    	// uncomment for quick iteration on TDE.
+	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
+	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
+	    	//if (!f.getName().startsWith("refs")) {continue; };
+	    	logger.info("Loading Invalid " + f.getName());
+	    	//docMgr.write(f.getPath(), new FileHandle(f));
+	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+	        
+	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
+	       
+	    	invalidFileUris.add(f.getName());
+	    }
+	    docMgr.write(writeSet);
+	}
+	
 	private void loadEntityTypes() {
 		
 	    JSONDocumentManager docMgr = _client.newJSONDocumentManager();
@@ -147,7 +175,7 @@ public class TestSetup {
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
 	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
 	    	//if (!f.getName().startsWith("refs")) {continue; };
-	    	logger.info("Loading " + f.getName());
+	    	logger.info("Loading ET Docs " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
 	        metadata.getCollections().addAll(
@@ -179,7 +207,7 @@ public class TestSetup {
 	    	if (f.getName().startsWith(".")) { continue; };
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	
-	    	logger.info("Loading " + f.getName());
+	    	logger.info("Loading Extra Files " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));
 	        sourceFileUris.add(f.getName());
 	    }
@@ -195,9 +223,11 @@ public class TestSetup {
 
 	    Collection<File> sourceFiles = getTestResources("/source-documents");
 	    Collection<File> testDocuments = getTestResources("/test-instances");
+	    Collection<File> testInvalidFiles = getTestResources("/invalid-entity-types");
 	    Collection<File> extraDocuments = new ArrayList<File>();
 	    extraDocuments.addAll(testDocuments);
 	    extraDocuments.addAll(sourceFiles);
+	    extraDocuments.addAll(testInvalidFiles);
 	    
 	    for (File f : extraDocuments) {
 	    	docMgr.delete(f.getName());

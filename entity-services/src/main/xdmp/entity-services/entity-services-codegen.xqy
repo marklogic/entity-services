@@ -119,18 +119,12 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         else 
             if(contains($ref, "#/definitions"))
             then
-            concat("if (not(",
-                    $path-to-property,
-                    "/element())) &#10;then data(",
-                    $path-to-property, 
-                    ")&#10;else json:to-array(",
-                    $path-to-property,
-                    " ! ",
-                    $prefix,
-                    ":extract-instance-",
-                    replace($ref, "#/definitions/", ""),
-                    "(.))"
-                    )
+            concat("&#10;    if (", $path-to-property, "/element())",
+                   "&#10;    then json:to-array(", 
+                    $path-to-property, " ! ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "(.))",
+                   "&#10;    else data(",
+                   $path-to-property, 
+                   ")")
             else
                concat($path-to-property, "/node()")
                 

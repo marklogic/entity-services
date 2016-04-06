@@ -1,32 +1,29 @@
-<es:instance xmlns:es="http://marklogic.com/entity-services"><es:info>
-    <es:title>Northwind-Ref-Combo-SameDocument-SubjectIri</es:title>
-    <es:version>0.0.1</es:version>
-  </es:info><Order>
-    <CustomerID>VINET</CustomerID>
-    <OrderDate>1996-07-04T14:25:55</OrderDate>
-    <ShipAddress>59 rue de l'Abbaye</ShipAddress>
-    <OrderDetails>
-      <OrderDetail>
+<Order>
+     <CustomerID>VINET</CustomerID>
+     <OrderDate>1996-07-04T14:25:55</OrderDate>
+     <ShipAddress>59 rue de l'Abbaye</ShipAddress>
+     <OrderDetails>
+        <OrderDetail>
 			<ProductID>11</ProductID>
 			<UnitPrice>14.0000</UnitPrice>
 			<Quantity>12</Quantity>
 			<Discount>0</Discount>
-		</OrderDetail>
-    </OrderDetails>
+	    </OrderDetail>
+	</OrderDetails>
     <OrderDetails>
-      <OrderDetail>
+        <OrderDetail>
 			<ProductID>42</ProductID>
 			<UnitPrice>9.8000</UnitPrice>
 			<Quantity>10</Quantity>
 			<Discount>0</Discount>
 		</OrderDetail>
-    </OrderDetails>
-    <OrderDetails>
-      <OrderDetail>
+	</OrderDetails>
+	<OrderDetails>
+	    <OrderDetail>
 			<ProductID>72</ProductID>
 			<UnitPrice>34.8000</UnitPrice>
 			<Quantity>5</Quantity>
 			<Discount>0</Discount>
 		</OrderDetail>
-    </OrderDetails>
-  </Order></es:instance>
+	</OrderDetails>
+</Order>

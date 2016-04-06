@@ -120,18 +120,14 @@ public class TestEntityTypes extends EntityServicesTestBase {
 	    	if (f.getName().startsWith(".")) { continue; };
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
 	    	logger.info("Loading " + f.getName());
-	    	
-	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-	        metadata.getCollections().addAll(
-	        		"http://marklogic.com/entity-services/entity-types",
-	        		f.getName());
-	        
-	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
+
+	    	// don't add metadata to invalid types -- they throw a TDE error.
+	    	writeSet.add(f.getName(), new FileHandle(f));
 	       
 	        invalidEntityTypes.add(f.getName());
 	    }
     	docMgr.write(writeSet);
-    	
+
     	for (String entityType : invalidEntityTypes) {
 	    	logger.info("Checking invalid: " + entityType);
 	    	@SuppressWarnings("unused")

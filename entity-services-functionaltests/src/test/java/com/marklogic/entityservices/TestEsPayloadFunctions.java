@@ -524,6 +524,20 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	}
     }
     
+    @Test
+    /* testing entity-type-from-node with rangeIndex error */
+    public void testInvalidRangeIndexDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking entity-type-from-node() with rangeIndex error");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('invalid-db-prop-rangeindex.json')))", new JacksonHandle());	
+    				//fail("eval should throw ES-ENTITY-TYPE-INVALID  exception for entity-type-from-node with rangeIndex error");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain ES-ENTITY-TYPE-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("gYearMonth in property YearsofService is unsupported for a range index."));
+    	}
+    }
+    
 /*    private void debugOutput(Document xmldoc) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();

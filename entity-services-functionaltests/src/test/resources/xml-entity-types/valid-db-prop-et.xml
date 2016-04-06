@@ -8,22 +8,48 @@
     <Customer>
      <es:properties>
         <CustomerId>
-          <es:datatype>string</es:datatype>
+          <es:datatype>integer</es:datatype>
+          <es:collation>anything rubbish</es:collation>
         </CustomerId>
         <CompanyName>
           <es:datatype>string</es:datatype>
         </CompanyName>
         <Country>
-           <es:datatype>string</es:datatype>
+           <es:datatype>boolean</es:datatype>
         </Country>
         <ContactName>
-           <es:datatype>string</es:datatype>
+           <es:datatype>iri</es:datatype>
         </ContactName>
+        <Liking><es:datatype>anyURI</es:datatype></Liking>
+        <Age><es:datatype>double</es:datatype></Age>
+        <Height><es:datatype>int</es:datatype></Height>
+        <Weight><es:datatype>short</es:datatype></Weight>
+        <YearsofService><es:datatype>gYearMonth</es:datatype></YearsofService>
+        <Numberyrs><es:datatype>byte</es:datatype></Numberyrs>
+        <Awards><es:datatype>float</es:datatype></Awards>
+        <dateofShipment><es:datatype>date</es:datatype></dateofShipment>
+        <dateofOrder><es:datatype>dateTime</es:datatype></dateofOrder>
+        <CustSince><es:datatype>dayTimeDuration</es:datatype></CustSince>
+        <DaysofSurfing><es:datatype>nonNegativeInteger</es:datatype></DaysofSurfing>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
        <es:range-index>CompanyName</es:range-index>
        <es:range-index>Country</es:range-index>
+       <es:range-index>CustomerId</es:range-index>
+       <es:range-index>ContactName</es:range-index>
+       <es:range-index>Weight</es:range-index>
+       <es:range-index>Height</es:range-index>
+       <es:range-index>Numberyrs</es:range-index>
+       <es:range-index>Awards</es:range-index>
+       <es:range-index>Age</es:range-index>
+       <es:range-index>dateofShipment</es:range-index>
+       <es:range-index>dateofOrder</es:range-index>
+       <es:range-index>CustSince</es:range-index>
+       <es:range-index>DaysofSurfing</es:range-index>
        <es:word-lexicon>CustomerId</es:word-lexicon>
+       <es:word-lexicon>Age</es:word-lexicon>
+       <es:word-lexicon>Weight</es:word-lexicon>
+       <es:word-lexicon>DaysofSurfing</es:word-lexicon>
      </Customer>
      <Product>
         <es:properties>

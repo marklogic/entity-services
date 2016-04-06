@@ -1,6 +1,17 @@
 <Customer>
-<CustomerId>some string</CustomerId>
+<CustomerId>123</CustomerId>
 <CompanyName>some string</CompanyName>
-<Country>some string</Country>
-<ContactName>some string</ContactName>
+<Country>true</Country>
+<ContactName>http://example.org/some-iri</ContactName>
+<Liking>http://example.org/some-uri</Liking>
+<Age>123</Age>
+<Height>123</Height>
+<Weight>343</Weight>
+<YearsofService>2001-01</YearsofService>
+<Numberyrs>123</Numberyrs>
+<Awards>123</Awards>
+<dateofShipment>2000-01-23</dateofShipment>
+<dateofOrder>2000-01-23T17:00:26.789186-08:00</dateofOrder>
+<CustSince>P1D</CustSince>
+<DaysofSurfing>123</DaysofSurfing>
 </Customer>

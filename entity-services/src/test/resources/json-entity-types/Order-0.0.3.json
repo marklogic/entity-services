@@ -9,13 +9,13 @@
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "http://marklogic.com/collation/"
+          "collation" : "http://marklogic.com/collation/en"
         },
         "orderDate": {
           "datatype": "date"
         },
         "hasOrderDetails": {
-          "$ref": "OrderDetails/0.0.3/definitions/OrderDetails"
+          "$ref": "http://OrderDetails/0.0.3/definitions/OrderDetails"
         }
       },
       "primaryKey":"orderId"

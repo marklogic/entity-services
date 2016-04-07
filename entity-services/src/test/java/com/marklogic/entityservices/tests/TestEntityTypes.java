@@ -100,6 +100,25 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-multiple-pk.xml", "only one primary key allowed");
         invalidMessages.put("invalid-property-ref-with-others.xml", "If a property has es:ref as a child, then it cannot have a datatype.");
         invalidMessages.put("invalid-range-index-key.xml", "unsupported for a range index.");
+        invalidMessages.put("invalid-bad-absolute-reference.json", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-absolute-reference.xml", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-absolute-item-reference.json", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-absolute-item-reference.xml", "must be a valid URI.");
+        invalidMessages.put("invalid-missing-reference.json", "must resolve to local entity type.");
+        invalidMessages.put("invalid-missing-reference.xml", "must resolve to local entity type.");
+        invalidMessages.put("invalid-array-no-items.json", "must contain an \"items\" declaration");
+        invalidMessages.put("invalid-array-no-items.xml", "must contain an \"items\" declaration");
+        invalidMessages.put("invalid-nested-array.json", "cannot both be an \"array\" and have items of type \"array\".");
+        invalidMessages.put("invalid-nested-array.xml", "cannot both be an \"array\" and have items of type \"array\".");
+        invalidMessages.put("invalid-bad-baseUri.json", "If present, baseUri (es:base-uri) must be an absolute URI.");
+        invalidMessages.put("invalid-bad-baseUri.xml", "If present, baseUri (es:base-uri) must be an absolute URI.");
+        invalidMessages.put("invalid-collation.json", "There is an invalid collation in the entity type document.");
+        invalidMessages.put("invalid-collation.xml", "There is an invalid collation in the entity type document.");
+        invalidMessages.put("invalid-bad-local-reference.json", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-local-reference.xml", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-local-item-reference.json", "must be a valid URI.");
+        invalidMessages.put("invalid-bad-local-item-reference.xml", "must be a valid URI.");
+    
     }
     
     @Test
@@ -122,6 +141,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
 	    	logger.info("Loading " + f.getName());
 
 	    	// don't add metadata to invalid types -- they throw a TDE error.
+	    	//docMgr.write(f.getName(), new FileHandle(f));
 	    	writeSet.add(f.getName(), new FileHandle(f));
 	       
 	        invalidEntityTypes.add(f.getName());
@@ -190,6 +210,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
             	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
 
             	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
+            	logger.debug("Validating and parsing " + entityType);
             	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
         		JsonNode jsonActual = handle.get();
                 checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);

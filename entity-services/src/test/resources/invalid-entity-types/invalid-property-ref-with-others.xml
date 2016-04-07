@@ -9,7 +9,7 @@
         <es:properties>
             <orderId>
                 <es:datatype>string</es:datatype>
-                <es:collation>http://marklogic.com/collation</es:collation>
+                <es:collation>http://marklogic.com/collation/en</es:collation>
                 <es:ref>#definitions/OrderDetails</es:ref>
             </orderId>
             <base64BinaryKey>

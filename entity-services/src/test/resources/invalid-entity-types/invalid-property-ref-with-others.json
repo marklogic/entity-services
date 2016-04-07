@@ -9,7 +9,7 @@
       "properties": {
         "orderId": {
           "datatype": "string",
-          "collation" : "http://marklogic.com/collation",
+          "collation" : "http://marklogic.com/collation/en",
           "$ref":"#definitions/OrderDetails"
         },
         "base64BinaryKey": { "datatype": "base64Binary" }

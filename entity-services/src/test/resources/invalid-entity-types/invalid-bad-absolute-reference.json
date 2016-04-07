@@ -1,0 +1,17 @@
+{
+    "info": {
+        "title": "invalid-bad-absolute-reference",
+        "baseUri": "http://blah",
+        "version": "0.0.1",
+        "description": "This invalid file has an absolute reference target that is malformed."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "$ref": "thisshouldbeanabsoluteuri"
+                }
+            }
+        }
+    }
+}

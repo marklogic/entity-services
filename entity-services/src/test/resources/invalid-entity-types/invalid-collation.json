@@ -1,0 +1,18 @@
+{
+    "info": {
+        "title": "invalid-collation",
+        "baseUri": "http://blah",
+        "version": "0.0.1",
+        "description": "This invalid file has an invalid collation."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "datatype":"string",
+                    "collation":"bink"
+                }
+            }
+        }
+    }
+}

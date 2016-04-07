@@ -1,0 +1,19 @@
+{
+  "info": {
+    "title" : "invalid-bad-baseUri",
+    "baseUri" : "thisisbad",
+    "description" : "This data type a bad baseUri"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "string",
+          "collation" : "http://marklogic.com/collation/en"
+        }
+      },
+      "primaryKey": ["orderId"]
+    }
+  }
+}
+

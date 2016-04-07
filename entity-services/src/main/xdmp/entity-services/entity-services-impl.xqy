@@ -58,6 +58,7 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="es:info|/info">
           <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">"info" section must be an object and contain exactly one title declaration.</iso:assert>
           <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">"info" section must be an object and contain exactly one version declaration.</iso:assert>
+          <iso:assert test="empty(es:base-uri|baseUri) or matches(es:base-uri|baseUri, '^[a-z]+:')" id="ES-BASEURI">If present, baseUri (es:base-uri) must be an absolute URI.</iso:assert>
         </iso:rule>
         <!-- XML version of primary key rule -->
         <iso:rule context="es:definitions/node()[es:primary-key]">
@@ -70,22 +71,33 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="properties/object-node()">
           <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">If a property has $ref as a child, then it cannot have a datatype.</iso:assert>
           <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
+          <iso:assert test="./datatype|node('$ref')" id="ES-PROPETRY-IS-OBJECT">Each propery must be an object, with either "datatype" or "$ref" as a key</iso:assert>
         </iso:rule>
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">
           <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If a property has es:ref as a child, then it cannot have a datatype.</iso:assert>
           <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
         </iso:rule>
-        <iso:rule context="es:ref">
-          <iso:assert test="( starts-with(xs:string(.),'#/definitions/') or ( xs:string(.) castable as sem:iri) )" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>
+        <iso:rule context="es:ref|node('$ref')">
+          <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-x]+:')" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>
+          <iso:assert test="if (starts-with(xs:string(.), '#/definitions/')) then replace(xs:string(.), '#/definitions/', '') = (root(.)/definitions/*/node-name(.) ! xs:string(.), root(.)/es:entity-type/es:definitions/*/local-name(.)) else true()" id="ES-LOCAL-REF">Local reference <xsl:value-of select="."/> must resolve to local entity type.</iso:assert>
+          <iso:assert test="if (not(contains(xs:string(.), '#/definitions/'))) then matches(xs:string(.), '^[a-z]+:') else true()" id="ES-ABSOLUTE-REF">Non-local reference <xsl:value-of select="."/> must be a valid URI.</iso:assert>
         </iso:rule>
         <iso:rule context="es:datatype">
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test="if (. eq 'array') then exists(../es:items) else true()">Property <xsl:value-of select="local-name(..)" /> is of type "array" and must contain an "items" declaration.</iso:assert>
+         <iso:assert test="if (. eq 'array') then exists(../es:items/es:ref) or ../es:items/es:datatype ne 'array' else true()">Property <xsl:value-of select="local-name(..)" /> cannot both be an "array" and have items of type "array".</iso:assert>
          <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth') and local-name(..) = ../../../es:range-index/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="datatype">
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test="if (. eq 'array') then exists(../items) else true()">Property <xsl:value-of select="node-name(.)" /> is of type "array" and must contain an "items" declaration.</iso:assert>
+         <iso:assert test="if (. eq 'array') then exists(../items/node('$ref')) or ../items/datatype ne 'array' else true()">Property <xsl:value-of select="node-name(.)" /> cannot both be an "array" and have items of type "array".</iso:assert>
          <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth') and node-name(..) = ../../../rangeIndex)"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:collation|collation">
+         <!-- this function throws an error for invalid collations, so must be caught in alidate function -->
+         <iso:assert test="xdmp:collation-canonical-uri(.)">Collation <xsl:value-of select="." /> is not valid.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>
@@ -95,7 +107,14 @@ declare function esi:entity-type-validate(
     $entity-type as document-node()
 ) as xs:string*
 {
-    validate:schematron($entity-type, $esi:entity-type-schematron)
+    try {
+        validate:schematron($entity-type, $esi:entity-type-schematron)
+    }
+    catch ($e) {
+        if ($e/error:code eq "XDMP-COLLATION")
+        then "There is an invalid collation in the entity type document."
+        else xdmp:rethrow()
+    }
 };
 
 
@@ -472,7 +491,7 @@ declare function esi:database-properties-generate(
         let $property := map:get(map:get($entity-type-map, "properties"), $range-index-property)
         let $specified-datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
         let $datatype := esi:indexable-datatype($specified-datatype)
-        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($ri-map, "collation", $collation)
         let $_ := map:put($ri-map, "invalid-values", "reject")
         let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
@@ -484,7 +503,7 @@ declare function esi:database-properties-generate(
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
         let $wl-map := json:object()
         let $property := map:get(map:get($entity-type-map, "properties"), $word-lexicon-property)
-        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/") )
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($wl-map, "collation", $collation)
         let $_ := map:put($wl-map, "localname", $word-lexicon-property)
         let $_ := map:put($wl-map, "namespace-uri", "")

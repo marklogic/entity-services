@@ -1,8 +1,8 @@
 <es:entity-type xmlns:es="http://marklogic.com/entity-services">
   <es:info>
-      <es:title>Order</es:title>
-      <es:version>0.0.3</es:version>
-      <es:description>An order schema that references details that are not themselves in this schema file</es:description>
+      <es:title>invalid-bad-baseUri</es:title>
+      <es:base-uri>badBaseUri</es:base-uri>
+      <es:description>This data type has a bad baseUri</es:description>
   </es:info>
   <es:definitions>
     <Order>
@@ -11,12 +11,6 @@
                 <es:datatype>string</es:datatype>
                 <es:collation>http://marklogic.com/collation/en</es:collation>
             </orderId>
-            <orderDate>
-                <es:datatype>date</es:datatype>
-            </orderDate>
-            <hasOrderDetails>
-                <es:ref>http://OrderDetails/0.0.3/definitions/OrderDetails</es:ref>
-            </hasOrderDetails>
         </es:properties>
         <es:primary-key>orderId</es:primary-key>
     </Order>

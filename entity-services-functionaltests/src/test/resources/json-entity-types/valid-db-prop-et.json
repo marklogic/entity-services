@@ -43,7 +43,8 @@
       "primaryKey" : "CustomerId",
       "rangeIndex" : ["CompanyName","Country","CustomerId","ContactName","Weight","Height","Numberyrs","Awards",
       "Age","dateofShipment","dateofOrder","CustSince","DaysofSurfing","ProductsPurchased"],
-      "wordLexicon" : ["CustomerId","Age","Weight","DaysofSurfing"]
+      "wordLexicon" : ["CustomerId","Age","Weight","DaysofSurfing"],
+      "required": ["anything rubbish"]
     },
     "Product": {
       "properties": {

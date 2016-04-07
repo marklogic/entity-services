@@ -62,7 +62,8 @@
         }
       },
       "primaryKey" : "ProductName",
-      "rangeIndex" : ["UnitPrice","Discontinued"]
+      "rangeIndex" : ["UnitPrice","Discontinued"],
+      "wordLexicon" :["SupplierID"]
     }
   }
 }

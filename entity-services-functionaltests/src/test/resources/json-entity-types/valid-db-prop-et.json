@@ -32,11 +32,17 @@
         "dateofShipment":{"datatype":"date"},
         "dateofOrder":{"datatype":"dateTime"},
         "CustSince":{"datatype":"dayTimeDuration"},
-        "DaysofSurfing":{"datatype":"nonNegativeInteger"}
+        "DaysofSurfing":{"datatype":"nonNegativeInteger"},
+        "ProductsPurchased":{  
+               "datatype":"array",
+               "items":{  
+                  "$ref":"#/definitions/Product"
+               }
+            }
       },
       "primaryKey" : "CustomerId",
       "rangeIndex" : ["CompanyName","Country","CustomerId","ContactName","Weight","Height","Numberyrs","Awards",
-      "Age","dateofShipment","dateofOrder","CustSince","DaysofSurfing"],
+      "Age","dateofShipment","dateofOrder","CustSince","DaysofSurfing","ProductsPurchased"],
       "wordLexicon" : ["CustomerId","Age","Weight","DaysofSurfing"]
     },
     "Product": {
@@ -45,7 +51,8 @@
           "datatype": "string"
         },
         "UnitPrice": {
-          "datatype": "integer"
+          "datatype": "integer",
+          "collation" : "anything rubbish"
         },
         "SupplierID":{
           "datatype":"integer"
@@ -53,7 +60,9 @@
         "Discontinued":{
           "datatype":"boolean"
         }
-      }
+      },
+      "primaryKey" : "ProductName",
+      "rangeIndex" : ["UnitPrice","Discontinued"]
     }
   }
 }

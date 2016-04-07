@@ -57,7 +57,7 @@
        <es:word-lexicon>Age</es:word-lexicon>
        <es:word-lexicon>Weight</es:word-lexicon>
        <es:word-lexicon>DaysofSurfing</es:word-lexicon>
-       <es:required>anything rubbish</es:required>
+       <es:required>CustomerId</es:required>
      </Customer>
      <Product>
         <es:properties>

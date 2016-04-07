@@ -1,0 +1,18 @@
+{
+    "info": {
+        "title": "invalid-nested-array",
+        "baseUri": "http://bink",
+        "version": "0.0.1",
+        "description": "This invalid file has datatype array for an array's items."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "datatype":"array",
+                    "items": { "datatype": "array" }
+                }
+            }
+        }
+    }
+}

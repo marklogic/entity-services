@@ -1,0 +1,20 @@
+{
+    "info": {
+        "title": "invalid-base-local-item-reference",
+        "baseUri": "http://blah",
+        "version": "0.0.1",
+        "description": "This invalid file has a local items reference target that is malformed."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "datatype":"array",
+                    "items":{
+                      "$ref": "#/initions/Cust"
+                    }
+                }
+            }
+        }
+    }
+}

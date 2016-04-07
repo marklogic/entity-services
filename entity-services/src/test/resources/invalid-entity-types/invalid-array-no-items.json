@@ -1,0 +1,18 @@
+{
+    "info": {
+        "title": "invalid-array-no-items",
+        "baseUri": "http://blah",
+        "version": "0.0.1",
+        "description": "This invalid file has datatype array but no items."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "datatype":"array",
+                    "items": { "datatype": "array" }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "info": {
+        "title": "invalid-base-local-reference",
+        "baseUri": "",
+        "version": "0.0.1",
+        "description": "This invalid file has a local reference target that is malformed."
+    },
+    "definitions": {
+        "Customer": {
+            "properties": {
+                "fof": {
+                    "$ref": "#initions/Cust"
+                }
+            }
+        }
+    }
+}

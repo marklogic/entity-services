@@ -31,6 +31,12 @@
         <dateofOrder><es:datatype>dateTime</es:datatype></dateofOrder>
         <CustSince><es:datatype>dayTimeDuration</es:datatype></CustSince>
         <DaysofSurfing><es:datatype>nonNegativeInteger</es:datatype></DaysofSurfing>
+        <ProductsPurchased>
+             <es:datatype>array</es:datatype>
+             <es:items>
+		<es:ref>#/definitions/Product</es:ref>
+	     </es:items>
+	   </ProductsPurchased>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
        <es:range-index>CompanyName</es:range-index>
@@ -46,6 +52,7 @@
        <es:range-index>dateofOrder</es:range-index>
        <es:range-index>CustSince</es:range-index>
        <es:range-index>DaysofSurfing</es:range-index>
+       <es:range-index>ProductsPurchased</es:range-index>
        <es:word-lexicon>CustomerId</es:word-lexicon>
        <es:word-lexicon>Age</es:word-lexicon>
        <es:word-lexicon>Weight</es:word-lexicon>
@@ -58,6 +65,7 @@
          </ProductName> 
          <UnitPrice>
             <es:datatype>integer</es:datatype>
+            <es:collation>anything rubbish</es:collation>
          </UnitPrice>
          <SupplierID>
              <es:datatype>integer</es:datatype>
@@ -66,6 +74,9 @@
              <es:datatype>boolean</es:datatype>
          </Discontinued>
         </es:properties>
+        <es:primary-key>ProductName</es:primary-key>
+       <es:range-index>UnitPrice</es:range-index>
+       <es:range-index>Discontinued</es:range-index>
       </Product>
  </es:definitions>
 </es:entity-type>

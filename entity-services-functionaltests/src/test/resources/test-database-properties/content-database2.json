@@ -1,4 +1,4 @@
-{
+ {
 "database-name": "%%DATABASE%%", 
 "schema-database": "%%SCHEMAS_DATABASE%%", 
 "path-namespace": [
@@ -26,6 +26,11 @@
 {
 "collation": "http://marklogic.com/collation/", 
 "localname": "DaysofSurfing", 
+"namespace-uri": ""
+}, 
+{
+"collation": "http://marklogic.com/collation/", 
+"localname": "SupplierID", 
 "namespace-uri": ""
 }
 ], 

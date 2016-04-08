@@ -72,7 +72,8 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")) {
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")||entityType.contains("valid-ref-combo")
+					||entityType.contains("valid-datatype-array")||entityType.contains("valid-definitions-empty")) {
 				continue;
 			}
 			;
@@ -94,7 +95,8 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")) {
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")||entityType.contains("valid-ref-combo")||entityType.contains("valid-datatype-array")
+					||entityType.contains("valid-definitions-empty")) {
 				continue;
 			}
 

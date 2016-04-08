@@ -54,6 +54,7 @@ import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 //import com.marklogic.entityservices.tests.TestEvalException;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
@@ -192,6 +193,32 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	 	return status;		
 	}
 	
+	private String getKeys(String path, String entityType) throws TransformerException, SAXException, IOException {
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream(path + entityType);
+		Document controlDoc = builder.parse(is);
+				
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		
+		return writer.toString();
+	}
+	
 	@Test
 	//This test verifies that conversion module generates 6+n functions, where is number of entity type names
 	public void testConversionModuleGenerate() throws TestEvalException, IOException {
@@ -266,38 +293,90 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
-	public void testExtractInstance() throws IOException, TestEvalException, SAXException, TransformerException {
+	public void testExtractInstanceOrder() throws IOException, TestEvalException, SAXException, TransformerException {
 		
-		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
+		String entityType = "valid-ref-combo-sameDocument-subIri.json";
 		String sourceDocument = "10248.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new StringHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
-		String extractInstanceResult = handle.get();
+		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
-		assertNotNull("Extract Instance Result must not be null (and should not throw error) ", extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Order.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
 		
 	}
 	
 
 	@Test
-	public void testExtInstWithMalformedDoc() throws IOException, TestEvalException {
+	public void testExtractInstanceCustomer() throws IOException, TestEvalException {
 		
-		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
-		String sourceDocument = "10248.xml";
+		String entityType = "valid-ref-combo-sameDocument-subIri.json";
+		String sourceDocument = "VINET.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new StringHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
-		String extractInstanceResult = handle.get();
+		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
-		assertNotNull("Extract Instance Result must not be null (and should not throw error) ", extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Customer.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
+
+	@Test
+	public void testExtractInstanceProduct() throws IOException, TestEvalException {
+		
+		String entityType = "valid-ref-combo-sameDocument-subIri.json";
+		String sourceDocument = "11.xml";
+		String ns = getNameSpace(entityType);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
+		
+		JsonNode extractInstanceResult = handle.get();
+		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Product.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
 		
 	}
 	
+	@Test
+	public void testExtractInstanceInvalid() throws IOException, TestEvalException {
+		
+		String entityType = "valid-ref-combo-sameDocument-subIri.json";
+		String sourceDocument = "11.xml";
+		String ns = getNameSpace(entityType);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
+		
+		JsonNode extractInstanceResult = handle.get();
+		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Invalid.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
+
 	@Test
 	public void testExtInstWithNoArgs() throws IOException, TestEvalException {
 		
@@ -575,5 +654,76 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		//logger.info("actualDoc now ::::" + actualDoc);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+	}
+	
+	@Test
+	public void testInstanceFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "VINET.xml";
+		String ns = getNameSpace(entityType);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
+		JsonNode actualDoc = handle.get();
+		//Get the keys file as input stream
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/noRef-from-document.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));	
+	}
+	
+	@Test
+	public void testInstanceXmlFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "VINET.xml";
+		String ns = getNameSpace(entityType);
+		
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-xml-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
+		String actualDoc = handle.get();
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/noRef-xml-from-document.xml");
+		Document controlDoc = builder.parse(is);
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);
+	}
+	
+	@Test
+	public void testInstanceJsonFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String entityType = "valid-ref-same-document.xml";
+		String sourceDocument = "VINET.xml";
+		String ns = getNameSpace(entityType);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+	              "ext:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
+		JsonNode actualDoc = handle.get();
+		//Get the keys file as input stream
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/noRef-json-from-document.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));	
 	}
 }

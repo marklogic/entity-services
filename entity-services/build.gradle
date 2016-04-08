@@ -1,4 +1,8 @@
-apply plugin: 'eclipse'
+plugins {
+    id "eclipse"
+}
+
+apply plugin: "com.marklogic.ml-gradle"
 
 dependencies {
     compile gradleApi()

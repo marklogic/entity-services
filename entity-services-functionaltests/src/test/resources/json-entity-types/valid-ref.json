@@ -2,7 +2,7 @@
   "info": {
     "title": "Northwind",
     "version": "0.0.1",
-    "baseUri": ""
+    "baseUri":"http://marklogic.com/test"
   },
   "definitions": {
     "Customer": {
@@ -17,7 +17,7 @@
           "datatype":"string" 
         },
         "fof":{
-          "$ref":"#definitions/Customer" 
+          "$ref":"#/definitions/Customer" 
         }
       },
       "primaryKey" : "CustomerId"

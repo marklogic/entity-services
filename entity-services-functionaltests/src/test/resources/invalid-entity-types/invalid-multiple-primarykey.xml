@@ -2,7 +2,7 @@
   <es:info>
       <es:title>Invalid Multiple Primarykey</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri/>
+      <es:base-uri>http://marklogic.com/tests</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>

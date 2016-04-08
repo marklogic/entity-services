@@ -8,7 +8,7 @@
         "properties":{
             "companyName":{
                 "datatype": "string",
-                "collation":"...",
+                "collation":"http://marklogic.com/collation/en",
                 "$ref":"#definitions/EntityTypeName3"
             },
             "postalCode":{

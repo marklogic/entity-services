@@ -2,7 +2,7 @@
   <es:info>
       <es:title>Northwind</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri/>
+      <es:base-uri>http://marklogic.com/test</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>
@@ -17,7 +17,7 @@
            <es:datatype>string</es:datatype>
         </Country>
         <fof>
-           <es:ref>#definitions/Customer</es:ref>
+            <es:ref>#/definitions/Customer</es:ref>
         </fof>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>

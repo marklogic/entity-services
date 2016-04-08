@@ -2,14 +2,14 @@
   <es:info>
       <es:title>Lets test DB prop generate</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri/>
+      <es:base-uri>http://marklogic.com/test</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>
      <es:properties>
         <CustomerId>
           <es:datatype>integer</es:datatype>
-          <es:collation>anything rubbish</es:collation>
+          <es:collation>http://marklogic.com/collation/en</es:collation>
         </CustomerId>
         <CompanyName>
           <es:datatype>string</es:datatype>
@@ -66,7 +66,7 @@
          </ProductName> 
          <UnitPrice>
             <es:datatype>integer</es:datatype>
-            <es:collation>anything rubbish</es:collation>
+            <es:collation>http://marklogic.com/collation/en</es:collation>
          </UnitPrice>
          <SupplierID>
              <es:datatype>integer</es:datatype>

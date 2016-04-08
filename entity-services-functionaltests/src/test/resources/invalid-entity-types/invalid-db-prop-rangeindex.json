@@ -2,14 +2,14 @@
   "info": {
     "title": "Lets test DB prop generate",
     "version": "0.0.1",
-    "baseUri": ""
+    "baseUri":"http://marklogic.com/tests"
   },
   "definitions": {
     "Customer": {
       "properties": {
         "CustomerId": {
           "datatype": "integer",
-          "collation" : "anything rubbish"
+          "collation" : "http://marklogic.com/collation/en"
         },
         "CompanyName": {
           "datatype": "string"

@@ -2,7 +2,7 @@
    "info":{  
       "title":"Invalid Multiple Primary Key",
       "version":"0.0.1",
-      "baseUri":""
+      "baseUri":"http://marklogic.com/tests"
    },
    "definitions":{  
       "Customer":{  

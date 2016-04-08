@@ -1,7 +1,7 @@
 {
   "info": {
   	"title": "Invalid Missing Version",
-    "baseUri": ""
+    "baseUri":"http://marklogic.com/tests"
   },
   "definitions": {
     "Customer": {

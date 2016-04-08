@@ -9,8 +9,8 @@
             <es:properties>
                 <companyName>
                     <es:datatype>string</es:datatype>
-                    <es:collation>...</es:collation>
-                    <es:ref>#definitions/EntityTypeName3</es:ref>
+                    <es:collation>http://marklogic.com/collation/en</es:collation>
+                    <es:ref>#/definitions/EntityTypeName3</es:ref>
                 </companyName>
                 <postalCode>
                     <es:datatype>integer</es:datatype>

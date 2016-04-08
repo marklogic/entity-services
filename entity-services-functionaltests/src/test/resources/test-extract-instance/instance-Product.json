@@ -1,0 +1,8 @@
+{
+"$type": "Product", 
+"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Product ProductID=\"11\">\n\t<ProductName>Queso Cabrales</ProductName>\n\t<SupplierID>5</SupplierID>\n\t<CategoryID>4</CategoryID>\n\t<QuantityPerUnit>1 kg pkg.</QuantityPerUnit>\n\t<UnitPrice>21.0000</UnitPrice>\n\t<UnitsInStock>22</UnitsInStock>\n\t<UnitsOnOrder>30</UnitsOnOrder>\n\t<ReorderLevel>30</ReorderLevel>\n\t<Discontinued>false</Discontinued>\n</Product>", 
+"ProductName": "Queso Cabrales", 
+"UnitPrice": "21.0000", 
+"SupplierID": "5", 
+"Discontinued": "false"
+}

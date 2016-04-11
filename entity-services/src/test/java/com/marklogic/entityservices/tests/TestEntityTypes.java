@@ -60,7 +60,6 @@ import com.hp.hpl.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
@@ -118,7 +117,15 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-local-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-bad-local-item-reference.json", "must be a valid URI.");
         invalidMessages.put("invalid-bad-local-item-reference.xml", "must be a valid URI.");
-    
+        invalidMessages.put("invalid-required.json", "Required properties must be valid properties.");
+        invalidMessages.put("invalid-required.xml", "Required properties must be valid properties.");
+        invalidMessages.put("invalid-bad-title.json", "Title must have no whitespace and must start with a letter.");
+        invalidMessages.put("invalid-bad-title.xml", "Title must have no whitespace and must start with a letter.");
+        invalidMessages.put("invalid-missing-range-index.json", "Range index property must be a valid property.");
+        invalidMessages.put("invalid-missing-range-index.xml", "Range index property must be a valid property.");
+        invalidMessages.put("invalid-missing-lexicon.json", "Word lexicon property must be a valid property.");
+        invalidMessages.put("invalid-missing-lexicon.xml", "Word lexicon property must be a valid property.");
+   
     }
     
     @Test

@@ -59,6 +59,7 @@ declare variable $esi:entity-type-schematron :=
           <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">"info" section must be an object and contain exactly one title declaration.</iso:assert>
           <iso:assert test="count(es:version|version) eq 1" id="ES-VERSIONKEY">"info" section must be an object and contain exactly one version declaration.</iso:assert>
           <iso:assert test="empty(es:base-uri|baseUri) or matches(es:base-uri|baseUri, '^[a-z]+:')" id="ES-BASEURI">If present, baseUri (es:base-uri) must be an absolute URI.</iso:assert>
+          <iso:assert test="(title|es:title) castable as xs:NCName">Title must have no whitespace and must start with a letter.</iso:assert>
         </iso:rule>
         <!-- XML version of primary key rule -->
         <iso:rule context="es:definitions/node()[es:primary-key]">
@@ -98,6 +99,24 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="es:collation|collation">
          <!-- this function throws an error for invalid collations, so must be caught in alidate function -->
          <iso:assert test="xdmp:collation-canonical-uri(.)">Collation <xsl:value-of select="." /> is not valid.</iso:assert>
+        </iso:rule>
+        <iso:rule context="required">
+         <iso:assert test=". = (../properties/* ! node-name(.))">Required properties must be valid properties.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:required">
+         <iso:assert test="string(.) = (../es:properties/* ! local-name(.))">Required properties must be valid properties.</iso:assert>
+        </iso:rule>
+        <iso:rule context="rangeIndex">
+         <iso:assert test=". = (../properties/* ! node-name(.))">Range index property must be a valid property.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:range-index">
+         <iso:assert test=". = (../es:properties/* ! local-name(.))">Range index property must be a valid property.</iso:assert>
+        </iso:rule>
+        <iso:rule context="wordLexicon">
+         <iso:assert test=". = (../properties/* ! node-name(.))">Word lexicon property must be a valid property.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:word-lexicon">
+         <iso:assert test="string(.) = (../es:properties/* ! local-name(.))">Word lexicon property must be a valid property.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>

@@ -1,0 +1,31 @@
+<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>Not an NCName</es:title>
+      <es:version>0.0.1</es:version>
+      <es:description>This entity type has a title that is not an NCName</es:description>
+  </es:info>
+  <es:definitions>
+    <Order>
+        <es:properties>
+            <orderId>
+                <es:datatype>string</es:datatype>
+                <es:collation>http://marklogic.com/collation/en</es:collation>
+            </orderId>
+            <base64BinaryKey>
+                <es:datatype>#/definitions/OrderDetails</es:datatype>
+            </base64BinaryKey>
+        </es:properties>
+        <es:primary-key>orderId</es:primary-key>
+    </Order>
+    <OrderDetails>
+        <es:properties>
+            <quantity>
+                <es:datatype>integer</es:datatype>
+            </quantity>
+            <productName>
+                <es:datatype>string</es:datatype>
+            </productName>
+        </es:properties>
+    </OrderDetails>
+  </es:definitions>
+</es:entity-type>

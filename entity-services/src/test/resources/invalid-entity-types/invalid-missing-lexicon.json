@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title":"invalid-missing-range-index",
+    "version": "0.0.3",
+    "description":"This invalid document has a word lexicon key that does not exist."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "wordLexicon": ["orderId", "chuck"]
+    }
+  }
+}

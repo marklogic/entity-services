@@ -1,0 +1,30 @@
+{
+  "info": {
+    "title" : "Not an NCName",
+    "description":"This entity type has a title that is not an NCName",
+    "version": "0.0.1"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "string",
+          "collation" : "http://marklogic.com/collation/en"
+        },
+        "base64BinaryKey": { "datatype": "base64Binary" }
+      },
+      "primaryKey": ["orderId"]
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "datatype": "integer"
+        },
+        "productName": {
+          "datatype": "string"
+        }
+      }
+    }
+  }
+}
+

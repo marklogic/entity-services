@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title":"invalid-required",
+    "version": "0.0.3",
+    "description":"This invalid document has a required key that does not exist."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "required": ["orderId", "chuck"]
+    }
+  }
+}

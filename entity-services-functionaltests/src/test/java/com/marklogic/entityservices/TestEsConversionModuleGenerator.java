@@ -18,6 +18,7 @@ package com.marklogic.entityservices;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -54,6 +55,8 @@ import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 //import com.marklogic.entityservices.tests.TestEvalException;
@@ -86,16 +89,33 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		conversionModules = generateConversionModules();
 		storeConversionModules(conversionModules);
+		storeCustomConversionModules();
 
 	}
 	
 	private static void storeConversionModules(Map<String, StringHandle> moduleMap) {
-		DocumentWriteSet writeSet = docMgr.newWriteSet();
 		
+		DocumentWriteSet writeSet = docMgr.newWriteSet();
+				
 		for (String entityTypeName : moduleMap.keySet()) {
 			
 			String moduleName = "/conv/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
 			writeSet.add(moduleName, moduleMap.get(entityTypeName));
+		}
+		docMgr.write(writeSet);
+	}
+	
+	private static void storeCustomConversionModules() {
+		
+		DocumentWriteSet writeSet = docMgr.newWriteSet();
+		Collection<File> custConvMod = TestSetup.getInstance().getTestResources("/customized-conversion-module");
+		
+		for (File f : custConvMod) {
+		
+			String moduleName = "/conv/" + f.getName();
+			DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+	        
+	    	writeSet.add(moduleName, metadata, new FileHandle(f));
 		}
 		docMgr.write(writeSet);
 	}
@@ -294,7 +314,9 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	
 	@Test
 	public void testExtractInstanceOrder() throws IOException, TestEvalException, SAXException, TransformerException {
-		
+		/*
+		 * Might need to edit the gen module to get expected output
+		 */
 		String entityType = "valid-ref-combo-sameDocument-subIri.json";
 		String sourceDocument = "10248.xml";
 		String ns = getNameSpace(entityType);
@@ -337,7 +359,9 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 
 	@Test
 	public void testExtractInstanceProduct() throws IOException, TestEvalException {
-		
+		/*
+		 * Might need to edit the gen module to get expected output
+		 */
 		String entityType = "valid-ref-combo-sameDocument-subIri.json";
 		String sourceDocument = "11.xml";
 		String ns = getNameSpace(entityType);
@@ -406,77 +430,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("Too many args, expected 1 but got 2"));
 		}
-		
 	}
-	/**
-	 * Rationale for this test is that default generated conversion module should
-	 * work out-of-the-box, and handle an identity transform from test instances.
-	 * @throws IOException 
-	 * @throws JsonProcessingException 
-	 * @throws TransformerException 
-	 */
-	/*
-	@Test
-	public void defaultModuleExtractsIdentity() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
-		
-		for (String entityType : entityTypes) {
-			
-			// just test JSON ones here.
-			if (entityType.contains(".xml")) {continue; };
-			
-			//if (!entityType.equals("SchemaCompleteEntityType-0.0.1.json")) {continue;}
-			storeConversionModuleAsXqy(entityType);
-			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
-			
-			String entityTypeName = entityType.replace(".json",  "");
-			
-			InputStream is = this.getClass().getResourceAsStream("/json-entity-types/" + entityType);
-			ObjectMapper mapper = new ObjectMapper();
-			ObjectNode controlFile = (ObjectNode) mapper.readTree(is);
-			JsonNode baseUriNode = controlFile.get("info").get("baseUri");
-			String baseUri = null;
-			if (baseUriNode == null) {
-				baseUri = "http://example.org/";
-			} else {
-				baseUri = baseUriNode.asText();
-			}
-			String uriPrefix = baseUri;
-			if (!baseUri.matches(".*[#/]$")) {
-				uriPrefix += "#";
-			}
-			String moduleName = "/ext/" + entityTypeName + ".xqy";
-			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
-			
-			try {
-				
-				DOMHandle handle = evalOneResult(
-					"import module namespace conv = \""+uriPrefix + entityTypeName +"\" at \""+moduleName+"\"; "+
-					"conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )/"+entityTypeNoVersion, new DOMHandle());
-				
-				// dom returned from extraction must equal test instance.
-				String controlFilePath = "/test-instances/" + entityTypeTestFileName;
-				Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
-				
-				Document actualInstance = handle.get();
-				assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
-				Element actualDocumentElement = actualInstance.getDocumentElement();
-				
-//				logger.debug("Control doc");
-//				debugOutput(controlDom);
-//				logger.debug("Actual doc wrapped");
-//				debugOutput(actualInstance);
-				
-				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
-				
-				
-			} catch (TestEvalException e) {
-				logger.warn("Exception thrown validating conversion module.  Maybe test conversion module cannot test " + entityTypeNoVersion);
-				fail("Evaluation exception thrown during conversion module testing." + e.getMessage());
-			}
-			}
-		
-	} */
 	
 	@Test
 	public void testInstanceToCanonicalXml() throws IOException, TestEvalException, SAXException, TransformerException {
@@ -707,6 +661,46 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);
 	}
+	
+	@Test
+	public void testInstanceXmlFromDocumentRefSame() throws IOException, TestEvalException, SAXException, TransformerException {
+		
+		String sourceDocument = "10248.xml";
+		
+		StringHandle handle = evalOneResult("import module namespace gen = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; "+
+	              "gen:instance-xml-from-document(gen:instance-to-envelope(gen:extract-instance-Order( doc('"+sourceDocument+"'))))", new StringHandle());
+		String actualDoc = handle.get();
+		//Get the keys file as controlDoc
+		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/refSame-xml-from-document.xml");
+		Document controlDoc = builder.parse(is);
+		// convert DOM Document into a string
+		StringWriter writer = new StringWriter();
+		DOMSource domSource = new DOMSource(controlDoc);
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		javax.xml.transform.Transformer transformer = null;
+		try {
+	    		transformer = tf.newTransformer();
+		} catch (TransformerConfigurationException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		transformer.transform(domSource, result);
+				
+		//logger.info("XML IN String format is: \n" + writer.toString()); 
+		//logger.info("actualDoc now ::::" + actualDoc);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);
+	}
+	
+	/*
+	 * TODO 1
+	 * Add tests for RefCombo for all 3 instance-from-document APIs after getting more info for bug 38883
+	 * 
+	 * TODO 2
+	 * Add tests for RefSame for instance-json-from-document and instance-from-document after bug 39018 is fixed
+	 * 
+	 */
 	
 	@Test
 	public void testInstanceJsonFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {

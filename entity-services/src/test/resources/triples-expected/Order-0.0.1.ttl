@@ -19,6 +19,7 @@ type:Order  a          es:EntityType ;
         es:version     "0.0.1" .
 
 order:orderDate  a   es:Property ;
+        a es:RequiredProperty ;
         es:datatype  xsd:date ;
         es:title     "orderDate" .
 
@@ -38,6 +39,8 @@ order:hasOrderDetails
         es:title  "hasOrderDetails" .
 
 order:orderId  a     es:Property ;
+        a es:PrimaryKey ;
+        a es:RequiredProperty ;
         es:datatype  xsd:string ;
         es:title     "orderId" .
 

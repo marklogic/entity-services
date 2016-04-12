@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -67,6 +68,22 @@ public class TestEntityTypeSPARQL extends EntityServicesTestBase {
 		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
 		assertEquals(1, bindings.size());
 		assertEquals("http://marklogic.com/entity-services#version", bindings.get(0).get("version").get("value").asText());
+		
+	}
+	
+	@Test
+	@Ignore
+	// This test will verify the results of bug 
+	public void testEntityServicesVocabulary() {
+		String entityServicesClasses = 
+				 "PREFIX es: <http://marklogic.com/entity-services#> "
+				+"ASK where {"
+				+ "es:EntityServicesDocument a rdfs:Class ."
+				+ "es:EntityType a rdfs:Class ."
+				+ "es:Property a rdfs:Class ."
+
+				+ "}";
+		assertTrue("All the classes exist", queryMgr.executeAsk(queryMgr.newQueryDefinition(entityServicesClasses)));
 		
 	}
 }

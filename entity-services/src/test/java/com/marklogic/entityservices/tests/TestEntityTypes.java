@@ -304,7 +304,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
         		logger.debug("Actual number of triples: " + actualTriples.size());
         		
         		
-        		// more debug
+        		/* The following commented out code was for debuging purposes and 
+        		   lingers for those who need to maintain on into the future. */
 //        		OutputStream os = new FileOutputStream(new File("/tmp/actual.ttl"));
 //        		RDFDataMgr.write(os, actualTriples, Lang.TURTLE);
 //        		os.close();
@@ -312,8 +313,9 @@ public class TestEntityTypes extends EntityServicesTestBase {
 //        		RDFDataMgr.write(os, expectedTriples, Lang.TURTLE);
 //        		os.close();
         		
-        		//RDFDataMgr.write(System.out, actualTriples, Lang.TURTLE);
-        		// what a great function for debugging:
+        		// RDFDataMgr.write(System.out, actualTriples, Lang.TURTLE);
+        		
+        		// A great class for debugging, Defference.
 //        		logger.debug("Difference, expected - actual");
 //        		Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
 //        		RDFDataMgr.write(System.out, diff, Lang.TURTLE);

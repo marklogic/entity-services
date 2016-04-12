@@ -21,8 +21,8 @@
         </ContactName>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
-       <es:range-index>hello</es:range-index>
-       <es:range-index>world</es:range-index>
+       <es:range-index>CompanyName</es:range-index>
+       <es:range-index>Country</es:range-index>
      </Customer>
      <Product>
         <es:properties>

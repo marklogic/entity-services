@@ -150,7 +150,7 @@
       </es:properties>
       <es:primary-key>orderId</es:primary-key>
       <es:required>orderId</es:required>
-      <es:required>orderDate</es:required>
+      <es:required>dateKey</es:required>
       <es:range-index>byteKey</es:range-index>
       <es:range-index>shortKey</es:range-index>
       <es:range-index>unsignedByteKey</es:range-index>

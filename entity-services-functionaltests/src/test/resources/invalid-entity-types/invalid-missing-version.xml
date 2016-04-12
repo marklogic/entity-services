@@ -1,7 +1,7 @@
 <es:entity-type xmlns:es="http://marklogic.com/entity-services">
   <es:info>
       <es:title>Person</es:title>
-      <es:description>An incredibly trivial data integration declaration.</es:description>
+      <es:description>An-incredibly-trivial-data-integration-declaration.</es:description>
   </es:info>
   <es:definitions>
     <Person>

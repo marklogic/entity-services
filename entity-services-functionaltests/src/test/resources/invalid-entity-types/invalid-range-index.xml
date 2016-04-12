@@ -1,8 +1,8 @@
 <es:entity-type xmlns:es="http://marklogic.com/entity-services">
   <es:info>
-      <es:title>Invalid-Multiple-Primarykey</es:title>
+      <es:title>Northwind</es:title>
       <es:version>0.0.1</es:version>
-      <es:base-uri>http://marklogic.com/tests</es:base-uri>
+      <es:base-uri>http://marklogic.com/test</es:base-uri>
   </es:info>
   <es:definitions>
     <Customer>
@@ -19,15 +19,10 @@
         <ContactName>
            <es:datatype>string</es:datatype>
         </ContactName>
-        <likes>
-           <es:datatype>array</es:datatype>
-           <es:items>
-               <es:datatype>int</es:datatype>
-           </es:items>
-        </likes>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
-       <es:primary-key>CompanyName</es:primary-key>
+       <es:range-index>hello</es:range-index>
+       <es:range-index>world</es:range-index>
      </Customer>
      <Product>
         <es:properties>

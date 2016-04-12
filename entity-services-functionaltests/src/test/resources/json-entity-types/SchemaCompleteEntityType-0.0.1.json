@@ -67,7 +67,7 @@
         }
       },
       "primaryKey": "orderId",
-      "required": ["orderId", "orderDate"],
+      "required": ["orderId", "dateKey"],
       "rangeIndex": ["byteKey", "shortKey", "unsignedByteKey", "unsignedShortKey", "stringKey",
                      "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
                      "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey"],

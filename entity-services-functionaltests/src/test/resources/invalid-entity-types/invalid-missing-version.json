@@ -1,6 +1,6 @@
 {
   "info": {
-  	"title": "Invalid Missing Version",
+  	"title": "Invalid-Missing-Version",
     "baseUri":"http://marklogic.com/tests"
   },
   "definitions": {

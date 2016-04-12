@@ -21,7 +21,7 @@
         }
       },
       "primaryKey" : "CustomerId", 
-      "rangeIndex":["CompanyName","Country"]
+      "rangeIndex":["hello","world"]
     },
     "Product": {
       "properties": {

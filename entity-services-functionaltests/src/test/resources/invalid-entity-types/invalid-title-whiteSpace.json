@@ -1,6 +1,6 @@
 {
   "info": {
-    "title": "Northwind",
+    "title": "Invalid Whitespace Test",
     "version": "0.0.1",
     "baseUri":"http://marklogic.com/test"
   },
@@ -18,10 +18,13 @@
         },
         "ContactName":{
           "datatype":"string" 
+        },
+        "likes": {
+          "datatype" : "array" ,
+          "items": { "datatype" : "int" }
         }
       },
-      "primaryKey" : "CustomerId", 
-      "rangeIndex":["CompanyName","Country"]
+      "primaryKey" : "CustomerId"
     },
     "Product": {
       "properties": {

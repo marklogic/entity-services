@@ -101,22 +101,22 @@ declare variable $esi:entity-type-schematron :=
          <iso:assert test="xdmp:collation-canonical-uri(.)">Collation <xsl:value-of select="." /> is not valid.</iso:assert>
         </iso:rule>
         <iso:rule context="required">
-         <iso:assert test=". = (../properties/* ! node-name(.))">Required properties must be valid properties.</iso:assert>
+         <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="es:required">
-         <iso:assert test="string(.) = (../es:properties/* ! local-name(.))">Required properties must be valid properties.</iso:assert>
+         <iso:assert test="string(.) = (../es:properties/*/local-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="rangeIndex">
-         <iso:assert test=". = (../properties/* ! node-name(.))">Range index property must be a valid property.</iso:assert>
+         <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="es:range-index">
-         <iso:assert test=". = (../es:properties/* ! local-name(.))">Range index property must be a valid property.</iso:assert>
+         <iso:assert test="string(.) = (../es:properties/*/local-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="wordLexicon">
-         <iso:assert test=". = (../properties/* ! node-name(.))">Word lexicon property must be a valid property.</iso:assert>
+         <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Word lexicon property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="es:word-lexicon">
-         <iso:assert test="string(.) = (../es:properties/* ! local-name(.))">Word lexicon property must be a valid property.</iso:assert>
+         <iso:assert test="string(.) = (../es:properties/*/local-name(.))">Word lexicon property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>

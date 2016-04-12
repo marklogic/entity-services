@@ -117,14 +117,14 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-local-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-bad-local-item-reference.json", "must be a valid URI.");
         invalidMessages.put("invalid-bad-local-item-reference.xml", "must be a valid URI.");
-        invalidMessages.put("invalid-required.json", "Required properties must be valid properties.");
-        invalidMessages.put("invalid-required.xml", "Required properties must be valid properties.");
+        invalidMessages.put("invalid-required.json", "doesn't exist.");
+        invalidMessages.put("invalid-required.xml", "doesn't exist.");
         invalidMessages.put("invalid-bad-title.json", "Title must have no whitespace and must start with a letter.");
         invalidMessages.put("invalid-bad-title.xml", "Title must have no whitespace and must start with a letter.");
-        invalidMessages.put("invalid-missing-range-index.json", "Range index property must be a valid property.");
-        invalidMessages.put("invalid-missing-range-index.xml", "Range index property must be a valid property.");
-        invalidMessages.put("invalid-missing-lexicon.json", "Word lexicon property must be a valid property.");
-        invalidMessages.put("invalid-missing-lexicon.xml", "Word lexicon property must be a valid property.");
+        invalidMessages.put("invalid-missing-range-index.json", "doesn't exist.");
+        invalidMessages.put("invalid-missing-range-index.xml", "doesn't exist");
+        invalidMessages.put("invalid-missing-lexicon.json", "doesn't exist.");
+        invalidMessages.put("invalid-missing-lexicon.xml", "doesn't exist.");
    
     }
     
@@ -166,7 +166,6 @@ public class TestEntityTypes extends EntityServicesTestBase {
 				assertTrue("Must contain invalidity message. Message was " + e.getMessage(), 
 						e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
 				
-				// finish structure above for message checks (to be finished) TODO
 				assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
 			}
     	}

@@ -242,6 +242,54 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     }
     
     @Test
+    /* testing entity-type-from-node json for title with white space */
+    public void testFromNodeJsonInvalidTitle() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-title-whiteSpace.json");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-title-whiteSpace.json'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases. invalid-title-whiteSpace.json");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: Title must have no whitespace and must start with a letter."));    		
+    	}
+    		
+    }
+    
+    @Test
+    /* testing entity-type-from-node json for invalid range index */
+    public void testFromNodeJsonInvalidRangeIndex() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-range-index.json");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-range-index.json'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases. invalid-range-index.json");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: Range index property hello doesn't exist. Range index property world doesn't exist."));    		
+    	}
+    		
+    }
+    
+    @Test
+    /* testing entity-type-from-node xml for invalid range index */
+    public void testFromNodeXmlInvalidRangeIndex() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-range-index.xml");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-range-index.xml'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid cases. invalid-range-index.xml");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: Range index property hello doesn't exist. Range index property world doesn't exist."));    		
+    	}
+    		
+    }
+    
+    @Test
     /* testing entity-type-from-node xml for missing info */
     public void testFromNodeXmlMissingInfo() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
 				logger.info("Checking invalid-missing-info.xml");
@@ -437,6 +485,22 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: \"info\" section must be an object and contain exactly one title declaration. \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
+    
+    /* BUG 38392
+    @Test
+    // testing entity-type-from-node for an xml entity type where info is not an object 
+    public void testFromNodeMissingItemsXml() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-items-when-datatype-array.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-missing-items-when-datatype-array.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-items-when-datatype-array.xml");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().equals("ES-ENTITY-TYPE-INVALID: Property OrderDetail is of type \"array\" and must contain an \"items\" declaration."));
+    	}
+    }
+    */
     
     @Test
     /* testing entity-type-to-xml with a document node */

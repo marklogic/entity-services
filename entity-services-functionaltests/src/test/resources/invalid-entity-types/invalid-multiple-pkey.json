@@ -1,6 +1,6 @@
 {  
    "info":{  
-      "title":"Invalid Multiple Primary Key",
+      "title":"Invalid-Multiple-Primary-Key",
       "version":"0.0.1",
       "baseUri":"http://marklogic.com/tests"
    },

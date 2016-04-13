@@ -1,0 +1,33 @@
+{
+    "name":"Half Marathon Two",
+    "comprisedOfRuns":[
+        "half2-10",
+        "half2-11",
+        "half2-12",
+        "half2-13",
+        "half2-14",
+        "half2-15",
+        "half2-16",
+        "half2-17",
+        "half2-18",
+        "half2-19",
+        "half2-1",
+        "half2-20",
+        "half2-21",
+        "half2-22",
+        "half2-23",
+        "half2-24",
+        "half2-25",
+        "half2-2",
+        "half2-3",
+        "half2-4",
+        "half2-5",
+        "half2-6",
+        "half2-7",
+        "half2-8",
+        "half2-9"
+    ],
+    "wonByRunner":"Nathanial",
+    "courseLength":13.1
+}
+

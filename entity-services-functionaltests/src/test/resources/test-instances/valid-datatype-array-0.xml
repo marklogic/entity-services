@@ -1,9 +1,9 @@
 <Customer>
-    <CustomerId>some string</CustomerId>
-    <CompanyName>some string</CompanyName>
-    <Country>some string</Country>
-    <ContactName>some string</ContactName>
-    <likes>123</likes>
-    <likes>123</likes>
-    <likes>123</likes>
+<CustomerId>some string</CustomerId>
+<CompanyName>some string</CompanyName>
+<Country>some string</Country>
+<ContactName>some string</ContactName>
+<likes>123</likes>
+<likes>123</likes>
+<likes>123</likes>
 </Customer>

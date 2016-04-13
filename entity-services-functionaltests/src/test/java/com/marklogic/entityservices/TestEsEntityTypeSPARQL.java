@@ -127,7 +127,7 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		//new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(System.out, results);
 	
 		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
-		assertEquals(5, bindings.size());
+		assertEquals(6, bindings.size());
 		//Each Entity Type has a RDF type
 		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", bindings.get(0).get("p").get("value").asText());
 		assertEquals("http://marklogic.com/entity-services#EntityType", bindings.get(0).get("o").get("value").asText());
@@ -135,18 +135,22 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		//Entity type has property ProductName
 		assertEquals("http://marklogic.com/entity-services#property", bindings.get(1).get("p").get("value").asText());
 		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/productName", bindings.get(1).get("o").get("value").asText());
+		
+		//Entity type has property ProductName
+		assertEquals("http://marklogic.com/entity-services#primaryKey", bindings.get(2).get("p").get("value").asText());
+		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/quantity", bindings.get(2).get("o").get("value").asText());
      
 		//Entity type has property quantity
-	    assertEquals("http://marklogic.com/entity-services#property", bindings.get(2).get("p").get("value").asText());
-	    assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/quantity", bindings.get(2).get("o").get("value").asText());
+	    assertEquals("http://marklogic.com/entity-services#property", bindings.get(3).get("p").get("value").asText());
+	    assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/quantity", bindings.get(3).get("o").get("value").asText());
 	
 	   //Entity type has version
-	    assertEquals("http://marklogic.com/entity-services#version", bindings.get(3).get("p").get("value").asText());
-	    assertEquals("0.0.1", bindings.get(3).get("o").get("value").asText());
+	    assertEquals("http://marklogic.com/entity-services#version", bindings.get(4).get("p").get("value").asText());
+	    assertEquals("0.0.1", bindings.get(4).get("o").get("value").asText());
 	    
 	    //Entity type has title
-	    assertEquals("http://marklogic.com/entity-services#title", bindings.get(4).get("p").get("value").asText());
-	    assertEquals("OrderDetails", bindings.get(4).get("o").get("value").asText());
+	    assertEquals("http://marklogic.com/entity-services#title", bindings.get(5).get("p").get("value").asText());
+	    assertEquals("OrderDetails", bindings.get(5).get("o").get("value").asText());
 	
       }
 	

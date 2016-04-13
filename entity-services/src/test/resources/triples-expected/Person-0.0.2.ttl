@@ -20,6 +20,7 @@ type:Person a es:EntityType ;
         prop:friendOf ;
     es:primaryKey prop:id .
 prop:id a es:Property ;
+    a es:PrimaryKey ;
     es:title "id" ;
     es:datatype xs:string .
 prop:firstName a es:Property ;

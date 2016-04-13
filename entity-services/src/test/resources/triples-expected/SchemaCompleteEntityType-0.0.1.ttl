@@ -6,6 +6,7 @@
 
 order:shortKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:short ;
         es:title "shortKey" .
 
@@ -16,6 +17,8 @@ order:decimalKey
 
 order:stringKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
+        a es:WordLexiconProperty ;
         es:datatype xs:string ;
         es:title "stringKey" .
 
@@ -29,6 +32,7 @@ type:OrderDetails
 
 order:iriKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/semantics#iri> ;
         es:title "iriKey" .
 
@@ -44,26 +48,31 @@ order:floatKey
 
 order:integerKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:integer ;
         es:title "integerKey" .
 
 order:negativeIntegerKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:negativeInteger ;
         es:title "negativeIntegerKey" .
 
 order:nonNegativeIntegerKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:nonNegativeInteger ;
         es:title "nonNegativeIntegerKey" .
 
 order:positiveIntegerKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:positiveInteger ;
         es:title "positiveIntegerKey" .
 
 order:nonPositiveIntegerKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:nonPositiveInteger ;
         es:title "nonPositiveIntegerKey" .
 
@@ -86,6 +95,7 @@ type:SchemaCompleteEntityType
 
 order:byteKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:byte ;
         es:title "byteKey" .
 
@@ -127,6 +137,8 @@ order:hexBinaryKey
 
 order:orderId
         a es:Property ;
+        a es:PrimaryKey ;
+        a es:RequiredProperty ;
         es:datatype xs:string ;
         es:collation "http://marklogic.com/collation/" ;
         es:title "orderId" .
@@ -167,6 +179,7 @@ order:unsignedIntKey
 
 order:unsignedByteKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:unsignedByte ;
         es:title "unsignedByteKey" .
 
@@ -211,6 +224,7 @@ order:arrayStringKey
         
 order:unsignedShortKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:unsignedShort ;
         es:title "unsignedShortKey" .
 
@@ -221,11 +235,13 @@ order:timeKey
 
 order:anyURIKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:anyURI ;
         es:title "anyURIKey" .
 
 order:booleanKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:boolean ;
         es:title "booleanKey" .
 
@@ -241,6 +257,7 @@ order:durationKey
 
 order:dateKey
         a es:Property ;
+        a es:RequiredProperty ;
         es:datatype xs:date ;
         es:title "dateKey" .
 

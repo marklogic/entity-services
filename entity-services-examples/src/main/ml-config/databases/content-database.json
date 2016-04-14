@@ -3,7 +3,7 @@
     "database-name": "%%DATABASE%%",
     "element-word-lexicon": [
         {
-            "collation": "http://marklogic.com/collation/",
+            "collation": "http://marklogic.com/collation/en",
             "localname": "name",
             "namespace-uri": ""
         }
@@ -16,29 +16,29 @@
     ],
     "range-path-index": [
         {
-            "collation": "http://marklogic.com/collation/",
-            "invalid-values": "ignore",
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/date",
             "range-value-positions": false,
             "scalar-type": "date"
         },
         {
-            "collation": "http://marklogic.com/collation/",
-            "invalid-values": "ignore",
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/distance",
             "range-value-positions": false,
             "scalar-type": "decimal"
         },
         {
-            "collation": "http://marklogic.com/collation/",
-            "invalid-values": "ignore",
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/duration",
             "range-value-positions": false,
             "scalar-type": "dayTimeDuration"
         },
         {
-            "collation": "http://marklogic.com/collation/",
-            "invalid-values": "ignore",
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/runByRunner",
             "range-value-positions": false,
             "scalar-type": "string"

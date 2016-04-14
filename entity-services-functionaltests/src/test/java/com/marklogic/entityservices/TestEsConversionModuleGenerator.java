@@ -130,7 +130,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			StringHandle xqueryModule = new StringHandle();
 			try {
 				xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
-			} catch (com.marklogic.entityservices.TestEvalException e) {
+			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
 			map.put(entityType, xqueryModule);
@@ -237,6 +237,22 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		XMLUnit.setIgnoreWhitespace(true);
 		
 		return writer.toString();
+	}
+	
+	@Test
+	//This test verifies that conversion module generates a document as output and not text
+	public void testConvModOutputNodeKind() {
+		
+		for (String entityType : entityTypes) {
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; };
+			StringHandle xqueryModule = new StringHandle();
+			try {
+				xqueryModule = evalOneResult("xdmp:node-kind(es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"'))))", xqueryModule);
+				assert(xqueryModule.get().toString()=="document");
+			} catch (TestEvalException e) {
+				logger.info("Got exception: " + e);
+			}
+		}
 	}
 	
 	@Test

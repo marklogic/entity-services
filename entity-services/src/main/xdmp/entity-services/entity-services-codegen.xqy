@@ -228,7 +228,20 @@ declare function {$prefix}:instance-from-document(
             for $property in $root-instance/*
             return
                 if ($property/element())
-                then map:put($instance, local-name($property), $property/* ! {$prefix}:child-instance(.))
+                then 
+                    if (map:contains($instance, local-name($property)))
+                    then 
+                        let $existing-key := 
+                            if (map:get($instance, local-name($property)) instance of json:array)
+                            then map:get($instance, local-name($property))
+                            else 
+                                let $a := json:array()
+                                let $_ := json:array-push($a, map:get($instance, local-name($property)))
+                                return $a
+                        let $_ := for $child in $property/* return json:array-push($existing-key, {$prefix}:child-instance($child))
+                        return map:put($instance, local-name($property), $existing-key)
+                    else
+                        map:put($instance, local-name($property), $property/* ! {$prefix}:child-instance(.))
                 else map:put($instance, local-name($property), data($property))
         return $instance
 }};

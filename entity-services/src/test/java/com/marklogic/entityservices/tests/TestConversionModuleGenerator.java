@@ -205,20 +205,20 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			
 			// test that XML from envelope returns the instance.
 			String testToInstance = moduleImport(entityType) 
-					+"conv:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
+					+"i:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
 			handle = evalOneResult(testToInstance, new DOMHandle());
 			actualInstance = handle.get();
 			XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
 
 			// extract instance, returned as JSON, matches instance-json-from-document
-			JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType) + "conv:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
-			JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType) + "conv:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
+			JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType) + "i:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
+			JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType) + "i:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
 			JsonNode instance = instanceJSONHandle.get();
 			JsonNode jsonInstance = instanceAsJSONHandle.get();
 			org.hamcrest.MatcherAssert.assertThat(instance, org.hamcrest.Matchers.equalTo(jsonInstance));
 
 			// moreover, extracting the attachments also will result in identity.
-			DOMHandle domHandle = evalOneResult(moduleImport(entityType) + "conv:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )", new DOMHandle());
+			DOMHandle domHandle = evalOneResult(moduleImport(entityType) + "i:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )", new DOMHandle());
 			Document originalDocument = domHandle.get();
 			XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
 			

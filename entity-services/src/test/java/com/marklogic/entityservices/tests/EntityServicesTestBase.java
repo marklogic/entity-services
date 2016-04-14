@@ -77,8 +77,9 @@ public abstract class EntityServicesTestBase {
 	    
 	    String entityServicesImport = 
 	            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
-	    		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
-	
+	    		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n" +
+	    		"import module namespace i = 'http://marklogic.com/entity-services-instance' at '/MarkLogic/entity-services/entity-services-instance.xqy';\n";
+		
 	    ServerEvaluationCall call = 
 	            client.newServerEval().xquery(entityServicesImport + functionCall);
 	    EvalResultIterator results = null;

@@ -15,42 +15,35 @@ import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx
 import module namespace es = "http://marklogic.com/entity-services" 
     at "/MarkLogic/entity-services/entity-services.xqy";
 
+import module namespace i = "http://marklogic.com/entity-services-instance" 
+    at "/MarkLogic/entity-services/entity-services-instance.xqy";
 
-declare private function race:include-if-exists(
-    $property-path,
-    $instance,
-    $property-key,
-    $value
-) as empty-sequence()
-{
-    if (exists($property-path))
-    then 
-    map:put($instance, $property-key, $value) 
-    else ()
-};
-
-
-(: extract-instance-{entity-type} Functions :)
 
 (:~
- : Generates an insance of "Race" type 
+ : Creates a map:map representation of an entity instance from some source
+ : document.
+ : @param $source-node  A document or node that contains data for populating a Race
+ : @return A map:map instance that holds the data for this entity type.
  :)
 declare function race:extract-instance-Race(
     $source-node as node()
 ) as map:map
 {
-    let $instance := json:object()
-    let $_ := map:put($instance, "$type", "Race")
-    let $_ := map:put($instance, "$attachments", xdmp:quote($source-node))
-    let $_ := race:include-if-exists($source-node/name, $instance, 'name', data($source-node/name))
-    (: reference not embedded :)
-    let $_ := map:put($instance, "comprisedOfRuns", json:to-array($source-node/comprisedOfRuns))
-    let $_ := race:include-if-exists($source-node/wonByRunner, $instance, 'wonByRunner', data($source-node/wonByRunner))
-    let $_ := race:include-if-exists($source-node/courseLength, $instance, 'courseLength', data($source-node/courseLength))
-   
-    return $instance
+    json:object()
+        (: This line identifies the type of this instance.  Do not change it. :)
+        =>i:with(true(), '$type', 'Race')
+        (: This line adds the original source document as an attachment.
+         : If this entity type is not the root of a document, you should remove this.
+         : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
+         : because you cannot preserve JSON nodes with the XML envelope verbatim.
+         :)
+        =>i:with(true(), '$attachments', xdmp:quote($source-node))
+        =>i:with($source-node/name,             'name',                   data($source-node/name))
+        =>i:with($source-node/comprisedOfRuns,  'comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
+        =>i:with($source-node/wonByRunner,      'wonByRunner',            data($source-node/wonByRunner))
+        =>i:with($source-node/courseLength,     'courseLength',           data($source-node/courseLength))
 };
-    
+
 (:~
     TODO make descriptive comment for extract-instance-Run
  :)
@@ -58,19 +51,18 @@ declare function race:extract-instance-Run(
     $source-node as node()
 ) as map:map
 {
-    let $instance := json:object()
-    let $_ := map:put($instance, "$type", "Run")
-    let $_ := map:put($instance, "$attachments", xdmp:quote($source-node))
-    let $_ := race:include-if-exists($source-node/id, $instance, 'id', data($source-node/id))
-    let $_ := race:include-if-exists($source-node/date, $instance, 'date', data($source-node/date))
-    let $_ := race:include-if-exists($source-node/distance, $instance, 'distance', data($source-node/distance))
-    let $_ := race:include-if-exists($source-node/distanceLabel, $instance, 'distanceLabel', data($source-node/distanceLabel))
-    let $_ := race:include-if-exists($source-node/duration, $instance, 'duration', functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
     let $runner-name := string($source-node/runByRunner)
     let $runnerDoc := cts:search( collection("raw"), cts:json-property-value-query("name", $runner-name))
-    let $_ := map:put($instance, "runByRunner", race:extract-instance-Runner($runnerDoc))
-   
-    return $instance
+    return
+    json:object()
+        =>i:with(true(), '$type', 'Run')
+        =>i:with(true(), '$attachments', xdmp:quote($source-node))
+        =>i:with($source-node/id,                'id',                     data($source-node/id))
+        =>i:with($source-node/date,              'date',                   data($source-node/date))
+        =>i:with($source-node/distance,          'distance',               data($source-node/distance))
+        =>i:with($source-node/distanceLabel,     'distanceLabel',               data($source-node/distanceLabel))
+        =>i:with($source-node/duration,          'duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
+        =>i:with($source-node/runByRunner,       'runByRunner',            race:extract-instance-Runner($runnerDoc))
 };
     
 (: modifying this one for JSON inputs, each a separate file :)
@@ -78,20 +70,23 @@ declare function race:extract-instance-Runner(
     $source-node as node()
 ) as map:map
 {
-    let $instance := json:object()
-    let $_ := map:put($instance, "$type", "Runner")
-    let $_ := race:include-if-exists($source-node/name, $instance, 'name', data($source-node/name))
-    let $_ := race:include-if-exists($source-node/age, $instance, 'age', data($source-node/age))
-    let $_ := race:include-if-exists($source-node/gender, $instance, 'gender', data($source-node/gender))
-   
-    return $instance
+    json:object()
+        =>i:with(true(), '$type', 'Runner')
+        =>i:with($source-node/name,           'name',                   data($source-node/name))
+        =>i:with($source-node/age,            'age',                    data($source-node/age))
+        =>i:with($source-node/gender,         'gender',                  data($source-node/gender))
 };
     
 
-(: instance-to-canonical-xml function
- : Depending on the relationships among your entity types
- : you may wish to modify sections of this function
- : to meet your own purposes.
+(:~
+ : Turns an entity instance into an XML structure.
+ : This out-of-the box implementation traverses a map structure
+ : and turns it deterministically into an XML tree.
+ : Using this function as-is should be sufficient for most use
+ : cases, and will play well with other generated artifacts.
+ : @param $entity-instance A map:map instance returned from one of the extract-instance
+ :    functions.
+ : @return An XML element that encodes the instance.
  :)
 declare function race:instance-to-canonical-xml(
     $entity-instance as map:map
@@ -115,7 +110,7 @@ declare function race:instance-to-canonical-xml(
                 return 
                     for $val in json:array-values($instance-property)
                     return
-                        if ($val instance of map:map)
+                        if ($val instance of json:object)
                         then element { $key } { race:instance-to-canonical-xml($val) }
                         else element { $key } { $val }
             (: A sequence of values should be simply treated as multiple elements :)
@@ -128,10 +123,13 @@ declare function race:instance-to-canonical-xml(
 };
 
 
-(: instance-to-envelope 
- : This function is used to wrap sources and entity instances
- : within the same document
- : TODO EA-3, this will be part of XQuery server library, not generated code.
+(: 
+ : Wraps a canonical instance (returned by instance-to-canonical-xml())
+ : within an envelope patterned document, along with the source
+ : document, which is stored in an attachments section.
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @return A document which wraps both the canonical instance and source docs.
  :)
 declare function race:instance-to-envelope(
     $entity-instance as map:map
@@ -153,67 +151,4 @@ declare function race:instance-to-envelope(
     }
 };
 
-
-(: instance-from-document 
- : if you have modified instance-to-envelope
- : you may need also to modify this function
- :)
-declare function race:instance-from-document(
-    $document as document-node()
-) as map:map*
-{
-    let $xml-from-document := race:instance-xml-from-document($document)
-    for $root-instance in $xml-from-document
-        let $instance := json:object()
-        let $_ :=
-            for $property in $root-instance/*
-            return
-                if ($property/element())
-                then map:put($instance, local-name($property), $property/* ! race:child-instance(.))
-                else map:put($instance, local-name($property), data($property))
-        return $instance
-};
-
-declare function race:child-instance(
-    $element as element()
-) as map:map*
-{
-    let $child := json:object()
-    let $_ := 
-        for $property in $element/*
-        return
-            if ($property/element())
-            then map:put($child, local-name($property), race:child-instance($property))
-            else map:put($child, local-name($property), data($property))
-    return $child
-};
-
-
-(:~
- : Returns all XML from within a document envelope except the es:info.
- : This function is generic enough not to require customization for
- : most entity type implementations.
- :)
-declare function race:instance-xml-from-document(
-    $document as document-node()
-) as element()
-{
-    $document//es:instance/(* except es:info)
-};
-
-declare function race:instance-json-from-document(
-    $document as document-node()
-) as object-node()
-{
-    let $instance := race:instance-from-document($document)
-    return xdmp:to-json($instance)/node()
-};
-
-
-declare function race:instance-get-attachments(
-    $document as document-node()
-) as element()*
-{
-    $document//es:attachments/*
-};
 

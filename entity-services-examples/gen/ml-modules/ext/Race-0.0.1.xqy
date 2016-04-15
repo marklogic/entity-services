@@ -56,14 +56,14 @@ declare function race:extract-instance-Race(
 ) as map:map
 {
     json:object()
-        (: This line identifies the type of this instance.  Do not change it. :).
+        (: This line identifies the type of this instance.  Do not change it. :)
         =>i:with(true(), '$type', 'Race')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>i:with(true(), '$attachments', $source-node)
+        =>i:with(true(), '$attachments', xdmp:quote($source-node))
         =>i:with($source-node/Race/name,             'name',                   data($source-node/Race/name))
         =>i:with($source-node/Race/comprisedOfRuns,  'comprisedOfRuns',                
             if ($source-node/Race/comprisedOfRuns/element())
@@ -95,7 +95,7 @@ declare function race:extract-instance-Run(
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>i:with(true(), '$attachments', $source-node)
+        =>i:with(true(), '$attachments', xdmp:quote($source-node))
         =>i:with($source-node/Run/id,                'id',                     data($source-node/Run/id))
         =>i:with($source-node/Run/date,              'date',                   data($source-node/Run/date))
         =>i:with($source-node/Run/distance,          'distance',               data($source-node/Run/distance))
@@ -119,7 +119,7 @@ declare function race:extract-instance-Runner(
 ) as map:map
 {
     json:object()
-        (: This line identifies the type of this instance.  Do not change it. :).
+        (: This line identifies the type of this instance.  Do not change it. :)
         =>i:with(true(), '$type', 'Runner')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.

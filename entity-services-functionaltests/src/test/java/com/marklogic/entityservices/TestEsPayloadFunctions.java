@@ -4,22 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
@@ -41,16 +33,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
-import com.marklogic.client.FailedRequestException;
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-import com.marklogic.client.io.marker.AbstractReadHandle;
 
+
+@SuppressWarnings("unused")
 public class TestEsPayloadFunctions extends EntityServicesTestBase {
 
 	@BeforeClass
@@ -387,7 +376,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	}
     }
     
-    @Test
+	@Test
     /* testing entity-type-from-node xml for missing definitions */
     public void testFromNodeXmlMissingDefinitions() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-definitions.xml");
@@ -640,6 +629,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		
 		DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
 
+		@SuppressWarnings("unchecked")
 		List<Difference> l = diff.getAllDifferences();
 		for (Difference d : l) {
 			System.out.println(d.toString());

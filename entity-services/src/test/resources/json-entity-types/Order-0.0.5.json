@@ -1,0 +1,41 @@
+{
+  "info": {
+    "title": "Order",
+    "version": "0.0.5",
+    "baseUri": "http://order5",
+    "description" : "This ET doc has a reference to order details that HAS a primary key, and thus can be many to may"
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "string"
+        },
+        "orderDate": {
+          "datatype": "date"
+        },
+        "hasOrderDetails": {
+          "datatype":"array",
+          "items" : {"$ref": "#/definitions/OrderDetails"}
+        }
+      },
+      "primaryKey" : "orderId",
+      "required" : ["orderId", "orderDate"]
+    },
+    "OrderDetails": {
+      "properties": {
+        "lineItemId": {
+          "datatype":"integer"
+        },
+        "quantity": {
+          "datatype": "integer"
+        },
+        "productName": {
+          "datatype": "string"
+        }
+      },
+      "primaryKey":"lineItemId"
+    }
+  }
+}
+

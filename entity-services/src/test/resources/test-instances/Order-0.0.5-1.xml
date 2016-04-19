@@ -1,0 +1,5 @@
+<OrderDetails>
+<lineItemId>123</lineItemId>
+<quantity>123</quantity>
+<productName>some string</productName>
+</OrderDetails>

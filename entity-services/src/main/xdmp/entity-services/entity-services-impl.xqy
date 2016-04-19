@@ -622,19 +622,13 @@ declare function esi:schema-generate(
 };
 
 
-
-declare private function esi:ref-type(
+declare private function esi:ref-datatype(
     $entity-type as map:map,
     $entity-type-name as xs:string,
     $property-name as xs:string
-) as xs:string
+) as xs:string 
 {
-    let $definitions := map:get($entity-type, "definitions")
-    let $entity-type := map:get($definitions, $entity-type-name)
-    let $property := map:get(map:get($entity-type, "properties"), $property-name)
-    let $ref-target := head( (map:get($property, "$ref"), 
-                              map:get(map:get($property, "items"), "$ref") ) )
-    let $ref-type := map:get($definitions, replace($ref-target, "#/definitions/", ""))
+    let $ref-type := esi:ref-type($entity-type, $entity-type-name, $property-name)
     return 
         if (empty($ref-type))
         then "string"
@@ -652,6 +646,42 @@ declare private function esi:ref-type(
 };
 
 
+declare function esi:ref-type-name(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as xs:string
+{
+    let $definitions := map:get($entity-type, "definitions")
+    let $entity-type := map:get($definitions, $entity-type-name)
+    let $property := map:get(map:get($entity-type, "properties"), $property-name)
+    let $ref-target := head( (map:get($property, "$ref"), 
+                              map:get(map:get($property, "items"), "$ref") ) )
+    return replace($ref-target, "#/definitions/", "")
+};
+
+
+declare private function esi:ref-type(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as map:map?
+{
+    let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
+    return map:get(map:get($entity-type, "definitions"), $ref-type-name)
+};
+
+declare private function esi:ref-has-no-primary-key(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as xs:boolean
+{
+    let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
+    let $ref-target := map:get(map:get($entity-type, "definitions"), $ref-type-name)
+    return not("primaryKey" = map:keys($ref-target))
+};
+
 declare function esi:extraction-template-generate(
     $entity-type as map:map
 ) as element(tde:template)
@@ -660,29 +690,16 @@ declare function esi:extraction-template-generate(
     let $schema-name := map:get($info, "title")
     let $definitions := map:get($entity-type, "definitions")
     let $definition-keys := map:keys($definitions)
-    return
-    <tde:template xmlns="http://marklogic.com/xdmp/tde">
-        <tde:description>
-            Extraction Template Generated from Entity Type Document
-            graph uri: {esi:entity-type-graph-iri($entity-type)}
-        </tde:description>
-        <tde:context>//es:instance</tde:context>
-        <tde:path-namespaces>
-            <tde:path-namespace>
-                <tde:prefix>es</tde:prefix>
-                <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
-            </tde:path-namespace>
-        </tde:path-namespaces>
-        <tde:templates>
-        {
+    let $scalar-rows := map:map()
+    let $_ :=
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
         let $primary-key-name := map:get($entity-type-map, "primaryKey")
         let $properties-map := map:get($entity-type-map, "properties")
-        let $primary-key-type := map:get( map:get($properties-map, $primary-key-name),
-                                          "datatype" )
+        let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
         let $property-keys := map:keys($properties-map)
-        let $scalar-columns :=
+        return
+        map:put($scalar-rows, $entity-type-name,
             <tde:rows>
                 <tde:row>
                     <tde:schema-name>{ $schema-name }</tde:schema-name>
@@ -697,13 +714,14 @@ declare function esi:extraction-template-generate(
                         then "string"
                         else map:get($property-properties, "datatype")
                     return
+                        (: if the column is an array, skip it in scalar row :)
                         if (exists($items-map)) then ()
                         else
                             if ( map:contains($property-properties, "$ref") )
                             then
                             <tde:column>
                                 <tde:name>{ $property-name }</tde:name>
-                                <tde:scalar-type>{ esi:ref-type($entity-type, $entity-type-name, $property-name) } </tde:scalar-type>
+                                <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) } </tde:scalar-type>
                                 <tde:val>{ $property-name }</tde:val>
                             </tde:column>
                             else
@@ -715,61 +733,103 @@ declare function esi:extraction-template-generate(
                     }
                     </tde:columns>
                 </tde:row>
-            </tde:rows>
-        let $array-rows :=
+            </tde:rows>)
+    let $array-rows := map:map()
+    let $_ := 
+        for $entity-type-name in $definition-keys
+        let $entity-type-map := map:get($definitions, $entity-type-name)
+        let $primary-key-name := map:get($entity-type-map, "primaryKey")
+        let $properties-map := map:get($entity-type-map, "properties")
+        let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
+        let $property-keys := map:keys($properties-map)
+        let $column-map := map:map()
+        let $_ := 
             for $property-name in $property-keys
             let $property-properties := map:get($properties-map, $property-name)
             let $items-map := map:get($property-properties, "items")
             let $is-ref := map:contains($items-map, "$ref")
+            let $is-local-ref := map:contains($items-map, "$ref") and starts-with( map:get($items-map, "$ref"), "#/definitions/")
             let $items-datatype := 
                 if (map:get($items-map, "datatype") eq "iri")
                 then "string"
                 else map:get($items-map, "datatype")
             where exists($items-map)
             return
-            <tde:template>
-                <tde:context>./{ $property-name }</tde:context>
-                <tde:rows>
-                  <tde:row>
-                    <tde:schema-name>{ $schema-name }</tde:schema-name>
-                    <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
-                    <tde:columns>
-                        <!-- this column joins to PK of 'parent' -->
-                        <tde:column>
-                            <tde:name>{ $primary-key-name }</tde:name>
-                            <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
-                            <tde:val>../{ $primary-key-name }</tde:val>
-                        </tde:column>
-                        {
-                        if ($is-ref)
-                        then 
+            map:put($column-map, $property-name,
+                <tde:template>
+                    <tde:context>./{ $property-name }</tde:context>
+                    <tde:rows>
+                      <tde:row>
+                        <tde:schema-name>{ $schema-name }</tde:schema-name>
+                        <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
+                        <tde:columns>
+                            <!-- this column joins to PK of 'parent' -->
                             <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
-                                <tde:scalar-type>{ esi:ref-type($entity-type, $entity-type-name, $property-name) }</tde:scalar-type>
-                                <tde:val>.</tde:val>
+                                <tde:name>{ $primary-key-name }</tde:name>
+                                <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
+                                <tde:val>../{ $primary-key-name }</tde:val>
                             </tde:column>
-                        else
-                            <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
-                                <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
-                                <tde:val>.</tde:val>
-                            </tde:column>
-                        }
-                    </tde:columns>
-                  </tde:row>
-                </tde:rows>
-            </tde:template>
+                            {
+                            if ($is-ref)
+                            then 
+                                <tde:column>
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) }</tde:scalar-type>
+                                    <tde:val>.</tde:val>
+                                </tde:column>
+                            else
+                                <tde:column>
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
+                                    <tde:val>.</tde:val>
+                                </tde:column>,
+                            if ($is-local-ref and esi:ref-has-no-primary-key($entity-type, $entity-type-name, $property-name))
+                            then 
+                                let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
+                                return (
+                                map:get($scalar-rows, $ref-type-name)/tde:row[tde:view-name eq $ref-type-name ]/tde:columns/tde:column,
+                                map:delete($scalar-rows, $ref-type-name))
+                            else ()
+                            }
+                        </tde:columns>
+                      </tde:row>
+                    </tde:rows>
+                </tde:template>
+            )
+        return 
+        if (exists(map:keys($column-map)))
+        then map:put($array-rows, $entity-type-name, $column-map)
+        else ()
+    let $entity-type-templates :=
+        for $entity-type-name in map:keys($scalar-rows) 
         return
         <tde:template>
             <tde:context>./{ $entity-type-name }</tde:context>
             { 
-            $scalar-columns ,
-            if (exists($array-rows))
-            then <tde:templates>{ $array-rows }</tde:templates>
+            map:get($scalar-rows, $entity-type-name),
+            if (map:contains($array-rows, $entity-type-name))
+            then 
+                let $m := map:get($array-rows, $entity-type-name)
+                return
+                <tde:templates>{ for $k in map:keys($m) return map:get($m, $k) }</tde:templates>
             else ()
             }
         </tde:template>
-        }
+    return
+    <tde:template xmlns="http://marklogic.com/xdmp/tde">
+        <tde:description>
+            Extraction Template Generated from Entity Type Document
+            graph uri: {esi:entity-type-graph-iri($entity-type)}
+        </tde:description>
+        <tde:context>//es:instance</tde:context>
+        <tde:path-namespaces>
+            <tde:path-namespace>
+                <tde:prefix>es</tde:prefix>
+                <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
+            </tde:path-namespace>
+        </tde:path-namespaces>
+        <tde:templates>
+        { $entity-type-templates }
         </tde:templates>
     </tde:template>
 };

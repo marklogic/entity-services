@@ -3,18 +3,10 @@ package com.marklogic.entityservices.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static com.jayway.restassured.RestAssured.*;
-import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
-import static com.jayway.restassured.config.RestAssuredConfig.newConfig;
-import static com.jayway.restassured.config.XmlConfig.xmlConfig;
-import static org.hamcrest.Matchers.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.namespace.NamespaceContext;
 
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLAssert;
@@ -23,7 +15,6 @@ import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,7 +23,6 @@ import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-import com.marklogic.client.util.EditableNamespaceContext;
 
 public class TestExtractionTemplates extends EntityServicesTestBase {
 	
@@ -119,14 +109,37 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 	    
 	    // check scalar array
 	    arrayEntityType = extractionTemplates.get("SchemaCompleteEntityType-0.0.1.json").get();
-	    logger.debug(arrayEntityType);
-
-		
+	    
 		XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType_arrayKey']", arrayEntityType);
 	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='arrayKey']", arrayEntityType);
 	    
 	}
 	
+	@Test
+	public void embedChildWithNoPrimaryKey() throws XpathException, IOException, SAXException {
+		// this one has an array of refs
+		String entityTypeWithArray = "Order-0.0.4.json";
+		String arrayEntityType = extractionTemplates.get(entityTypeWithArray).get();
+		
+		Map<String, String> ctx = new HashMap<String, String>();
+		ctx.put("tde", "http://marklogic.com/xdmp/tde");
+		logger.debug(arrayEntityType);
+
+		
+		XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
+		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", arrayEntityType);
+	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='OrderDetails']", arrayEntityType);
+
+	    // negative case -- ref with primary key in target
+	    entityTypeWithArray = "Order-0.0.5.json";
+		arrayEntityType = extractionTemplates.get(entityTypeWithArray).get();
+		
+		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']", arrayEntityType);
+	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", arrayEntityType);
+	    XMLAssert.assertXpathExists("//tde:row[tde:view-name='OrderDetails']", arrayEntityType);
+
+	    
+	}
 	
 
 	@AfterClass

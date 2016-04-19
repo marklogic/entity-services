@@ -596,11 +596,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		String envelopeDoc = "valid-ref-combo-sameDocument-subIri-envelope.xml";
 		
-		StringHandle handle = evalOneResult("import module namespace i = \"http://marklogic.com/entity-services-instance\" at \"/MarkLogic/entity-services/entity-services-instance.xqy\";"+
-				"import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
 	              //"xdmp:document-insert('valid-ref-combo-sameDocument-subIri-envelope.xml', ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') )))", new StringHandle());
 		//StringHandle handle2 = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "i:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
+	              "es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
 		String actualDoc = handle.get();
 		//Get the keys file as controlDoc
 		InputStream is = this.getClass().getResourceAsStream("/test-attachments/" + entityType);
@@ -633,8 +632,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		//String docTitle = getDocTitle(entityType);
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace i = \"http://marklogic.com/entity-services-instance\" at \"/MarkLogic/entity-services/entity-services-instance.xqy\";"+
-				"import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
 	              "i:instance-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
 		JsonNode actualDoc = handle.get();
 		//Get the keys file as input stream
@@ -653,8 +651,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "VINET.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace i = \"http://marklogic.com/entity-services-instance\" at \"/MarkLogic/entity-services/entity-services-instance.xqy\";"+
-				"import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
 	              "i:instance-xml-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
 		String actualDoc = handle.get();
 		//Get the keys file as controlDoc

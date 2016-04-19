@@ -15,7 +15,7 @@
 :)
 xquery version "1.0-ml";
 
-module namespace i = "http://marklogic.com/entity-services-instance";
+module namespace inst = "http://marklogic.com/entity-services-instance";
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
@@ -25,34 +25,17 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
-declare function i:with(
-    $instance as map:map,
-    $property-path as item()*,
-    $property-key as xs:string,
-    $value as item()*
-) as map:map
-{
-    if (exists($property-path))
-    then 
-    map:put($instance, $property-key, $value) 
-    else (),
-    $instance
-};
 
-(: instance-from-document 
- : if you have modified instance-to-envelope
- : you may need also to modify this function
- :)
-declare function i:instance-from-document(
+declare function inst:instance-from-document(
     $document as document-node()
 ) as map:map*
 {
-    let $xml-from-document := i:instance-xml-from-document($document)
+    let $xml-from-document := inst:instance-xml-from-document($document)
     for $root-instance in $xml-from-document
-        return i:child-instance($root-instance)
+        return inst:child-instance($root-instance)
 };
 
-declare function i:child-instance(
+declare function inst:child-instance(
     $element as element()
 ) as map:map*
 {
@@ -71,37 +54,32 @@ declare function i:child-instance(
                             let $a := json:array()
                             let $_ := json:array-push($a, map:get($child, local-name($property)))
                             return $a
-                    let $_ := for $child in $property/* return json:array-push($existing-key, i:child-instance($child))
+                    let $_ := for $child in $property/* return json:array-push($existing-key, inst:child-instance($child))
                     return map:put($child, local-name($property), $existing-key)
                 else
-                    map:put($child, local-name($property), $property/* ! i:child-instance(.))
+                    map:put($child, local-name($property), $property/* ! inst:child-instance(.))
             else map:put($child, local-name($property), data($property))
     return $child
 };
 
 
-(:~
- : Returns all XML from within a document envelope except the es:info.
- : This function is generic enough not to require customization for
- : most entity type implementations.
- :)
-declare function i:instance-xml-from-document(
+declare function inst:instance-xml-from-document(
     $document as document-node()
-) as element()
+) as element()*
 {
     $document//es:instance/(* except es:info)
 };
 
-declare function i:instance-json-from-document(
+declare function inst:instance-json-from-document(
     $document as document-node()
 ) as object-node()
 {
-    let $instance := i:instance-from-document($document)
+    let $instance := inst:instance-from-document($document)
     return xdmp:to-json($instance)/node()
 };
 
 
-declare function i:instance-get-attachments(
+declare function inst:instance-get-attachments(
     $document as document-node()
 ) as element()*
 {

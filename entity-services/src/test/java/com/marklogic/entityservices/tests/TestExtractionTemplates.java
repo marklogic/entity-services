@@ -123,7 +123,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 		
 		Map<String, String> ctx = new HashMap<String, String>();
 		ctx.put("tde", "http://marklogic.com/xdmp/tde");
-		logger.debug(arrayEntityType);
+		//logger.debug(arrayEntityType);
 
 		
 		XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));

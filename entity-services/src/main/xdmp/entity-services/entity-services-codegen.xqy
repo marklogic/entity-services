@@ -82,9 +82,6 @@ module namespace {$prefix} = "{$base-uri}{$title}-{$version}";
 import module namespace es = "http://marklogic.com/entity-services" 
     at "/MarkLogic/entity-services/entity-services.xqy";
 
-import module namespace i = "http://marklogic.com/entity-services-instance" 
-    at "/MarkLogic/entity-services/entity-services-instance.xqy";
-
 
 (:
  :  extract-instance-{{entity-type}} functions 
@@ -112,13 +109,13 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
 {{
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>i:with(true(), '$type', '{ $entity-type-key }')
+        =>es:with(true(), '$type', '{ $entity-type-key }')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>i:with(true(), '$attachments', $source-node)
+        =>es:with(true(), '$attachments', $source-node)
         (: The following lines are generated from the { $entity-type-key } entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.
@@ -160,7 +157,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
                 
     return
     (: include a call to conditional map:put :) 
-    concat("    =>i:with(",
+    concat("    =>es:with(",
             functx:pad-string-to-length($path-to-property || ", " , " ", max( (string-length($path-to-property), 35) )+1 ),
             functx:pad-string-to-length("'" || $property-key || "',", " ", max( (string-length($path-to-property), 25) )+1 ),
             $value, 

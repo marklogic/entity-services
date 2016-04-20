@@ -1,0 +1,36 @@
+<Order OrderID="10858">
+	<CustomerID>LACOR</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1998-01-29T12:07:21</OrderDate>
+	<RequiredDate>1998-02-26T21:08:49</RequiredDate>
+	<ShippedDate>1998-02-03T00:28:05</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>52.5100</Freight>
+	<ShipName>La corne d'abondance</ShipName>
+	<ShipAddress>67, avenue de l'Europe</ShipAddress>
+	<ShipCity>Versailles</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>78000</ShipPostalCode>
+	<ShipCountry>France</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>7</ProductID>
+			<UnitPrice>30.0000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>27</ProductID>
+			<UnitPrice>43.9000</UnitPrice>
+			<Quantity>10</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>70</ProductID>
+			<UnitPrice>15.0000</UnitPrice>
+			<Quantity>4</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

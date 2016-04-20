@@ -1,0 +1,30 @@
+<Order OrderID="10816">
+	<CustomerID>GREAL</CustomerID>
+	<EmployeeID>4</EmployeeID>
+	<OrderDate>1998-01-06T11:19:04</OrderDate>
+	<RequiredDate>1998-02-03T15:55:02</RequiredDate>
+	<ShippedDate>1998-02-04T16:49:55</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>719.7800</Freight>
+	<ShipName>Great Lakes Food Market</ShipName>
+	<ShipAddress>2732 Baker Blvd.</ShipAddress>
+	<ShipCity>Eugene</ShipCity>
+	<ShipRegion>OR</ShipRegion>
+	<ShipPostalCode>97403</ShipPostalCode>
+	<ShipCountry>USA</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>38</ProductID>
+			<UnitPrice>263.5000</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>62</ProductID>
+			<UnitPrice>49.3000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,36 @@
+<Order OrderID="10916">
+	<CustomerID>RANCH</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1998-02-27T21:46:04</OrderDate>
+	<RequiredDate>1998-03-27T00:43:08</RequiredDate>
+	<ShippedDate>1998-03-09T13:31:13</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>63.7700</Freight>
+	<ShipName>Rancho grande</ShipName>
+	<ShipAddress>Av. del Libertador 900</ShipAddress>
+	<ShipCity>Buenos Aires</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>1010</ShipPostalCode>
+	<ShipCountry>Argentina</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>16</ProductID>
+			<UnitPrice>17.4500</UnitPrice>
+			<Quantity>6</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>32</ProductID>
+			<UnitPrice>32.0000</UnitPrice>
+			<Quantity>6</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>57</ProductID>
+			<UnitPrice>19.5000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

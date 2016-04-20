@@ -1,0 +1,13 @@
+<Customer CustomerID="FRANS">
+	<CompanyName>Franchi S.p.A.</CompanyName>
+	<ContactName>Paolo Accorti</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Via Monte Bianco 34</Address>
+	<City>Torino</City>
+	<Region/>
+	<PostalCode>10100</PostalCode>
+	<Country>Italy</Country>
+	<Phone>011-4988260</Phone>
+	<Fax>011-4988261</Fax>
+</Customer>
+

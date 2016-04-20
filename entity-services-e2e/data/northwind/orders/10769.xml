@@ -1,0 +1,42 @@
+<Order OrderID="10769">
+	<CustomerID>VAFFE</CustomerID>
+	<EmployeeID>3</EmployeeID>
+	<OrderDate>1997-12-08T11:41:04</OrderDate>
+	<RequiredDate>1998-01-05T11:54:44</RequiredDate>
+	<ShippedDate>1997-12-12T15:07:56</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>65.0600</Freight>
+	<ShipName>Vaffeljernet</ShipName>
+	<ShipAddress>Smagsloget 45</ShipAddress>
+	<ShipCity>Århus</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>8200</ShipPostalCode>
+	<ShipCountry>Denmark</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>41</ProductID>
+			<UnitPrice>9.6500</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>52</ProductID>
+			<UnitPrice>7.0000</UnitPrice>
+			<Quantity>15</Quantity>
+			<Discount>0.05</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>61</ProductID>
+			<UnitPrice>28.5000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>62</ProductID>
+			<UnitPrice>49.3000</UnitPrice>
+			<Quantity>15</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

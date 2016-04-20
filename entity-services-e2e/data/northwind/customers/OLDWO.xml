@@ -1,0 +1,13 @@
+<Customer CustomerID="OLDWO">
+	<CompanyName>Old World Delicatessen</CompanyName>
+	<ContactName>Rene Phillips</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>2743 Bering St.</Address>
+	<City>Anchorage</City>
+	<Region>AK</Region>
+	<PostalCode>99508</PostalCode>
+	<Country>USA</Country>
+	<Phone>(907) 555-7584</Phone>
+	<Fax>(907) 555-2880</Fax>
+</Customer>
+

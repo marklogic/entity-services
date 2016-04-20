@@ -1,0 +1,13 @@
+<Customer CustomerID="REGGC">
+	<CompanyName>Reggiani Caseifici</CompanyName>
+	<ContactName>Maurizio Moroni</ContactName>
+	<ContactTitle>Sales Associate</ContactTitle>
+	<Address>Strada Provinciale 124</Address>
+	<City>Reggio Emilia</City>
+	<Region/>
+	<PostalCode>42100</PostalCode>
+	<Country>Italy</Country>
+	<Phone>0522-556721</Phone>
+	<Fax>0522-556722</Fax>
+</Customer>
+

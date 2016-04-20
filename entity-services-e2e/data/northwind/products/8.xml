@@ -1,0 +1,12 @@
+<Product ProductID="8">
+	<ProductName>Northwoods Cranberry Sauce</ProductName>
+	<SupplierID>3</SupplierID>
+	<CategoryID>2</CategoryID>
+	<QuantityPerUnit>12 - 12 oz jars</QuantityPerUnit>
+	<UnitPrice>40.0000</UnitPrice>
+	<UnitsInStock>6</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>0</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

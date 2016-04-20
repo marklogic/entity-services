@@ -1,0 +1,36 @@
+<Order OrderID="10516">
+	<CustomerID>HUNGO</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1997-04-24T19:11:30</OrderDate>
+	<RequiredDate>1997-05-22T10:32:21</RequiredDate>
+	<ShippedDate>1997-05-01T07:14:49</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>62.7800</Freight>
+	<ShipName>Hungry Owl All-Night Grocers</ShipName>
+	<ShipAddress>8 Johnstown Road</ShipAddress>
+	<ShipCity>Cork</ShipCity>
+	<ShipRegion>Co. Cork</ShipRegion>
+	<ShipPostalCode/>
+	<ShipCountry>Ireland</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>18</ProductID>
+			<UnitPrice>62.5000</UnitPrice>
+			<Quantity>25</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>41</ProductID>
+			<UnitPrice>9.6500</UnitPrice>
+			<Quantity>80</Quantity>
+			<Discount>0.1</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>42</ProductID>
+			<UnitPrice>14.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

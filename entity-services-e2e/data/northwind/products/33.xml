@@ -1,0 +1,12 @@
+<Product ProductID="33">
+	<ProductName>Geitost</ProductName>
+	<SupplierID>15</SupplierID>
+	<CategoryID>4</CategoryID>
+	<QuantityPerUnit>500 g</QuantityPerUnit>
+	<UnitPrice>2.5000</UnitPrice>
+	<UnitsInStock>112</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>20</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

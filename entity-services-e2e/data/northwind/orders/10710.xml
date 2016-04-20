@@ -1,0 +1,30 @@
+<Order OrderID="10710">
+	<CustomerID>FRANS</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1997-10-20T08:08:54</OrderDate>
+	<RequiredDate>1997-11-17T10:30:21</RequiredDate>
+	<ShippedDate>1997-10-23T11:42:14</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>4.9800</Freight>
+	<ShipName>Franchi S.p.A.</ShipName>
+	<ShipAddress>Via Monte Bianco 34</ShipAddress>
+	<ShipCity>Torino</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>10100</ShipPostalCode>
+	<ShipCountry>Italy</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>19</ProductID>
+			<UnitPrice>9.2000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>47</ProductID>
+			<UnitPrice>9.5000</UnitPrice>
+			<Quantity>5</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,13 @@
+<Customer CustomerID="QUICK">
+	<CompanyName>QUICK-Stop</CompanyName>
+	<ContactName>Horst Kloss</ContactName>
+	<ContactTitle>Accounting Manager</ContactTitle>
+	<Address>Taucherstraße 10</Address>
+	<City>Cunewalde</City>
+	<Region/>
+	<PostalCode>01307</PostalCode>
+	<Country>Germany</Country>
+	<Phone>0372-035188</Phone>
+	<Fax/>
+</Customer>
+

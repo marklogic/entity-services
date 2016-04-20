@@ -1,0 +1,36 @@
+<Order OrderID="10680">
+	<CustomerID>OLDWO</CustomerID>
+	<EmployeeID>1</EmployeeID>
+	<OrderDate>1997-09-24T03:54:05</OrderDate>
+	<RequiredDate>1997-10-22T05:04:12</RequiredDate>
+	<ShippedDate>1997-09-26T21:06:49</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>26.6100</Freight>
+	<ShipName>Old World Delicatessen</ShipName>
+	<ShipAddress>2743 Bering St.</ShipAddress>
+	<ShipCity>Anchorage</ShipCity>
+	<ShipRegion>AK</ShipRegion>
+	<ShipPostalCode>99508</ShipPostalCode>
+	<ShipCountry>USA</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>16</ProductID>
+			<UnitPrice>17.4500</UnitPrice>
+			<Quantity>50</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>31</ProductID>
+			<UnitPrice>12.5000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>42</ProductID>
+			<UnitPrice>14.0000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

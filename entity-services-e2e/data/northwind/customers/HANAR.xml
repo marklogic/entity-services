@@ -1,0 +1,13 @@
+<Customer CustomerID="HANAR">
+	<CompanyName>Hanari Carnes</CompanyName>
+	<ContactName>Mario Pontes</ContactName>
+	<ContactTitle>Accounting Manager</ContactTitle>
+	<Address>Rua do Paço, 67</Address>
+	<City>Rio de Janeiro</City>
+	<Region>RJ</Region>
+	<PostalCode>05454-876</PostalCode>
+	<Country>Brazil</Country>
+	<Phone>(21) 555-0091</Phone>
+	<Fax>(21) 555-8765</Fax>
+</Customer>
+

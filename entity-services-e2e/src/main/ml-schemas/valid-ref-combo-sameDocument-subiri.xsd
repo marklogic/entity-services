@@ -1,0 +1,118 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+<xs:complexType name="CustomerContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="Customer">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="CustomerType">
+<xs:sequence>
+<xs:element ref="CustomerId">
+</xs:element>
+<xs:element ref="CompanyName">
+</xs:element>
+<xs:element ref="Country">
+</xs:element>
+<xs:element ref="Address">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Customer" type="CustomerType">
+</xs:element>
+<xs:element name="CustomerId" type="xs:string">
+</xs:element>
+<xs:element name="CompanyName" type="xs:string">
+</xs:element>
+<xs:element name="Country" type="xs:string">
+</xs:element>
+<xs:element name="Address" type="xs:string">
+</xs:element>
+<xs:complexType name="ProductContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="Product">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ProductType">
+<xs:sequence>
+<xs:element ref="ProductName">
+</xs:element>
+<xs:element ref="ProductID">
+</xs:element>
+<xs:element ref="UnitPrice">
+</xs:element>
+<xs:element ref="SupplierID">
+</xs:element>
+<xs:element ref="Discontinued">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Product" type="ProductType">
+</xs:element>
+<xs:element name="ProductName" type="xs:string">
+</xs:element>
+<xs:element name="ProductID" type="xs:integer">
+</xs:element>
+<xs:element name="UnitPrice" type="xs:decimal">
+</xs:element>
+<xs:element name="SupplierID" type="xs:integer">
+</xs:element>
+<xs:element name="Discontinued" type="xs:boolean">
+</xs:element>
+<xs:complexType name="OrderContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="Order">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="OrderType">
+<xs:sequence>
+<xs:element ref="OrderID">
+</xs:element>
+<xs:element ref="CustomerID">
+</xs:element>
+<xs:element ref="OrderDate">
+</xs:element>
+<xs:element ref="ShipAddress">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Order" type="OrderType">
+</xs:element>
+<xs:element name="OrderID" type="xs:integer">
+</xs:element>
+<xs:element name="CustomerID" type="CustomerContainerType">
+</xs:element>
+<xs:element name="OrderDate" type="xs:dateTime">
+</xs:element>
+<xs:element name="ShipAddress" type="xs:string">
+</xs:element>
+<xs:element name="OrderDetails" type="xs:anyURI">
+</xs:element>
+<xs:complexType name="OrderDetailContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetail">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="OrderDetailType">
+<xs:sequence>
+<xs:element ref="ProductID">
+</xs:element>
+<xs:element ref="UnitPrice">
+</xs:element>
+<xs:element ref="Quantity">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="OrderDetail" type="OrderDetailType">
+</xs:element>
+<xs:element name="ProductID" type="ProductContainerType">
+</xs:element>
+<xs:element name="UnitPrice" type="xs:decimal">
+</xs:element>
+<xs:element name="Quantity" type="xs:integer">
+</xs:element>
+</xs:schema>

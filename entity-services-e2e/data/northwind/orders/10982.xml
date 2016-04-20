@@ -1,0 +1,30 @@
+<Order OrderID="10982">
+	<CustomerID>BOTTM</CustomerID>
+	<EmployeeID>2</EmployeeID>
+	<OrderDate>1998-03-27T01:56:47</OrderDate>
+	<RequiredDate>1998-04-24T12:33:36</RequiredDate>
+	<ShippedDate>1998-04-08T18:54:17</ShippedDate>
+	<ShipVia>1</ShipVia>
+	<Freight>14.0100</Freight>
+	<ShipName>Bottom-Dollar Markets</ShipName>
+	<ShipAddress>23 Tsawassen Blvd.</ShipAddress>
+	<ShipCity>Tsawassen</ShipCity>
+	<ShipRegion>BC</ShipRegion>
+	<ShipPostalCode>T2F 8M4</ShipPostalCode>
+	<ShipCountry>Canada</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>7</ProductID>
+			<UnitPrice>30.0000</UnitPrice>
+			<Quantity>20</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>43</ProductID>
+			<UnitPrice>46.0000</UnitPrice>
+			<Quantity>9</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

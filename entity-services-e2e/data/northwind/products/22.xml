@@ -1,0 +1,12 @@
+<Product ProductID="22">
+	<ProductName>Gustaf's Knäckebröd</ProductName>
+	<SupplierID>9</SupplierID>
+	<CategoryID>5</CategoryID>
+	<QuantityPerUnit>24 - 500 g pkgs.</QuantityPerUnit>
+	<UnitPrice>21.0000</UnitPrice>
+	<UnitsInStock>104</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>25</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

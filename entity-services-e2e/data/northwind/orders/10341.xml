@@ -1,0 +1,30 @@
+<Order OrderID="10341">
+	<CustomerID>SIMOB</CustomerID>
+	<EmployeeID>7</EmployeeID>
+	<OrderDate>1996-10-29T09:48:19</OrderDate>
+	<RequiredDate>1996-11-26T21:30:38</RequiredDate>
+	<ShippedDate>1996-11-05T22:29:02</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>26.7800</Freight>
+	<ShipName>Simons bistro</ShipName>
+	<ShipAddress>Vinbæltet 34</ShipAddress>
+	<ShipCity>Kobenhavn</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>1734</ShipPostalCode>
+	<ShipCountry>Denmark</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>33</ProductID>
+			<UnitPrice>2.0000</UnitPrice>
+			<Quantity>8</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>59</ProductID>
+			<UnitPrice>44.0000</UnitPrice>
+			<Quantity>9</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

@@ -1,0 +1,13 @@
+<Customer CustomerID="WANDK">
+	<CompanyName>Die Wandernde Kuh</CompanyName>
+	<ContactName>Rita Müller</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Adenauerallee 900</Address>
+	<City>Stuttgart</City>
+	<Region/>
+	<PostalCode>70563</PostalCode>
+	<Country>Germany</Country>
+	<Phone>0711-020361</Phone>
+	<Fax>0711-035428</Fax>
+</Customer>
+

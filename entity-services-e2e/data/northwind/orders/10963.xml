@@ -1,0 +1,24 @@
+<Order OrderID="10963">
+	<CustomerID>FURIB</CustomerID>
+	<EmployeeID>9</EmployeeID>
+	<OrderDate>1998-03-19T05:55:10</OrderDate>
+	<RequiredDate>1998-04-16T13:11:34</RequiredDate>
+	<ShippedDate>1998-03-26T14:33:20</ShippedDate>
+	<ShipVia>3</ShipVia>
+	<Freight>2.7000</Freight>
+	<ShipName>Furia Bacalhau e Frutos do Mar</ShipName>
+	<ShipAddress>Jardim das rosas n. 32</ShipAddress>
+	<ShipCity>Lisboa</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>1675</ShipPostalCode>
+	<ShipCountry>Portugal</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>60</ProductID>
+			<UnitPrice>34.0000</UnitPrice>
+			<Quantity>2</Quantity>
+			<Discount>0.15</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

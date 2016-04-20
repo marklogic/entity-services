@@ -1,0 +1,12 @@
+<Product ProductID="48">
+	<ProductName>Chocolade</ProductName>
+	<SupplierID>22</SupplierID>
+	<CategoryID>3</CategoryID>
+	<QuantityPerUnit>10 pkgs.</QuantityPerUnit>
+	<UnitPrice>12.7500</UnitPrice>
+	<UnitsInStock>15</UnitsInStock>
+	<UnitsOnOrder>70</UnitsOnOrder>
+	<ReorderLevel>25</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

@@ -1,0 +1,30 @@
+<Order OrderID="10848">
+	<CustomerID>CONSH</CustomerID>
+	<EmployeeID>7</EmployeeID>
+	<OrderDate>1998-01-23T19:15:02</OrderDate>
+	<RequiredDate>1998-02-20T02:50:01</RequiredDate>
+	<ShippedDate>1998-01-29T22:44:39</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>38.2400</Freight>
+	<ShipName>Consolidated Holdings</ShipName>
+	<ShipAddress>Berkeley Gardens 12  Brewery</ShipAddress>
+	<ShipCity>London</ShipCity>
+	<ShipRegion/>
+	<ShipPostalCode>WX1 6LT</ShipPostalCode>
+	<ShipCountry>UK</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>5</ProductID>
+			<UnitPrice>21.3500</UnitPrice>
+			<Quantity>30</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>9</ProductID>
+			<UnitPrice>97.0000</UnitPrice>
+			<Quantity>3</Quantity>
+			<Discount>0</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

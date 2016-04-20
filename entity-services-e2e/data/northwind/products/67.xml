@@ -1,0 +1,12 @@
+<Product ProductID="67">
+	<ProductName>Laughing Lumberjack Lager</ProductName>
+	<SupplierID>16</SupplierID>
+	<CategoryID>1</CategoryID>
+	<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+	<UnitPrice>14.0000</UnitPrice>
+	<UnitsInStock>52</UnitsInStock>
+	<UnitsOnOrder>0</UnitsOnOrder>
+	<ReorderLevel>10</ReorderLevel>
+	<Discontinued>false</Discontinued>
+</Product>
+

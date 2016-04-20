@@ -1,0 +1,42 @@
+<Order OrderID="10372">
+	<CustomerID>QUEEN</CustomerID>
+	<EmployeeID>5</EmployeeID>
+	<OrderDate>1996-12-04T21:09:54</OrderDate>
+	<RequiredDate>1997-01-01T16:50:13</RequiredDate>
+	<ShippedDate>1996-12-09T23:04:42</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>890.7800</Freight>
+	<ShipName>Queen Cozinha</ShipName>
+	<ShipAddress>Alameda dos Canàrios, 891</ShipAddress>
+	<ShipCity>Sao Paulo</ShipCity>
+	<ShipRegion>SP</ShipRegion>
+	<ShipPostalCode>05487-020</ShipPostalCode>
+	<ShipCountry>Brazil</ShipCountry>
+	<OrderDetails>
+		<OrderDetail>
+			<ProductID>20</ProductID>
+			<UnitPrice>64.8000</UnitPrice>
+			<Quantity>12</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>38</ProductID>
+			<UnitPrice>210.8000</UnitPrice>
+			<Quantity>40</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>60</ProductID>
+			<UnitPrice>27.2000</UnitPrice>
+			<Quantity>70</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+		<OrderDetail>
+			<ProductID>72</ProductID>
+			<UnitPrice>27.8000</UnitPrice>
+			<Quantity>42</Quantity>
+			<Discount>0.25</Discount>
+		</OrderDetail>
+	</OrderDetails>
+</Order>
+

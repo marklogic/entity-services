@@ -1,0 +1,13 @@
+<Customer CustomerID="PRINI">
+	<CompanyName>Princesa Isabel Vinhos</CompanyName>
+	<ContactName>Isabel de Castro</ContactName>
+	<ContactTitle>Sales Representative</ContactTitle>
+	<Address>Estrada da saúde n. 58</Address>
+	<City>Lisboa</City>
+	<Region/>
+	<PostalCode>1756</PostalCode>
+	<Country>Portugal</Country>
+	<Phone>(1) 356-5634</Phone>
+	<Fax/>
+</Customer>
+

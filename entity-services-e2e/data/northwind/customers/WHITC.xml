@@ -1,0 +1,13 @@
+<Customer CustomerID="WHITC">
+	<CompanyName>White Clover Markets</CompanyName>
+	<ContactName>Karl Jablonski</ContactName>
+	<ContactTitle>Owner</ContactTitle>
+	<Address>305 - 14th Ave. S. Suite 3B</Address>
+	<City>Seattle</City>
+	<Region>WA</Region>
+	<PostalCode>98128</PostalCode>
+	<Country>USA</Country>
+	<Phone>(206) 555-4112</Phone>
+	<Fax>(206) 555-4115</Fax>
+</Customer>
+

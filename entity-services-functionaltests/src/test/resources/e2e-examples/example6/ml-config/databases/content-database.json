@@ -1,0 +1,30 @@
+{
+"database-name": "%%DATABASE%%", 
+"schema-database": "%%SCHEMAS_DATABASE%%", 
+"path-namespace": [
+{
+"prefix": "es", 
+"namespace-uri": "http://marklogic.com/entity-services"
+}
+], 
+"element-word-lexicon": [
+], 
+"range-path-index": [
+{
+"collation": "http://marklogic.com/collation/en", 
+"invalid-values": "reject", 
+"path-expression": "//es:instance/Customer/CompanyName", 
+"range-value-positions": false, 
+"scalar-type": "string"
+}, 
+{
+"collation": "http://marklogic.com/collation/en", 
+"invalid-values": "reject", 
+"path-expression": "//es:instance/Customer/Country", 
+"range-value-positions": false, 
+"scalar-type": "string"
+}
+], 
+"triple-index": true, 
+"collection-lexicon": true
+}

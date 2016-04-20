@@ -1,0 +1,194 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+<xs:complexType name="SchemaCompleteEntityTypeContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="SchemaCompleteEntityType">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="SchemaCompleteEntityTypeType">
+<xs:sequence>
+<xs:element ref="orderId">
+</xs:element>
+<xs:element ref="anyURIKey">
+</xs:element>
+<xs:element ref="base64BinaryKey">
+</xs:element>
+<xs:element ref="booleanKey">
+</xs:element>
+<xs:element ref="byteKey">
+</xs:element>
+<xs:element ref="dateKey">
+</xs:element>
+<xs:element ref="dateTimeKey">
+</xs:element>
+<xs:element ref="dayTimeDurationKey">
+</xs:element>
+<xs:element ref="decimalKey">
+</xs:element>
+<xs:element ref="doubleKey">
+</xs:element>
+<xs:element ref="durationKey">
+</xs:element>
+<xs:element ref="floatKey">
+</xs:element>
+<xs:element ref="gDayKey">
+</xs:element>
+<xs:element ref="gMonthKey">
+</xs:element>
+<xs:element ref="gMonthDayKey">
+</xs:element>
+<xs:element ref="gYearKey">
+</xs:element>
+<xs:element ref="gYearMonthKey">
+</xs:element>
+<xs:element ref="hexBinaryKey">
+</xs:element>
+<xs:element ref="intKey">
+</xs:element>
+<xs:element ref="integerKey">
+</xs:element>
+<xs:element ref="negativeIntegerKey">
+</xs:element>
+<xs:element ref="nonNegativeIntegerKey">
+</xs:element>
+<xs:element ref="positiveIntegerKey">
+</xs:element>
+<xs:element ref="nonPositiveIntegerKey">
+</xs:element>
+<xs:element ref="longKey">
+</xs:element>
+<xs:element ref="shortKey">
+</xs:element>
+<xs:element ref="stringKey">
+</xs:element>
+<xs:element ref="timeKey">
+</xs:element>
+<xs:element ref="unsignedByteKey">
+</xs:element>
+<xs:element ref="unsignedIntKey">
+</xs:element>
+<xs:element ref="unsignedLongKey">
+</xs:element>
+<xs:element ref="unsignedShortKey">
+</xs:element>
+<xs:element ref="yearMonthDurationKey">
+</xs:element>
+<xs:element ref="iriKey">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="arrayKey">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="arrayStringKey">
+</xs:element>
+<xs:element ref="referenceInThisFile">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="arrayreferenceInThisFile">
+</xs:element>
+<xs:element ref="externalReference">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="externalArrayReference">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="SchemaCompleteEntityType" type="SchemaCompleteEntityTypeType">
+</xs:element>
+<xs:element name="orderId" type="xs:string">
+</xs:element>
+<xs:element name="anyURIKey" type="xs:anyURI">
+</xs:element>
+<xs:element name="base64BinaryKey" type="xs:base64Binary">
+</xs:element>
+<xs:element name="booleanKey" type="xs:boolean">
+</xs:element>
+<xs:element name="byteKey" type="xs:byte">
+</xs:element>
+<xs:element name="dateKey" type="xs:date">
+</xs:element>
+<xs:element name="dateTimeKey" type="xs:dateTime">
+</xs:element>
+<xs:element name="dayTimeDurationKey" type="xs:dayTimeDuration">
+</xs:element>
+<xs:element name="decimalKey" type="xs:decimal">
+</xs:element>
+<xs:element name="doubleKey" type="xs:double">
+</xs:element>
+<xs:element name="durationKey" type="xs:duration">
+</xs:element>
+<xs:element name="floatKey" type="xs:float">
+</xs:element>
+<xs:element name="gDayKey" type="xs:gDay">
+</xs:element>
+<xs:element name="gMonthKey" type="xs:gMonth">
+</xs:element>
+<xs:element name="gMonthDayKey" type="xs:gMonthDay">
+</xs:element>
+<xs:element name="gYearKey" type="xs:gYear">
+</xs:element>
+<xs:element name="gYearMonthKey" type="xs:gYearMonth">
+</xs:element>
+<xs:element name="hexBinaryKey" type="xs:hexBinary">
+</xs:element>
+<xs:element name="intKey" type="xs:int">
+</xs:element>
+<xs:element name="integerKey" type="xs:integer">
+</xs:element>
+<xs:element name="negativeIntegerKey" type="xs:negativeInteger">
+</xs:element>
+<xs:element name="nonNegativeIntegerKey" type="xs:nonNegativeInteger">
+</xs:element>
+<xs:element name="positiveIntegerKey" type="xs:positiveInteger">
+</xs:element>
+<xs:element name="nonPositiveIntegerKey" type="xs:nonPositiveInteger">
+</xs:element>
+<xs:element name="longKey" type="xs:long">
+</xs:element>
+<xs:element name="shortKey" type="xs:short">
+</xs:element>
+<xs:element name="stringKey" type="xs:string">
+</xs:element>
+<xs:element name="timeKey" type="xs:time">
+</xs:element>
+<xs:element name="unsignedByteKey" type="xs:unsignedByte">
+</xs:element>
+<xs:element name="unsignedIntKey" type="xs:unsignedInt">
+</xs:element>
+<xs:element name="unsignedLongKey" type="xs:unsignedLong">
+</xs:element>
+<xs:element name="unsignedShortKey" type="xs:unsignedShort">
+</xs:element>
+<xs:element name="yearMonthDurationKey" type="xs:yearMonthDuration">
+</xs:element>
+<xs:element name="iriKey" type="sem:iri">
+</xs:element>
+<xs:element name="arrayKey" type="xs:long">
+</xs:element>
+<xs:element name="arrayStringKey" type="xs:string">
+</xs:element>
+<xs:element name="referenceInThisFile" type="OrderDetailsContainerType">
+</xs:element>
+<xs:element name="arrayreferenceInThisFile" type="OrderDetailsContainerType">
+</xs:element>
+<xs:element name="externalReference" type="xs:anyURI">
+</xs:element>
+<xs:element name="externalArrayReference" type="xs:anyURI">
+</xs:element>
+<xs:complexType name="OrderDetailsContainerType" mixed="true">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="OrderDetailsType">
+<xs:sequence>
+<xs:element ref="quantity">
+</xs:element>
+<xs:element ref="productName">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="OrderDetails" type="OrderDetailsType">
+</xs:element>
+<xs:element name="quantity" type="xs:integer">
+</xs:element>
+<xs:element name="productName" type="xs:string">
+</xs:element>
+</xs:schema>

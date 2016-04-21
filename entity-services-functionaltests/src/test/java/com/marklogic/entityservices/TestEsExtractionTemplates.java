@@ -81,12 +81,49 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			JsonNode schemaJson = template.get();
 			
 			JsonNode body = schemaJson.get("view");
-			logger.info("View body :::"+"whole view body ::::"+ body);
-			logger.info("View name  :::"+schemaName+"    Result :::"+body.get("name").asText());
-			logger.info("View has columns :::"+"Result ::::"+ body.get("columns"));
+			//logger.info("View body of view-name SchemaCompleteEntityType"+ body);
+			//logger.info("View name  :::"+schemaName+"    Result :::"+body.get("name").asText());
+			//logger.info("View has columns :::"+"Result ::::"+ body.get("columns"));
 			
 			assertEquals("View name", schemaName, body.get("name").asText());
 			assertTrue("View has columns", body.get("columns").isArray());
+			
+		
+		    String schemaName2 = "SchemaCompleteEntityType_arrayreferenceInThisFile";
+			//logger.info("Validating extraction template: " + entityType);
+			JacksonHandle template2 = new JacksonHandle();
+			try {
+				template2 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName2+"')", template2);
+			} catch (TestEvalException e) {
+				fail("View " + schemaName2 + " didn't exist");
+			}
+			JsonNode schemaJson2 = template2.get();
+			
+			JsonNode body2 = schemaJson2.get("view");
+			//logger.info("View body of view-name SchemaCompleteEntityType"+ body2);
+			//logger.info("View name  :::"+schemaName2+"    Result :::"+body2.get("name").asText());
+			//logger.info("View has columns :"+ body2.get("columns"));
+			
+			assertEquals("View name", schemaName2, body2.get("name").asText());
+			assertTrue("View has columns", body2.get("columns").isArray());
+			
+			String schemaName3 = "SchemaCompleteEntityType_externalArrayReference";
+			//logger.info("Validating extraction template: " + entityType);
+			JacksonHandle template3 = new JacksonHandle();
+			try {
+				template3 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName3+"')", template3);
+			} catch (TestEvalException e) {
+				fail("View " + schemaName3 + " didn't exist");
+			}
+			JsonNode schemaJson3 = template3.get();
+			
+			JsonNode body3 = schemaJson3.get("view");
+			//logger.info("View body of view-name SchemaCompleteEntityType"+ body3);
+			//logger.info("View name  :::"+schemaName3+"    Result :::"+body3.get("name").asText());
+			//logger.info("View has columns :"+ body3.get("columns"));
+			
+			assertEquals("View name", schemaName3, body3.get("name").asText());
+			assertTrue("View has columns", body3.get("columns").isArray());
 		
 	}
 	
@@ -105,9 +142,9 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			JsonNode schemaJson = template.get();
 			
 			JsonNode body = schemaJson.get("view");
-			logger.info("View body :::"+"whole view body ::::"+ body);
-			logger.info("View name  :::"+schemaName+"    Result :::"+body.get("name").asText());
-			logger.info("View has columns :::"+"Result ::::"+ body.get("columns"));
+			//logger.info("View body :::"+"whole view body ::::"+ body);
+			//logger.info("View name  :::"+schemaName+"    Result :::"+body.get("name").asText());
+			//logger.info("View has columns :::"+"Result ::::"+ body.get("columns"));
 			
 			assertEquals("View name", schemaName, body.get("name").asText());
 			assertTrue("View has columns", body.get("columns").isArray());

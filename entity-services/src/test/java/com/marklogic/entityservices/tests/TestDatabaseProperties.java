@@ -45,7 +45,7 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/expected-database-properties/content-database.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
-		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
+		org.hamcrest.MatcherAssert.assertThat(databaseConfiguration, org.hamcrest.Matchers.equalTo(control));
 	}
 	
 }

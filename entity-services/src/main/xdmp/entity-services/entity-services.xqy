@@ -74,8 +74,10 @@ declare function es:entity-type-to-json(
 };
 
 (:~
- : Generate a conversion module for a given entity type
- : @param An entity type document.
+ : Generates an XQuery module that can be customized and used
+ : to support transforms associated with an entity type
+ : @param $entity-type  An entity type object.
+ : @return An XQuery module (text) that can be edited and installed in a modules database.
  :)
 declare function es:conversion-module-generate(
     $entity-type as map:map

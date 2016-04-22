@@ -68,7 +68,8 @@
       },
       "primaryKey": "orderId",
       "required": ["orderId", "dateKey"],
-      "rangeIndex": ["byteKey", "shortKey", "unsignedByteKey", "unsignedShortKey", "stringKey",
+      "rangeIndex": ["arrayKey", "referenceInThisFile", "arrayreferenceInThisFile", "externalReference", 
+                     "externalArrayReference", "byteKey", "shortKey", "unsignedByteKey", "unsignedShortKey", "stringKey",
                      "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
                      "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey"],
       "wordLexicon": ["stringKey"]

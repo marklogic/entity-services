@@ -44,6 +44,13 @@
             "scalar-type": "string"
         }
     ],
+    "element-word-lexicon": [
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "localname": "runByRunner",
+            "namespace-uri": ""
+        }
+    ],
     "schema-database": "%%SCHEMAS_DATABASE%%",
     "triple-index": true
 }

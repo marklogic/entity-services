@@ -15,10 +15,6 @@ import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx
 import module namespace es = "http://marklogic.com/entity-services" 
     at "/MarkLogic/entity-services/entity-services.xqy";
 
-import module namespace i = "http://marklogic.com/entity-services-instance" 
-    at "/MarkLogic/entity-services/entity-services-instance.xqy";
-
-
 (:~
  : Creates a map:map representation of an entity instance from some source
  : document.
@@ -31,17 +27,17 @@ declare function race:extract-instance-Race(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>i:with(true(), '$type', 'Race')
+        =>es:with(true(), '$type', 'Race')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>i:with(true(), '$attachments', xdmp:quote($source-node))
-        =>i:with($source-node/name,             'name',                   data($source-node/name))
-        =>i:with($source-node/comprisedOfRuns,  'comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
-        =>i:with($source-node/wonByRunner,      'wonByRunner',            data($source-node/wonByRunner))
-        =>i:with($source-node/courseLength,     'courseLength',           data($source-node/courseLength))
+        =>es:with(true(), '$attachments', xdmp:quote($source-node))
+        =>es:with($source-node/name,             'name',                   data($source-node/name))
+        =>es:with($source-node/comprisedOfRuns,  'comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
+        =>es:with($source-node/wonByRunner,      'wonByRunner',            data($source-node/wonByRunner))
+        =>es:with($source-node/courseLength,     'courseLength',           data($source-node/courseLength))
 };
 
 (:~
@@ -55,14 +51,14 @@ declare function race:extract-instance-Run(
     let $runnerDoc := cts:search( collection("raw"), cts:json-property-value-query("name", $runner-name))
     return
     json:object()
-        =>i:with(true(), '$type', 'Run')
-        =>i:with(true(), '$attachments', xdmp:quote($source-node))
-        =>i:with($source-node/id,                'id',                     data($source-node/id))
-        =>i:with($source-node/date,              'date',                   data($source-node/date))
-        =>i:with($source-node/distance,          'distance',               data($source-node/distance))
-        =>i:with($source-node/distanceLabel,     'distanceLabel',               data($source-node/distanceLabel))
-        =>i:with($source-node/duration,          'duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
-        =>i:with($source-node/runByRunner,       'runByRunner',            race:extract-instance-Runner($runnerDoc))
+        =>es:with(true(), '$type', 'Run')
+        =>es:with(true(), '$attachments', xdmp:quote($source-node))
+        =>es:with($source-node/id,                'id',                     data($source-node/id))
+        =>es:with($source-node/date,              'date',                   data($source-node/date))
+        =>es:with($source-node/distance,          'distance',               data($source-node/distance))
+        =>es:with($source-node/distanceLabel,     'distanceLabel',               data($source-node/distanceLabel))
+        =>es:with($source-node/duration,          'duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
+        =>es:with($source-node/runByRunner,       'runByRunner',            race:extract-instance-Runner($runnerDoc))
 };
     
 (: modifying this one for JSON inputs, each a separate file :)
@@ -71,10 +67,10 @@ declare function race:extract-instance-Runner(
 ) as map:map
 {
     json:object()
-        =>i:with(true(), '$type', 'Runner')
-        =>i:with($source-node/name,           'name',                   data($source-node/name))
-        =>i:with($source-node/age,            'age',                    data($source-node/age))
-        =>i:with($source-node/gender,         'gender',                  data($source-node/gender))
+        =>es:with(true(), '$type', 'Runner')
+        =>es:with($source-node/name,           'name',                   data($source-node/name))
+        =>es:with($source-node/age,            'age',                    data($source-node/age))
+        =>es:with($source-node/gender,         'gender',                  data($source-node/gender))
 };
     
 

@@ -16,6 +16,10 @@
 xquery version "1.0-ml";
 
 
+(: This module supports code generation for entity services.
+ : This module has no public API.  See entity-services.xqy for
+ : the public interface.
+ :)
 module namespace es-codegen = "http://marklogic.com/entity-services-codegen";
 
 import module namespace esi = "http://marklogic.com/entity-services-impl"
@@ -27,12 +31,6 @@ declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
 
-(:~
- : Generates an XQuery module that can be customized and used
- : to support transforms associated with an entity type
- : @param $entity-type  An entity type object.
- : @return An XQuery module (text) that can be edited and installed in a modules database.
- :)
 declare function es-codegen:conversion-module-generate(
     $entity-type as map:map
 ) as document-node()
@@ -118,7 +116,8 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         =>es:with(true(), '$attachments', $source-node)
         (: The following lines are generated from the { $entity-type-key } entity type 
          : You need to ensure that all of the property paths are correct for your source
-         : data to populate instances.
+         : data to populate instances.  You can also implement lookup functions, or 
+         : populate the instance with constants.
          :)
     {
     (: Begin code generation block :)

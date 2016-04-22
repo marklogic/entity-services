@@ -151,6 +151,11 @@
       <es:primary-key>orderId</es:primary-key>
       <es:required>orderId</es:required>
       <es:required>dateKey</es:required>
+      <es:range-index>arrayKey</es:range-index>
+      <es:range-index>referenceInThisFile</es:range-index>
+      <es:range-index>arrayreferenceInThisFile</es:range-index>
+      <es:range-index>externalReference</es:range-index>
+      <es:range-index>externalArrayReference</es:range-index>
       <es:range-index>byteKey</es:range-index>
       <es:range-index>shortKey</es:range-index>
       <es:range-index>unsignedByteKey</es:range-index>

@@ -508,7 +508,16 @@ declare function esi:database-properties-generate(
         for $range-index-property in json:array-values($range-index-properties)
         let $ri-map := json:object()
         let $property := map:get(map:get($entity-type-map, "properties"), $range-index-property)
-        let $specified-datatype := head( (map:get($property, "datatype"), map:get(map:get($property, "items"), "datatype")) )
+        let $specified-datatype := 
+            if (map:contains($property, "datatype"))
+            then
+                if (map:get($property, "datatype") eq "array")
+                then 
+                    if (map:contains(map:get($property, "items"), "datatype"))
+                    then map:get(map:get($property, "items"), "datatype")
+                    else esi:ref-datatype($entity-type, $entity-type-name, $range-index-property)
+                else map:get($property, "datatype")
+            else esi:ref-datatype($entity-type, $entity-type-name, $range-index-property)
         let $datatype := esi:indexable-datatype($specified-datatype)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($ri-map, "collation", $collation)

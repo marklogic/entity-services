@@ -18,6 +18,41 @@
         {
             "collation": "http://marklogic.com/collation/en",
             "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/arrayKey",
+            "range-value-positions": false,
+            "scalar-type": "long"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/referenceInThisFile",
+            "range-value-positions": false,
+            "scalar-type": "string"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/arrayreferenceInThisFile",
+            "range-value-positions": false,
+            "scalar-type": "string"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/externalReference",
+            "range-value-positions": false,
+            "scalar-type": "string"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/externalArrayReference",
+            "range-value-positions": false,
+            "scalar-type": "string"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/SchemaCompleteEntityType/byteKey",
             "range-value-positions": false,
             "scalar-type": "int"

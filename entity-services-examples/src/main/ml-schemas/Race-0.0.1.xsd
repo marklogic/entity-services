@@ -13,7 +13,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Race" type="RaceType"/>
-  <xs:element name="name" type="xs:string"/>
   <xs:element name="comprisedOfRuns" type="RunContainerType"/>
   <xs:element name="wonByRunner" type="xs:anyURI"/>
   <xs:element name="courseLength" type="xs:decimal"/>

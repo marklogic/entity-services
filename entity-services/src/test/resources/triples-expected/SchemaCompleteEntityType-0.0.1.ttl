@@ -83,6 +83,7 @@ order:yearMonthDurationKey
 
 order:externalReference
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> ;
         es:title "externalReference" .
 
@@ -165,6 +166,7 @@ order:longKey
 
 order:arrayreferenceInThisFile
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items> ;
         es:title "arrayreferenceInThisFile" .
@@ -190,6 +192,7 @@ orderdetails:quantity
 
 order:externalArrayReference
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/externalArrayReference/items> ;
         es:title "externalArrayReference" .
@@ -205,6 +208,7 @@ order:doubleKey
 
 order:arrayKey
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayKey/items> ;
         es:title "arrayKey" .
@@ -268,5 +272,6 @@ orderdetails:productName
 
 order:referenceInThisFile
         a es:Property ;
+        a es:RangeIndexedProperty ;
         es:ref type:OrderDetails ;
         es:title "referenceInThisFile" .

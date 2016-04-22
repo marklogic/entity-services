@@ -129,6 +129,22 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
        }
     
     @Test
+    /* testing Invalid baseURi : */
+    public void testFromNodeInvalidBaseUriColon() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-baseUri-colon.xml");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-baseUri-colon.xml'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid baseUri. invalid-baseUri-colon.xml");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("If present, baseUri (es:base-uri) must be an absolute URI."));    		
+    	}
+    		
+    }
+    
+    @Test
     /* testing Invalid case sensitive datatype in json Entity Type doc */
     public void testFromNodeInvalidDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     		

@@ -1,4 +1,5 @@
 <Order xmlns:es="http://marklogic.com/entity-services">
+  <OrderID>10248</OrderID>
   <CustomerID>VINET</CustomerID>
   <OrderDate>1996-07-04T14:25:55</OrderDate>
   <ShipAddress>59 rue de l'Abbaye</ShipAddress>

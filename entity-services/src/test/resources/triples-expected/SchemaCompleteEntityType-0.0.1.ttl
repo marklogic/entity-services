@@ -85,6 +85,7 @@ order:externalReference
         a es:Property ;
         a es:RangeIndexedProperty ;
         es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> ;
+        es:description  "This property refers to a type externally with no array declaration." ;
         es:title "externalReference" .
 
 type:SchemaCompleteEntityType
@@ -92,6 +93,7 @@ type:SchemaCompleteEntityType
         es:title "SchemaCompleteEntityType" ;
         es:version "0.0.1" ;
         es:property order:arrayStringKey, order:decimalKey , order:unsignedLongKey , order:timeKey , order:referenceInThisFile , order:durationKey , order:doubleKey , order:externalArrayReference , order:floatKey , order:arrayKey , order:unsignedIntKey , order:yearMonthDurationKey , order:booleanKey , order:unsignedShortKey , order:shortKey , order:iriKey , order:dayTimeDurationKey , order:orderId , order:externalReference , order:byteKey , order:integerKey , order:dateTimeKey , order:dateKey , order:base64BinaryKey , order:gDayKey, order:gMonthKey, order:gMonthDayKey, order:gYearKey, order:gYearMonthKey, order:hexBinaryKey, order:arrayreferenceInThisFile , order:anyURIKey , order:stringKey , order:intKey , order:longKey, order:negativeIntegerKey, order:nonNegativeIntegerKey, order:positiveIntegerKey, order:nonPositiveIntegerKey, order:unsignedByteKey ;
+        es:description  "The type itself, with lots of properties." ;
         es:primaryKey order:orderId .
 
 order:byteKey
@@ -133,6 +135,7 @@ order:hexBinaryKey
 <http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
         a       es:EntityServicesDocument ;
         es:definitions type:OrderDetails , type:SchemaCompleteEntityType ;
+        es:description  "All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid." ;
         es:title "SchemaCompleteEntityType" ;
         es:version "0.0.1" .
 
@@ -169,6 +172,7 @@ order:arrayreferenceInThisFile
         a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items> ;
+        es:description  "This property refers to OrderDetails with an array declaration." ;
         es:title "arrayreferenceInThisFile" .
 
 <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items>
@@ -195,6 +199,7 @@ order:externalArrayReference
         a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/externalArrayReference/items> ;
+        es:description  "This property refers to external OrderDetails with an array declaration." ;
         es:title "externalArrayReference" .
 
         
@@ -274,4 +279,5 @@ order:referenceInThisFile
         a es:Property ;
         a es:RangeIndexedProperty ;
         es:ref type:OrderDetails ;
+        es:description  "This property refers to OrderDetails with no array declaration." ;
         es:title "referenceInThisFile" .

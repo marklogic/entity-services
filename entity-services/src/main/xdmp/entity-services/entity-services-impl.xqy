@@ -280,6 +280,7 @@ declare function esi:entity-type-to-xml(
                         else ()
                     }
                 },
+                esi:key-convert-to-xml($entity-type-map, "description"),
                 esi:key-convert-to-xml($entity-type-map, "primaryKey"),
                 esi:key-convert-to-xml($entity-type-map, "required"),
                 esi:key-convert-to-xml($entity-type-map, "rangeIndex"),
@@ -327,6 +328,7 @@ declare function esi:entity-type-from-xml(
             let $_ := esi:put-if-exists($entity-type-map, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
             let $_ := esi:put-if-exists($entity-type-map, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
             let $_ := esi:put-if-exists($entity-type-map, "wordLexicon", json:to-array($entity-type-node/es:word-lexicon/xs:string(.)))
+            let $_ := esi:put-if-exists($entity-type-map, "description", data($entity-type-node/es:description))
             return map:put($d, fn:local-name($entity-type-node), $entity-type-map)
         return $d
 

@@ -7,6 +7,7 @@
   },
   "definitions": {
     "SchemaCompleteEntityType": {
+      "description": "The type itself, with lots of properties.",
       "properties": {
         "orderId": {
           "datatype": "string",
@@ -62,7 +63,7 @@
         },
         "externalArrayReference": { 
             "datatype":"array",
-            "description":"This property refers to OrderDetails with no array declaration.",
+            "description":"This property refers to external OrderDetails with an array declaration.",
             "items":{ "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails"}
         }
       },

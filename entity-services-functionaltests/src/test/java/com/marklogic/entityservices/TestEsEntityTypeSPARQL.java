@@ -89,7 +89,8 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		//new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(System.out, results2);
 	
 		ArrayNode bindings2 = (ArrayNode) results2.get("results").get("bindings");
-		assertEquals(5, bindings2.size());
+		logger.info(bindings2.toString());
+		assertEquals(6, bindings2.size());
 		// Verify that Entity type doc has RDF type in it.
 		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", bindings2.get(0).get("p").get("value").asText());
 		assertEquals("http://marklogic.com/entity-services#EntityServicesDocument", bindings2.get(0).get("o").get("value").asText());
@@ -107,8 +108,12 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		assertEquals("0.0.1", bindings2.get(3).get("o").get("value").asText());
 		
 		// Verify that Entity type doc has title in it.
-		assertEquals("http://marklogic.com/entity-services#title", bindings2.get(4).get("p").get("value").asText());
-		assertEquals("SchemaCompleteEntityType", bindings2.get(4).get("o").get("value").asText());
+		assertEquals("http://marklogic.com/entity-services#description", bindings2.get(4).get("p").get("value").asText());
+		assertEquals("All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.", bindings2.get(4).get("o").get("value").asText());
+				
+		// Verify that Entity type doc has title in it.
+		assertEquals("http://marklogic.com/entity-services#title", bindings2.get(5).get("p").get("value").asText());
+		assertEquals("SchemaCompleteEntityType", bindings2.get(5).get("o").get("value").asText());
 		     
 	}
 	

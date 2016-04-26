@@ -1,0 +1,120 @@
+{
+  "info": {
+    "title": "DBProp-Ref-Same",
+    "version": "0.0.1",
+    "baseUri": "http://marklogic.com/testing-entity-type",
+    "description":"All Schema Elements represented in this type. Ref within document."
+  },
+  "definitions": {
+    "SchemaCompleteEntityType": {
+      "properties": {
+        "orderId": {
+          "datatype": "string",
+          "collation" : "http://marklogic.com/collation/"
+        },
+        "anyURIKey" : {"datatype":"anyURI"},
+        "base64BinaryKey": { "datatype": "base64Binary" },
+        "booleanKey": { "datatype": "boolean" },
+        "byteKey" : { "datatype" : "byte"},
+        "dateKey" : { "datatype" : "date"},
+        "dateTimeKey" : { "datatype" : "dateTime"},
+        "dayTimeDurationKey" : { "datatype" : "dayTimeDuration"},
+        "decimalKey" : { "datatype" : "decimal"},
+        "doubleKey" : { "datatype" : "double"},
+        "durationKey" : { "datatype" : "duration"},
+        "floatKey" : { "datatype" : "float"},
+        "gDayKey" : { "datatype" : "gDay"},
+        "gMonthKey" : { "datatype" : "gMonth"},
+        "gMonthDayKey" : { "datatype" : "gMonthDay"},
+        "gYearKey" : { "datatype" : "gYear"},
+        "gYearMonthKey" : { "datatype" : "gYearMonth"},
+        "hexBinaryKey" : { "datatype" : "hexBinary"},
+        "intKey" : { "datatype" : "int"},
+        "integerKey" : { "datatype" : "integer"},
+        "negativeIntegerKey" : { "datatype" : "negativeInteger"},
+        "nonNegativeIntegerKey" : { "datatype" : "nonNegativeInteger"},
+        "positiveIntegerKey" : { "datatype" : "positiveInteger"},
+        "nonPositiveIntegerKey" : { "datatype" : "nonPositiveInteger"},
+        "longKey" : { "datatype" : "long"},
+        "shortKey" : { "datatype" : "short"},
+        "stringKey" : { "datatype" : "string"},
+        "timeKey" : { "datatype" : "time"},
+        "unsignedByteKey" : { "datatype" : "unsignedByte"},
+        "unsignedIntKey" : { "datatype" : "unsignedInt"},
+        "unsignedLongKey" : { "datatype" : "unsignedLong"},
+        "unsignedShortKey" : { "datatype" : "unsignedShort"},
+        "yearMonthDurationKey" : { "datatype" : "yearMonthDuration"},
+        "iriKey": {"datatype":"iri"},
+        "arrayKey": {"datatype":"array","items":{"datatype":"long"}},
+        "arrayStringKey": {"datatype":"array","items":{"datatype":"string","collation":"http://marklogic.com/collation/"}},
+        "referenceInThisFile": { 
+             "$ref": "#/definitions/OrderDetails",
+             "description":"This property refers to OrderDetails with no array declaration."
+        },
+        "arrayreferenceInThisFile": { 
+            "datatype":"array",
+            "description":"This property refers to OrderDetails with an array declaration.",
+            "items":{"$ref": "#/definitions/OrderDetails"}
+        },
+        "externalReference": { 
+           "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails",
+           "description":"This property refers to a type externally with no array declaration."
+        },
+        "externalArrayReference": { 
+            "datatype":"array",
+            "description":"This property refers to OrderDetails with no array declaration.",
+            "items":{ "$ref": "http://myorganization.com/Schema-1.1.1/OrderDetails"}
+        }
+      },
+      "primaryKey": "orderId",
+      "required": ["orderId", "dateKey"],
+      "rangeIndex": ["anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
+      				 "unsignedByteKey", "unsignedShortKey", "stringKey", "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
+      				 "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey", "floatKey", "gDayKey", "gMonthKey", "gYearKey", 
+      				 "gYearMonthKey", "intKey", "longKey", "timeKey", "unsignedIntKey", "unsignedLongKey", "yearMonthDurationKey", "arrayKey", 
+      				 "arrayStringKey", "referenceInThisFile", "arrayreferenceInThisFile", "externalReference", "externalArrayReference"],
+      "wordLexicon": ["anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
+      				 "unsignedByteKey", "unsignedShortKey", "stringKey", "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
+      				 "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey", "floatKey", "gDayKey", "gMonthKey", "gYearKey", 
+      				 "gYearMonthKey", "intKey", "longKey", "timeKey", "unsignedIntKey", "unsignedLongKey", "yearMonthDurationKey", "arrayKey", 
+      				 "arrayStringKey", "referenceInThisFile", "arrayreferenceInThisFile", "externalReference", "externalArrayReference"]
+    },
+    "Order":{  
+         "properties":{  
+            "OrderID":{  
+               "datatype":"integer"
+            },
+            "productName":{  
+               "$ref":"#/definitions/OrderDetails"
+            },
+            "OrderDate":{  
+               "datatype":"dateTime"
+            },
+            "ShipAddress":{  
+               "datatype":"string"
+            },
+            "OrderDetails":{  
+               "datatype":"array",
+               "items":{  
+                  "$ref":"#/definitions/OrderDetails"
+               }
+            }
+         },
+         "primaryKey":"OrderID",
+         "required":["OrderID"],
+         "rangeIndex":["OrderDate", "productName", "OrderID"]
+    },
+    "OrderDetails": {
+      "properties": {
+        "quantity": {
+          "datatype": "integer"
+        },
+        "productName": {
+          "datatype": "string"
+        }
+      },
+      "primaryKey": "quantity"
+    }
+  }
+}
+

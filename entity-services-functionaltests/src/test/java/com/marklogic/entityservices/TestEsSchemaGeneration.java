@@ -93,7 +93,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 
 		for (String entityType : entityTypes) {
 			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")||entityType.contains("valid-ref-combo")||entityType.contains("valid-datatype-array")
-					||entityType.contains("valid-definitions-empty")||entityType.contains("valid-no-baseUri")) {
+					||entityType.contains("valid-definitions-empty")||entityType.contains("valid-no-baseUri")||entityType.contains("valid-simple-ref")) {
 				continue;
 			}
 

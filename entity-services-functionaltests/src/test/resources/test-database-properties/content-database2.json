@@ -131,7 +131,7 @@
 "invalid-values": "reject", 
 "path-expression": "//es:instance/Customer/ProductsPurchased", 
 "range-value-positions": false, 
-"scalar-type": "array"
+"scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 

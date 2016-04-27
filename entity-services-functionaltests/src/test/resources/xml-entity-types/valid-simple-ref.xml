@@ -7,8 +7,10 @@
   </es:info>
   <es:definitions>
     <SchemaCompleteEntityType>
+      <es:description>This is a entity type having all the ESD and IRIs.</es:description>
       <es:properties>
         <orderId>
+          <es:description>This is the Order ID property</es:description>
           <es:datatype>string</es:datatype>
           <es:collation>http://marklogic.com/collation/</es:collation>
         </orderId>
@@ -150,6 +152,7 @@
       <es:primary-key>orderId</es:primary-key>
       <es:required>orderId</es:required>
       <es:required>dateKey</es:required>
+      <es:range-index>orderId</es:range-index>
       <es:range-index>anyURIKey</es:range-index>
       <es:range-index>dateKey</es:range-index>
       <es:range-index>dateTimeKey</es:range-index>
@@ -186,6 +189,7 @@
       <es:range-index>arrayreferenceInThisFile</es:range-index>
       <es:range-index>externalReference</es:range-index>
       <es:range-index>externalArrayReference</es:range-index>
+      <es:word-lexicon>orderId</es:word-lexicon>
 	  <es:word-lexicon>anyURIKey</es:word-lexicon>
       <es:word-lexicon>dateKey</es:word-lexicon>
       <es:word-lexicon>dateTimeKey</es:word-lexicon>

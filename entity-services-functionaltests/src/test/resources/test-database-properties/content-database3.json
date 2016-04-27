@@ -9,6 +9,11 @@
    ],
    "element-word-lexicon":[  
       {  
+         "collation":"http://marklogic.com/collation/",
+         "localname":"orderId",
+         "namespace-uri":""
+      },
+      {  
          "collation":"http://marklogic.com/collation/en",
          "localname":"anyURIKey",
          "namespace-uri":""
@@ -190,6 +195,13 @@
       }
    ],
    "range-path-index":[  
+      {  
+         "collation":"http://marklogic.com/collation/",
+         "invalid-values":"reject",
+         "path-expression":"//es:instance/SchemaCompleteEntityType/orderId",
+         "range-value-positions":false,
+         "scalar-type":"string"
+      },
       {  
          "collation":"http://marklogic.com/collation/en",
          "invalid-values":"reject",

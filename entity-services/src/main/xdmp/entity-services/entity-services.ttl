@@ -1,0 +1,108 @@
+@prefix es:     <http://marklogic.com/entity-services#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix dc:     <http://purl.org/dc/terms/> .
+
+es:EntityServices a owl:Ontology ;
+    rdfs:label "MarkLogic Entity Services Vocabulary" ;
+    rdfs:comment "This vocabulary defines and documents IRIs used for making MarkLogic entity models." ;
+.
+
+es:EntityServicesDocument a owl:Class ;
+    rdfs:label "EntityServicesDocument" ;
+    rdfs:comment "A document that contains definitions for zero or more entity types." ;
+.
+
+es:EntityType a owl:Class ;
+    rdfs:label "EntityType" ;
+    rdfs:comment "An entity type is a MarkLogic modeling construct.  It defines a class of instances, each of which has a set of properties and other attributes associates with MarkLogic operations." ;
+.
+
+es:Property a owl:Class ;
+    rdfs:label "Property" ;
+    rdfs:comment "A es:Property is a MarkLogic modeling construct.  An entity type has zero or more properties, each of which can be a scalar property, an array, or a reference to an EntityType." ;
+.
+
+es:PrimaryKey a owl:Class ;
+    rdfs:label "PrimaryKey" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:comment "A es:PrimaryKey is a es:Property that is intended to uniquely identity instances of an Entity Type." ;
+.
+    
+
+es:RangeIndexedProperty a owl:Class ;
+    rdfs:label "RangeIndexedProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:comment "A es:RangeIndexedProperty is a es:Property that is backed by a range index in MarkLogic.  Its implementation is a path range index, with the same type (or supertype) of the property's declared es:datatype." ;
+.
+
+es:WordLexiconProperty a owl:Class ;
+    rdfs:label "WordLexiconProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:comment "A es:WordLexiconProperty is a es:Property that is backed by a word lexicon in MarkLogic."  ;
+.
+
+es:RequiredProperty a owl:Class ;
+    rdfs:label "RequiredProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:comment "A es:RequiredProperty must be present in all instances of a given type.  Schemas and extraction templates will expect a value to be present in each instance." 
+.
+
+es:title a owl:DatatypeProperty ;
+    rdfs:label "title" ;
+    rdfs:range xsd:NCName ;
+    rdfs:comment "An alphanumeric string (conforming to xsd:NCName) to identity an EntityServicesDocument, EntityType, or Property." ;
+.
+
+es:version a owl:DatatypeProperty ;
+    rdfs:label "version" ;
+    rdfs:comment "A string (semver recommended) used to identify the version of an EntityTypeDocument or EntityType." ;
+.
+ 
+es:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "A long-form textual description of an EntityServicesDocument, EntityType, or Property" ;
+.
+ 
+es:definitions a owl:ObjectProperty ;
+    rdfs:label "definitions" ;
+    rdfs:comment "A rdf:Property that links an EntityServicesDocument to its constituent EntityType definitions." ;
+    rdfs:domain es:EntityServicesDocument ;
+    rdfs:range es:EntityType ;
+.
+ 
+es:property a owl:ObjectProperty ;
+    rdfs:label "property" ;
+    rdfs:comment "A rdf:Property that links an EntityType to its constituent es:Property definitions" ;
+    rdfs:domain es:EntityType ;
+    rdfs:range es:Property ;
+.
+ 
+es:datatype a owl:DatatypeProperty ;
+    rdfs:label "datatype" ;
+    rdfs:comment "A rdf:Property that links an es:Property to a scalar type." ;
+    rdfs:domain es:Property ;
+.
+ 
+es:ref a owl:ObjectProperty ;
+    rdfs:label "ref" ;
+    rdfs:comment "A rdf:Property that links an es:Property to an instance of an EntityType." ;
+    rdfs:domain es:Property ;
+    rdfs:range es:EntityType ;
+.
+ 
+es:items a owl:ObjectProperty ;
+    rdfs:label "items" ;
+    rdfs:comment "A rdf:Property that links an es:Property of type array to the properties of its constituents." ;
+    rdfs:domain es:Property ;
+.
+ 
+es:collation a owl:DatatypeProperty ;
+    rdfs:label "collation" ;
+    rdfs:comment "A rdf:Property specifies the collation to use for range index and word lexicons based on properties." ;
+    rdfs:domain es:Property ;
+.
+ 
+

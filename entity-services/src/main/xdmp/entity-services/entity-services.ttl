@@ -95,7 +95,7 @@ es:property a owl:ObjectProperty ;
 es:datatype a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "datatype" ;
-    rdfs:comment "A rdf:Property that links an es:Property to a scalar type." ;
+    rdfs:comment "A rdf:Property that links an es:Property to a data type." ;
     rdfs:domain es:Property ;
 .
  

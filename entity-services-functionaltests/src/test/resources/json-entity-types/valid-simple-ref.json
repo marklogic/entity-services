@@ -7,8 +7,10 @@
   },
   "definitions": {
     "SchemaCompleteEntityType": {
+      "description": "This is a entity type having all the ESD and IRIs.",
       "properties": {
         "orderId": {
+          "description": "This is the Order ID property",
           "datatype": "string",
           "collation" : "http://marklogic.com/collation/"
         },
@@ -68,12 +70,12 @@
       },
       "primaryKey": "orderId",
       "required": ["orderId", "dateKey"],
-      "rangeIndex": ["anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
+      "rangeIndex": ["orderId", "anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
       				 "unsignedByteKey", "unsignedShortKey", "stringKey", "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
       				 "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey", "floatKey", "gDayKey", "gMonthKey", "gYearKey", 
       				 "gYearMonthKey", "intKey", "longKey", "timeKey", "unsignedIntKey", "unsignedLongKey", "yearMonthDurationKey", "arrayKey", 
       				 "arrayStringKey", "referenceInThisFile", "arrayreferenceInThisFile", "externalReference", "externalArrayReference"],
-      "wordLexicon": ["anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
+      "wordLexicon": ["orderId", "anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
       				 "unsignedByteKey", "unsignedShortKey", "stringKey", "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
       				 "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey", "floatKey", "gDayKey", "gMonthKey", "gYearKey", 
       				 "gYearMonthKey", "intKey", "longKey", "timeKey", "unsignedIntKey", "unsignedLongKey", "yearMonthDurationKey", "arrayKey", 

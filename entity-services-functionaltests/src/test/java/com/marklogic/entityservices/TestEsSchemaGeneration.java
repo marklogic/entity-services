@@ -102,13 +102,14 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			storeSchema(entityType, schemas.get(entityType));
 			DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
 					new DOMHandle());
+			removeSchema(entityType);
 
 			InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
 			Document filesystemXML = builder.parse(is);
 			XMLUnit.setIgnoreWhitespace(true);
 			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
 					validateResult.get());
-			removeSchema(entityType);
+			
 		}
 
 	}

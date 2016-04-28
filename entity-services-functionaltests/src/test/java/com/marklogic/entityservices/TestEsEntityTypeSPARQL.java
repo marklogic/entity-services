@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -89,7 +90,7 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		//new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(System.out, results2);
 	
 		ArrayNode bindings2 = (ArrayNode) results2.get("results").get("bindings");
-		logger.info(bindings2.toString());
+		//logger.info(bindings2.toString());
 		assertEquals(6, bindings2.size());
 		// Verify that Entity type doc has RDF type in it.
 		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", bindings2.get(0).get("p").get("value").asText());
@@ -189,4 +190,25 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 	    assertEquals("base64BinaryKey", bindings.get(2).get("o").get("value").asText());
 	
       }
+	
+	@Test
+	public void testSPARQLPropertyOrderId() throws JsonGenerationException, JsonMappingException, IOException {
+		
+		// This test verifies that property has RDFtype,title,rangeIndex, wordLexicon,required,title,version,description,collation and data type
+		String assertPropertyHasRDFtitledatatype =  "PREFIX t: <http://marklogic.com/testing-entity-type/DBProp-Ref-Same-0.0.1/SchemaCompleteEntityType/>"
+				+"SELECT ?p ?o "
+				+"WHERE { t:orderId ?p ?o }"
+				+"order by ?s";
+					
+		JacksonHandle handle= queryMgr.executeSelect(queryMgr.newQueryDefinition(assertPropertyHasRDFtitledatatype), new JacksonHandle());
+		JsonNode results = handle.get();
+		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testSPARQLPropertyOrderId.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+		
+		assertEquals(control, bindings);
+	}
+
 }

@@ -54,7 +54,7 @@ es:RequiredProperty a owl:Class ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "RequiredProperty" ;
     rdfs:subClassOf es:Property ;
-    rdfs:comment "A es:RequiredProperty must be present in all instances of a given type.  Schemas and extraction templates will expect a value to be present in each instance." 
+    rdfs:comment "A es:RequiredProperty must be present in all instances of a given type.  Schemas and extraction templates will expect a value to be present in each instance. (EA-3)" 
 .
 
 es:title a owl:DatatypeProperty ;
@@ -67,7 +67,7 @@ es:title a owl:DatatypeProperty ;
 es:version a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "version" ;
-    rdfs:comment "A string (semver recommended) used to identify the version of an EntityTypeDocument or EntityType." ;
+    rdfs:comment "A string (semver recommended) used to identify the version of an EntityServicesDocument or EntityType." ;
 .
  
 es:description a owl:DatatypeProperty ;

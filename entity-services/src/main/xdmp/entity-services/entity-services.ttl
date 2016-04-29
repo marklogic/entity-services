@@ -32,7 +32,7 @@ es:PrimaryKey a owl:Class ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "PrimaryKey" ;
     rdfs:subClassOf es:Property ;
-    rdfs:comment "A es:PrimaryKey is a es:Property that is intended to uniquely identity instances of an Entity Type." ;
+    rdfs:comment "A es:PrimaryKey is a es:Property that is intended to uniquely identity instances of an EntityType." ;
 .
     
 
@@ -73,7 +73,7 @@ es:version a owl:DatatypeProperty ;
 es:description a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "description" ;
-    rdfs:comment "A long-form textual description of an EntityServicesDocument, EntityType, or Property" ;
+    rdfs:comment "A long-form textual description of an EntityServicesDocument, EntityType, or Property." ;
 .
  
 es:definitions a owl:ObjectProperty ;
@@ -87,7 +87,7 @@ es:definitions a owl:ObjectProperty ;
 es:property a owl:ObjectProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "property" ;
-    rdfs:comment "A rdf:Property that links an EntityType to its constituent es:Property definitions" ;
+    rdfs:comment "A rdf:Property that links an EntityType to its constituent es:Property definitions." ;
     rdfs:domain es:EntityType ;
     rdfs:range es:Property ;
 .
@@ -102,7 +102,7 @@ es:datatype a owl:DatatypeProperty ;
 es:ref a owl:ObjectProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "ref" ;
-    rdfs:comment "A rdf:Property that links an es:Property to an instance of an EntityType." ;
+    rdfs:comment "A rdf:Property that links an es:Property to an instance of its own or another EntityType." ;
     rdfs:domain es:Property ;
     rdfs:range es:EntityType ;
 .

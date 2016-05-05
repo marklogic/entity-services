@@ -4,16 +4,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
@@ -52,7 +60,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")) {continue; };
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {continue; };
 			
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
@@ -151,6 +159,24 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 		
 	}
 	
+	@Test
+	public void verifyExtractionTemplateGenerate() throws TestEvalException, SAXException, IOException {
+
+		for (String entityType : entityTypes) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")) { continue;}
+
+			DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
+			Document template = handle.get();
+			
+			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType);
+			Document filesystemXML = builder.parse(is);
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					template);
+			
+		}
+
+	}
 	
 
 	@AfterClass

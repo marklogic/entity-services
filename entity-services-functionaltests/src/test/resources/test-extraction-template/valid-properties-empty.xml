@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>Extraction Template Generated from Entity Type Document
+            graph uri: http://example.org/Northwind-0.0.1</description>
+  <context>//es:instance</context>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Product</context>
+      <rows>
+        <row>
+          <schema-name>Northwind</schema-name>
+          <view-name>Product</view-name>
+          <columns>
+            <column>
+              <name>ProductName</name>
+              <scalar-type>string</scalar-type>
+              <val>ProductName</val>
+            </column>
+            <column>
+              <name>UnitPrice</name>
+              <scalar-type>integer</scalar-type>
+              <val>UnitPrice</val>
+            </column>
+            <column>
+              <name>SupplierID</name>
+              <scalar-type>integer</scalar-type>
+              <val>SupplierID</val>
+            </column>
+            <column>
+              <name>Discontinued</name>
+              <scalar-type>boolean</scalar-type>
+              <val>Discontinued</val>
+            </column>
+          </columns>
+        </row>
+      </rows>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
+      <rows>
+        <row>
+          <schema-name>Northwind</schema-name>
+          <view-name>Customer</view-name>
+          <columns>
+            <column>
+              <name>CustomerId</name>
+              <scalar-type>string</scalar-type>
+              <val>CustomerId</val>
+            </column>
+            <column>
+              <name>CompanyName</name>
+              <scalar-type>string</scalar-type>
+              <val>CompanyName</val>
+            </column>
+            <column>
+              <name>Country</name>
+              <scalar-type>string</scalar-type>
+              <val>Country</val>
+            </column>
+            <column>
+              <name>ContactName</name>
+              <scalar-type>string</scalar-type>
+              <val>ContactName</val>
+            </column>
+          </columns>
+        </row>
+      </rows>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Order</context>
+      <rows>
+        <row>
+          <schema-name>Northwind</schema-name>
+          <view-name>Order</view-name>
+          <columns />
+        </row>
+      </rows>
+    </template>
+  </templates>
+</template>

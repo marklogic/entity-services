@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>Extraction Template Generated from Entity Type Document
+            graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
+  <context>//es:instance</context>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates />
+</template>

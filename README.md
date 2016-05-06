@@ -2,9 +2,21 @@
 
 This is the repository for entity services, a feature in MarkLogic 9
 
-# Prerequisite
+It contains several sub-projects configured to build with gradle.
 
-To develop with this project, you'll need
+* one public API server module written in XQuery, several implementation modules.
+  This code is shipped with the server.  Unit tests are here under `entity-services.`
+
+* functional tests in `entity-services-functionaltests`
+
+* end-to-end scenario tests in `entity-services-e2e`
+
+* examples in `entity-services-examples`
+
+
+# Development Prerequisite 
+
+To *develop* with this project, you'll need
 
 * to clone this repository
 
@@ -26,6 +38,10 @@ to
 
 `{MarkLogicCheckout}/src/Modules/MarkLogic/entity-services`
 
+Now, when you import and use entity services code, it will be the copy served
+from this local checkout.
+
+
 # Setup
 
 To set up a server for running tests, 
@@ -34,5 +50,6 @@ To set up a server for running tests,
 
 This command takes the configuration at gradle.properties and
 creates forests, databases and servers for running the tests.
+It also sets up a separate database and server for examples.
 
 

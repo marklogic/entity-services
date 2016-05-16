@@ -61,6 +61,8 @@ declare variable $esi:entity-type-schematron :=
           <iso:assert test="empty(es:base-uri|baseUri) or matches(es:base-uri|baseUri, '^[a-z]+:')" id="ES-BASEURI">If present, baseUri (es:base-uri) must be an absolute URI.</iso:assert>
           <iso:assert test="(title|es:title) castable as xs:NCName">Title must have no whitespace and must start with a letter.</iso:assert>
         </iso:rule>
+        <iso:rule context="(definitions|es:definitions)"><iso:assert test="count(./*) ge 1" id="ES-DEFINITIONS">There must be at least one entity type in an entity services document.</iso:assert>
+        </iso:rule>
         <!-- XML version of primary key rule -->
         <iso:rule context="es:definitions/node()[es:primary-key]">
           <iso:assert test="count(./es:primary-key) eq 1" id="ES-PRIMARYKEY">For each Entity Type, only one primary key allowed.</iso:assert>

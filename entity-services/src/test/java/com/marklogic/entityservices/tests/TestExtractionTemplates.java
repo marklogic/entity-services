@@ -97,6 +97,9 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 			try {
 				template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
 			} catch (TestEvalException e) {
+                // one test, with no properties, creates an invalid TDE template.
+                // we accept that.
+                if (schemaName.equals("NoProperties")) continue;
 				fail("View " + schemaName + " didn't exist");
 			}
 			JsonNode schemaJson = template.get();

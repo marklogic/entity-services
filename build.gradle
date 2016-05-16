@@ -32,6 +32,11 @@ subprojects {
         testClassesDir file('build/classes/test')
     }
    
+    ext {
+        mlAppConfig {
+            createTriggersDatabase = false
+        }
+    }
 }
 
 

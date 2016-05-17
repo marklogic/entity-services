@@ -115,7 +115,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testFromNodeValidXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     	for (String entityType : entityTypes) {
           ObjectMapper mapper = new ObjectMapper();
-          logger.info("Checking "+entityType);
+          logger.info("Checking... "+entityType);
             	
             	if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
             	

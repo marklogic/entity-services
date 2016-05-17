@@ -79,6 +79,7 @@ import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 
 	private StringHandle xqueryModule = new StringHandle();
+	//Test
 	private static TextDocumentManager docMgr;
 	private static Map<String, StringHandle> conversionModules;
 	

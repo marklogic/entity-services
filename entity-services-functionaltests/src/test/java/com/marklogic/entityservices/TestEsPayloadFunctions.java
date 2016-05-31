@@ -192,6 +192,38 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
        }
     
     @Test
+    /* testing zero definitions/EntityTypes : */
+    public void testFromNodeNoEntityTypeJson() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-definitions-empty.json");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-definitions-empty.json'))", new JacksonHandle());	
+            		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.json");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: There must be at least one entity type in an entity services document."));    		
+    	}
+    		
+    }
+    
+    @Test
+    /* testing zero definitions/EntityTypes : */
+    public void testFromNodeNoEntityTypeXml() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking invalid-definitions-empty.xml");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-definitions-empty.xml'))", new JacksonHandle());	
+            		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.xml");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-ENTITY-TYPE-INVALID: There must be at least one entity type in an entity services document."));    		
+    	}
+    		
+    }
+    
+    @Test
     /* testing Invalid baseURi : */
     public void testFromNodeInvalidBaseUriColon() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     		

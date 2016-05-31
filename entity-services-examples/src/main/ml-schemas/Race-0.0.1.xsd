@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:complexType name="RaceContainerType" mixed="true">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="Race"/>

@@ -8,3 +8,7 @@
 .DS_Store
 .gitignore
 /build/
+.idea
+*.iml
+.gitignore
+classes

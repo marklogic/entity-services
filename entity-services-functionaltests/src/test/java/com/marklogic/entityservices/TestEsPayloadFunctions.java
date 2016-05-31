@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 MarkLogic Corporation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.marklogic.entityservices;
 
 import static org.junit.Assert.assertEquals;
@@ -22,12 +6,22 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.marklogic.client.eval.EvalResult.Type;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
@@ -41,6 +35,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -49,10 +44,62 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.io.IOUtils;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mortbay.log.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hp.hpl.jena.sparql.algebra.Transformer;
+import com.hp.hpl.jena.sparql.function.library.e;
+import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.TextDocumentManager;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.DocumentMetadataHandle;
+import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+//import com.marklogic.entityservices.tests.TestEvalException;
+import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 
 @SuppressWarnings("unused")
@@ -610,6 +657,103 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     }
     
     @Test
+	public void testJS() throws Exception {
+	
+	
+	 	try {
+		String query1 = " var results = 100;results";
+						
+		ServerEvaluationCall evl= client.newServerEval().javascript(query1);
+		
+        EvalResultIterator evr = evl.eval();
+		while (evr.hasNext()) {
+			EvalResult er = evr.next();
+			er.getNumber();
+		}
+		
+
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+    @Test
+	public void testJS2() throws Exception {
+	
+	
+	 	try {
+		String query1 = "var es = require('/MarkLogic/entity-services/entity-services.xqy');es.conversionModuleGenerate( es.entityTypeFromNode( fn.doc('valid-ref-combo-sameDocument-subIri.xml')));";
+        ServerEvaluationCall evl= client.newServerEval().javascript(query1);
+        String bindings="";
+        EvalResultIterator evr = evl.eval();
+        
+		while (evr.hasNext()) {
+			EvalResult er = evr.next();
+			 bindings = er.getType().toString();		
+		}
+				
+	    assertEquals("TEXTNODE",bindings);
+		
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+    
+    @Test
+	public void testJS3() throws Exception {
+	
+	
+	 	try {
+		String query1 = "var es = require('/MarkLogic/entity-services/entity-services.xqy');es.entityTypeFromNode( fn.doc('valid-ref-combo-sameDocument-subIri.xml'));";
+        ServerEvaluationCall evl= client.newServerEval().javascript(query1);
+        String bindings="";
+        EvalResultIterator evr = evl.eval();
+        
+		while (evr.hasNext()) {
+			EvalResult er = evr.next();
+			 bindings = er.getType().toString();		
+		}
+				
+	    assertEquals("JSON",bindings);
+		
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+    
+    @Test
+  	public void testJS4() throws Exception {
+  	
+  	
+  	 	try {
+  		String query1 = "var es = require('/MarkLogic/entity-services/entity-services.xqy');es.entityTypeFromNode( fn.doc('valid-ref-combo-sameDocument-subIri.xml'));";
+          ServerEvaluationCall evl= client.newServerEval().javascript(query1);
+          String bindings="";
+          EvalResultIterator evr = evl.eval();
+          
+  		while (evr.hasNext()) {
+  			EvalResult er = evr.next();
+  			 bindings = er.getString();		
+  		}
+  			
+  		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-js/js3.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+	
+		bindings.replaceAll(" ","");
+		System.out.println("bindings:::"+bindings);
+		control.toString().replaceAll(" ","");
+		System.out.println("control:::"+control.toString());
+		
+  	    //assertEquals(control.toString(),bindings);
+		assertNotNull(bindings);
+  		
+  		} catch (Exception e) {
+  			throw e;
+  		}
+  	}
+
+	@Test
     /* testing entity-type-from-node with rangeIndex error */
     public void testInvalidRangeIndexDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-from-node() with rangeIndex error");

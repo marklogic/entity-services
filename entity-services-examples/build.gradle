@@ -10,3 +10,18 @@ buildscript {
 }
 
 apply plugin: 'com.marklogic.ml-gradle'
+
+dependencies {
+    compile('com.marklogic:data-movement:1.0-SNAPSHOT') {
+        exclude(group: 'com.google.guava')
+    }
+
+    // compile('org.apache.camel:camel-core:2.15.3')
+    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.7.0')
+}
+
+ext {
+    mlAppConfig {
+        modulePaths.add("entity-services-examples/src/main/ml-modules")
+    }
+}

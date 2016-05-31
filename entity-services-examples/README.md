@@ -24,9 +24,6 @@ For now, use curl to load this entity type as a first step.  Entity type documen
 curl --user admin:admin --digest -X PUT --data-binary @src/main/ml-modules/entity-types/simple-race.json -Hcontent-type:application/json "http://localhost:8000/v1/documents?uri=simple-race.json&database=entity-services-examples-content&collection=http://marklogic.com/entity-services/entity-types"
 ```
 
-Future: ml-gradle will load entity types from here or another directory.
-
-
 
 ### Step 2 load staging data
 

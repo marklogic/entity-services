@@ -21,33 +21,30 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 
 /**
  *
  */
-public class CSVLoader {
+public class CSVLoader extends ExamplesBase {
+
 
     private static Logger logger = LoggerFactory.getLogger(CSVLoader.class);
 
-    DataMovementManager moveMgr;
-    JobTicket ticket;
-    ObjectMapper csvMapper, mapper;
-    CsvSchema bootstrapSchema;
 
-    public CSVLoader() {
-        DatabaseClient client = DatabaseClientFactory.newClient("localhost", Integer.parseInt("8000"), "entity-services-examples-content", "admin", "admin", DatabaseClientFactory.Authentication.DIGEST);
+    private CsvSchema bootstrapSchema;
+    private ObjectMapper csvMapper;
 
-        moveMgr = DataMovementManager.newInstance();
-        moveMgr.setClient(client);
+    private CSVLoader() throws IOException {
+        super();
 
         bootstrapSchema = CsvSchema.emptySchema().withHeader();
         csvMapper = new CsvMapper();
-        mapper = new ObjectMapper();
 
 
     }
 
-    public void go() throws InterruptedException {
+    private void go() throws InterruptedException {
 
 
         logger.info("job started.");
@@ -67,7 +64,6 @@ public class CSVLoader {
                         }
                 );
                 ;
-        // .withTransform(offshoreTransform);
         ticket=moveMgr.startJob(batcher);
 
         try( DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), "*.csv") )
@@ -100,9 +96,10 @@ public class CSVLoader {
         batcher.flush();
     }
 
-    public String getSummaryReport() {
+    private String getSummaryReport() {
         JobReport report = moveMgr.getJobReport(ticket);
         if (report == null) {
+            // is this a bug or not implemented TODO
             return "Report is null";
         }
         else {

@@ -67,10 +67,16 @@ declare function es:entity-type-to-xml(
  : @param An entity type document.
  :)
 declare function es:entity-type-to-json(
-    $entity-type as map:map
+    $entity-type
 ) as object-node()
 {
-    xdmp:to-json($entity-type)/node()
+(: This function has no argument type because the XQuery engine otherwise
+ : casts nodes to map:map, which would be confusing for this particular
+ : function
+ :)
+    if ($entity-type instance of map:map)
+    then xdmp:to-json($entity-type)/node()
+    else fn:error( (), "ES-ENTITY-TYPE-INVALID", "Entity types must be map:map (or its subtype json:object)")
 };
 
 (:~

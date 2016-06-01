@@ -17,7 +17,7 @@
     "range-path-index": [
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/arrayKey",
             "range-value-positions": false,
             "scalar-type": "long"
@@ -25,118 +25,125 @@
         {
             "collation": "http://marklogic.com/collation/en",
             "invalid-values": "reject",
+            "path-expression": "//es:instance/SchemaCompleteEntityType/dateKey",
+            "range-value-positions": false,
+            "scalar-type": "date"
+        },
+        {
+            "collation": "http://marklogic.com/collation/en",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/referenceInThisFile",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/arrayreferenceInThisFile",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/externalReference",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/externalArrayReference",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/byteKey",
             "range-value-positions": false,
             "scalar-type": "int"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/shortKey",
             "range-value-positions": false,
             "scalar-type": "int"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedByteKey",
             "range-value-positions": false,
             "scalar-type": "unsignedInt"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedShortKey",
             "range-value-positions": false,
             "scalar-type": "unsignedInt"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/stringKey",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/iriKey",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/anyURIKey",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/booleanKey",
             "range-value-positions": false,
             "scalar-type": "string"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/integerKey",
             "range-value-positions": false,
             "scalar-type": "decimal"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/negativeIntegerKey",
             "range-value-positions": false,
             "scalar-type": "decimal"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/nonNegativeIntegerKey",
             "range-value-positions": false,
             "scalar-type": "decimal"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/positiveIntegerKey",
             "range-value-positions": false,
             "scalar-type": "decimal"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/SchemaCompleteEntityType/nonPositiveIntegerKey",
             "range-value-positions": false,
             "scalar-type": "decimal"

@@ -153,6 +153,7 @@
       <es:required>orderId</es:required>
       <es:required>dateKey</es:required>
       <es:range-index>arrayKey</es:range-index>
+      <es:range-index>dateKey</es:range-index>
       <es:range-index>referenceInThisFile</es:range-index>
       <es:range-index>arrayreferenceInThisFile</es:range-index>
       <es:range-index>externalReference</es:range-index>

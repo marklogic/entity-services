@@ -267,6 +267,7 @@ order:durationKey
 order:dateKey
         a es:Property ;
         a es:RequiredProperty ;
+        a es:RangeIndexedProperty ;
         es:datatype xs:date ;
         es:title "dateKey" .
 

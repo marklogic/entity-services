@@ -15,10 +15,6 @@
  */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -46,6 +42,8 @@ import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -254,7 +252,19 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
         }
 	
 	}
-	
+
+	//@Test
+	/* to test required, send an instance document with gaps to two different entity types */
+	public void testRequiredHandling() {
+
+		DocumentWriteSet writeSet = docMgr.newWriteSet();
+
+        // writeSet.add(moduleName, moduleMap.get(entityTypeName));
+        // docMgr.write(writeSet);
+
+		//fail("No test implemented yet.");
+	}
+
 	@AfterClass
 	public static void removeConversions() {
 		for (String entityType : conversionModules.keySet()) {

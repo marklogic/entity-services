@@ -170,7 +170,7 @@ public class TestSetup {
 	    
 	    Collection<File> testDocuments = getTestResources("/test-instances");
 	    
-	    	    Collection<File> extraDocuments = new ArrayList<File>();
+	    Collection<File> extraDocuments = new ArrayList<File>();
 	    extraDocuments.addAll(testDocuments);
 	    extraDocuments.addAll(sourceFiles);
 	    

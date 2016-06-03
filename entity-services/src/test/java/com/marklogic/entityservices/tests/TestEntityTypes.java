@@ -127,6 +127,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-missing-lexicon.xml", "doesn't exist.");
   		invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in an entity services document");
         invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in an entity services document");
+		invalidMessages.put("invalid-bad-property.json", "Each property must be an object, with either \"datatype\" or \"$ref\" as a key.");
     }
     
     @Test

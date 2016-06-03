@@ -1,0 +1,18 @@
+{
+  "info": {
+    "title": "invalid-bad-property",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/test",
+    "description": "This invalid entity document has 'primaryKey' in the wrong place"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype": "string"
+        },
+        "primaryKey" : "CustomerId"
+      }
+    }
+  }
+}

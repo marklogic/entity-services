@@ -74,7 +74,9 @@ declare variable $esi:entity-type-schematron :=
         <iso:rule context="properties/object-node()">
           <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">If a property has $ref as a child, then it cannot have a datatype.</iso:assert>
           <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
-          <iso:assert test="./datatype|node('$ref')" id="ES-PROPETRY-IS-OBJECT">Each propery must be an object, with either "datatype" or "$ref" as a key</iso:assert>
+        </iso:rule>
+        <iso:rule context="properties/*">
+          <iso:assert test="./datatype|node('$ref')" id="ES-PROPERTY-IS-OBJECT">Each property must be an object, with either "datatype" or "$ref" as a key.</iso:assert>
         </iso:rule>
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">

@@ -626,7 +626,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an Invalid Coercion exception for entity-type-to-json() with a document node");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
+    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map"));
     	}
     }
   

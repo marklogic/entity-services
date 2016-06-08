@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
+import com.marklogic.client.io.*;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
@@ -39,9 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
 
 import static org.junit.Assert.*;
 
@@ -251,18 +249,6 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			}
         }
 	
-	}
-
-	//@Test
-	/* to test required, send an instance document with gaps to two different entity types */
-	public void testRequiredHandling() {
-
-		DocumentWriteSet writeSet = docMgr.newWriteSet();
-
-        // writeSet.add(moduleName, moduleMap.get(entityTypeName));
-        // docMgr.write(writeSet);
-
-		//fail("No test implemented yet.");
 	}
 
 	@AfterClass

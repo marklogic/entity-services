@@ -18,6 +18,7 @@ package com.marklogic.entityservices.tests;
 import java.io.OutputStream;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,6 +29,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.marklogic.client.query.StructuredQueryBuilder;
+import com.marklogic.client.query.StructuredQueryDefinition;
 import org.junit.AfterClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,10 +70,11 @@ public abstract class EntityServicesTestBase {
 	}
 	
 	
-	//@AfterClass
+	@AfterClass
 	public static void removeContent() {
 		TestSetup testSetup = TestSetup.getInstance();
 		testSetup.teardownClass();
+
 	}
 	
 	public static EvalResultIterator eval(String functionCall) throws TestEvalException {

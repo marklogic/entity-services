@@ -64,7 +64,7 @@ document {
  :     instances when storing them in documents.  You may choose to remove 
  :     code that denormalizes, and just include reference values in your instances 
  :     instead.
- : 3.  Source XPath expressions.  The data coming into the extract-instance={{X}} 
+ : 3.  Source XPath expressions.  The data coming into the extract-instance-{{X}} 
  :     functions will probably not be exactly what this module predicts.
  :
  : After modifying this file, put it in your project for deployment to the modules 
@@ -89,7 +89,9 @@ import module namespace es = "http://marklogic.com/entity-services"
  :  The resulting map is used by instance-to-canonical-xml to create documents
  :  in the database.
  :  
- :  There are numerous customizations you may wish to apply to this module.
+ :  It is expected that an implementer will edit at least XPath expressions in
+ :  the extraction functions.  It is less likely that you will want to edit
+ :  the instance-to-canonical-xml or envelope functions.
  :)
 { 
     for $entity-type-key in map:keys(map:get($entity-type, "definitions"))
@@ -107,17 +109,26 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
 {{
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', '{ $entity-type-key }')
+        =>map:with('$type', '{ $entity-type-key }')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
+         : If the source document is JSON, use 
+         : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
-        (: The following lines are generated from the { $entity-type-key } entity type 
+        =>map:with('$attachments', $source-node)
+        (: The following lines are generated from the '{ $entity-type-key }' entity type 
          : You need to ensure that all of the property paths are correct for your source
-         : data to populate instances.  You can also implement lookup functions, or 
+         : data to populate instances.  The general pattern is
+         : =>map:with('keyName', data($source-node/path/to/data/in/the/source))
+         : but you may also wish to convert values
+         : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
+         : You can also implement lookup functions, 
+         : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
          : populate the instance with constants.
+         : =>map:with('constantValue', 10)
+         : Once you've customized this function, write a test with expected inputs, and a test instance document
+         : created with es:entity-type-get-test-instances($entity-type)
          :)
     {
     (: Begin code generation block :)
@@ -152,12 +163,17 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
                    $path-to-property, 
                    ")")
             else
-               concat($path-to-property, "/node()")
+               concat(
+                '(: The following assignment comes from an external reference.  Its value probably requires developer attention :)',
+                $path-to-property, "/node()")
                 
+    (: if a property is required, use map:with to force inclusion :)
+    let $function-call-string :=
+        if ($property-key = ( map:get($this-type, "primaryKey"), json:array-values( map:get($this-type, "required")) ))
+        then "    =>   map:with("
+        else "    =>es:optional("
     return
-    (: include a call to conditional map:put :) 
-    concat("    =>es:with(",
-            functx:pad-string-to-length($path-to-property || ", " , " ", max( (string-length($path-to-property), 35) )+1 ),
+    concat($function-call-string, 
             functx:pad-string-to-length("'" || $property-key || "',", " ", max( (string-length($path-to-property), 25) )+1 ),
             $value, 
             ")&#10;   "

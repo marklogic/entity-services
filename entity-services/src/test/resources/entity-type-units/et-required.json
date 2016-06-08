@@ -12,12 +12,16 @@
         },
         "b": {
           "datatype": "string"
+        },
+        "c": {
+          "datatype": "date"
         }
       },
       "primaryKey": "a",
       "required": [
-        "b "
-      ]
+        "b"
+      ],
+      "rangeIndex":["a","b","c"]
     }
   }
 }

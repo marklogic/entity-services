@@ -207,20 +207,18 @@ declare function es:instance-get-attachments(
 
 
 (:~
- : Fluent method to add key/value pairs to an entity instance.
+ : Fluent method to add key/value pairs to an entity instance, if the value exists.
  : @param $instance An instance of map:map to add a key to.
- : @param $property-path - A en expression that, if non-empty, evaluates the property-key and value for addition to $instance.
  : @param $property-key - The key to add to $instance.
  : @param $value - the value to add to $instance for the given key.
 :)
-declare function es:with(
+declare function es:optional(
     $instance as map:map,
-    $property-path as item()*,
     $property-key as xs:string,
     $value as item()*
 ) as map:map
 {
-    if (exists($property-path))
+    if (exists($value))
     then 
     map:put($instance, $property-key, $value) 
     else (),

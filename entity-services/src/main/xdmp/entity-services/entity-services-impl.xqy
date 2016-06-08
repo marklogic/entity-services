@@ -578,6 +578,8 @@ declare function esi:schema-generate(
     {
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
+        let $primary-key-name := map:get($entity-type-map, "primaryKey")
+        let $required-properties := ( json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
         let $properties-map := map:get($entity-type-map, "properties")
         let $property-keys := map:keys($properties-map)
         return
@@ -589,15 +591,26 @@ declare function esi:schema-generate(
         </xs:complexType>,
         <xs:complexType name="{ $entity-type-name }Type">
             <xs:sequence>
-        {
-            for $property-name in $property-keys
-            let $property-map := map:get($properties-map, $property-name)
-            let $datatype := map:get($property-map, "datatype")
-            return
-                if ($datatype eq "array")
-                then <xs:element minOccurs="0" maxOccurs="unbounded" ref="{ $property-name }"/>
-                else <xs:element ref="{ $property-name }"/>
-        }
+            {
+                (: construct xs:element element for each property :)
+                for $property-name in $property-keys
+                let $property-map := map:get($properties-map, $property-name)
+                let $datatype := map:get($property-map, "datatype")
+                return
+                    element xs:element {
+                    (
+                    if ($datatype eq "array")
+                    then 
+                       ( attribute minOccurs { "0" },
+                         attribute maxOccurs { "unbounded" }
+                        )
+                    else if ($property-name = $required-properties )
+                    then ()
+                    else attribute minOccurs { "0" },
+                    attribute ref { $property-name }
+                    )
+                }
+            }
             </xs:sequence>
         </xs:complexType>,
         <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>,
@@ -714,6 +727,7 @@ declare function esi:extraction-template-generate(
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
         let $primary-key-name := map:get($entity-type-map, "primaryKey")
+        let $required-properties := ( json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
         let $properties-map := map:get($entity-type-map, "properties")
         let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
         let $property-keys := map:keys($properties-map)
@@ -732,6 +746,10 @@ declare function esi:extraction-template-generate(
                         if (map:get($property-properties, "datatype") eq "iri")
                         then "string"
                         else map:get($property-properties, "datatype")
+                    let $is-nullable := 
+                        if ($property-name = $required-properties)
+                        then ()
+                        else <tde:nullable>true</tde:nullable>
                     return
                         (: if the column is an array, skip it in scalar row :)
                         if (exists($items-map)) then ()
@@ -742,12 +760,14 @@ declare function esi:extraction-template-generate(
                                 <tde:name>{ $property-name }</tde:name>
                                 <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) } </tde:scalar-type>
                                 <tde:val>{ $property-name }</tde:val>
+                                {$is-nullable}
                             </tde:column>
                             else
                             <tde:column>
                                 <tde:name>{ $property-name }</tde:name>
                                 <tde:scalar-type>{ $datatype }</tde:scalar-type>
                                 <tde:val>{ $property-name }</tde:val>
+                                {$is-nullable}
                             </tde:column>
                     }
                     </tde:columns>
@@ -758,6 +778,7 @@ declare function esi:extraction-template-generate(
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
         let $primary-key-name := map:get($entity-type-map, "primaryKey")
+        let $required-properties := (json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
         let $properties-map := map:get($entity-type-map, "properties")
         let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
         let $property-keys := map:keys($properties-map)
@@ -768,6 +789,10 @@ declare function esi:extraction-template-generate(
             let $items-map := map:get($property-properties, "items")
             let $is-ref := map:contains($items-map, "$ref")
             let $is-local-ref := map:contains($items-map, "$ref") and starts-with( map:get($items-map, "$ref"), "#/definitions/")
+            let $is-nullable := 
+                if ($property-name = $required-properties)
+                then ()
+                else <tde:nullable>true</tde:nullable>
             let $items-datatype := 
                 if (map:get($items-map, "datatype") eq "iri")
                 then "string"
@@ -782,7 +807,7 @@ declare function esi:extraction-template-generate(
                         <tde:schema-name>{ $schema-name }</tde:schema-name>
                         <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
                         <tde:columns>
-                            <!-- this column joins to PK of 'parent' -->
+                            <!-- this column joins to primary key of '{$entity-type-name}' -->
                             <tde:column>
                                 <tde:name>{ $primary-key-name }</tde:name>
                                 <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
@@ -795,19 +820,27 @@ declare function esi:extraction-template-generate(
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) }</tde:scalar-type>
                                     <tde:val>.</tde:val>
+                                    {$is-nullable}
                                 </tde:column>
                             else
                                 <tde:column>
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
                                     <tde:val>.</tde:val>
+                                    {$is-nullable}
                                 </tde:column>,
                             if ($is-local-ref and esi:ref-has-no-primary-key($entity-type, $entity-type-name, $property-name))
                             then 
                                 let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
                                 return (
                                 map:get($scalar-rows, $ref-type-name)/tde:row[tde:view-name eq $ref-type-name ]/tde:columns/tde:column,
-                                map:delete($scalar-rows, $ref-type-name))
+                                map:put($scalar-rows, $ref-type-name,
+                                    comment { "No extraction template emitted for" || 
+                                               $ref-type-name || 
+                                               "as it was incorporated in another view. " 
+                                            }
+                                        )
+                                )
                             else ()
                             }
                         </tde:columns>
@@ -822,6 +855,14 @@ declare function esi:extraction-template-generate(
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows) 
         return
+        if (empty ( ( json:array-values(
+                        map:get(
+                            map:get( $definitions, $entity-type-name ), "required")),
+                        map:get(
+                            map:get( $definitions, $entity-type-name ), "primaryKey"))))
+        then comment { "S" }
+        else 
+
         <tde:template>
             <tde:context>./{ $entity-type-name }</tde:context>
             { 
@@ -847,8 +888,14 @@ declare function esi:extraction-template-generate(
                 <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
             </tde:path-namespace>
         </tde:path-namespaces>
-        <tde:templates>
-        { $entity-type-templates }
-        </tde:templates>
+        { 
+        if ( $entity-type-templates/element() )
+        then
+            <tde:templates>
+            { $entity-type-templates }
+            </tde:templates>
+        else
+            comment { "An entity type must have at least one required column or a primary key to generate an extraction template." }
+        }
     </tde:template>
 };

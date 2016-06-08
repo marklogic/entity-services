@@ -1,4 +1,4 @@
- {
+{
 "database-name": "%%DATABASE%%", 
 "schema-database": "%%SCHEMAS_DATABASE%%", 
 "path-namespace": [
@@ -37,14 +37,14 @@
 "range-path-index": [
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/CompanyName", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Country", 
 "range-value-positions": false, 
 "scalar-type": "string"
@@ -58,91 +58,91 @@
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/ContactName", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Weight", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Height", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Numberyrs", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Awards", 
 "range-value-positions": false, 
 "scalar-type": "float"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/Age", 
 "range-value-positions": false, 
 "scalar-type": "double"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/dateofShipment", 
 "range-value-positions": false, 
 "scalar-type": "date"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/dateofOrder", 
 "range-value-positions": false, 
 "scalar-type": "dateTime"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/CustSince", 
 "range-value-positions": false, 
 "scalar-type": "dayTimeDuration"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/DaysofSurfing", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Customer/ProductsPurchased", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Product/UnitPrice", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "reject", 
+"invalid-values": "ignore", 
 "path-expression": "//es:instance/Product/Discontinued", 
 "range-value-positions": false, 
 "scalar-type": "string"

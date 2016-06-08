@@ -240,6 +240,22 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     }
     
     @Test
+    /* testing bug38858 */
+    public void testEachPropertymusthaveObj() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    		
+            	logger.info("Checking bug38858.json");
+            	JacksonHandle handle = null;
+            	try {
+        			handle = evalOneResult("es:entity-type-from-node(fn:doc('bug38858.json'))", new JacksonHandle());	
+            		fail("eval should throw an exception for invalid ET.");
+        		} catch (TestEvalException e) {
+        			logger.info(e.getMessage());
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Each property must be an object"));    		
+    	}
+    		
+    }
+    
+    @Test
     /* testing Invalid case sensitive datatype in json Entity Type doc */
     public void testFromNodeInvalidDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     		

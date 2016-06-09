@@ -181,6 +181,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 		for (String entityType : entityTypes) {
 			if (entityType.contains(".json")||entityType.contains(".jpg")) { continue;}
 
+			logger.error(docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new StringHandle()).get());
 			DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
 			Document template = handle.get();
 			

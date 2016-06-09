@@ -1,4 +1,5 @@
 <Customer xmlns:es="http://marklogic.com/entity-services">
+<CustomerId/>
 <CompanyName>Vins et alcools Chevalier</CompanyName>
 <Country>France</Country>
 <Address>59 rue de l'Abbaye</Address>

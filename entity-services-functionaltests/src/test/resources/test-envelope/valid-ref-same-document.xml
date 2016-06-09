@@ -1,7 +1,9 @@
 <es:envelope xmlns:es="http://marklogic.com/entity-services"><es:instance><es:info>
       <es:title>Northwind-Ref-Same-Document</es:title>
       <es:version>0.0.1</es:version>
-    </es:info><Customer><CompanyName>Alfreds Futterkiste</CompanyName><Country>Germany</Country><Address>Obere Str. 57</Address></Customer></es:instance><es:attachments><Customer CustomerID="ALFKI">
+    </es:info><Customer>
+	<CustomerId/>
+	<CompanyName>Alfreds Futterkiste</CompanyName><Country>Germany</Country><Address>Obere Str. 57</Address></Customer></es:instance><es:attachments><Customer CustomerID="ALFKI">
 	<CompanyName>Alfreds Futterkiste</CompanyName>
 	<ContactName>Maria Anders</ContactName>
 	<ContactTitle>Sales Representative</ContactTitle>

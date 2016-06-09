@@ -493,9 +493,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
-				
-		//logger.info("XML IN String format is: \n" + writer.toString()); 
-		//logger.info("actualDoc now ::::" + actualDoc);
+
+		//logger.error("Entity type " + entityType);
+		//logger.error("XML IN String format is: \n" + writer.toString());
+		//logger.error("actualDoc now ::::" + actualDoc);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
 	}
@@ -652,9 +653,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
-				
-		//logger.info("XML IN String format is: \n" + writer.toString()); 
-		//logger.info("actualDoc now ::::" + actualDoc);
+
+		logger.error("Checking entity type " + entityType);
+		logger.error("XML IN String format is: \n" + writer.toString());
+		logger.error("actualDoc now ::::" + actualDoc);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);
 	}
@@ -715,6 +717,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
-		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));	
+		org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
 	}
 }

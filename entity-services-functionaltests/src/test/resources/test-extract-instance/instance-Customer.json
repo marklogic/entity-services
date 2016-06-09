@@ -1,6 +1,7 @@
 {
 "$type": "Customer", 
-"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Customer CustomerID=\"VINET\">\n\t<CompanyName>Vins et alcools Chevalier</CompanyName>\n\t<ContactName>Paul Henriot</ContactName>\n\t<ContactTitle>Accounting Manager</ContactTitle>\n\t<Address>59 rue de l'Abbaye</Address>\n\t<City>Reims</City>\n\t<Region/>\n\t<PostalCode>51100</PostalCode>\n\t<Country>France</Country>\n\t<Phone>26.47.15.10</Phone>\n\t<Fax>26.47.15.11</Fax>\n</Customer>", 
+"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Customer CustomerID=\"VINET\">\n\t<CompanyName>Vins et alcools Chevalier</CompanyName>\n\t<ContactName>Paul Henriot</ContactName>\n\t<ContactTitle>Accounting Manager</ContactTitle>\n\t<Address>59 rue de l'Abbaye</Address>\n\t<City>Reims</City>\n\t<Region/>\n\t<PostalCode>51100</PostalCode>\n\t<Country>France</Country>\n\t<Phone>26.47.15.10</Phone>\n\t<Fax>26.47.15.11</Fax>\n</Customer>",
+"CustomerId":"",
 "CompanyName": "Vins et alcools Chevalier", 
 "Country": "France", 
 "Address": "59 rue de l'Abbaye"

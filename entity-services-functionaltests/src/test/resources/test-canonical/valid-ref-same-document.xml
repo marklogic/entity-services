@@ -1,4 +1,5 @@
 <Customer>
+  <CustomerId/>
   <CompanyName>Alfreds Futterkiste</CompanyName>
   <Country>Germany</Country>
   <Address>Obere Str. 57</Address>

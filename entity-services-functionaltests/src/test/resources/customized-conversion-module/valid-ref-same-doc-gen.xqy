@@ -54,21 +54,21 @@ declare function northwind-Ref-Same-Document:extract-instance-Customer(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Customer')
+        =>map:with('$type', 'Customer')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
+        =>map:with('$attachments', $source-node)
         (: The following lines are generated from the Customer entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.
          :)
-        =>es:with($source-node/Customer/@CustomerId,   'CustomerId',                    data($source-node/Customer/@CustomerId))
-        =>es:with($source-node/Customer/CompanyName,  'CompanyName',                    data($source-node/Customer/CompanyName))
-        =>es:with($source-node/Customer/Country,      'Country',                    data($source-node/Customer/Country))
-        =>es:with($source-node/Customer/Address,      'Address',                    data($source-node/Customer/Address))
+        =>map:with('CustomerId',              data($source-node/Customer/@CustomerId))
+        =>map:with('CompanyName',                data($source-node/Customer/CompanyName))
+        =>map:with('Country',                    data($source-node/Customer/Country))
+        =>map:with('Address',                    data($source-node/Customer/Address))
    
 };
     
@@ -84,22 +84,22 @@ declare function northwind-Ref-Same-Document:extract-instance-Product(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Product')
+        =>map:with('$type', 'Product')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
+        =>map:with('$attachments', $source-node)
         (: The following lines are generated from the Product entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.
          :)
-        =>es:with($source-node/Product/ProductName,   'ProductName',                   data($source-node/Product/ProductName))
-        =>es:with($source-node/Product/ProductID,     'ProductID',                   data($source-node/Product/ProductID))
-        =>es:with($source-node/Product/UnitPrice,     'UnitPrice',                   data($source-node/Product/UnitPrice))
-        =>es:with($source-node/Product/SupplierID,    'SupplierID',                   data($source-node/Product/SupplierID))
-        =>es:with($source-node/Product/Discontinued,  'Discontinued',                   data($source-node/Product/Discontinued))
+        =>map:with('ProductName',                   data($source-node/Product/ProductName))
+        =>map:with('ProductID',                   data($source-node/Product/ProductID))
+        =>map:with('UnitPrice',                   data($source-node/Product/UnitPrice))
+        =>map:with('SupplierID',                   data($source-node/Product/SupplierID))
+        =>map:with('Discontinued',                   data($source-node/Product/Discontinued))
    
 };
     
@@ -115,22 +115,22 @@ declare function northwind-Ref-Same-Document:extract-instance-Order(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Order')
+        =>map:with('$type', 'Order')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
+        =>map:with('$attachments', $source-node)
         (: The following lines are generated from the Order entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.
          :)
-        =>es:with($source-node/Order/@OrderID,         'OrderID',                 data($source-node/Order/@OrderID))
-        =>es:with($source-node/Order/CustomerID,      'CustomerID',                 data($source-node/Order/CustomerID))
-        =>es:with($source-node/Order/OrderDate,       'OrderDate',                 data($source-node/Order/OrderDate))
-        =>es:with($source-node/Order/ShipAddress,     'ShipAddress',                 data($source-node/Order/ShipAddress))
-        =>es:with($source-node/Order/OrderDetails,    'OrderDetails',                 
+        =>map:with('OrderID',                 data($source-node/Order/@OrderID))
+        =>map:with('CustomerID',                 data($source-node/Order/CustomerID))
+        =>map:with('OrderDate',                 data($source-node/Order/OrderDate))
+        =>map:with('ShipAddress',                 data($source-node/Order/ShipAddress))
+        =>map:with('OrderDetails',
             if ($source-node/Order/OrderDetails/element())
             then json:to-array($source-node/Order/OrderDetails/* ! northwind-Ref-Same-Document:extract-instance-OrderDetail(.))
             else data($source-node/Order/OrderDetails))
@@ -149,23 +149,23 @@ declare function northwind-Ref-Same-Document:extract-instance-OrderDetail(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'OrderDetail')
+        =>map:with('$type', 'OrderDetail')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
+        =>map:with('$attachments', $source-node)
         (: The following lines are generated from the OrderDetail entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.
          :)
-        =>es:with($source-node/ProductID, 'ProductID',                       
+        =>map:with('ProductID',
             if ($source-node/ProductID/element())
             then json:to-array($source-node/ProductID ! northwind-Ref-Same-Document:extract-instance-Product(.))
             else data($source-node/ProductID))
-        =>es:with($source-node/UnitPrice, 'UnitPrice',                       data($source-node/UnitPrice))
-        =>es:with($source-node/Quantity,  'Quantity',                       data($source-node/Quantity))
+        =>map:with('UnitPrice',                       data($source-node/UnitPrice))
+        =>map:with('Quantity',                       data($source-node/Quantity))
    
 };
     

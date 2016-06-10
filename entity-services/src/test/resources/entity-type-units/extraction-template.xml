@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
-            Extraction Template Generated from Entity Type Document
-            graph uri: http://baloo/et-required-0.0.1</description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://baloo/et-required-0.0.1</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>

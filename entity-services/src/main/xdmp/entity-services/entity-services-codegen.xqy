@@ -125,7 +125,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
          : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
          : You can also implement lookup functions, 
          : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
-         : populate the instance with constants.
+         : or populate the instance with constants.
          : =>map:with('constantValue', 10)
          : Once you've customized this function, write a test with expected inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)

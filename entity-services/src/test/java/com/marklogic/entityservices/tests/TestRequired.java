@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.io.*;
-import org.assertj.core.api.SoftAssertionClassAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
@@ -91,7 +90,8 @@ public class TestRequired  extends EntityServicesTestBase {
 
         DOMHandle handle;
         handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new DOMHandle());
-        // save("/entity-type-units/extraction-template.xml", handle.get());
+        // String toWrite = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new StringHandle()).get();
+        // save("/entity-type-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/extraction-template.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
@@ -104,7 +104,8 @@ public class TestRequired  extends EntityServicesTestBase {
 
         DOMHandle handle;
         handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new DOMHandle());
-        // save("/entity-type-units/schema.xml", handle.get());
+        // String toWrite = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new StringHandle()).get();
+        // save("/entity-type-units/schema.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/schema.xml");
         Document filesystemXML = builder.parse(is);
         XMLUnit.setIgnoreWhitespace(true);

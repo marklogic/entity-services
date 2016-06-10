@@ -860,7 +860,9 @@ declare function esi:extraction-template-generate(
                             map:get( $definitions, $entity-type-name ), "required")),
                         map:get(
                             map:get( $definitions, $entity-type-name ), "primaryKey"))))
-        then comment { "S" }
+        then comment { "The template for " || $entity-type-name || 
+                       " cannot be generated.  Each template row requires " ||
+                       "a primary key or at least one requried property." }
         else 
 
         <tde:template>
@@ -878,8 +880,8 @@ declare function esi:extraction-template-generate(
     return
     <tde:template xmlns="http://marklogic.com/xdmp/tde">
         <tde:description>
-            Extraction Template Generated from Entity Type Document
-            graph uri: {esi:entity-type-graph-iri($entity-type)}
+Extraction Template Generated from Entity Type Document
+graph uri: {esi:entity-type-graph-iri($entity-type)}
         </tde:description>
         <tde:context>//es:instance</tde:context>
         <tde:path-namespaces>

@@ -162,20 +162,6 @@ declare function esi:entity-type-graph-iri(
 };
 
 
-
-(: this funcion stores the two templates in the schemas db.
- : once Config is supported, remove this function
-declare function esi:templates-bootstrap()
-{
-    xdmp:document-insert("json-entity-services.tde", $json-extraction-template,
-                                xdmp:default-permissions(),
-                                "http://marklogic.com/xdmp/tde"),
-    xdmp:document-insert("xml-entity-services.tde", $xml-extraction-template,
-                                xdmp:default-permissions(),
-                                "http://marklogic.com/xdmp/tde")
-};
- :)
-
 (: 
  : This function is useful for debugging
  : and testing, but preferred access to triples
@@ -744,7 +730,7 @@ declare function esi:extraction-template-generate(
                     let $items-map := map:get($property-properties, "items")
                     let $datatype := 
                         if (map:get($property-properties, "datatype") eq "iri")
-                        then "string"
+                        then "IRI"
                         else map:get($property-properties, "datatype")
                     let $is-nullable := 
                         if ($property-name = $required-properties)

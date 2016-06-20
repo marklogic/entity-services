@@ -56,10 +56,10 @@ declare function es:entity-type-from-node(
  : @param An entity type document.
  :)
 declare function es:entity-type-to-xml(
-    $entity-type as map:map
+    $entity-type
 ) as element(es:entity-type)
 {
-    esi:entity-type-to-xml($entity-type)
+    esi:ensure-entity-type($entity-type)=>esi:entity-type-to-xml()
 };
 
 (:~
@@ -70,13 +70,7 @@ declare function es:entity-type-to-json(
     $entity-type
 ) as object-node()
 {
-(: This function has no argument type because the XQuery engine otherwise
- : casts nodes to map:map, which would be confusing for this particular
- : function
- :)
-    if ($entity-type instance of map:map)
-    then xdmp:to-json($entity-type)/node()
-    else fn:error( (), "ES-ENTITY-TYPE-INVALID", "Entity types must be map:map (or its subtype json:object)")
+    xdmp:to-json(esi:ensure-entity-type($entity-type))/node()
 };
 
 (:~
@@ -86,10 +80,10 @@ declare function es:entity-type-to-json(
  : @return An XQuery module (text) that can be edited and installed in a modules database.
  :)
 declare function es:conversion-module-generate(
-    $entity-type as map:map
+    $entity-type
 ) as document-node()
 {
-    es-codegen:conversion-module-generate($entity-type)
+    esi:ensure-entity-type($entity-type)=>es-codegen:conversion-module-generate()
 };
 
 (:~
@@ -98,10 +92,10 @@ declare function es:conversion-module-generate(
  : @param An entity type document.
  :)
 declare function es:entity-type-get-test-instances(
-    $entity-type as map:map
+    $entity-type
 ) as element()*
 {
-    esi:entity-type-get-test-instances($entity-type)
+    esi:ensure-entity-type($entity-type)=>esi:entity-type-get-test-instances()
 };
 
 
@@ -115,10 +109,10 @@ declare function es:entity-type-get-test-instances(
  : @param An entity type document.
  :)
 declare function es:database-properties-generate(
-    $entity-type as map:map
+    $entity-type
 ) as document-node()
 {
-    esi:database-properties-generate($entity-type)
+    esi:ensure-entity-type($entity-type)=>esi:database-properties-generate()
 };
 
 
@@ -129,10 +123,10 @@ declare function es:database-properties-generate(
  : @return An XSD schema that can validate entity instances in XML form.
  :)
 declare function es:schema-generate(
-    $entity-type as map:map)
-as element()*
+    $entity-type
+) as element()*
 {
-    esi:schema-generate($entity-type)
+    esi:ensure-entity-type($entity-type)=>esi:schema-generate()
 };
 
 
@@ -143,11 +137,11 @@ as element()*
  : @param An entity type document.
  :)
 declare function es:extraction-template-generate(
-    $entity-type as map:map
+    $entity-type
 ) as document-node()
 {
     document {
-        esi:extraction-template-generate($entity-type) 
+        esi:ensure-entity-type($entity-type)=>esi:extraction-template-generate()
     }
 };
 

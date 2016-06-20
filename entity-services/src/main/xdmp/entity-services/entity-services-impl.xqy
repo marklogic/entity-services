@@ -887,3 +887,18 @@ graph uri: {esi:entity-type-graph-iri($entity-type)}
         }
     </tde:template>
 };
+
+
+(: This function has no argument type because the XQuery engine otherwise
+ : casts nodes to map:map, which would be confusing for this particular
+ : function
+ :)
+declare function esi:ensure-entity-type(
+    $entity-type
+) as map:map
+{
+    if ($entity-type instance of map:map)
+    then $entity-type
+    else fn:error( (), "ES-ENTITY-INVALID-TYPE", "Entity types must be map:map (or its subtype json:object)")
+};
+

@@ -109,6 +109,7 @@ public class TestRequired  extends EntityServicesTestBase {
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/schema.xml");
         Document filesystemXML = builder.parse(is);
         XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setIgnoreComments(true);
         assertXMLEqual("Control document for 'required' values in schemas. ", filesystemXML, handle.get());
     }
 

@@ -245,7 +245,7 @@ declare function {$prefix}:instance-to-envelope(
         element es:envelope {{
             element es:instance {{
                 element es:info {{
-                    element es:title {{ "{$title}" }},
+                    element es:title {{ map:get($entity-instance,'$type') }},
                     element es:version {{ "{$version}" }}
                 }},
                 {$prefix}:instance-to-canonical-xml($entity-instance)

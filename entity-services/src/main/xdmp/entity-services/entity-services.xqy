@@ -24,6 +24,7 @@ import module namespace es-codegen = "http://marklogic.com/entity-services-codeg
 import module namespace inst = "http://marklogic.com/entity-services-instance" at "entity-services-instance.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
+declare namespace search = "http://marklogic.com/appservices/search";
 
 declare variable $ENTITY-TYPES-IRI := "http://marklogic.com/entity-services#";
 
@@ -144,6 +145,22 @@ declare function es:extraction-template-generate(
         esi:ensure-entity-type($entity-type)=>esi:extraction-template-generate()
     }
 };
+
+
+(:~
+ : Generates an element for configuring Search API applications
+ : Intended as a starting point for developing a search grammar tailored
+ : for entity and relationship searches.
+ : @param An entity type document.
+ :)
+declare function es:search-options-generate(
+    $entity-type as map:map
+) 
+{
+    esi:ensure-entity-type($entity-type)=>esi:search-options-generate()
+};
+
+
 
 (:~
  : Given a document, gets the instance data 

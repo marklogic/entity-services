@@ -800,9 +800,13 @@ declare function esi:extraction-template-generate(
                                 <tde:val>../{ $primary-key-name }</tde:val>
                             </tde:column>
                             {
-                            if ($is-ref)
+                            if ($is-ref and esi:ref-has-no-primary-key($entity-type, $entity-type-name, $property-name))
                             then 
+                                ()
+                            else if ($is-ref)
+                            then
                                 <tde:column>
+                                    <!-- this column joins to primary key of '{$entity-type}' -->
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) }</tde:scalar-type>
                                     <tde:val>.</tde:val>
@@ -823,7 +827,7 @@ declare function esi:extraction-template-generate(
                                 map:put($scalar-rows, $ref-type-name,
                                     comment { "No extraction template emitted for" || 
                                                $ref-type-name || 
-                                               "as it was incorporated in another view. " 
+                                               "as it was incorporated into another view. " 
                                             }
                                         )
                                 )
@@ -846,7 +850,7 @@ declare function esi:extraction-template-generate(
                             map:get( $definitions, $entity-type-name ), "required")),
                         map:get(
                             map:get( $definitions, $entity-type-name ), "primaryKey"))))
-        then comment { "The template for " || $entity-type-name || 
+        then comment { "The standalone template for " || $entity-type-name || 
                        " cannot be generated.  Each template row requires " ||
                        "a primary key or at least one requried property." }
         else 
@@ -889,6 +893,148 @@ graph uri: {esi:entity-type-graph-iri($entity-type)}
 };
 
 
+declare private function esi:wrap-duplicates(
+    $all-constraints as map:map,
+    $property-name as xs:string,
+    $constraint-template as element()
+) as map:map
+{
+    if (map:contains($all-constraints, $property-name))
+    then 
+        map:with(
+            $all-constraints,
+            $property-name || xdmp:random(),
+            comment { "This constraint is a duplicate and is commented out so as to be a valid options node.&#10;",
+            xdmp:quote($constraint-template),
+            "&#10;"
+            })
+    else map:with($all-constraints, $property-name, $constraint-template)
+};
+
+
+(:
+ : Generates a configuration node for use with the MarkLogic Search API.
+ : The resulting node can be used to configure a search application over
+ : a corpus of entity types.
+ :)
+declare function esi:search-options-generate(
+    $entity-type as map:map
+) 
+{
+    let $info := map:get($entity-type, "info")
+    let $schema-name := map:get($info, "title")
+    let $definitions := map:get($entity-type, "definitions")
+    let $definition-keys := map:keys($definitions)
+    let $all-constraints := map:map()
+    let $all-tuples-definitions := json:array()
+    let $_ :=
+        for $entity-type-name in $definition-keys
+        let $entity-type-map := map:get($definitions, $entity-type-name)
+        let $primary-key-name := map:get($entity-type-map, "primaryKey")
+        let $properties-map := map:get($entity-type-map, "properties")
+        let $tuples-range-definitions := json:array()
+        let $_range-constraints :=
+            for $property-name in json:array-values(map:get($entity-type-map, "rangeIndex"))
+            let $property-map := map:get($properties-map, $property-name)
+            (: TODO refactor :)
+            let $specified-datatype := 
+                if (map:contains($property-map, "datatype"))
+                then
+                    if (map:get($property-map, "datatype") eq "array")
+                    then 
+                        if (map:contains(map:get($property-map, "items"), "datatype"))
+                        then map:get(map:get($property-map, "items"), "datatype")
+                        else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
+                    else map:get($property-map, "datatype")
+                else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
+            let $datatype := esi:indexable-datatype($specified-datatype)
+            let $collation := if ($datatype eq "string") 
+                then attribute
+                    collation { 
+                        head( (map:get($property-map, "collation"), "http://marklogic.com/collation/en") )
+                    }
+                else ()
+            let $range-definition := 
+                <search:range type="xs:{ $datatype }" facet="true">
+                    { $collation }
+                    <search:path-index
+                        xmlns:es="http://marklogic.com/entity-services">//es:instance/{$entity-type-name}/{$property-name}</search:path-index>
+                </search:range>
+            let $constraint-template :=
+                <search:constraint name="{ $property-name } ">
+                    {$range-definition}
+                </search:constraint>
+            let $_ := json:array-push($tuples-range-definitions, $range-definition)
+            return
+            (
+            esi:wrap-duplicates($all-constraints, $property-name, $constraint-template),
+            if (json:array-size($tuples-range-definitions) gt 0)
+            then
+                json:array-push($all-tuples-definitions,
+                    <search:tuples name="{ $entity-type-name }">
+                        {json:array-values($tuples-range-definitions)}
+                    </search:tuples>)
+            else ()
+            )
+       let $_word-constraints := 
+            for $property-name in json:array-values(map:get($entity-type-map, "wordLexicon"))
+            return
+            esi:wrap-duplicates($all-constraints, $property-name,
+                <search:constraint name="{ $property-name } ">
+                    <search:word>
+                        <search:element ns="" name="{ $property-name }"/>
+                    </search:word>
+                </search:constraint>)
+        let $_pk-constraint := 
+            esi:wrap-duplicates($all-constraints, $primary-key-name,
+                <search:constraint name="{ $primary-key-name } ">
+                    <search:value>
+                        <search:element ns="" name="{ $primary-key-name }"/>
+                    </search:value>
+                </search:constraint>)
+        return ()
+    let $types-expr := string-join( $definition-keys, "|" )
+    let $type-constraint :=
+        <search:constraint name="entity-type">
+            <search:value>
+                <search:element ns="http://marklogic.com/entity-services" name="title"/>
+            </search:value>
+        </search:constraint>
+    return
+    <search:options xmlns:search="http://marklogic.com/appservices/search">
+        {
+        $type-constraint, 
+        map:keys($all-constraints) ! map:get($all-constraints, .),
+        json:array-values($all-tuples-definitions),
+        comment { 
+            "Uncomment to return no results for a blank search, rather than the default of all results&#10;",           xdmp:quote(
+        <search:term>
+            <search:empty apply="no-results"/>
+        </search:term>),
+            "&#10;"
+        },
+        comment { "Change to 'filtered' to exclude false-positives in certain searches" },
+        <search:search-option>unfiltered</search:search-option>,
+        comment { "Modify document extraction to change results returned" },
+        <search:extract-document-data selected="include">
+            <search:extract-path xmlns:es="http://marklogic.com/entity-services">//es:instance/({ $types-expr })</search:extract-path>
+        </search:extract-document-data>,
+
+        comment { "Change or remove this additional-query to broaden search beyond entity instance documents" },
+        <search:additional-query>
+            <cts:element-query xmlns:cts="http://marklogic.com/cts">
+            <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
+            <cts:true-query/>
+            </cts:element-query>
+        </search:additional-query>,
+        comment { "To return facets, change this option to 'true' and edit constraints" },
+        <search:return-facets>false</search:return-facets>,
+        comment { "To return snippets, comment out or remove this option" },
+        <search:transform-results apply="empty-snippet" />
+        }
+    </search:options>
+};
+
 (: This function has no argument type because the XQuery engine otherwise
  : casts nodes to map:map, which would be confusing for this particular
  : function
@@ -899,6 +1045,6 @@ declare function esi:ensure-entity-type(
 {
     if ($entity-type instance of map:map)
     then $entity-type
-    else fn:error( (), "ES-ENTITY-INVALID-TYPE", "Entity types must be map:map (or its subtype json:object)")
+    else fn:error( (), "ES-ENTITY-TYPE-INVALID", "Entity types must be map:map (or its subtype json:object)")
 };
 

@@ -145,7 +145,7 @@ declare function et-required:instance-to-envelope(
         element es:envelope {
             element es:instance {
                 element es:info {
-                    element es:title { "et-required" },
+                    element es:title { map:get($entity-instance,'$type') },
                     element es:version { "0.0.1" }
                 },
                 et-required:instance-to-canonical-xml($entity-instance)

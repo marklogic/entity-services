@@ -27,17 +27,17 @@ declare function race:extract-instance-Race(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Race')
+        =>map:with('$type', 'Race')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', xdmp:quote($source-node))
-        =>es:with($source-node/name,             'name',                   data($source-node/name))
-        =>es:with($source-node/comprisedOfRuns,  'comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
-        =>es:with($source-node/wonByRunner,      'wonByRunner',            data($source-node/wonByRunner))
-        =>es:with($source-node/courseLength,     'courseLength',           data($source-node/courseLength))
+        =>map:with('$attachments', xdmp:quote($source-node))
+        =>map:with('name',                   data($source-node/name))
+        =>map:with('comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
+        =>map:with('wonByRunner',            data($source-node/wonByRunner))
+        =>map:with('courseLength',           data($source-node/courseLength))
 };
 
 (:~
@@ -51,14 +51,14 @@ declare function race:extract-instance-Run(
     let $runnerDoc := cts:search( collection("raw"), cts:json-property-value-query("name", $runner-name))
     return
     json:object()
-        =>es:with(true(), '$type', 'Run')
-        =>es:with(true(), '$attachments', xdmp:quote($source-node))
-        =>es:with($source-node/id,                'id',                     data($source-node/id))
-        =>es:with($source-node/date,              'date',                   data($source-node/date))
-        =>es:with($source-node/distance,          'distance',               data($source-node/distance))
-        =>es:with($source-node/distanceLabel,     'distanceLabel',               data($source-node/distanceLabel))
-        =>es:with($source-node/duration,          'duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
-        =>es:with($source-node/runByRunner,       'runByRunner',            race:extract-instance-Runner($runnerDoc))
+        =>map:with('$type', 'Run')
+        =>map:with('$attachments', xdmp:quote($source-node))
+        =>map:with('id',                     data($source-node/id))
+        =>map:with('date',                   data($source-node/date))
+        =>map:with('distance',               data($source-node/distance))
+        =>map:with('distanceLabel',               data($source-node/distanceLabel))
+        =>map:with('duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
+        =>map:with('runByRunner',            race:extract-instance-Runner($runnerDoc))
 };
     
 (: modifying this one for JSON inputs, each a separate file :)
@@ -67,10 +67,10 @@ declare function race:extract-instance-Runner(
 ) as map:map
 {
     json:object()
-        =>es:with(true(), '$type', 'Runner')
-        =>es:with($source-node/name,           'name',                   data($source-node/name))
-        =>es:with($source-node/age,            'age',                    data($source-node/age))
-        =>es:with($source-node/gender,         'gender',                  data($source-node/gender))
+        =>map:with('$type', 'Runner')
+        =>map:with('name',                   data($source-node/name))
+        =>map:with('age',                    data($source-node/age))
+        =>map:with('gender',                  data($source-node/gender))
 };
     
 
@@ -135,7 +135,7 @@ declare function race:instance-to-envelope(
         element es:envelope {
             element es:instance {
                 element es:info {
-                    element es:title { "Race" },
+                    element es:title { map:get($entity-instance, '$type') },
                     element es:version { "0.0.1" }
                 },
                 race:instance-to-canonical-xml($entity-instance)

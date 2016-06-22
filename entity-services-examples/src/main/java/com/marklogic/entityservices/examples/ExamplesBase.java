@@ -3,6 +3,7 @@ package com.marklogic.entityservices.examples;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
+import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
@@ -55,7 +56,7 @@ public class ExamplesBase {
                     importOrDescend(entry, batcher, collection);
                 } else {
                     logger.info("Adding " + entry.getFileName().toString());
-                    String uri = entry.getFileName().toString();
+                    String uri = entry.toString();
                     if (collection != null) {
                         DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection);
                         batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(Format.JSON));

@@ -17,14 +17,14 @@
     "range-path-index": [
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/Run/date",
             "range-value-positions": false,
             "scalar-type": "date"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
+            "invalid-values": "ignore",
             "path-expression": "//es:instance/Run/distance",
             "range-value-positions": false,
             "scalar-type": "decimal"

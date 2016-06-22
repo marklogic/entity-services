@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
-            graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</description>
+graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>
@@ -26,16 +26,19 @@
               <name>UnitPrice</name>
               <scalar-type>integer</scalar-type>
               <val>UnitPrice</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>SupplierID</name>
               <scalar-type>integer</scalar-type>
               <val>SupplierID</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Discontinued</name>
               <scalar-type>boolean</scalar-type>
               <val>Discontinued</val>
+              <nullable>true</nullable>
             </column>
           </columns>
         </row>
@@ -57,71 +60,85 @@
               <name>CompanyName</name>
               <scalar-type>string</scalar-type>
               <val>CompanyName</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Country</name>
               <scalar-type>boolean</scalar-type>
               <val>Country</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>ContactName</name>
-              <scalar-type>string</scalar-type>
+              <scalar-type>IRI</scalar-type>
               <val>ContactName</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Liking</name>
               <scalar-type>anyURI</scalar-type>
               <val>Liking</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Age</name>
               <scalar-type>double</scalar-type>
               <val>Age</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Height</name>
               <scalar-type>int</scalar-type>
               <val>Height</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Weight</name>
               <scalar-type>short</scalar-type>
               <val>Weight</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>YearsofService</name>
               <scalar-type>gYearMonth</scalar-type>
               <val>YearsofService</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Numberyrs</name>
               <scalar-type>byte</scalar-type>
               <val>Numberyrs</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Awards</name>
               <scalar-type>float</scalar-type>
               <val>Awards</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>dateofShipment</name>
               <scalar-type>date</scalar-type>
               <val>dateofShipment</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>dateofOrder</name>
               <scalar-type>dateTime</scalar-type>
               <val>dateofOrder</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>CustSince</name>
               <scalar-type>dayTimeDuration</scalar-type>
               <val>CustSince</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>DaysofSurfing</name>
               <scalar-type>nonNegativeInteger</scalar-type>
               <val>DaysofSurfing</val>
+              <nullable>true</nullable>
             </column>
           </columns>
         </row>
@@ -135,7 +152,7 @@
               <view-name>Customer_ProductsPurchased</view-name>
               <columns>
                 <!--
- this column joins to PK of 'parent' 
+ this column joins to primary key of '{$entity-type-name}' 
 -->
                 <column>
                   <name>CustomerId</name>
@@ -146,6 +163,7 @@
                   <name>ProductsPurchased</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
+                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>

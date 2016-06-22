@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
-            graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1</description>
+graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>
@@ -26,21 +26,25 @@
               <name>anyURIKey</name>
               <scalar-type>anyURI</scalar-type>
               <val>anyURIKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>base64BinaryKey</name>
               <scalar-type>base64Binary</scalar-type>
               <val>base64BinaryKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>booleanKey</name>
               <scalar-type>boolean</scalar-type>
               <val>booleanKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>byteKey</name>
               <scalar-type>byte</scalar-type>
               <val>byteKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>dateKey</name>
@@ -51,151 +55,181 @@
               <name>dateTimeKey</name>
               <scalar-type>dateTime</scalar-type>
               <val>dateTimeKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>dayTimeDurationKey</name>
               <scalar-type>dayTimeDuration</scalar-type>
               <val>dayTimeDurationKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>decimalKey</name>
               <scalar-type>decimal</scalar-type>
               <val>decimalKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>doubleKey</name>
               <scalar-type>double</scalar-type>
               <val>doubleKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>durationKey</name>
               <scalar-type>duration</scalar-type>
               <val>durationKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>floatKey</name>
               <scalar-type>float</scalar-type>
               <val>floatKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>gDayKey</name>
               <scalar-type>gDay</scalar-type>
               <val>gDayKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>gMonthKey</name>
               <scalar-type>gMonth</scalar-type>
               <val>gMonthKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>gMonthDayKey</name>
               <scalar-type>gMonthDay</scalar-type>
               <val>gMonthDayKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>gYearKey</name>
               <scalar-type>gYear</scalar-type>
               <val>gYearKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>gYearMonthKey</name>
               <scalar-type>gYearMonth</scalar-type>
               <val>gYearMonthKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>hexBinaryKey</name>
               <scalar-type>hexBinary</scalar-type>
               <val>hexBinaryKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>intKey</name>
               <scalar-type>int</scalar-type>
               <val>intKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>integerKey</name>
               <scalar-type>integer</scalar-type>
               <val>integerKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>negativeIntegerKey</name>
               <scalar-type>negativeInteger</scalar-type>
               <val>negativeIntegerKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>nonNegativeIntegerKey</name>
               <scalar-type>nonNegativeInteger</scalar-type>
               <val>nonNegativeIntegerKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>positiveIntegerKey</name>
               <scalar-type>positiveInteger</scalar-type>
               <val>positiveIntegerKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>nonPositiveIntegerKey</name>
               <scalar-type>nonPositiveInteger</scalar-type>
               <val>nonPositiveIntegerKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>longKey</name>
               <scalar-type>long</scalar-type>
               <val>longKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>shortKey</name>
               <scalar-type>short</scalar-type>
               <val>shortKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>stringKey</name>
               <scalar-type>string</scalar-type>
               <val>stringKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>timeKey</name>
               <scalar-type>time</scalar-type>
               <val>timeKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>unsignedByteKey</name>
               <scalar-type>unsignedByte</scalar-type>
               <val>unsignedByteKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>unsignedIntKey</name>
               <scalar-type>unsignedInt</scalar-type>
               <val>unsignedIntKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>unsignedLongKey</name>
               <scalar-type>unsignedLong</scalar-type>
               <val>unsignedLongKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>unsignedShortKey</name>
               <scalar-type>unsignedShort</scalar-type>
               <val>unsignedShortKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>yearMonthDurationKey</name>
               <scalar-type>yearMonthDuration</scalar-type>
               <val>yearMonthDurationKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>iriKey</name>
-              <scalar-type>string</scalar-type>
+              <scalar-type>IRI</scalar-type>
               <val>iriKey</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>referenceInThisFile</name>
               <scalar-type>string</scalar-type>
               <val>referenceInThisFile</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>externalReference</name>
               <scalar-type>string</scalar-type>
               <val>externalReference</val>
+              <nullable>true</nullable>
             </column>
           </columns>
         </row>
@@ -209,7 +243,7 @@
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
               <columns>
                 <!--
- this column joins to PK of 'parent' 
+ this column joins to primary key of '{$entity-type-name}' 
 -->
                 <column>
                   <name>orderId</name>
@@ -220,6 +254,7 @@
                   <name>arrayStringKey</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
+                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>
@@ -233,7 +268,7 @@
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
               <columns>
                 <!--
- this column joins to PK of 'parent' 
+ this column joins to primary key of '{$entity-type-name}' 
 -->
                 <column>
                   <name>orderId</name>
@@ -244,16 +279,19 @@
                   <name>arrayreferenceInThisFile</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
+                  <nullable>true</nullable>
                 </column>
                 <column>
                   <name>quantity</name>
                   <scalar-type>integer</scalar-type>
                   <val>quantity</val>
+                  <nullable>true</nullable>
                 </column>
                 <column>
                   <name>productName</name>
                   <scalar-type>string</scalar-type>
                   <val>productName</val>
+                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>
@@ -267,7 +305,7 @@
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
               <columns>
                 <!--
- this column joins to PK of 'parent' 
+ this column joins to primary key of '{$entity-type-name}' 
 -->
                 <column>
                   <name>orderId</name>
@@ -278,6 +316,7 @@
                   <name>arrayKey</name>
                   <scalar-type>long</scalar-type>
                   <val>.</val>
+                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>
@@ -291,7 +330,7 @@
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
               <columns>
                 <!--
- this column joins to PK of 'parent' 
+ this column joins to primary key of '{$entity-type-name}' 
 -->
                 <column>
                   <name>orderId</name>
@@ -302,6 +341,7 @@
                   <name>externalArrayReference</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
+                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>
@@ -309,5 +349,8 @@
         </template>
       </templates>
     </template>
+    <!--
+The template for OrderDetails cannot be generated.  Each template row requires a primary key or at least one requried property.
+-->
   </templates>
 </template>

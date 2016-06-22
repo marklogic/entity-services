@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
-            graph uri: http://refSubjectUri#Northwind-Ref-Subject-Uri-0.0.1</description>
+graph uri: http://refSubjectUri#Northwind-Ref-Subject-Uri-0.0.1</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>
@@ -26,77 +26,26 @@
               <name>CompanyName</name>
               <scalar-type>string</scalar-type>
               <val>CompanyName</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Country</name>
               <scalar-type>string</scalar-type>
               <val>Country</val>
+              <nullable>true</nullable>
             </column>
             <column>
               <name>Address</name>
               <scalar-type>string</scalar-type>
               <val>Address</val>
+              <nullable>true</nullable>
             </column>
           </columns>
         </row>
       </rows>
     </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./Order</context>
-      <rows>
-        <row>
-          <schema-name>Northwind-Ref-Subject-Uri</schema-name>
-          <view-name>Order</view-name>
-          <columns>
-            <column>
-              <name>OrderID</name>
-              <scalar-type>integer</scalar-type>
-              <val>OrderID</val>
-            </column>
-            <column>
-              <name>CustomerID</name>
-              <scalar-type>integer</scalar-type>
-              <val>CustomerID</val>
-            </column>
-            <column>
-              <name>OrderDate</name>
-              <scalar-type>dateTime</scalar-type>
-              <val>OrderDate</val>
-            </column>
-            <column>
-              <name>ShipAddress</name>
-              <scalar-type>string</scalar-type>
-              <val>ShipAddress</val>
-            </column>
-          </columns>
-        </row>
-      </rows>
-      <templates>
-        <template>
-          <context>./OrderDetails</context>
-          <rows>
-            <row>
-              <schema-name>Northwind-Ref-Subject-Uri</schema-name>
-              <view-name>Order_OrderDetails</view-name>
-              <columns>
-                <!--
- this column joins to PK of 'parent' 
+    <!--
+The template for Order cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
-                <column>
-                  <name />
-                  <scalar-type />
-                  <val>../</val>
-                </column>
-                <column>
-                  <name>OrderDetails</name>
-                  <scalar-type>string</scalar-type>
-                  <val>.</val>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-      </templates>
-    </template>
   </templates>
 </template>

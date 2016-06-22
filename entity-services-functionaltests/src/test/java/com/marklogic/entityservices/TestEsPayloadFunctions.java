@@ -625,10 +625,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("es:entity-type-to-xml(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-    				fail("eval should throw an Invalid Coercion exception for entity-type-to-xml() with a document node");
+    				fail("eval should throw an ES-ENTITYTYPE INVALID exception for entity-type-to-xml() with a document node");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
+    				assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
     	}
     }
 
@@ -639,28 +639,27 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-    				fail("eval should throw an Invalid Coercion exception for entity-type-to-json() with a document node");
+    				fail("eval should throw an ES-ENTITYTYPE INVALID exception for entity-type-to-json() with a document node");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map"));
+    				assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map"));
     	}
     }
   
-    /*
     @Test
-     testing entity-type-to-json with json document node. Commented for BUG: 38517
+    /* testing entity-type-to-json with json document node. Commented for BUG: 38517 */
     public void testToJsonWithJsonDocumentNode() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking entity-type-to-json() with a document node");
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("es:entity-type-to-json(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-    				fail("eval should throw an Invalid Coercion exception for entity-type-to-json() with a document node");
+    				fail("eval should throw an ES-ENTITYTYPE INVALID exception for entity-type-to-json() with a document node");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain XDMP-AS error message but got: "+e.getMessage(), e.getMessage().contains("$entity-type as map:map -- Invalid coercion: xs:untypedAtomic"));
+    				assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
     	}
     }
-    */
+    
     
     @Test
     /* testing entity-type-to-json with no args */

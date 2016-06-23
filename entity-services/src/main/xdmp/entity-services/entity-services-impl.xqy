@@ -555,6 +555,49 @@ declare function esi:schema-generate(
 {
     let $definitions := map:get($entity-type, "definitions")
     let $definition-keys := map:keys($definitions)
+    let $element-declarations := map:map()
+    (: construct all the element declarations :)
+    let $_ := 
+        for $entity-type-name in $definition-keys
+        let $entity-type-map := map:get($definitions, $entity-type-name)
+        let $properties-map := map:get($entity-type-map, "properties")
+        let $property-keys := map:keys($properties-map)
+        for $property-name in $property-keys
+        let $property-map := map:get($properties-map, $property-name)
+        return
+            esi:wrap-duplicates($element-declarations, $property-name,
+                if (map:contains($property-map, "$ref"))
+                then 
+                    let $ref-value := map:get($property-map, "$ref")
+                    return
+                    if (contains($ref-value, "#/definitions/"))
+                    then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
+                    else <xs:element name="{ $property-name }" type="xs:anyURI"/>
+                else if (map:contains($property-map, "datatype"))
+                then
+                    let $datatype := map:get($property-map, "datatype")
+                    let $items-map := map:get($property-map, "items")
+                    return
+                        if ($datatype eq "array")
+                        then 
+                            if (map:contains($items-map, "$ref"))
+                            then
+                                let $ref-value := map:get($items-map, "$ref")
+                                return
+                                if (contains($ref-value, "#/definitions/"))
+                                then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
+                                else <xs:element name="{ $property-name }" type="xs:anyURI"/>
+                            else
+                                let $datatype := map:get($items-map, "datatype")
+                                return
+                                    if ($datatype eq "iri")
+                                    then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
+                                    else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+                        else if ($datatype eq "iri")
+                        then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
+                        else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+                else ()
+            )
     return
     <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema" 
@@ -562,6 +605,7 @@ declare function esi:schema-generate(
         elementFormDefault="qualified" 
         xmlns:es="http://marklogic.com/entity-services">
     {
+        map:keys($element-declarations) ! map:get($element-declarations, .),
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
         let $primary-key-name := map:get($entity-type-map, "primaryKey")
@@ -599,41 +643,7 @@ declare function esi:schema-generate(
             }
             </xs:sequence>
         </xs:complexType>,
-        <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>,
-        for $property-name in $property-keys
-        let $property-map := map:get($properties-map, $property-name)
-        return
-            if (map:contains($property-map, "$ref"))
-            then 
-                let $ref-value := map:get($property-map, "$ref")
-                return
-                if (contains($ref-value, "#/definitions/"))
-                then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
-                else <xs:element name="{ $property-name }" type="xs:anyURI"/>
-            else if (map:contains($property-map, "datatype"))
-            then
-                let $datatype := map:get($property-map, "datatype")
-                let $items-map := map:get($property-map, "items")
-                return
-                    if ($datatype eq "array")
-                    then 
-                        if (map:contains($items-map, "$ref"))
-                        then
-                            let $ref-value := map:get($items-map, "$ref")
-                            return
-                            if (contains($ref-value, "#/definitions/"))
-                            then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
-                            else <xs:element name="{ $property-name }" type="xs:anyURI"/>
-                        else
-                            let $datatype := map:get($items-map, "datatype")
-                            return
-                                if ($datatype eq "iri")
-                                then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
-                                else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
-                    else if ($datatype eq "iri")
-                    then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
-                    else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
-            else ()
+        <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>
         )
     }
     </xs:schema>
@@ -894,21 +904,21 @@ graph uri: {esi:entity-type-graph-iri($entity-type)}
 
 
 declare private function esi:wrap-duplicates(
-    $all-constraints as map:map,
+    $containing-map as map:map,
     $property-name as xs:string,
-    $constraint-template as element()
+    $item as element()
 ) as map:map
 {
-    if (map:contains($all-constraints, $property-name))
+    if (map:contains($containing-map, $property-name))
     then 
         map:with(
-            $all-constraints,
+            $containing-map,
             $property-name || xdmp:random(),
-            comment { "This constraint is a duplicate and is commented out so as to be a valid options node.&#10;",
-            xdmp:quote($constraint-template),
+            comment { "This item is a duplicate and is commented out so as to create a valid artifact.&#10;",
+            xdmp:quote($item),
             "&#10;"
             })
-    else map:with($all-constraints, $property-name, $constraint-template)
+    else map:with($containing-map, $property-name, $item)
 };
 
 

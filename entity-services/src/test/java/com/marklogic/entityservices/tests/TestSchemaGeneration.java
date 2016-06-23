@@ -77,7 +77,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 			logger.info("Generating schema: " + entityType);
 			StringHandle schema = new StringHandle();
 			try {
-				schema = evalOneResult("es:schema-generate( es:entity-type-from-node( fn:doc( '" + entityType + "')))",
+				schema = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()",
 						schema);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);

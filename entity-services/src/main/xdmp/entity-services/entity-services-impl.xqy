@@ -785,6 +785,7 @@ declare function esi:extraction-template-generate(
             let $items-map := map:get($property-properties, "items")
             let $is-ref := map:contains($items-map, "$ref")
             let $is-local-ref := map:contains($items-map, "$ref") and starts-with( map:get($items-map, "$ref"), "#/definitions/")
+            let $is-external-ref := $is-ref and not($is-local-ref)
             let $is-nullable := 
                 if ($property-name = $required-properties)
                 then ()
@@ -803,8 +804,10 @@ declare function esi:extraction-template-generate(
                         <tde:schema-name>{ $schema-name }</tde:schema-name>
                         <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
                         <tde:columns>
-                            <!-- this column joins to primary key of '{$entity-type-name}' -->
                             <tde:column>
+                                { comment { "This column joins to property",
+                                            $primary-key-name, "of",
+                                            $entity-type-name } }
                                 <tde:name>{ $primary-key-name }</tde:name>
                                 <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
                                 <tde:val>../{ $primary-key-name }</tde:val>
@@ -816,7 +819,8 @@ declare function esi:extraction-template-generate(
                             else if ($is-ref)
                             then
                                 <tde:column>
-                                    <!-- this column joins to primary key of '{$entity-type}' -->
+                                    { comment { "This column joins to primary key of",
+                                                esi:ref-type-name($entity-type, $entity-type-name, $property-name) } }
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($entity-type, $entity-type-name, $property-name) }</tde:scalar-type>
                                     <tde:val>.</tde:val>
@@ -824,11 +828,24 @@ declare function esi:extraction-template-generate(
                                 </tde:column>
                             else
                                 <tde:column>
+                                    { comment { "This column holds array values from property",
+                                                $primary-key-name, "of",
+                                                $entity-type-name } }
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
                                     <tde:val>.</tde:val>
                                     {$is-nullable}
                                 </tde:column>,
+                            if ($is-external-ref)
+                            then
+                                <tde:column>
+                                    { comment { "This column joins to primary key of an external reference" } }
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>string</tde:scalar-type>
+                                    <tde:val>.</tde:val>
+                                    {$is-nullable}
+                                </tde:column>
+                            else (),
                             if ($is-local-ref and esi:ref-has-no-primary-key($entity-type, $entity-type-name, $property-name))
                             then 
                                 let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)

@@ -11,7 +11,7 @@ graph uri: http://example.org/Northwind-0.0.1</description>
   </path-namespaces>
   <templates>
     <!--
-The template for Product cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for Product cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Customer</context>
@@ -48,7 +48,7 @@ The template for Product cannot be generated.  Each template row requires a prim
       </rows>
     </template>
     <!--
-The template for Order cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for Order cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
   </templates>
 </template>

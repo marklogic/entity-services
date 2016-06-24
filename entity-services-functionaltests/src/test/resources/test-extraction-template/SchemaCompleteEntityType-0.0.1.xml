@@ -242,15 +242,14 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column holds array values from property orderId of SchemaCompleteEntityType-->
                   <name>arrayStringKey</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
@@ -267,19 +266,11 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
-                </column>
-                <column>
-                  <name>arrayreferenceInThisFile</name>
-                  <scalar-type>string</scalar-type>
-                  <val>.</val>
-                  <nullable>true</nullable>
                 </column>
                 <column>
                   <name>quantity</name>
@@ -304,15 +295,14 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column holds array values from property orderId of SchemaCompleteEntityType-->
                   <name>arrayKey</name>
                   <scalar-type>long</scalar-type>
                   <val>.</val>
@@ -329,15 +319,14 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column joins to primary key of an external reference -->
                   <name>externalArrayReference</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
@@ -350,7 +339,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
       </templates>
     </template>
     <!--
-The template for OrderDetails cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for OrderDetails cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
   </templates>
 </template>

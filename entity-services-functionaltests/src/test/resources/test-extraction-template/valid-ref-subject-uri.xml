@@ -45,7 +45,7 @@ graph uri: http://refSubjectUri#Northwind-Ref-Subject-Uri-0.0.1</description>
       </rows>
     </template>
     <!--
-The template for Order cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for Order cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
   </templates>
 </template>

@@ -242,15 +242,14 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
               <schema-name>DBProp-Ref-Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column holds array values from property orderId of SchemaCompleteEntityType-->
                   <name>arrayStringKey</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
@@ -267,15 +266,14 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
               <schema-name>DBProp-Ref-Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column joins to primary key of OrderDetails-->
                   <name>arrayreferenceInThisFile</name>
                   <scalar-type>integer</scalar-type>
                   <val>.</val>
@@ -292,15 +290,14 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
               <schema-name>DBProp-Ref-Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column holds array values from property orderId of SchemaCompleteEntityType-->
                   <name>arrayKey</name>
                   <scalar-type>long</scalar-type>
                   <val>.</val>
@@ -317,15 +314,14 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
               <schema-name>DBProp-Ref-Same</schema-name>
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                 <!--This column joins to property orderId of SchemaCompleteEntityType-->
                   <name>orderId</name>
                   <scalar-type>string</scalar-type>
                   <val>../orderId</val>
                 </column>
                 <column>
+                  <!--This column joins to primary key of an external reference-->
                   <name>externalArrayReference</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>
@@ -378,15 +374,14 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
               <schema-name>DBProp-Ref-Same</schema-name>
               <view-name>Order_OrderDetails</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property OrderID of Order-->
                   <name>OrderID</name>
                   <scalar-type>integer</scalar-type>
                   <val>../OrderID</val>
                 </column>
                 <column>
+                  <!--This column joins to primary key of OrderDetails-->
                   <name>OrderDetails</name>
                   <scalar-type>integer</scalar-type>
                   <val>.</val>

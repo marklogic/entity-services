@@ -151,15 +151,14 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
               <schema-name>Lets-test-DB-prop-generate</schema-name>
               <view-name>Customer_ProductsPurchased</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!-- This column joins to property CustomerId of Customer -->
                   <name>CustomerId</name>
                   <scalar-type>integer</scalar-type>
                   <val>../CustomerId</val>
                 </column>
                 <column>
+                  <!-- This column joins to primary key of Product -->
                   <name>ProductsPurchased</name>
                   <scalar-type>string</scalar-type>
                   <val>.</val>

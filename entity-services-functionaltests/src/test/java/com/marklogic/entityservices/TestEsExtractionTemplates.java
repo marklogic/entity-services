@@ -42,6 +42,8 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
+import javax.xml.transform.TransformerException;
+
 public class TestEsExtractionTemplates extends EntityServicesTestBase {
 	
 	private static XMLDocumentManager docMgr;
@@ -176,7 +178,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 	}
 	
 	@Test
-	public void verifyExtractionTemplateGenerate() throws TestEvalException, SAXException, IOException {
+	public void verifyExtractionTemplateGenerate() throws TestEvalException, SAXException, IOException, TransformerException {
 
 		for (String entityType : entityTypes) {
 			if (entityType.contains(".json")||entityType.contains(".jpg")) { continue;}
@@ -188,6 +190,10 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			
 			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType);
 			Document filesystemXML = builder.parse(is);
+
+
+            //debugOutput(template);
+
 			XMLUnit.setIgnoreWhitespace(true);
 			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
 					template);

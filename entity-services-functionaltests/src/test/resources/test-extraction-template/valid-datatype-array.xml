@@ -11,7 +11,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
   </path-namespaces>
   <templates>
     <!--
-The template for Product cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for Product cannot be generated.  Each template row requires a primary key or at least one requried property.
 -->
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Customer</context>
@@ -54,15 +54,14 @@ The template for Product cannot be generated.  Each template row requires a prim
               <schema-name>Northwind</schema-name>
               <view-name>Customer_likes</view-name>
               <columns>
-                <!--
- this column joins to primary key of '{$entity-type-name}' 
--->
                 <column>
+                  <!--This column joins to property CustomerId of Customer-->
                   <name>CustomerId</name>
                   <scalar-type>string</scalar-type>
                   <val>../CustomerId</val>
                 </column>
                 <column>
+                  <!--This column holds array values from property CustomerId of Customer-->
                   <name>likes</name>
                   <scalar-type>int</scalar-type>
                   <val>.</val>

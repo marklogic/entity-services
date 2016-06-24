@@ -1,0 +1,36 @@
+{
+  "info": {
+    "title": "et-duplicate-prop",
+    "version": "0.0.1",
+    "description":"Test case for repeated properties among entity types.",
+    "baseUri": "http://baloo/"
+  },
+  "definitions": {
+    "ETOne": {
+      "properties": {
+        "a": {
+          "datatype": "integer"
+        },
+        "b": {
+          "datatype": "string"
+        },
+        "c": {
+          "$ref": "#/definitions/ETTwo"
+        }
+      },
+      "primaryKey": "a",
+      "required": [
+        "b"
+      ],
+      "rangeIndex":["a","b","c"]
+    },
+    "ETTwo": {
+      "properties": {
+        "a": {
+          "datatype":"string"
+        }
+      },
+      "primaryKey": "a"
+    }
+  }
+}

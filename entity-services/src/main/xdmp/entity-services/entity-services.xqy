@@ -154,7 +154,7 @@ declare function es:extraction-template-generate(
  : @param An entity type document.
  :)
 declare function es:search-options-generate(
-    $entity-type as map:map
+    $entity-type
 ) 
 {
     esi:ensure-entity-type($entity-type)=>esi:search-options-generate()

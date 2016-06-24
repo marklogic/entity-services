@@ -47,7 +47,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
         //debugOutput(searchOptions);
 
 
-		InputStream is = this.getClass().getResourceAsStream("/expected-search-options/SchemaCompleteEntityType-0.0.1.xml");
+		InputStream is = this.getClass().getResourceAsStream("/test-search-options/SchemaCompleteEntityType-0.0.1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLUnit.setIgnoreComments(true);

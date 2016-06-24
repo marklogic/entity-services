@@ -1,0 +1,27 @@
+{
+  "info": {
+    "title": "et-required",
+    "version": "0.0.1",
+    "baseUri": "http://baloo/"
+  },
+  "definitions": {
+    "ETOne": {
+      "properties": {
+        "a": {
+          "datatype": "integer"
+        },
+        "b": {
+          "datatype": "string"
+        },
+        "c": {
+          "datatype": "date"
+        }
+      },
+      "primaryKey": "a",
+      "required": [
+        "b"
+      ],
+      "rangeIndex":["a","b","c"]
+    }
+  }
+}

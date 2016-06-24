@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://baloo/et-required-0.0.1</description>
+  <context>//es:instance</context>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./ETOne</context>
+      <rows>
+	<row>
+	  <schema-name>et-required</schema-name>
+	  <view-name>ETOne</view-name>
+	  <columns>
+	    <column>
+	      <name>a</name>
+	      <scalar-type>integer</scalar-type>
+	      <val>a</val>
+	    </column>
+	    <column>
+	      <name>b</name>
+	      <scalar-type>string</scalar-type>
+	      <val>b</val>
+	    </column>
+	    <column>
+	      <name>c</name>
+	      <scalar-type>date</scalar-type>
+	      <val>c</val>
+		  <nullable>true</nullable>
+	    </column>
+	  </columns>
+	</row>
+      </rows>
+    </template>
+  </templates>
+</template>

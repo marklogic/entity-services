@@ -125,7 +125,7 @@ public class TestSetup {
 	Collection<File> getTestResources(String dirName) {
 		URL filesUrl = _client.getClass().getResource(dirName);
 
-		return FileUtils.listFiles(new File(filesUrl.getPath()), 
+		return FileUtils.listFiles(new File(filesUrl.getPath()),
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	

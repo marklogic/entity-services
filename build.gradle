@@ -22,8 +22,17 @@ subprojects {
     }
 
     dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile 'org.apache.httpcomponents:httpclient:4.1.1'
+        testCompile 'commons-io:commons-io:2.5'
+        testCompile('com.marklogic:marklogic-jena:1.0.0') {
+            //exclude(group: 'org.slf4j')
+            exclude(group: 'ch.qos.logback')
+            exclude(group: 'log4j')
+        }
+        testCompile 'com.jayway.restassured:rest-assured:2.4.1'
+        testCompile 'xmlunit:xmlunit:1.6'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.assertj:assertj-core:3.4.1'
     }
     
     

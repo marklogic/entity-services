@@ -19,10 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,7 +35,6 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.custommonkey.xmlunit.DetailedDiff;
@@ -136,7 +132,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
     	URL sourcesFilesUrl = client.getClass().getResource("/invalid-entity-types");
     	
     	@SuppressWarnings("unchecked")
-		Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()), 
+		Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
             FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
     	Set<String> invalidEntityTypes = new HashSet<String>();
     	

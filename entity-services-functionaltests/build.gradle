@@ -6,16 +6,6 @@ apply plugin: "com.marklogic.ml-gradle"
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
-dependencies {
-	testCompile('com.marklogic:marklogic-jena:1.0.0') {
-        exclude(group: 'org.slf4j')
-        exclude(group: 'ch.qos.logback')
-        exclude(group: 'log4j')
-    }
-	testCompile 'com.jayway.restassured:rest-assured:2.4.1'
-	testCompile 'xmlunit:xmlunit:1.6'
-    testCompile 'junit:junit:4.11'
-}
 
 ext {
     mlAppConfig {

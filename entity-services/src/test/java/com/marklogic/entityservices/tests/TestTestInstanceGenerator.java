@@ -20,11 +20,11 @@ import java.io.InputStream;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.jena.atlas.logging.Log;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mortbay.log.Log;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -52,7 +52,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 			
 			String generateTestInstances = "es:entity-type-get-test-instances( es:entity-type-from-node( fn:doc('"+entityType+"') ) )";
 			
-			Log.info("Creating test instances from " + entityType);
+			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);
 			int resultNumber = 0;
 			while (results.hasNext()) {

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<x>
+  <ETOne>
+    <pk>http://example.org/some-iri/1</pk>
+    <p1>1</p1>
+    <p2>3</p2>  <!-- this one becomes an integer from string -->
+    <p3>32</p3>
+    <p4>333</p4>
+    <p5>12</p5>
+    <p5>23</p5>
+    <p5>13</p5>
+    <p6>4</p6>
+    <p6>4</p6>
+    <p6>4</p6>
+  </ETOne>
+  <ETTwo>
+    <pk>http://example.org/some-iri/2</pk>
+    <parent>
+      <ETOne>http://example.org/some-iri</ETOne>
+    </parent>
+    <p7>3</p7>
+    <p8>23</p8>
+    <p8>13</p8>
+    <p8>12</p8>
+    <p9>19</p9>
+    <p9>14</p9>
+    <p9>16</p9>
+    <p10>2</p10>
+  </ETTwo>
+  <ETFour>
+    <p1>100293</p1>
+  </ETFour>
+</x>

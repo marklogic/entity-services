@@ -160,6 +160,21 @@ declare function es:search-options-generate(
     esi:ensure-entity-type($entity-type)=>esi:search-options-generate()
 };
 
+(:~
+ : Generates an XQuery module that can create an instance of one
+ : type from documents saved by code from another type.
+ : @param An entity type document that describes the target type of the conversion.
+ : @param An entity type document that describes the source type of the conversion.
+ :)
+declare function es:version-comparison-generate(
+    $source-entity-type,
+    $target-entity-type
+) as document-node()
+{
+    es-codegen:version-comparison-generate(
+           $source-entity-type=>esi:ensure-entity-type(),
+           $target-entity-type=>esi:ensure-entity-type())
+};
 
 
 (:~

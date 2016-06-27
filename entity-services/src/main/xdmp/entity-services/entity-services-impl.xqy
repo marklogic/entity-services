@@ -19,6 +19,7 @@ module namespace esi = "http://marklogic.com/entity-services-impl";
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
+
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
 
 import module namespace validate = "http://marklogic.com/validate" at "/MarkLogic/appservices/utils/validate.xqy";
@@ -27,6 +28,7 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
+declare variable $esi:DEFAULT_BASE_URI := "http://example.org/";
 declare variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
 declare variable $esi:ENTITY_TYPE_COLLECTION := "http://marklogic.com/entity-services/entity-types/";
 
@@ -146,13 +148,7 @@ declare function esi:entity-type-graph-iri(
 ) as sem:iri
 {
     let $info := map:get($entity-type, "info")
-    let $baseUri := fn:head( (
-        map:get($info, "baseUri"),
-        "http://example.org/") )
-    let $baseUriPrefix :=  
-        if (fn:matches($baseUri, "[#/]$")) 
-        then $baseUri
-        else concat($baseUri, "#")
+    let $baseUriPrefix := esi:resolve-base-uri($info)
     return
     sem:iri(
         concat( $baseUriPrefix, 
@@ -1078,6 +1074,8 @@ declare function esi:search-options-generate(
     </search:options>
 };
 
+
+
 (: This function has no argument type because the XQuery engine otherwise
  : casts nodes to map:map, which would be confusing for this particular
  : function
@@ -1091,3 +1089,15 @@ declare function esi:ensure-entity-type(
     else fn:error( (), "ES-ENTITY-TYPE-INVALID", "Entity types must be map:map (or its subtype json:object)")
 };
 
+
+(: resolves the default URI from an entity-type's info section :)
+declare function esi:resolve-base-uri(
+    $info as map:map
+) as xs:string
+{
+    let $base-uri := fn:head((map:get($info, "baseUri"), $esi:DEFAULT_BASE_URI))
+    return
+        if (fn:matches($base-uri, "[#/]$")) 
+        then $base-uri 
+        else concat($base-uri, "#")
+};

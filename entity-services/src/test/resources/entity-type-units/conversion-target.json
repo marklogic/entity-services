@@ -1,0 +1,93 @@
+{
+  "info": {
+    "title": "conversion",
+    "version": "0.0.2",
+    "description": "Version 0.0.2 of my entity type.",
+    "baseUri": "http://example.org/tests/"
+  },
+  "definitions": {
+    "ETOne": {
+      "properties": {
+        "pk": {
+          "datatype": "iri"
+        },
+        "p1":{
+          "datatype": "integer",
+          "description":"inherited directly from source"
+        },
+        "p2":{
+          "datatype": "integer",
+          "description":"datatype cast from source, valid"
+        },
+        "p3":{
+          "datatype": "array",
+          "items":    {
+            "datatype":"integer"
+          },
+          "description":"array in new version"
+        },
+        "p4": {
+          "datatype": "array",
+          "items": {
+            "datatype": "integer"
+          },
+          "description":"array in new version, with cast"
+        },
+        "p5":{
+          "datatype": "integer",
+          "description":"from array to scalar"
+        },
+        "p6":{
+          "datatype": "integer",
+          "description":"from array to scalar, cast"
+        }
+      },
+      "primaryKey": "pk",
+      "required": ["p1","p2"],
+      "wordLexicon": ["p2"],
+      "rangeIndex": ["p3","p4"]
+    },
+    "ETTwo": {
+      "properties": {
+        "pk": {
+          "datatype": "iri"
+        },
+        "parent":{
+          "$ref": "#/definitions/ETOne",
+          "description":"local ref, in both versions"
+        },
+        "p7":{
+          "$ref": "#/definitions/ETThree",
+          "description":"new reference, replacing scalar"
+        },
+        "p8":{
+          "$ref": "#/definitions/ETThree",
+          "description":"new reference, replacing array"
+        },
+        "p9":{
+          "datatype":"array",
+          "items":{
+            "$ref":"#/definitions/ETTwo"
+          },
+          "description":"new array reference, replacing array"
+        },
+        "p11":{
+          "datatype": "integer",
+          "description":"property not in new version"
+        }
+      },
+      "primaryKey": "pk",
+      "required": ["p7","p9"],
+      "wordLexicon": ["p9"],
+      "rangeIndex": ["p8","p9"]
+    },
+    "ETThree": {
+      "description": "An entity type in this version that did not exist before.",
+      "properties":{
+        "p1":{
+          "datatype":"integer"
+        }
+      }
+    }
+  }
+}

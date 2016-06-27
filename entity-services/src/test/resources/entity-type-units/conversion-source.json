@@ -1,0 +1,96 @@
+{
+  "info": {
+    "title": "conversion",
+    "version": "0.0.1",
+    "description": "Version 0.0.1 of my entity type.",
+    "baseUri": "http://example.org/tests/"
+  },
+  "definitions": {
+    "ETOne": {
+      "properties": {
+        "pk": {
+          "datatype": "iri"
+        },
+        "p1":{
+          "datatype": "integer",
+          "description":"target does not change"
+        },
+        "p2":{
+          "datatype": "string",
+          "description":"in target, type is 'integer'"
+        },
+        "p3":{
+          "datatype": "integer",
+          "description":"array in new version"
+        },
+        "p4": {
+          "datatype": "string",
+          "description":"array in new version, different types"
+        },
+        "p5":{
+          "datatype": "array",
+          "items" : {
+            "datatype": "integer"
+          },
+          "description":"from array to scalar"
+        },
+        "p6":{
+          "datatype": "array",
+          "items" : {
+            "datatype": "string"
+          },
+          "description":"from array to scalar, cast"
+        }
+      },
+      "primaryKey": "pk",
+      "required": ["p1","p2"],
+      "wordLexicon": ["p2"],
+      "rangeIndex": ["p3","p4"]
+    },
+    "ETTwo": {
+      "properties": {
+        "pk": {
+          "datatype": "iri"
+        },
+        "parent":{
+          "$ref": "#/definitions/ETOne",
+          "description":"local ref, in both versions"
+        },
+        "p7":{
+          "datatype": "string",
+          "description":"new reference, replacing scalar"
+        },
+        "p8":{
+          "datatype": "array",
+          "items": {
+            "datatype":"integer"
+          },
+          "description":"new reference, replacing array"
+        },
+        "p9":{
+          "datatype":"array",
+          "items":{
+            "datatype" : "integer"
+          },
+          "description":"new array reference, replacing array"
+        },
+        "p10":{
+          "datatype":"string",
+          "description":"property not in old version"
+        }
+      },
+      "primaryKey": "pk",
+      "required": ["p8","p9"],
+      "wordLexicon": ["p7"],
+      "rangeIndex": ["p8"]
+    },
+    "ETFour": {
+      "description": "An entity type in this version that did carry forward.",
+      "properties":{
+        "p1":{
+          "datatype":"integer"
+        }
+      }
+    }
+  }
+}

@@ -48,23 +48,23 @@ public class ExamplesBase {
         mapper = new ObjectMapper();
     }
 
-    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection) {
+    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 if (entry.toFile().isDirectory()) {
                     logger.info("Reading subdirectory " + entry.getFileName().toString());
-                    importOrDescend(entry, batcher, collection);
+                    importOrDescend(entry, batcher, collection, format);
                 } else {
                     logger.info("Adding " + entry.getFileName().toString());
                     String uri = entry.toString();
                     if (collection != null) {
                         DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection);
-                        batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(Format.JSON));
+                        batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
                     }
                     else {
-                        batcher.add(uri, new FileHandle(entry.toFile()).withFormat(Format.JSON));
+                        batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
                     }
-                    logger.info("Inserted JSON document " + uri);
+                    logger.info("Inserted " + format.toString() + " document " + uri);
                 }
             }
 
@@ -96,9 +96,39 @@ public class ExamplesBase {
 
         ticket=moveMgr.startJob(batcher);
 
-        importOrDescend(jsonDirectory, batcher, toCollection);
+        importOrDescend(entityTypesDir, batcher, toCollection, Format.JSON);
 
         batcher.flush();
+    }
+
+
+    /*
+      This method uses a document-centric approach to RDF reference data, by invoking
+      a server-side transform that parses turtle into MarkLogic XML triples.
+     */
+    public void importRDF(Path referenceDataDir, String collection) {
+
+        logger.info("RDF Load Job started");
+
+        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher()
+                .withBatchSize(1)
+                .withThreadCount(1)
+                .withTransform(new ServerTransform("turtleToXml"))
+                .onBatchSuccess( (client, batch) ->  logger.info("Loaded rdf data batch") )
+                .onBatchFailure(
+                        (client, batch, throwable) -> {
+                            logger.warn("FAILURE on batch:" + batch.toString() + "\n",
+                                    throwable);
+                            throwable.printStackTrace();
+                        }
+                );
+        ;
+        ticket=moveMgr.startJob(batcher);
+
+        importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
+
+        batcher.flush();
+
     }
 }
 

@@ -24,7 +24,7 @@ public class EntityServicesLoader extends ExamplesBase {
     }
 
     private void go() throws IOException, InterruptedException {
-        importJSON(Paths.get(props.getProperty("entityTypesDir")));
+        importJSON(Paths.get(props.getProperty("entityTypesDir")), "http://marklogic.com/entity-services/entity-types");
     }
 
     public static void main(String[] args) throws Exception {

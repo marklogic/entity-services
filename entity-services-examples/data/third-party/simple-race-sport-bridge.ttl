@@ -1,0 +1,12 @@
+# Triples to integrate the simple-race entity type with 
+# The BBC sport ontology
+
+
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix race: <http://grechaw.github.io/entity-types/Race-0.0.1/> .
+@prefix Runner: <http://grechaw.github.io/entity-types#Runner/> .
+@prefix sport: <http://www.bbc.co.uk/ontologies/sport/> .
+
+race:Runner rdfs:subClassOf sport:Person .
+race:Race rdfs:subClassOf sport:Competition .

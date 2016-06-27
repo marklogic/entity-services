@@ -49,8 +49,7 @@ public class CSVLoader extends ExamplesBase {
 
         logger.info("job started.");
 
-        File dir = new File("/home/cgreer/third_party/offshore_leaks_csvs-20160513/");
-        //File dir = new File("/path/to/CSVs");
+        File dir = new File("/path/to/CSVs");
 
         WriteHostBatcher batcher = moveMgr.newWriteHostBatcher()
                 .withBatchSize(600)

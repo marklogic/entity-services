@@ -3,7 +3,7 @@
     "title": "Race",
     "version": "0.0.2",
     "baseUri": "http://grechaw.github.io/entity-types",
-    "description":"This schema represents a Runner who runs Runs and has the potential of winning Races.  We'll start with this entity-type, then decide on and populate instances, tie the data in with an external RDF-based model, and query it.  There are interesting problems with the bare-bones approach in this entity-type."
+    "description":"This schema represents a Runner who runs Runs and has the potential of winning Races..It fixes datatypes and keys from version 0.0.1 and also incorporates a link to an external hierarchy (LDBC sports ontology)"
   },
   "definitions": {
     "Race": {

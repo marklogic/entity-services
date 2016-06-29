@@ -395,6 +395,72 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
 		
 	}
+	
+	@Test
+	public void testExtractInstanceSchemaCompleteEntityType() throws IOException, TestEvalException {
+		
+		String entityType = "SchemaCompleteEntityType-0.0.1.json";
+		String sourceDocument = "11.xml";
+		String ns = getNameSpace(entityType);
+		
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-SchemaCompleteEntityType( doc('"+sourceDocument+"') )", new JacksonHandle());
+		
+		JsonNode extractInstanceResult = handle.get();
+		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-SchemaCompleteEntityType.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
+	
+	@Test
+	public void testExtractInstanceProduct2() throws IOException, TestEvalException {
+		
+		String entityType = "valid-db-prop-et.json";
+		String sourceDocument = "42.xml";
+		String ns = getNameSpace(entityType);
+		System.out.println("namespace::::"+ns);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
+		
+		JsonNode extractInstanceResult = handle.get();
+		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Product2.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
+	
+	@Test
+	public void testExtractInstanceCustomer2() throws IOException, TestEvalException {
+		
+		String entityType = "valid-db-prop-et.json";
+		String sourceDocument = "42.xml";
+		String ns = getNameSpace(entityType);
+		System.out.println("namespace::::"+ns);
+		
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
+		
+		JsonNode extractInstanceResult = handle.get();
+		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Customer2.json");
+
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+
+		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
 
 	@Test
 	public void testExtInstWithNoArgs() throws IOException, TestEvalException {

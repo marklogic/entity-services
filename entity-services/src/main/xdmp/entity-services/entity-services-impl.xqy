@@ -513,10 +513,7 @@ declare function esi:database-properties-generate(
         let $datatype := esi:indexable-datatype($specified-datatype)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($ri-map, "collation", $collation)
-        let $invalid-values := 
-            if ($range-index-property = (map:get($entity-type-map, "primaryKey"), json:array-values(map:get($entity-type-map, "required"))))
-            then "reject"
-            else "ignore"
+        let $invalid-values := "reject"
         let $_ := map:put($ri-map, "invalid-values", $invalid-values)
         let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
         let $_ := map:put($ri-map, "range-value-positions", false())

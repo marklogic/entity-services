@@ -988,10 +988,11 @@ declare function esi:search-options-generate(
                 <search:constraint name="{ $property-name } ">
                     {$range-definition}
                 </search:constraint>
+            (: the collecting array will be added once after accumulation :)
             let $_ := json:array-push($tuples-range-definitions, $range-definition)
             return
-            (
-            esi:wrap-duplicates($all-constraints, $property-name, $constraint-template),
+                esi:wrap-duplicates($all-constraints, $property-name, $constraint-template)
+        let $_ :=
             if (json:array-size($tuples-range-definitions) gt 0)
             then
                 json:array-push($all-tuples-definitions,
@@ -999,8 +1000,7 @@ declare function esi:search-options-generate(
                         {json:array-values($tuples-range-definitions)}
                     </search:tuples>)
             else ()
-            )
-       let $_word-constraints := 
+        let $_word-constraints :=
             for $property-name in json:array-values(map:get($entity-type-map, "wordLexicon"))
             return
             esi:wrap-duplicates($all-constraints, $property-name,
@@ -1037,6 +1037,9 @@ declare function esi:search-options-generate(
         </search:term>),
             "&#10;"
         },
+        <search:values name="uris">
+            <search:uris/>
+        </search:values>,
         comment { "Change to 'filtered' to exclude false-positives in certain searches" },
         <search:search-option>unfiltered</search:search-option>,
         comment { "Modify document extraction to change results returned" },

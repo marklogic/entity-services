@@ -53,6 +53,12 @@ public class TestSearchOptions extends EntityServicesTestBase {
 		XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
+
+
+		// if this call throws an exception, the search options are not valid.
+        handle = evalOneResult("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
+				               "es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()=>search:check-options()", new DOMHandle());
+
 	}
 
 	

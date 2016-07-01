@@ -25,7 +25,7 @@
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "ignore",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/ETOne/c",
             "range-value-positions": false,
             "scalar-type": "date"

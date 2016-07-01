@@ -204,7 +204,7 @@
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/anyURIKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
@@ -218,252 +218,252 @@
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/dateTimeKey", 
 "range-value-positions": false, 
 "scalar-type": "dateTime"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/dayTimeDurationKey", 
 "range-value-positions": false, 
 "scalar-type": "dayTimeDuration"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/decimalKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/doubleKey", 
 "range-value-positions": false, 
 "scalar-type": "double"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/byteKey", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/shortKey", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedByteKey", 
 "range-value-positions": false, 
 "scalar-type": "unsignedInt"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedShortKey", 
 "range-value-positions": false, 
 "scalar-type": "unsignedInt"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/stringKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/iriKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/anyURIKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/booleanKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/integerKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/negativeIntegerKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/nonNegativeIntegerKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/positiveIntegerKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/nonPositiveIntegerKey", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/floatKey", 
 "range-value-positions": false, 
 "scalar-type": "float"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/gDayKey", 
 "range-value-positions": false, 
 "scalar-type": "gDay"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/gMonthKey", 
 "range-value-positions": false, 
 "scalar-type": "gMonth"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/gYearKey", 
 "range-value-positions": false, 
 "scalar-type": "gYear"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/gYearMonthKey", 
 "range-value-positions": false, 
 "scalar-type": "gYearMonth"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/intKey", 
 "range-value-positions": false, 
 "scalar-type": "int"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/longKey", 
 "range-value-positions": false, 
 "scalar-type": "long"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/timeKey", 
 "range-value-positions": false, 
 "scalar-type": "time"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedIntKey", 
 "range-value-positions": false, 
 "scalar-type": "unsignedInt"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/unsignedLongKey", 
 "range-value-positions": false, 
 "scalar-type": "unsignedLong"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/yearMonthDurationKey", 
 "range-value-positions": false, 
 "scalar-type": "yearMonthDuration"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/arrayKey", 
 "range-value-positions": false, 
 "scalar-type": "long"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/arrayStringKey", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/referenceInThisFile", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/arrayreferenceInThisFile", 
 "range-value-positions": false, 
 "scalar-type": "decimal"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/externalReference", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/SchemaCompleteEntityType/externalArrayReference", 
 "range-value-positions": false, 
 "scalar-type": "string"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/Order/OrderDate", 
 "range-value-positions": false, 
 "scalar-type": "dateTime"
 }, 
 {
 "collation": "http://marklogic.com/collation/en", 
-"invalid-values": "ignore", 
+"invalid-values": "reject", 
 "path-expression": "//es:instance/Order/productName", 
 "range-value-positions": false, 
 "scalar-type": "decimal"

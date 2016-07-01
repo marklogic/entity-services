@@ -82,8 +82,6 @@ public class ExamplesBase {
 
         logger.info("job started.");
 
-        Path entityTypesDir = jsonDirectory;
-
         WriteHostBatcher batcher = moveMgr.newWriteHostBatcher()
                 .withBatchSize(10)
                 .withThreadCount(2)
@@ -95,10 +93,10 @@ public class ExamplesBase {
                             throwable.printStackTrace();
                         }
                 );
-        ;
+
         ticket=moveMgr.startJob(batcher);
 
-        importOrDescend(entityTypesDir, batcher, toCollection);
+        importOrDescend(jsonDirectory, batcher, toCollection);
 
         batcher.flush();
     }

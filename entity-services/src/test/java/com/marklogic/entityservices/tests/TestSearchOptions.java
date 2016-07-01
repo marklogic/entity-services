@@ -32,16 +32,15 @@ import java.io.InputStream;
 
 public class TestSearchOptions extends EntityServicesTestBase {
 	
-	@BeforeClass
-	public static void setup() {
-		setupClients();
-	}
-	
+    @BeforeClass
+    public static void setup() {
+        setupClients();
+        TestSetup.getInstance().loadEntityTypes("/json-entity-types", "SchemaCompleteEntityType-0.0.1.json");
+    }
+
 	@Test
 	public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
-		String entityType = "SchemaCompleteEntityType-0.0.1.json";
-		
-		DOMHandle handle = evalOneResult("es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:entity-type-from-node()=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -51,15 +50,13 @@ public class TestSearchOptions extends EntityServicesTestBase {
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLUnit.setIgnoreComments(true);
-		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
-				searchOptions);
+		XMLAssert.assertXMLEqual("Search options validation failed.", filesystemXML, searchOptions);
 
 
 		// if this call throws an exception, the search options are not valid.
         handle = evalOneResult("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
-				               "es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()=>search:check-options()", new DOMHandle());
+				               "es:entity-type-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()", new DOMHandle());
 
 	}
 
-	
 }

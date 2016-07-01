@@ -63,7 +63,7 @@ public class CSVLoader extends ExamplesBase {
                             throwable.printStackTrace();
                         }
                 );
-                ;
+
         ticket=moveMgr.startJob(batcher);
 
         try( DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), "*.csv") )

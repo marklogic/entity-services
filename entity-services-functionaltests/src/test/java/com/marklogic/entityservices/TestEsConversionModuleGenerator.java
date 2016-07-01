@@ -125,7 +125,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; };
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
@@ -162,7 +162,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		        //logger.info("\n" + arr[0] + "\n" + arr[1]);
 		        break;
 		    } else {
-		        continue;
 		    }
 		}
 		
@@ -246,7 +245,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public void testConvModOutputNodeKind() {
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; };
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			StringHandle xqueryModule = new StringHandle();
 			try {
 				xqueryModule = evalOneResult("xdmp:node-kind(es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"'))))", xqueryModule);
@@ -262,7 +261,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public void testConversionModuleGenerate() throws TestEvalException, IOException {
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; };
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			String docTitle = getDocTitle(entityType);		
 			
 			//Validating generated extract instances of entity type names.

@@ -3,6 +3,7 @@ package com.marklogic.entityservices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentManager;
+import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 public class TestEsRequired  extends EntityServicesTestBase {
 
 
-    DocumentManager documentManager;
+    JSONDocumentManager documentManager;
     String entityType = "/et-required.json";
 
     private void save(String path, String content) throws IOException {
@@ -46,7 +47,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
             while ((line = br.readLine()) != null) {
                 if (contentIterator.hasNext()) {
                     String expectedLine = contentIterator.next();
-                    if (expectedLine.contains("Generated at timestamp")) continue;
+                    if (expectedLine.contains("Generated at timestamp")) { }
                     else
                         softly.assertThat(expectedLine)
                                 .as("Mismatch in conversion module line " + Long.toString(i++))

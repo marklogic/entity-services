@@ -19,7 +19,9 @@ package com.marklogic.entityservices.tests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.Format;
@@ -43,9 +45,6 @@ import static org.junit.Assert.fail;
 /**
  * Tests the server-side function es:echema-generate($entity-type) as
  * element(xsd:schema)
- * 
- * Stub - TODO implmement.
- *
  */
 public class TestSchemaGeneration extends EntityServicesTestBase {
 
@@ -56,8 +55,11 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 	public static void setupClass() {
 		setupClients();
 
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
+		TestSetup.getInstance().loadExtraFiles("/test-instances",".*");
 		docMgr = schemasClient.newXMLDocumentManager();
 		schemas = generateSchemas();
+
 		InputStream is = docMgr.getClass().getResourceAsStream("/entity-type-units/et-duplicate-prop.json");
 		JSONDocumentManager documentManager = client.newJSONDocumentManager();
 		documentManager.write("et-duplicate-prop.json", new InputStreamHandle(is).withFormat(Format.JSON));
@@ -91,13 +93,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")) {
-				continue;
-			};
-
 			StringHandle schema = generateSchema(entityType);
-
-
 			map.put(entityType, schema);
 		}
 		return map;
@@ -107,10 +103,6 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")) {
-				continue;
-			}
-
 			String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-0.xml");
 
 			storeSchema(entityType, schemas.get(entityType));
@@ -150,11 +142,9 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 
 	@AfterClass
 	public static void cleanupSchemas() {
-		for (String entityType : schemas.keySet()) {
 
-			String moduleName = "/ext/" + entityType.replaceAll("\\.(xml|json)", ".xsd");
-
-			docMgr.delete(moduleName);
-		}
+        Set<String> toDelete = new HashSet<String>();
+        schemas.keySet().forEach(x -> toDelete.add(x.replaceAll("\\.(xml|json)", ".xsd")));
+	    docMgr.delete(toDelete.toArray(new String[] {}));
 	}
 }

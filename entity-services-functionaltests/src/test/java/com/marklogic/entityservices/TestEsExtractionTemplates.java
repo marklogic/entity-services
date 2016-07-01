@@ -78,7 +78,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")) {continue; };
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {continue; }
 			
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();

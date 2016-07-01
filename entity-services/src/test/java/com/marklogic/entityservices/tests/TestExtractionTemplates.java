@@ -21,7 +21,9 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLAssert;
@@ -50,8 +52,9 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 		setupClients();
 
 		// extraction tempmlates go in schemas db.
-		docMgr = schemasClient.newXMLDocumentManager();	
-		
+		docMgr = schemasClient.newXMLDocumentManager();
+
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
 		extractionTemplates = generateExtractionTemplates();
 		storeExtractionTempates(extractionTemplates);
 	}
@@ -70,11 +73,9 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 	}
 	
 	private static Map<String, StringHandle> generateExtractionTemplates() {
-		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
+		Map<String, StringHandle> extractionTemplatesMap = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")) {continue; };
-			
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
@@ -82,15 +83,14 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
-			map.put(entityType, template);
+			extractionTemplatesMap.put(entityType, template);
 		}
-		return map;
+		return extractionTemplatesMap;
 	}
 	
 	@Test
 	public void testExtractionTemplates() {
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")) {continue; };
 			String schemaName = entityType.replaceAll("-.*$", "");
 			logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template = new JacksonHandle();
@@ -163,11 +163,8 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 
 	@AfterClass
 	public static void removeTemplates() {
-		for (String template : extractionTemplates.keySet()) {
-			
-			String templateName = template.replaceAll("\\.(xml|json)", ".tdex");
-			
-			docMgr.delete(templateName);
-		}
+        Set<String> toDelete = new HashSet<String>();
+        extractionTemplates.keySet().forEach(x -> toDelete.add(x.replaceAll("json", "tdex")));
+        docMgr.delete(toDelete.toArray(new String[] {}));
 	}
 }

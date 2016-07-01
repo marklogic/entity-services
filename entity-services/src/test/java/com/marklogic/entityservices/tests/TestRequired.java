@@ -46,7 +46,7 @@ public class TestRequired  extends EntityServicesTestBase {
             while ((line = br.readLine()) != null) {
                 if (contentIterator.hasNext()) {
                     String expectedLine = contentIterator.next();
-                    if (expectedLine.contains("Generated at timestamp")) continue;
+                    if (expectedLine.contains("Generated at timestamp")) { }
                     else
                         softly.assertThat(expectedLine)
                                 .as("Mismatch in conversion module line " + Long.toString(i++))

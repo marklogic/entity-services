@@ -20,7 +20,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,6 +70,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupEntityTypes() {
 		setupClients();
+        entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
+        entityTypes.addAll(TestSetup.getInstance().loadEntityTypes("/xml-entity-types", ".*.xml$"));
 	}
 	
     private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
@@ -127,51 +134,47 @@ public class TestEntityTypes extends EntityServicesTestBase {
     }
     
     @Test
-    public void testInvalidEntityTypes() {
-    	
-    	URL sourcesFilesUrl = client.getClass().getResource("/invalid-entity-types");
-    	
-    	@SuppressWarnings("unchecked")
+    public void testInvalidEntityTypes() throws URISyntaxException {
+
+		URL sourcesFilesUrl = client.getClass().getResource("/invalid-entity-types");
+
+		@SuppressWarnings("unchecked")
 		Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
-            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
-    	Set<String> invalidEntityTypes = new HashSet<String>();
-    	
-    	
-    	JSONDocumentManager docMgr = client.newJSONDocumentManager();
-	    DocumentWriteSet writeSet = docMgr.newWriteSet();
-	    
-    	for (File f : invalidEntityTypeFiles) {
-	    	if (f.getName().startsWith(".")) { continue; };
-	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
-	    	logger.info("Loading " + f.getName());
+				FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+		Set<String> invalidEntityTypes = new HashSet<String>();
 
-	    	// don't add metadata to invalid types -- they throw a TDE error.
-	    	//docMgr.write(f.getName(), new FileHandle(f));
-	    	writeSet.add(f.getName(), new FileHandle(f));
-	       
-	        invalidEntityTypes.add(f.getName());
-	    }
-    	docMgr.write(writeSet);
 
-    	for (String entityType : invalidEntityTypes) {
-	    	logger.info("Checking invalid: " + entityType);
-	    	@SuppressWarnings("unused")
+		JSONDocumentManager docMgr = client.newJSONDocumentManager();
+		DocumentWriteSet writeSet = docMgr.newWriteSet();
+
+		for (File f : invalidEntityTypeFiles) {
+			if (f.getName().startsWith(".")) { continue; };
+			if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; };
+			logger.info("Loading " + f.getName());
+			writeSet.add(f.getName(), new FileHandle(f));
+			invalidEntityTypes.add(f.getName());
+		}
+		docMgr.write(writeSet);
+
+		for (String entityType : invalidEntityTypes) {
+			logger.info("Checking invalid: " + entityType);
+			@SuppressWarnings("unused")
 			JacksonHandle handle = null;
 			try {
-				handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());	
-	    		fail("eval should throw an exception for invalid cases." + entityType);
+				handle = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
+				fail("eval should throw an exception for invalid cases." + entityType);
 			} catch (TestEvalException e) {
-				assertTrue("Must contain invalidity message. Message was " + e.getMessage(), 
+				assertTrue("Must contain invalidity message. Message was " + e.getMessage(),
 						e.getMessage().contains("ES-ENTITY-TYPE-INVALID"));
-				
+
 				assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
 			}
-    	}
-    	
-    	for (File f : invalidEntityTypeFiles) {
-    	    logger.info("Removing invalid: " + f.getName());
-    	    docMgr.delete(f.getName());
-    	}
+		}
+
+		for (File f : invalidEntityTypeFiles) {
+			logger.info("Removing invalid: " + f.getName());
+			docMgr.delete(f.getName());
+		}
     }
     
     
@@ -202,6 +205,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
             if ( entityType.toString().endsWith(".json")) {
             	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
             	JsonNode original = mapper.readValue(is, JsonNode.class);
+				is.close();
             	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
         		JsonNode actual = handle.get();
                 
@@ -214,7 +218,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
             	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
 
             	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
-            	logger.debug("Validating and parsing " + entityType);
+				jsonInputStreamControl.close();
+				logger.debug("Validating and parsing " + entityType);
             	JacksonHandle handle  = evalOneResult("es:entity-type-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
         		JsonNode jsonActual = handle.get();
                 checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);

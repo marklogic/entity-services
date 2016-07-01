@@ -41,16 +41,14 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupTestInstances() {
 		setupClients();
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/xml-entity-types", ".*.xml$");
 	}
 	
 	@Test
 	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
 			
-			// we test that xml and json are equivalent elsewhere, so only test half.
-			if (entityType.contains(".json")) { continue; }
-			
-			String generateTestInstances = "es:entity-type-get-test-instances( es:entity-type-from-node( fn:doc('"+entityType+"') ) )";
+			String generateTestInstances = " fn:doc('"+entityType+"')=>es:entity-type-from-node()=>es:entity-type-get-test-instances()";
 			
 			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);

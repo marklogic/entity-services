@@ -48,7 +48,6 @@ public abstract class EntityServicesTestBase {
 
 	protected static DatabaseClient client, modulesClient, schemasClient;
 	protected static Set<String> entityTypes;
-	protected static Set<String> sourceFileUris;
 
 	protected static Logger logger = LoggerFactory.getLogger(EntityServicesTestBase.class);
 	protected static DocumentBuilder builder;
@@ -65,8 +64,6 @@ public abstract class EntityServicesTestBase {
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
 		}
-		entityTypes = testSetup.getEntityTypes();
-		sourceFileUris = testSetup.getSourceFileUris();
 	}
 	
 	
@@ -74,10 +71,9 @@ public abstract class EntityServicesTestBase {
 	public static void removeContent() {
 		TestSetup testSetup = TestSetup.getInstance();
 		testSetup.teardownClass();
-
 	}
 	
-	public static EvalResultIterator eval(String functionCall) throws TestEvalException {
+	protected static EvalResultIterator eval(String functionCall) throws TestEvalException {
 	    
 	    String entityServicesImport = 
 	            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +

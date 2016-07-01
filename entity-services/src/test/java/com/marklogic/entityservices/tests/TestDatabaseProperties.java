@@ -30,13 +30,13 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setup() {
 		setupClients();
+		TestSetup.getInstance().loadEntityTypes("/json-entity-types", "SchemaCompleteEntityType-0.0.1.json");
 	}
 	
 	@Test
 	public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
-		String entityType = "SchemaCompleteEntityType-0.0.1.json";
-		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle =
+				evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:entity-type-from-node()=>es:database-properties-generate()", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());

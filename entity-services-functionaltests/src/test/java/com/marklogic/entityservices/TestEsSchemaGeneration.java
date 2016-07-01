@@ -73,7 +73,6 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 					||entityType.contains("valid-datatype-array")||entityType.contains("valid-definitions-empty")) {
 				continue;
 			}
-			;
 
 			logger.info("Generating schema: " + entityType);
 			StringHandle schema = new StringHandle();

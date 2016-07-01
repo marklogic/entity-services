@@ -61,13 +61,14 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	
 	private static TextDocumentManager docMgr;
 	private static Map<String, StringHandle> conversionModules;
-	
-	@BeforeClass
+
+    @BeforeClass
 	public static void setupClass() {
 		setupClients();
 		// save xquery module to modules database
 		docMgr = modulesClient.newTextDocumentManager();	
-		
+
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
 		conversionModules = generateConversionModules();
 		storeConversionModules(conversionModules);
 
@@ -88,12 +89,10 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")) {continue; };
-			
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
+				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:entity-type-from-node()=>es:conversion-module-generate()", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -104,16 +103,16 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	
 	@Test
 	public void verifyCreateValidModule() throws TestEvalException {
-		
-		String initialTest = "Order-0.0.1.xml";
-		StringHandle moduleHandle =  evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+initialTest+"')))", new StringHandle());
+
+        String initialTest = "Order-0.0.1.json";
+        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:entity-type-from-node()=>es:conversion-module-generate()", new StringHandle());
 		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
 		m.put(initialTest, moduleHandle);
 		// save conversion module into modules database
 		storeConversionModules(m);
 		
 		String instanceDocument = "Order-Source-1.xml";
-		
+		TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
 		StringHandle handle = evalOneResult("import module namespace conv = \"http:///Order-0.0.1\" at \"/ext/Order-0.0.1.xqy\"; "+
 		              "conv:extract-instance-Order( doc('"+instanceDocument+"') )", new StringHandle());
 		
@@ -166,13 +165,13 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	 */
 	@Test
 	public void testConversionModuleFuntionsOnIdentityPayload() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
-		
+
+		TestSetup.getInstance().loadExtraFiles("/test-instances", ".*");
 		
 		// test them all adn remove
 		for (String entityType : conversionModules.keySet()) {
 			
 			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
-			
 			
 			String entityTypeName = entityType.replace(".json",  "");
 			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");

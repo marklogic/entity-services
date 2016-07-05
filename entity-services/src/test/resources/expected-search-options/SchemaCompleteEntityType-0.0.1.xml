@@ -171,7 +171,7 @@
     </search:range>
   </search:tuples>
   <search:values name="uris">
-    <search:uris/>
+    <search:uri/>
   </search:values>
   <!--Uncomment to return no results for a blank search, rather than the default of all results
  <search:term xmlns:search="http://marklogic.com/appservices/search">

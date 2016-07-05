@@ -1038,7 +1038,7 @@ declare function esi:search-options-generate(
             "&#10;"
         },
         <search:values name="uris">
-            <search:uris/>
+            <search:uri/>
         </search:values>,
         comment { "Change to 'filtered' to exclude false-positives in certain searches" },
         <search:search-option>unfiltered</search:search-option>,

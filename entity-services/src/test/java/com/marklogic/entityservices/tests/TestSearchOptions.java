@@ -17,8 +17,11 @@ package com.marklogic.entityservices.tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
@@ -27,8 +30,12 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class TestSearchOptions extends EntityServicesTestBase {
 	
@@ -53,9 +60,23 @@ public class TestSearchOptions extends EntityServicesTestBase {
 		XMLAssert.assertXMLEqual("Search options validation failed.", filesystemXML, searchOptions);
 
 
-		// if this call throws an exception, the search options are not valid.
-        handle = evalOneResult("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
-				               "es:entity-type-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()", new DOMHandle());
+		// if this call has results, the search options are not valid.
+        EvalResultIterator checkOptions = eval("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
+				               "es:entity-type-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()");
+
+        assertFalse("Too many results for check options to pass", checkOptions.hasNext());
+        /*
+        while (checkOptions.hasNext()) {
+            EvalResult result = checkOptions.next();
+            DOMHandle domHandle = result.get(new DOMHandle());
+            Document dom = domHandle.get();
+            String emptyOptions = "<search:options xmlns:search='http://marklogic.com/appservices/search'/>";
+            XMLAssert.assertXMLEqual("Check options did not pass.", emptyOptions, dom);
+
+
+        }
+        */
+
 
 	}
 

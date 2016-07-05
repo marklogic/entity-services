@@ -60,14 +60,6 @@
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/positiveIntegerKey</search:path-index>
 </search:range>
 </search:constraint>
-<!--
-This constraint is a duplicate and is commented out so as to be a valid options node.
- <search:constraint name="stringKey" xmlns:search="http://marklogic.com/appservices/search">
-  <search:word>
-    <search:element ns="" name="stringKey"/>
-  </search:word>
-</search:constraint> 
--->
 <search:constraint name="orderId">
 <search:value>
 <search:element ns="" name="orderId">
@@ -79,269 +71,19 @@ This constraint is a duplicate and is commented out so as to be a valid options 
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
 </search:range>
 </search:constraint>
+<!--
+This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="stringKey" xmlns:search="http://marklogic.com/appservices/search">
+  <search:word>
+    <search:element ns="" name="stringKey"/>
+  </search:word>
+</search:constraint> 
+-->
 <search:constraint name="nonNegativeIntegerKey">
 <search:range type="xs:decimal" facet="true">
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/nonNegativeIntegerKey</search:path-index>
 </search:range>
 </search:constraint>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/negativeIntegerKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/negativeIntegerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/nonNegativeIntegerKey</search:path-index>
-</search:range>
-</search:tuples>
-<search:tuples name="SchemaCompleteEntityType">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
-</search:range>
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/shortKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedByteKey</search:path-index>
-</search:range>
-<search:range type="xs:unsignedInt" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/unsignedShortKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/stringKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/iriKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
-</search:range>
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/negativeIntegerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/nonNegativeIntegerKey</search:path-index>
-</search:range>
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/positiveIntegerKey</search:path-index>
-</search:range>
-</search:tuples>
 <search:tuples name="SchemaCompleteEntityType">
 <search:range type="xs:int" facet="true">
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/byteKey</search:path-index>
@@ -389,6 +131,10 @@ Uncomment to return no results for a blank search, rather than the default of al
   <search:empty apply="no-results"/>
 </search:term> 
 -->
+<search:values name="uris">
+<search:uris>
+</search:uris>
+</search:values>
 <!--
 Change to 'filtered' to exclude false-positives in certain searches
 -->

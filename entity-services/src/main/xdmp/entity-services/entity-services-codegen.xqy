@@ -170,11 +170,11 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     (: if a property is required, use map:with to force inclusion :)
     let $function-call-string :=
         if ($property-key = ( map:get($this-type, "primaryKey"), json:array-values( map:get($this-type, "required")) ))
-        then "    =>   map:with("
+        then "       =>map:with("
         else "    =>es:optional("
     return
     concat($function-call-string, 
-            functx:pad-string-to-length("'" || $property-key || "',", " ", max( (string-length($path-to-property), 25) )+1 ),
+            functx:pad-string-to-length("'" || $property-key || "',", " ", max((  (string-length($property-key)+4), 25) )+1 ),
             $value, 
             ")&#10;   "
           )

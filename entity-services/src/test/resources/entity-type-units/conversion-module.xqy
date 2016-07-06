@@ -77,8 +77,8 @@ declare function et-required:extract-instance-ETOne(
          : Once you've customized this function, write a test with expected inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)
          :)
-        =>   map:with('a',                      data($source-node/ETOne/a))
-        =>   map:with('b',                      data($source-node/ETOne/b))
+           =>map:with('a',                      data($source-node/ETOne/a))
+           =>map:with('b',                      data($source-node/ETOne/b))
         =>es:optional('c',                      data($source-node/ETOne/c))
    
 };

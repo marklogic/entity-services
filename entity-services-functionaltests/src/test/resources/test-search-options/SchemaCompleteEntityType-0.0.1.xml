@@ -132,8 +132,8 @@ Uncomment to return no results for a blank search, rather than the default of al
 </search:term> 
 -->
 <search:values name="uris">
-<search:uris>
-</search:uris>
+<search:uri>
+</search:uri>
 </search:values>
 <!--
 Change to 'filtered' to exclude false-positives in certain searches

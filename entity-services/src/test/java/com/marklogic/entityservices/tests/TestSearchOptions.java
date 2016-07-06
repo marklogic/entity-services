@@ -65,15 +65,13 @@ public class TestSearchOptions extends EntityServicesTestBase {
 				               "es:entity-type-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()");
 
         assertFalse("Too many results for check options to pass", checkOptions.hasNext());
-        /*
+        /* This is for diagnostics during changes:
         while (checkOptions.hasNext()) {
             EvalResult result = checkOptions.next();
             DOMHandle domHandle = result.get(new DOMHandle());
             Document dom = domHandle.get();
             String emptyOptions = "<search:options xmlns:search='http://marklogic.com/appservices/search'/>";
             XMLAssert.assertXMLEqual("Check options did not pass.", emptyOptions, dom);
-
-
         }
         */
 

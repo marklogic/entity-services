@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.util.*;
 
@@ -100,7 +101,7 @@ public class TestRequired  extends EntityServicesTestBase {
 
 
     @Test
-    public void testSchemasRequired() throws IOException, TestEvalException, SAXException {
+    public void testSchemasRequired() throws IOException, TestEvalException, SAXException, TransformerException {
 
         DOMHandle handle;
         handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new DOMHandle());

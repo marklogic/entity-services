@@ -1,3 +1,7 @@
 apply plugin: "com.marklogic.ml-gradle"
 
-
+ext {
+    mlAppConfig {
+        createTriggersDatabase = false
+    }
+}

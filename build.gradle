@@ -41,12 +41,6 @@ subprojects {
         systemProperties System.properties
         testClassesDir file('build/classes/test')
     }
-   
-    ext {
-        mlAppConfig {
-            createTriggersDatabase = false
-        }
-    }
 }
 
 

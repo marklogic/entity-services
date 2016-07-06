@@ -23,5 +23,6 @@ dependencies {
 ext {
     mlAppConfig {
         modulePaths.add("entity-services-examples/src/main/ml-modules")
+        createTriggersDatabase = false
     }
 }

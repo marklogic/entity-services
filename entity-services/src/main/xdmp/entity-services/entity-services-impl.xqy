@@ -878,7 +878,7 @@ declare function esi:extraction-template-generate(
                             map:get( $definitions, $entity-type-name ), "primaryKey"))))
         then comment { "The standalone template for " || $entity-type-name || 
                        " cannot be generated.  Each template row requires " ||
-                       "a primary key or at least one requried property." }
+                       "a primary key or at least one required property." }
         else 
 
         <tde:template>

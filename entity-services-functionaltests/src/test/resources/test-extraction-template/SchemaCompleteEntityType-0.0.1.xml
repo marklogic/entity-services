@@ -339,7 +339,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
       </templates>
     </template>
     <!--
-The standalone template for OrderDetails cannot be generated.  Each template row requires a primary key or at least one requried property.
+The standalone template for OrderDetails cannot be generated.  Each template row requires a primary key or at least one required property.
 -->
   </templates>
 </template>

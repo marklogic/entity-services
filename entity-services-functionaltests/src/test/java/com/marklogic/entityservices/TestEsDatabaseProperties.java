@@ -16,6 +16,8 @@
 package com.marklogic.entityservices;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,5 +85,18 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 
 		//org.hamcrest.MatcherAssert.assertThat("Expected: "+control+"\n\tGot: "+databaseConfiguration,control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
 	}
+	
+	@Test
+	public void bug38517DBPropsGen() {
+		logger.info("Checking database-properties-generate() with a document node");
+		try {
+			evalOneResult("es:database-properties-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for database-properties-generate() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+		}
+	}
+
 	
 }

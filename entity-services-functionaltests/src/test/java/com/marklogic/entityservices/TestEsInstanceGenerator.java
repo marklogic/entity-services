@@ -15,6 +15,9 @@
  */
 package com.marklogic.entityservices;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +35,7 @@ import org.xml.sax.SAXException;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.JacksonHandle;
 
 /**
  * Tests server function es:entity-type-get-test-instances( $entity-type )
@@ -81,6 +85,18 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 				XMLAssert.assertXMLEqual(controlDoc, actualDoc);
 				resultNumber++;
 			}
+		}
+	}
+	
+	@Test
+	public void bug38517GetTestInstances() {
+		logger.info("Checking entity-type-get-test-instances() with a document node");
+		try {
+			evalOneResult("es:entity-type-get-test-instances(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for entity-type-get-test-instances() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
 }

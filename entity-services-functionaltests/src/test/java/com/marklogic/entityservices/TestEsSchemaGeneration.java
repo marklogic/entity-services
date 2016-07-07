@@ -16,6 +16,9 @@
 package com.marklogic.entityservices;
 
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -31,6 +34,7 @@ import org.xml.sax.SAXException;
 
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
 /**
@@ -111,6 +115,18 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			
 		}
 
+	}
+	
+	@Test
+	public void bug38517SchemaGen() {
+		logger.info("Checking schema-generate() with a document node");
+		try {
+			evalOneResult("es:schema-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for schema-generate() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+		}
 	}
 
 	@AfterClass

@@ -241,6 +241,18 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}*/
 	
 	@Test
+	public void bug38517ConvModGen() {
+		logger.info("Checking conversion-module-generate() with a document node");
+		try {
+			evalOneResult("es:conversion-module-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for conversion-module-generate() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+		}
+	}
+	
+	@Test
 	//This test verifies that conversion module generates a document as output and not text
 	public void testConvModOutputNodeKind() {
 		

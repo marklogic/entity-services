@@ -27,6 +27,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -72,6 +76,19 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
+	
+	@Test
+	public void bug38517SearchOptionsGen() {
+		logger.info("Checking search-options-generate() with a document node");
+		try {
+			evalOneResult("es:search-options-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for search-options-generate() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+		}
+	}
+
 
 	
 }

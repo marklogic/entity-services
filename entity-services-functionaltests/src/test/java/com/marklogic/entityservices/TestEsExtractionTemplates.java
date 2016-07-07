@@ -228,6 +228,18 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 					template);
 			
 		}
+	
+	@Test
+	public void bug38517ExtTempGen() {
+		logger.info("Checking extraction-template-generate() with a document node");
+		try {
+			evalOneResult("es:extraction-template-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			fail("eval should throw an ES-ENTITYTYPE INVALID exception for extraction-template-generate() with a document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+		}
+	}
 
 	@AfterClass
 	public static void removeTemplates() {

@@ -5,24 +5,15 @@
 </search:element>
 </search:value>
 </search:constraint>
-<search:constraint name="Discontinued">
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/Discontinued</search:path-index>
-</search:range>
-</search:constraint>
-<search:constraint name="ContactName">
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/ContactName</search:path-index>
-</search:range>
+<search:constraint name="CustomerId">
+<search:value>
+<search:element ns="" name="CustomerId">
+</search:element>
+</search:value>
 </search:constraint>
 <search:constraint name="CompanyName">
 <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CompanyName</search:path-index>
-</search:range>
-</search:constraint>
-<search:constraint name="Weight">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Weight</search:path-index>
 </search:range>
 </search:constraint>
 <search:constraint name="Country">
@@ -32,15 +23,25 @@
 </search:constraint>
 <!--
 This item is a duplicate and is commented out so as to create a valid artifact.
- <search:constraint name="Weight" xmlns:search="http://marklogic.com/appservices/search">
-  <search:word>
-    <search:element ns="" name="Weight"/>
-  </search:word>
+ <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
+  <search:range type="xs:decimal" facet="true">
+    <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerId</search:path-index>
+  </search:range>
 </search:constraint> 
 -->
-<search:constraint name="Awards">
-<search:range type="xs:float" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Awards</search:path-index>
+<search:constraint name="ContactName">
+<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/ContactName</search:path-index>
+</search:range>
+</search:constraint>
+<search:constraint name="Weight">
+<search:range type="xs:int" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Weight</search:path-index>
+</search:range>
+</search:constraint>
+<search:constraint name="Height">
+<search:range type="xs:int" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Height</search:path-index>
 </search:range>
 </search:constraint>
 <search:constraint name="Numberyrs">
@@ -48,46 +49,9 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Numberyrs</search:path-index>
 </search:range>
 </search:constraint>
-<search:constraint name="CustomerId">
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerId</search:path-index>
-</search:range>
-</search:constraint>
-<search:constraint name="dateofShipment">
-<search:range type="xs:date" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/dateofShipment</search:path-index>
-</search:range>
-</search:constraint>
-<search:constraint name="ProductsPurchased">
-<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/ProductsPurchased</search:path-index>
-</search:range>
-</search:constraint>
-<search:constraint name="SupplierID">
-<search:word>
-<search:element ns="" name="SupplierID">
-</search:element>
-</search:word>
-</search:constraint>
-<!--
-This item is a duplicate and is commented out so as to create a valid artifact.
- <search:constraint name="DaysofSurfing" xmlns:search="http://marklogic.com/appservices/search">
-  <search:word>
-    <search:element ns="" name="DaysofSurfing"/>
-  </search:word>
-</search:constraint> 
--->
-<!--
-This item is a duplicate and is commented out so as to create a valid artifact.
- <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
-  <search:value>
-    <search:element ns="" name="CustomerId"/>
-  </search:value>
-</search:constraint> 
--->
-<search:constraint name="UnitPrice">
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
+<search:constraint name="Awards">
+<search:range type="xs:float" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Awards</search:path-index>
 </search:range>
 </search:constraint>
 <search:constraint name="Age">
@@ -95,20 +59,14 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Age</search:path-index>
 </search:range>
 </search:constraint>
-<search:constraint name="DaysofSurfing">
-<search:range type="xs:decimal" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/DaysofSurfing</search:path-index>
+<search:constraint name="dateofShipment">
+<search:range type="xs:date" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/dateofShipment</search:path-index>
 </search:range>
 </search:constraint>
-<search:constraint name="ProductName">
-<search:value>
-<search:element ns="" name="ProductName">
-</search:element>
-</search:value>
-</search:constraint>
-<search:constraint name="Height">
-<search:range type="xs:int" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/Height</search:path-index>
+<search:constraint name="dateofOrder">
+<search:range type="xs:dateTime" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/dateofOrder</search:path-index>
 </search:range>
 </search:constraint>
 <search:constraint name="CustSince">
@@ -116,6 +74,24 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustSince</search:path-index>
 </search:range>
 </search:constraint>
+<search:constraint name="DaysofSurfing">
+<search:range type="xs:decimal" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/DaysofSurfing</search:path-index>
+</search:range>
+</search:constraint>
+<search:constraint name="ProductsPurchased">
+<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/ProductsPurchased</search:path-index>
+</search:range>
+</search:constraint>
+<!--
+This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
+  <search:word>
+    <search:element ns="" name="CustomerId"/>
+  </search:word>
+</search:constraint> 
+-->
 <!--
 This item is a duplicate and is commented out so as to create a valid artifact.
  <search:constraint name="Age" xmlns:search="http://marklogic.com/appservices/search">
@@ -126,16 +102,41 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 -->
 <!--
 This item is a duplicate and is commented out so as to create a valid artifact.
- <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
+ <search:constraint name="Weight" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
-    <search:element ns="" name="CustomerId"/>
+    <search:element ns="" name="Weight"/>
   </search:word>
 </search:constraint> 
 -->
-<search:constraint name="dateofOrder">
-<search:range type="xs:dateTime" facet="true">
-<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/dateofOrder</search:path-index>
+<!--
+This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="DaysofSurfing" xmlns:search="http://marklogic.com/appservices/search">
+  <search:word>
+    <search:element ns="" name="DaysofSurfing"/>
+  </search:word>
+</search:constraint> 
+-->
+<search:constraint name="ProductName">
+<search:value>
+<search:element ns="" name="ProductName">
+</search:element>
+</search:value>
+</search:constraint>
+<search:constraint name="UnitPrice">
+<search:range type="xs:decimal" facet="true">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
 </search:range>
+</search:constraint>
+<search:constraint name="Discontinued">
+<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/Discontinued</search:path-index>
+</search:range>
+</search:constraint>
+<search:constraint name="SupplierID">
+<search:word>
+<search:element ns="" name="SupplierID">
+</search:element>
+</search:word>
 </search:constraint>
 <search:tuples name="Customer">
 <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">

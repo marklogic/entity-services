@@ -21,7 +21,7 @@ xquery version "1.0-ml";
  : database of your application, and check it into your source control system.
  :
  : Modification History:
- :   Generated at timestamp: 2016-06-09T09:53:59.453085-07:00
+ :   Generated at timestamp: 2016-07-07T12:10:26.123308-07:00
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
@@ -77,8 +77,8 @@ declare function et-required:extract-instance-ETOne(
          : Once you've customized this function, write a test with expected inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)
          :)
-        =>   map:with('a',                      data($source-node/ETOne/a))
-        =>   map:with('b',                      data($source-node/ETOne/b))
+           =>map:with('a',                      data($source-node/ETOne/a))
+           =>map:with('b',                      data($source-node/ETOne/b))
         =>es:optional('c',                      data($source-node/ETOne/c))
    
 };
@@ -156,4 +156,3 @@ declare function et-required:instance-to-envelope(
         }
     }
 };
-

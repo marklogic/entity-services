@@ -149,7 +149,17 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         then map:get(map:get(map:get($properties-map, $property-key), "items"), "$ref")
         else map:get(map:get($properties-map, $property-key), "$ref")
     let $path-to-property := concat("$source-node/", $entity-type-key, "/", $property-key)
-    let $value := 
+    let $property-comment :=
+        if (empty($ref))
+        then ""
+        else if (contains($ref, "#/definitions"))
+        then ""
+        else concat(
+      '    (: The following property assigment comes from an external reference.',
+'&#10;         : Its generated value probably requires developer attention.',
+'&#10;         :)',
+'&#10;    ')
+    let $value :=
         if (empty($ref))
         then 
             $wrap-if-array($path-to-property)
@@ -157,14 +167,13 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             if(contains($ref, "#/definitions"))
             then
             concat("&#10;            if (", $path-to-property, "/element())",
-                   "&#10;            then json:to-array(", 
+                   "&#10;            then json:to-array(",
                     $path-to-property, " ! ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "(.))",
                    "&#10;            else data(",
-                   $path-to-property, 
+                   $path-to-property,
                    ")")
             else
                concat(
-                '(: The following assignment comes from an external reference.  Its value probably requires developer attention :)',
                 $path-to-property, "/node()")
                 
     (: if a property is required, use map:with to force inclusion :)
@@ -173,7 +182,8 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         then "       =>map:with("
         else "    =>es:optional("
     return
-    concat($function-call-string, 
+    concat($property-comment,
+            $function-call-string, 
             functx:pad-string-to-length("'" || $property-key || "',", " ", max((  (string-length($property-key)+4), 25) )+1 ),
             $value, 
             ")&#10;   "

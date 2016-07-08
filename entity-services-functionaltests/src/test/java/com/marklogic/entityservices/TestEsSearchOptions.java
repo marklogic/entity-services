@@ -111,6 +111,21 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	}
 	*/
 	
+	@Test
+	public void testSearchOptionsGenerate3() throws IOException, TestEvalException, SAXException, TransformerException {
+		String entityType = "valid-no-baseUri.json";
+		
+		DOMHandle handle = evalOneResult("es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		Document searchOptions = handle.get();
+
+        //debugOutput(searchOptions);
+        InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-no-baseUri.xml");
+		Document filesystemXML = builder.parse(is);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLUnit.setIgnoreComments(true);
+		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
+				searchOptions);
+	}
 	
 	@Test
 	public void bug38517SearchOptionsGen() {

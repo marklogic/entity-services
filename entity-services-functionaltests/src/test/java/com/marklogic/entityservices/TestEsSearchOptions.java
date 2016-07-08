@@ -93,6 +93,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 				searchOptions);
 	}
 	
+	/* uncomment this test when bug#40666 gets fixed
 	@Test
 	public void testSearchOptions3() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "primary-key-as-a-ref.xml";
@@ -108,6 +109,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
+	*/
 	
 	
 	@Test

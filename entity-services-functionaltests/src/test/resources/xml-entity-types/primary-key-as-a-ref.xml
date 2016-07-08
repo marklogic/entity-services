@@ -21,6 +21,8 @@
         </fof>
        </es:properties>
        <es:primary-key>fof</es:primary-key>
+       <es:required>fof</es:required>
+       <es:range-index>fof</es:range-index>
      </Customer>
      <Product>
         <es:properties>

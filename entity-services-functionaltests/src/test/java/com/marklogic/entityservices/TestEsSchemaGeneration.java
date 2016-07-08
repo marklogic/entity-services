@@ -41,7 +41,7 @@ import com.marklogic.client.io.StringHandle;
  * Tests the server-side function es:echema-generate($entity-type) as
  * element(xsd:schema)
  * 
- * Stub - TODO implmement.
+ * Stub - TODO implement.
  *
  */
 public class TestEsSchemaGeneration extends EntityServicesTestBase {
@@ -109,14 +109,19 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			
 				String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-"+i+".xml");
 				logger.info("Validating for instance: "+testInstanceName);
+				try{
 				DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
 					new DOMHandle());
+				fail("Schema Validation failed.");
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
 				Document filesystemXML = builder.parse(is);
 				XMLUnit.setIgnoreWhitespace(true);
 				XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
 						validateResult.get());
 				
+				}catch (TestEvalException e) {
+					throw new RuntimeException(e);
+				}	
 			}
 			
 			removeSchema(entityType);
@@ -141,7 +146,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public static void cleanupSchemas() {
 		for (String entityType : schemas.keySet()) {
 
-			String moduleName = "/ext/" + entityType.replaceAll("\\.(xml|json)", ".xsd");
+			String moduleName = entityType.replaceAll("\\.(xml|json)", ".xsd");
 
 			docMgr.delete(moduleName);
 		}

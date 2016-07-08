@@ -78,6 +78,39 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	}
 	
 	@Test
+	public void testSearchOptionsWithXML() throws IOException, TestEvalException, SAXException, TransformerException {
+		String entityType = "valid-northwind1.xml";
+		
+		DOMHandle handle = evalOneResult("es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		Document searchOptions = handle.get();
+
+        //debugOutput(searchOptions);
+		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-northwind1.xml");
+		Document filesystemXML = builder.parse(is);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLUnit.setIgnoreComments(true);
+		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
+				searchOptions);
+	}
+	
+	@Test
+	public void testSearchOptions3() throws IOException, TestEvalException, SAXException, TransformerException {
+		String entityType = "primary-key-as-a-ref.xml";
+		
+		DOMHandle handle = evalOneResult("es:entity-type-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		Document searchOptions = handle.get();
+
+        //debugOutput(searchOptions);
+		InputStream is = this.getClass().getResourceAsStream("/test-search-options/primary-key-as-a-ref.xml");
+		Document filesystemXML = builder.parse(is);
+		XMLUnit.setIgnoreWhitespace(true);
+		XMLUnit.setIgnoreComments(true);
+		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
+				searchOptions);
+	}
+	
+	
+	@Test
 	public void bug38517SearchOptionsGen() {
 		logger.info("Checking search-options-generate() with a document node");
 		try {

@@ -78,7 +78,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")) {continue; }
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("primary-key-as-a-ref")) {continue; }
 			
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
@@ -181,7 +181,8 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 	public void verifyExtractionTemplateGenerate() throws TestEvalException, SAXException, IOException, TransformerException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")) { continue;}
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("primary-key-as-a-ref")) { continue;}
+			
 
 			logger.info("Validating extraction template for:" + entityType);
 			//logger.info(docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new StringHandle()).get());

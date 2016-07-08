@@ -21,7 +21,7 @@ xquery version "1.0-ml";
  : database of your application, and check it into your source control system.
  :
  : Modification History:
- :   Generated at timestamp: 2016-06-09T09:53:59.453085-07:00
+ :   Generated at timestamp: 2016-07-11T16:37:33.713808-07:00
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
@@ -83,6 +83,30 @@ declare function et-required:extract-instance-ETOne(
    
 };
     
+
+
+(:~
+ : This function includes an array if there are items to put in it.
+ : If there are no such items, then it returns an empty sequence.
+ :)
+declare function et-required:extract-array(
+    $path-to-property as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($path-to-property))
+    then ()
+    else json:to-array($path-to-property ! $fn(.))
+};
+
+declare function et-required:extract-array(
+    $path-to-property as item()*
+) as json:array?
+{
+    et-required:extract-array($path-to-property, fn:data#1)
+};
+
+
 
 (:~
  : Turns an entity instance into an XML structure.

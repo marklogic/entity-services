@@ -29,7 +29,7 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
 	
 	@BeforeClass
 	public static void setup() {
-		setupClients();
+   		setupClients();
 		TestSetup.getInstance().loadEntityTypes("/json-entity-types", "SchemaCompleteEntityType-0.0.1.json");
 	}
 	

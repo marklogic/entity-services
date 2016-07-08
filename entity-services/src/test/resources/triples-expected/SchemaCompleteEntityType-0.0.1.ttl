@@ -213,6 +213,7 @@ order:doubleKey
 
 order:arrayKey
         a es:Property ;
+        a es:RequiredProperty ;
         a es:RangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayKey/items> ;

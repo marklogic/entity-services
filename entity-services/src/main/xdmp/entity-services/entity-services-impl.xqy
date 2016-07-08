@@ -500,16 +500,8 @@ declare function esi:database-properties-generate(
         for $range-index-property in json:array-values($range-index-properties)
         let $ri-map := json:object()
         let $property := map:get(map:get($entity-type-map, "properties"), $range-index-property)
-        let $specified-datatype := 
-            if (map:contains($property, "datatype"))
-            then
-                if (map:get($property, "datatype") eq "array")
-                then 
-                    if (map:contains(map:get($property, "items"), "datatype"))
-                    then map:get(map:get($property, "items"), "datatype")
-                    else esi:ref-datatype($entity-type, $entity-type-name, $range-index-property)
-                else map:get($property, "datatype")
-            else esi:ref-datatype($entity-type, $entity-type-name, $range-index-property)
+        let $specified-datatype := esi:resolve-datatype($entity-type, $entity-type-name, $range-index-property)
+
         let $datatype := esi:indexable-datatype($specified-datatype)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($ri-map, "collation", $collation)
@@ -649,6 +641,32 @@ declare function esi:schema-generate(
 };
 
 
+declare function esi:resolve-datatype(
+    $entity-type as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as xs:string
+{
+    let $property := $entity-type=>map:get("definitions")
+        =>map:get($entity-type-name)
+        =>map:get("properties")
+        =>map:get($property-name)
+    return
+    if (map:contains($property, "datatype"))
+    then
+        if (map:get($property, "datatype") eq "array")
+        then 
+            if (map:contains(map:get($property, "items"), "datatype"))
+            then map:get(map:get($property, "items"), "datatype")
+            else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
+        else map:get($property, "datatype")
+    else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
+};
+
+
+(:
+ : resolves a reference and returns its datatype
+ :)
 declare private function esi:ref-datatype(
     $entity-type as map:map,
     $entity-type-name as xs:string,
@@ -679,9 +697,11 @@ declare function esi:ref-type-name(
     $property-name as xs:string
 ) as xs:string
 {
-    let $definitions := map:get($entity-type, "definitions")
-    let $entity-type := map:get($definitions, $entity-type-name)
-    let $property := map:get(map:get($entity-type, "properties"), $property-name)
+    let $property := $entity-type
+        =>map:get("definitions")
+        =>map:get($entity-type-name)
+        =>map:get("properties")
+        =>map:get($property-name)
     let $ref-target := head( (map:get($property, "$ref"), 
                               map:get(map:get($property, "items"), "$ref") ) )
     return replace($ref-target, "#/definitions/", "")
@@ -694,8 +714,9 @@ declare private function esi:ref-type(
     $property-name as xs:string
 ) as map:map?
 {
-    let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
-    return map:get(map:get($entity-type, "definitions"), $ref-type-name)
+    $entity-type
+        =>map:get("definitions")
+        =>map:get( esi:ref-type-name($entity-type, $entity-type-name, $property-name) )
 };
 
 declare private function esi:ref-has-no-primary-key(
@@ -971,18 +992,8 @@ declare function esi:search-options-generate(
             else ()
         let $_range-constraints :=
             for $property-name in json:array-values(map:get($entity-type-map, "rangeIndex"))
+            let $specified-datatype := esi:resolve-datatype($entity-type,$entity-type-name,$property-name)
             let $property-map := map:get($properties-map, $property-name)
-            (: TODO refactor :)
-            let $specified-datatype := 
-                if (map:contains($property-map, "datatype"))
-                then
-                    if (map:get($property-map, "datatype") eq "array")
-                    then 
-                        if (map:contains(map:get($property-map, "items"), "datatype"))
-                        then map:get(map:get($property-map, "items"), "datatype")
-                        else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
-                    else map:get($property-map, "datatype")
-                else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
             let $datatype := esi:indexable-datatype($specified-datatype)
             let $collation := if ($datatype eq "string") 
                 then attribute

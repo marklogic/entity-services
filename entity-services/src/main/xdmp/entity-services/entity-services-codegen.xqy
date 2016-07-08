@@ -136,12 +136,18 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     let $properties-map := map:get($this-type, "properties")
     let $properties-keys := map:keys($properties-map)
     for $property-key in map:keys($properties-map)
+    let $is-required := $property-key = 
+            ( map:get($this-type, "primaryKey"), json:array-values( map:get($this-type, "required")) )
     let $is-array := 
             map:get(map:get($properties-map, $property-key), "datatype") 
             eq "array"
+    let $property-datatype := esi:resolve-datatype($entity-type, $entity-type-key, $property-key)
     let $wrap-if-array := function($str) {
+            if ($is-array and $is-required)
+            then concat("json:to-array(", $str, " ! data(.) )")
+            else
             if ($is-array)
-            then concat("json:to-array(", $str, " ! data(.))")
+            then concat($prefix, ":extract-array(", $str, ")")
             else concat("data(", $str, ")")
         }
     let $ref :=
@@ -167,8 +173,8 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             if(contains($ref, "#/definitions"))
             then
             concat("&#10;            if (", $path-to-property, "/element())",
-                   "&#10;            then json:to-array(",
-                    $path-to-property, " ! ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "(.))",
+                   "&#10;            then ",  $prefix, ":extract-array(",
+                    $path-to-property, ", ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "#1)",
                    "&#10;            else data(",
                    $path-to-property,
                    ")")
@@ -178,7 +184,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
                 
     (: if a property is required, use map:with to force inclusion :)
     let $function-call-string :=
-        if ($property-key = ( map:get($this-type, "primaryKey"), json:array-values( map:get($this-type, "required")) ))
+        if ($is-required)
         then "       =>map:with("
         else "    =>es:optional("
     return
@@ -193,6 +199,30 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
 }};
     </extract-instance>/text()
 }
+
+
+(:~
+ : This function includes an array if there are items to put in it.
+ : If there are no such items, then it returns an empty sequence.
+ :)
+declare function {$prefix}:extract-array(
+    $path-to-property as item()*,
+    $fn as function(*)
+) as json:array?
+{{
+    if (empty($path-to-property))
+    then ()
+    else json:to-array($path-to-property ! $fn(.))
+}};
+
+declare function {$prefix}:extract-array(
+    $path-to-property as item()*
+) as json:array?
+{{
+    {$prefix}:extract-array($path-to-property, fn:data#1)
+}};
+
+
 
 (:~
  : Turns an entity instance into an XML structure.

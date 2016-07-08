@@ -18,10 +18,13 @@ package com.marklogic.entityservices.tests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.*;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -164,7 +167,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	 * @throws TransformerException 
 	 */
 	@Test
-	public void testConversionModuleFuntionsOnIdentityPayload() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
+	public void testConversionModuleExtractions() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
 
 		TestSetup.getInstance().loadExtraFiles("/test-instances", ".*");
 		
@@ -176,13 +179,19 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			String entityTypeName = entityType.replace(".json",  "");
 			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
 			
-			logger.debug("Checking canonical and envelope: " + entityType);
-				
-			DOMHandle handle = evalOneResult(
+			logger.debug("Checking canonical XML function and envelope function and empry extraction: " + entityType);
+
+			DOMHandle handle =
+					evalOneResult(
 				moduleImport(entityType) +
 				"let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
 				+"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
-				+"return (xdmp:document-insert('"+entityTypeTestFileName+"-envelope.xml', $envelope), $canonical)", new DOMHandle());
+                +"let $empty-extraction := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( <bah/> ) )"
+				+"return (xdmp:document-insert('"+entityTypeTestFileName+ "-envelope.xml', $envelope), " +
+						" xdmp:document-insert('"+entityTypeTestFileName+"-empty.xml' ,$empty-extraction), " +
+						"$canonical)",
+							new DOMHandle());
+
 			Document actualInstance = handle.get();
 			assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
 			
@@ -216,11 +225,14 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			DOMHandle domHandle = evalOneResult(moduleImport(entityType) + "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )", new DOMHandle());
 			Document originalDocument = domHandle.get();
 			XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
+
+			logger.debug("Removing test data");
+			docMgr.delete(entityTypeTestFileName +"-envelope.xml", entityTypeTestFileName + "-empty.xml");
 			
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testEnvelopeFunction() throws TestEvalException {
 		
@@ -252,11 +264,8 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 
 	@AfterClass
 	public static void removeConversions() {
-		for (String entityType : conversionModules.keySet()) {
-			
-			String moduleName = "/ext/" + entityType.replaceAll("\\.(xml|json)", ".xqy");
-			
-			docMgr.delete(moduleName);
-		}
+        Set<String> toDelete = new HashSet<String>();
+        conversionModules.keySet().forEach(x -> toDelete.add("/ext/" + x.replaceAll("\\.(xml|json)", ".xqy")));
+        //docMgr.delete(toDelete.toArray(new String[] {}));
 	}
 }

@@ -73,8 +73,8 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")||entityType.contains("valid-ref-combo")
-					||entityType.contains("valid-datatype-array")||entityType.contains("valid-definitions-empty")) {
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
+					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")) {
 				continue;
 			}
 
@@ -95,24 +95,32 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")||entityType.contains("valid-ref-combo")||entityType.contains("valid-datatype-array")
-					||entityType.contains("valid-definitions-empty")||entityType.contains("valid-no-baseUri")||entityType.contains("valid-simple-ref")) {
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
+					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")) {
 				continue;
 			}
-
-			String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-0.xml");
-
+			
+			StringHandle instances = evalOneResult("count(map:keys(map:get(es:entity-type-from-node( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
+			//logger.info("Count of definitions is: "+Integer.valueOf(instances.get()));
+			
 			storeSchema(entityType, schemas.get(entityType));
-			DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
+			
+			for(int i=0;i<Integer.valueOf(instances.get());i++) {
+			
+				String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-"+i+".xml");
+				logger.info("Validating for instance: "+testInstanceName);
+				DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
 					new DOMHandle());
+				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
+				Document filesystemXML = builder.parse(is);
+				XMLUnit.setIgnoreWhitespace(true);
+				XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+						validateResult.get());
+				
+			}
+			
 			removeSchema(entityType);
 
-			InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
-			Document filesystemXML = builder.parse(is);
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-					validateResult.get());
-			
 		}
 
 	}

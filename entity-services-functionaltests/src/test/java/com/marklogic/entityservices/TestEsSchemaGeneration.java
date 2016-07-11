@@ -112,7 +112,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				try{
 				DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
 					new DOMHandle());
-				fail("Schema Validation failed.");
+				
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
 				Document filesystemXML = builder.parse(is);
 				XMLUnit.setIgnoreWhitespace(true);
@@ -120,7 +120,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 						validateResult.get());
 				
 				}catch (TestEvalException e) {
-					throw new RuntimeException(e);
+					throw new RuntimeException("Error validating "+entityType,e);
 				}	
 			}
 			

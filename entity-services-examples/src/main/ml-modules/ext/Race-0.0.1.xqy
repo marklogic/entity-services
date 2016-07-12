@@ -6,8 +6,9 @@ xquery version "1.0-ml";
  : Modification History:
  :   Generated at timestamp: 2016-04-13T13:41:03.235074-07:00
  :   Modified to lookup/denormalize runner into run, and source from JSON raw,
+ :   For EA-3, revised to conform to new styles, enhancements, and bugfixes.
  :   Persisted by Charles Greer
- :   Date: 2016-04-01
+ :   Date: 2016-07-12
  :)
 module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1";
 
@@ -34,10 +35,11 @@ declare function race:extract-instance-Race(
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
         =>map:with('$attachments', xdmp:quote($source-node))
-        =>map:with('name',                   data($source-node/name))
-        =>map:with('comprisedOfRuns',        json:to-array($source-node/comprisedOfRuns))
-        =>map:with('wonByRunner',            data($source-node/wonByRunner))
-        =>map:with('courseLength',           data($source-node/courseLength))
+        =>map:with('name',                   xs:string($source-node/name))
+        =>map:with('comprisedOfRuns', race:extract-array($source-node/Race/comprisedOfRuns, 
+                                                            race:extract-instance-Run#1 ))
+        =>map:with('wonByRunner',            xs:string($source-node/Race/wonByRunner))
+        =>es:optional('courseLength',           xs:decimal($source-node/Race/courseLength))
 };
 
 (:~
@@ -53,10 +55,10 @@ declare function race:extract-instance-Run(
     json:object()
         =>map:with('$type', 'Run')
         =>map:with('$attachments', xdmp:quote($source-node))
-        =>map:with('id',                     data($source-node/id))
-        =>map:with('date',                   data($source-node/date))
-        =>map:with('distance',               data($source-node/distance))
-        =>map:with('distanceLabel',               data($source-node/distanceLabel))
+        =>map:with('id',                     xs:string($source-node/id))
+        =>map:with('date',                   xs:date($source-node/date))
+        =>map:with('distance',               xs:decimal($source-node/distance))
+        =>map:with('distanceLabel',          xs:string($source-node/distanceLabel))
         =>map:with('duration',               functx:dayTimeDuration((), (), xs:decimal($source-node/duration), ()))
         =>map:with('runByRunner',            race:extract-instance-Runner($runnerDoc))
 };
@@ -68,11 +70,26 @@ declare function race:extract-instance-Runner(
 {
     json:object()
         =>map:with('$type', 'Runner')
-        =>map:with('name',                   data($source-node/name))
-        =>map:with('age',                    data($source-node/age))
-        =>map:with('gender',                  data($source-node/gender))
+        =>map:with('name',                   xs:string($source-node/name))
+        =>map:with('age',                    xs:int($source-node/age))
+        =>map:with('gender',                 xs:string($source-node/gender))
 };
     
+
+(:~
+ : This function includes an array if there are items to put in it.
+ : If there are no such items, then it returns an empty sequence.
+ :)
+declare function race:extract-array(
+    $path-to-property as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($path-to-property))
+    then ()
+    else json:to-array($path-to-property ! $fn(.))
+};
+
 
 (:~
  : Turns an entity instance into an XML structure.

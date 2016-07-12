@@ -14,14 +14,14 @@ xquery version "1.0-ml";
  :     instances when storing them in documents.  You may choose to remove 
  :     code that denormalizes, and just include reference values in your instances 
  :     instead.
- : 3.  Source XPath expressions.  The data coming into the extract-instance={X} 
+ : 3.  Source XPath expressions.  The data coming into the extract-instance-{X} 
  :     functions will probably not be exactly what this module predicts.
  :
  : After modifying this file, put it in your project for deployment to the modules 
  : database of your application, and check it into your source control system.
  :
  : Modification History:
- :   Generated at timestamp: 2016-04-22T10:24:14.942526-07:00
+ :   Generated at timestamp: 2016-07-12T15:39:58.145671-07:00
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
@@ -39,7 +39,9 @@ import module namespace es = "http://marklogic.com/entity-services"
  :  The resulting map is used by instance-to-canonical-xml to create documents
  :  in the database.
  :  
- :  There are numerous customizations you may wish to apply to this module.
+ :  It is expected that an implementer will edit at least XPath expressions in
+ :  the extraction functions.  It is less likely that you will want to edit
+ :  the instance-to-canonical-xml or envelope functions.
  :)
 
 (:~
@@ -54,29 +56,32 @@ declare function race:extract-instance-Race(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Race')
+        =>map:with('$type', 'Race')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
+         : If the source document is JSON, use 
+         : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
-        (: The following lines are generated from the Race entity type 
+        =>map:with('$attachments', $source-node)
+        (: The following lines are generated from the 'Race' entity type 
          : You need to ensure that all of the property paths are correct for your source
-         : data to populate instances.  You can also implement lookup functions, or 
-         : populate the instance with constants.
+         : data to populate instances.  The general pattern is
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
+         : but you may also wish to convert values
+         : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
+         : You can also implement lookup functions, 
+         : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
+         : or populate the instance with constants.
+         : =>map:with('constantValue', 10)
+         : Once you've customized this function, write a test with expected inputs, and a test instance document
+         : created with es:entity-type-get-test-instances($entity-type)
          :)
-        =>es:with($source-node/Race/name,             'name',                   data($source-node/Race/name))
-        =>es:with($source-node/Race/comprisedOfRuns,  'comprisedOfRuns',                
-            if ($source-node/Race/comprisedOfRuns/element())
-            then json:to-array($source-node/Race/comprisedOfRuns ! race:extract-instance-Run(.))
-            else data($source-node/Race/comprisedOfRuns))
-        =>es:with($source-node/Race/wonByRunner,      'wonByRunner',                
-            if ($source-node/Race/wonByRunner/element())
-            then json:to-array($source-node/Race/wonByRunner ! race:extract-instance-Runner(.))
-            else data($source-node/Race/wonByRunner))
-        =>es:with($source-node/Race/courseLength,     'courseLength',                data($source-node/Race/courseLength))
-   
+        =>map:with('name',                   xs:string($source-node/name))
+        =>map:with('comprisedOfRuns', race:extract-array($source-node/Race/comprisedOfRuns, 
+                                                            race:extract-instance-Run#1 ))
+        =>map:with('wonByRunner',            xs:string($source-node/Race/wonByRunner)
+        =>map:with('courseLength',           xs:decimal($source-node/Race/courseLength))
 };
     
 (:~
@@ -91,27 +96,36 @@ declare function race:extract-instance-Run(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Run')
+        =>map:with('$type', 'Run')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
+         : If the source document is JSON, use 
+         : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
-        (: The following lines are generated from the Run entity type 
+        =>map:with('$attachments', $source-node)
+        (: The following lines are generated from the 'Run' entity type 
          : You need to ensure that all of the property paths are correct for your source
-         : data to populate instances.  You can also implement lookup functions, or 
-         : populate the instance with constants.
+         : data to populate instances.  The general pattern is
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
+         : but you may also wish to convert values
+         : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
+         : You can also implement lookup functions, 
+         : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
+         : or populate the instance with constants.
+         : =>map:with('constantValue', 10)
+         : Once you've customized this function, write a test with expected inputs, and a test instance document
+         : created with es:entity-type-get-test-instances($entity-type)
          :)
-        =>es:with($source-node/Run/id,                'id',                     data($source-node/Run/id))
-        =>es:with($source-node/Run/date,              'date',                   data($source-node/Run/date))
-        =>es:with($source-node/Run/distance,          'distance',               data($source-node/Run/distance))
-        =>es:with($source-node/Run/distanceLabel,     'distanceLabel',               data($source-node/Run/distanceLabel))
-        =>es:with($source-node/Run/duration,          'duration',               data($source-node/Run/duration))
-        =>es:with($source-node/Run/runByRunner,       'runByRunner',               
+           =>map:with('id',                     xs:string($source-node/Run/id))
+           =>map:with('date',                   xs:date($source-node/Run/date))
+           =>map:with('distance',               xs:decimal($source-node/Run/distance))
+        =>es:optional('distanceLabel',          xs:string($source-node/Run/distanceLabel))
+           =>map:with('duration',               xs:dayTimeDuration($source-node/Run/duration))
+           =>map:with('runByRunner',            
             if ($source-node/Run/runByRunner/element())
-            then json:to-array($source-node/Run/runByRunner ! race:extract-instance-Runner(.))
-            else data($source-node/Run/runByRunner))
+            then race:extract-array($source-node/Run/runByRunner, race:extract-instance-Runner#1)
+            else xs:string($source-node/Run/runByRunner))
    
 };
     
@@ -127,24 +141,49 @@ declare function race:extract-instance-Runner(
 {
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>es:with(true(), '$type', 'Runner')
+        =>map:with('$type', 'Runner')
         (: This line adds the original source document as an attachment.
          : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
+         : If the source document is JSON, use 
+         : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-        =>es:with(true(), '$attachments', $source-node)
-        (: The following lines are generated from the Runner entity type 
+        =>map:with('$attachments', $source-node)
+        (: The following lines are generated from the 'Runner' entity type 
          : You need to ensure that all of the property paths are correct for your source
-         : data to populate instances.  You can also implement lookup functions, or 
-         : populate the instance with constants.
+         : data to populate instances.  The general pattern is
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
+         : but you may also wish to convert values
+         : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
+         : You can also implement lookup functions, 
+         : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
+         : or populate the instance with constants.
+         : =>map:with('constantValue', 10)
+         : Once you've customized this function, write a test with expected inputs, and a test instance document
+         : created with es:entity-type-get-test-instances($entity-type)
          :)
-        =>es:with($source-node/Runner/name,           'name',                   data($source-node/Runner/name))
-        =>es:with($source-node/Runner/age,            'age',                    data($source-node/Runner/age))
-        =>es:with($source-node/Runner/gender,         'gender',                  data($source-node/Runner/gender))
+           =>map:with('name',                   xs:string($source-node/Runner/name))
+           =>map:with('age',                    xs:int($source-node/Runner/age))
+        =>es:optional('gender',                 xs:string($source-node/Runner/gender))
    
 };
     
+
+
+(:~
+ : This function includes an array if there are items to put in it.
+ : If there are no such items, then it returns an empty sequence.
+ :)
+declare function race:extract-array(
+    $path-to-property as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($path-to-property))
+    then ()
+    else json:to-array($path-to-property ! $fn(.))
+};
+
 
 (:~
  : Turns an entity instance into an XML structure.
@@ -207,7 +246,7 @@ declare function race:instance-to-envelope(
         element es:envelope {
             element es:instance {
                 element es:info {
-                    element es:title { "Race" },
+                    element es:title { map:get($entity-instance,'$type') },
                     element es:version { "0.0.1" }
                 },
                 race:instance-to-canonical-xml($entity-instance)

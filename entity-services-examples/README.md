@@ -13,25 +13,17 @@ This entity type model is very simple, but has some test data associated
 with it and demonstrate the various aspects of this feature.
 
 
-### Step 1 load `src/main/ml-modules/entity-types/simple-race.json`
+### Step 1 load `data/entity-types/simple-race.json` and instance data.
 
+EA-3 TODO
 
-This is an entity type document.  Entity type documents are stored in the content database, so that they can provide a real-time schema for entity instances.
+There are examples in Java using the MarkLogic Data Movement SDK to load both entity type documents and instance data.
 
-For now, use curl to load this entity type as a first step.  Entity type documents must be loaded into a specific collection to be queried with SPARQL.
+src/main/resources/application.properties provides the paths to the DMSDK classes for data loading.
 
-```
-curl --user admin:admin --digest -X PUT --data-binary @src/main/ml-modules/entity-types/simple-race.json -Hcontent-type:application/json "http://localhost:8000/v1/documents?uri=simple-race.json&database=entity-services-examples-content&collection=http://marklogic.com/entity-services/entity-types"
-```
+EntityServicesLoader loads the entity-types.
+JsonInstanceLoader loads the instance data
 
-
-### Step 2 load staging data
-
-The 'data' directory contains "raw" data for this ingestion scenario.  mlcp will load all of the documents under this directory into a "raw" collection for entity services code to process.  Here's an mlcp command that loads this data.
-
-```
-mlcp.sh IMPORT -input_file_path data -input_file_pattern ".*.json" -username admin -password admin -host localhost -port 8000 -database entity-services-examples-content -output_collections raw
-```
 
 
 ### Step 3 generate some code artifacts.

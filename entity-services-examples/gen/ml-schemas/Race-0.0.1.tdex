@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
-            Extraction Template Generated from Entity Type Document
-            graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>
@@ -32,6 +32,7 @@
 	      <name>gender</name>
 	      <scalar-type>string</scalar-type>
 	      <val>gender</val>
+	      <nullable>true</nullable>
 	    </column>
 	  </columns>
 	</row>
@@ -53,11 +54,13 @@
 	      <name>wonByRunner</name>
 	      <scalar-type>string</scalar-type>
 	      <val>wonByRunner</val>
+	      <nullable>true</nullable>
 	    </column>
 	    <column>
 	      <name>courseLength</name>
 	      <scalar-type>decimal</scalar-type>
 	      <val>courseLength</val>
+	      <nullable>true</nullable>
 	    </column>
 	  </columns>
 	</row>
@@ -70,16 +73,18 @@
 	      <schema-name>Race</schema-name>
 	      <view-name>Race_comprisedOfRuns</view-name>
 	      <columns>
-		<!-- this column joins to PK of 'parent' -->
 		<column>
+		  <!--This column joins to property name of Race-->
 		  <name>name</name>
 		  <scalar-type>string</scalar-type>
 		  <val>../name</val>
 		</column>
 		<column>
+		  <!--This column joins to primary key of Run-->
 		  <name>comprisedOfRuns</name>
 		  <scalar-type>string</scalar-type>
 		  <val>.</val>
+		  <nullable>true</nullable>
 		</column>
 	      </columns>
 	    </row>
@@ -113,6 +118,7 @@
 	      <name>distanceLabel</name>
 	      <scalar-type>string</scalar-type>
 	      <val>distanceLabel</val>
+	      <nullable>true</nullable>
 	    </column>
 	    <column>
 	      <name>duration</name>

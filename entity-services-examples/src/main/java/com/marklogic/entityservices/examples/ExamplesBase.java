@@ -23,14 +23,14 @@ import java.util.Properties;
  * Base class for examples.
  * See the importJSON method for generic loading of JSON from a directory tree.
  */
-public class ExamplesBase {
+public abstract class ExamplesBase {
 
     private static Logger logger = LoggerFactory.getLogger(ExamplesBase.class);
 
-    DataMovementManager moveMgr;
-    JobTicket ticket;
-    ObjectMapper mapper;
-    Properties props;
+    protected DataMovementManager moveMgr;
+    protected JobTicket ticket;
+    protected ObjectMapper mapper;
+    protected Properties props;
 
     public ExamplesBase() throws IOException {
         props = new Properties();
@@ -39,16 +39,15 @@ public class ExamplesBase {
         DatabaseClient client = DatabaseClientFactory.newClient(
                 props.getProperty("mlHost"),
                 Integer.parseInt(props.getProperty("mlRestPort")),
-                props.getProperty("mlUsername"),
-                props.getProperty("mlPassword"),
-                DatabaseClientFactory.Authentication.DIGEST);
+                new DatabaseClientFactory.DigestAuthContext(
+                    props.getProperty("mlUsername"),
+                    props.getProperty("mlPassword")));
 
-        moveMgr = DataMovementManager.newInstance();
-        moveMgr.setClient(client);
+        moveMgr = DataMovementManager.newInstance().withClient(client);
         mapper = new ObjectMapper();
     }
 
-    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
+    protected void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 if (entry.toFile().isDirectory()) {
@@ -96,40 +95,12 @@ public class ExamplesBase {
 
         ticket=moveMgr.startJob(batcher);
 
-        importOrDescend(entityTypesDir, batcher, toCollection, Format.JSON);
+        importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
 
         batcher.flush();
     }
 
 
-    /*
-      This method uses a document-centric approach to RDF reference data, by invoking
-      a server-side transform that parses turtle into MarkLogic XML triples.
-     */
-    public void importRDF(Path referenceDataDir, String collection) {
-
-        logger.info("RDF Load Job started");
-
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher()
-                .withBatchSize(1)
-                .withThreadCount(1)
-                .withTransform(new ServerTransform("turtleToXml"))
-                .onBatchSuccess( (client, batch) ->  logger.info("Loaded rdf data batch") )
-                .onBatchFailure(
-                        (client, batch, throwable) -> {
-                            logger.warn("FAILURE on batch:" + batch.toString() + "\n",
-                                    throwable);
-                            throwable.printStackTrace();
-                        }
-                );
-        ;
-        ticket=moveMgr.startJob(batcher);
-
-        importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
-
-        batcher.flush();
-
-    }
 }
 
 

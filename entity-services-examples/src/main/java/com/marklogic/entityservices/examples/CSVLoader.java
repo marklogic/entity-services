@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.document.ServerTransform;
+import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.StringHandle;
 import com.marklogic.datamovement.DataMovementManager;
 import com.marklogic.datamovement.JobReport;
@@ -24,7 +25,11 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- *
+ *  This file is simple an example of how to load CSV files into MarkLogic.
+ *  It uses a csvMapper to create JSON documents, one for each row in the CSV.
+ *  For EA-3 this is just an example on how to use DMSDK wtih CSV and JSON.
+ *  It loads these 'raw' JSON documents for later processing
+ *  with in-place transform services. (Post EA-3)
  */
 public class CSVLoader extends ExamplesBase {
 
@@ -49,11 +54,11 @@ public class CSVLoader extends ExamplesBase {
 
         logger.info("job started.");
 
-        File dir = new File("/path/to/CSVs");
+        File dir = new File(props.getProperty("referenceDataDir") + "/csv");
 
         WriteHostBatcher batcher = moveMgr.newWriteHostBatcher()
-                .withBatchSize(600)
-                .withThreadCount(16)
+                .withBatchSize(100)
+                .withThreadCount(10)
                 .onBatchSuccess( (client, batch) ->  logger.info(getSummaryReport()) )
                 .onBatchFailure(
                         (client, batch, throwable) -> {
@@ -79,7 +84,8 @@ public class CSVLoader extends ExamplesBase {
                     String jsonString = mapper.writeValueAsString(jsonNode);
 
                     String uri = entry.getFileName().toString() + "-" + Long.toString(i++) + ".json";
-                    batcher.add(uri, new StringHandle(jsonString));
+                    DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections("raw", "csv");
+                    batcher.add(uri, metadata, new StringHandle(jsonString));
                     if (i % 1000 == 0) logger.info("Inserting JSON document " + uri);
                 }
                 it.close();

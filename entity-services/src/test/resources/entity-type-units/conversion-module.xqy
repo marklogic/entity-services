@@ -67,7 +67,7 @@ declare function et-required:extract-instance-ETOne(
         (: The following lines are generated from the 'ETOne' entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.  The general pattern is
-         : =>map:with('keyName', data($source-node/path/to/data/in/the/source))
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
          : but you may also wish to convert values
          : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
          : You can also implement lookup functions, 
@@ -77,9 +77,9 @@ declare function et-required:extract-instance-ETOne(
          : Once you've customized this function, write a test with expected inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)
          :)
-           =>map:with('a',                      data($source-node/ETOne/a))
-           =>map:with('b',                      data($source-node/ETOne/b))
-        =>es:optional('c',                      data($source-node/ETOne/c))
+           =>map:with('a',                      xs:integer($source-node/ETOne/a))
+           =>map:with('b',                      xs:string($source-node/ETOne/b))
+        =>es:optional('c',                      xs:date($source-node/ETOne/c))
    
 };
     
@@ -98,14 +98,6 @@ declare function et-required:extract-array(
     then ()
     else json:to-array($path-to-property ! $fn(.))
 };
-
-declare function et-required:extract-array(
-    $path-to-property as item()*
-) as json:array?
-{
-    et-required:extract-array($path-to-property, fn:data#1)
-};
-
 
 
 (:~

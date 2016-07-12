@@ -31,6 +31,15 @@ declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 
 
+declare private function es-codegen:casting-function-name(
+    $datatype as xs:string
+) as xs:string
+{
+    if ($datatype eq "iri")
+    then "sem:iri"
+    else "xs:" || $datatype
+};
+
 declare function es-codegen:conversion-module-generate(
     $entity-type as map:map
 ) as document-node()
@@ -120,7 +129,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         (: The following lines are generated from the '{ $entity-type-key }' entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.  The general pattern is
-         : =>map:with('keyName', data($source-node/path/to/data/in/the/source))
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
          : but you may also wish to convert values
          : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
          : You can also implement lookup functions, 
@@ -142,13 +151,14 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             map:get(map:get($properties-map, $property-key), "datatype") 
             eq "array"
     let $property-datatype := esi:resolve-datatype($entity-type, $entity-type-key, $property-key)
+    let $casting-function-name := es-codegen:casting-function-name($property-datatype)
     let $wrap-if-array := function($str) {
             if ($is-array and $is-required)
-            then concat("json:to-array(", $str, " ! data(.) )")
+            then concat("json:to-array(", $str, " ! ", $casting-function-name, "(.) )")
             else
             if ($is-array)
-            then concat($prefix, ":extract-array(", $str, ")")
-            else concat("data(", $str, ")")
+            then concat($prefix, ":extract-array(", $str, ", ", $casting-function-name, "#1)")
+            else concat($casting-function-name, "(", $str, ")")
         }
     let $ref :=
         if ($is-array)
@@ -175,7 +185,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             concat("&#10;            if (", $path-to-property, "/element())",
                    "&#10;            then ",  $prefix, ":extract-array(",
                     $path-to-property, ", ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "#1)",
-                   "&#10;            else data(",
+                   "&#10;            else ", $casting-function-name, "(",
                    $path-to-property,
                    ")")
             else
@@ -214,14 +224,6 @@ declare function {$prefix}:extract-array(
     then ()
     else json:to-array($path-to-property ! $fn(.))
 }};
-
-declare function {$prefix}:extract-array(
-    $path-to-property as item()*
-) as json:array?
-{{
-    {$prefix}:extract-array($path-to-property, fn:data#1)
-}};
-
 
 
 (:~

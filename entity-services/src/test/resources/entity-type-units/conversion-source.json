@@ -25,7 +25,7 @@
         },
         "p4": {
           "datatype": "string",
-          "description":"array in new version, different types"
+          "description":"array in new version, with cast"
         },
         "p5":{
           "datatype": "array",
@@ -74,9 +74,17 @@
           },
           "description":"new array reference, replacing array"
         },
-        "p10":{
-          "datatype":"string",
-          "description":"property not in old version"
+        "p11":{
+          "datatype": "integer",
+          "description":"property not in new version"
+        },
+        "p12":{
+           "$ref":"#/definitions/ETFour",
+           "description":"property was a reference before."
+        },
+        "p13":{
+          "$ref":"#/definitions/ETFour",
+          "description":"property was a reference before, now an array"
         }
       },
       "primaryKey": "pk",
@@ -85,7 +93,7 @@
       "rangeIndex": ["p8"]
     },
     "ETFour": {
-      "description": "An entity type in this version that did carry forward.",
+      "description": "An entity type in this version that did not exist in the source.",
       "properties":{
         "p1":{
           "datatype":"integer"

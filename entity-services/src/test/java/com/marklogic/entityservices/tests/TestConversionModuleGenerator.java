@@ -179,7 +179,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			String entityTypeName = entityType.replace(".json",  "");
 			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
 			
-			logger.debug("Checking canonical XML function and envelope function and empry extraction: " + entityType);
+			logger.debug("Checking canonical XML function and envelope function and empty extraction: " + entityType);
 
 			DOMHandle handle =
 					evalOneResult(
@@ -199,10 +199,10 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			String controlFilePath = "/test-instances/" + entityTypeTestFileName;
 			Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
 
-//				logger.debug("Control doc");
-//				debugOutput(controlDom);
-//				logger.debug("Actual doc wrapped");
-//				debugOutput(actualInstance);
+            //logger.debug("Control doc");
+			//debugOutput(controlDom);
+			//logger.debug("Actual doc wrapped");
+			//debugOutput(actualInstance);
 			
 			XMLUnit.setIgnoreWhitespace(true);
 			XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);

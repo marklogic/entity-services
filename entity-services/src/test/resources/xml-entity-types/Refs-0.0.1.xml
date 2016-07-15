@@ -8,17 +8,37 @@
   <es:definitions>
     <Refs>
         <es:properties>
-            <correctReference>
+            <pk>
+                <es:datatype>integer</es:datatype>
+            </pk>
+            <correctRef>
                 <es:ref>#/definitions/Refs</es:ref>
-            </correctReference>
-            <secondCorrectReference>
+            </correctRef>
+            <secondCorrectRef>
                 <es:ref>#/definitions/Refs</es:ref>
-            </secondCorrectReference>
+            </secondCorrectRef>
+            <arrayRef>
+                <es:datatype>array</es:datatype>
+                <es:items>
+                    <es:ref>#/definitions/Refs</es:ref>
+                </es:items>
+            </arrayRef>
             <refWithDescription>
                 <es:ref>#/definitions/Refs</es:ref>
                 <es:description>This reference has a description</es:description>
             </refWithDescription>
+            <externalRef>
+                <es:ref>http://imanexternalreference/definitions/Refs</es:ref>
+                <es:description>This external reference has a description</es:description>
+            </externalRef>
+            <externalArrayRef>
+                <es:datatype>array</es:datatype>
+                <es:items>
+                    <es:ref>http://imanexternalreference/definitions/Refs</es:ref>
+                </es:items>
+            </externalArrayRef>
         </es:properties>
+        <es:primary-key>pk</es:primary-key>
     </Refs>
   </es:definitions>
 </es:entity-type>

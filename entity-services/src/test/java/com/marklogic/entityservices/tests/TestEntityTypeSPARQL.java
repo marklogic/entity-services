@@ -72,19 +72,4 @@ public class TestEntityTypeSPARQL extends EntityServicesTestBase {
 		
 	}
 	
-	@Test
-	@Ignore
-	// This test will verify the results of bug 
-	public void testEntityServicesVocabulary() {
-		String entityServicesClasses = 
-				 "PREFIX es: <http://marklogic.com/entity-services#> "
-				+"ASK where {"
-				+ "es:EntityServicesDocument a rdfs:Class ."
-				+ "es:EntityType a rdfs:Class ."
-				+ "es:Property a rdfs:Class ."
-
-				+ "}";
-		assertTrue("All the classes exist", queryMgr.executeAsk(queryMgr.newQueryDefinition(entityServicesClasses)));
-		
-	}
 }

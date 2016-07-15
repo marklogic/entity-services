@@ -141,6 +141,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 	}
 
 	@AfterClass
+	// TODO is this required?
 	public static void cleanupSchemas() {
 
         Set<String> toDelete = new HashSet<String>();

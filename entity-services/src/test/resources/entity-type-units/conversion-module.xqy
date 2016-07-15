@@ -21,7 +21,7 @@ xquery version "1.0-ml";
  : database of your application, and check it into your source control system.
  :
  : Modification History:
- :   Generated at timestamp: 2016-07-13T16:47:17.382159-07:00
+ :   Generated at timestamp: 2016-07-14T17:23:53.134994-07:00
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
@@ -54,15 +54,24 @@ declare function et-required:extract-instance-ETOne(
     $source-node as node()
 ) as map:map
 {
+    (: if this $source-node is a reference without an embedded object, then short circuit. :)
+    if (empty($source-node/ETOne/*))
+    then
+    json:object()
+        =>map:with('$type', 'ETOne')
+        =>map:with('$ref', $source-node/ETOne/text())
+        =>map:with('$attachments', $source-node)
+    else
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
         =>map:with('$type', 'ETOne')
         (: This line adds the original source document as an attachment.
-         : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, use 
+         : If this entity type is the root of a document, you should uncomment
+         : this line in order to include the source node as an attachment.
+         : If the source document is JSON, change the above line to
          : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
-         :)
+        :)
         =>map:with('$attachments', $source-node)
         (: The following lines are generated from the 'ETOne' entity type 
          : You need to ensure that all of the property paths are correct for your source
@@ -82,11 +91,12 @@ declare function et-required:extract-instance-ETOne(
          : inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)
          :)
-           =>map:with('a',                      xs:integer($source-node/ETOne/a))
-        =>map:with('b',                      xs:string($source-node/ETOne/b))
-     =>es:optional('c',                      xs:date($source-node/ETOne/c))
+        =>   map:with('a',                      xs:integer#1($source-node/ETOne/a))
+     =>   map:with('b',                      xs:string#1($source-node/ETOne/b))
+     =>es:optional('c',                      xs:date#1($source-node/ETOne/c))
 
 };
+
 
 
 
@@ -122,31 +132,34 @@ declare function et-required:instance-to-canonical-xml(
 {
     (: Construct an element that is named the same as the Entity Type :)
     element { map:get($entity-instance, "$type") }  {
-        for $key in map:keys($entity-instance)
-        let $instance-property := map:get($entity-instance, $key)
-        where ($key castable as xs:NCName and $key ne "$type")
-        return
-            typeswitch ($instance-property)
-            (: This branch handles embedded objects.  You can choose to prune
-               an entity's representation of extend it with lookups here. :)
-            case json:object+ 
-                return
-                    for $prop in $instance-property
-                    return element { $key } { et-required:instance-to-canonical-xml($prop) }
-            (: An array can also treated as multiple elements :)
-            case json:array
-                return 
-                    for $val in json:array-values($instance-property)
+        if ( map:contains($entity-instance, "$ref") )
+        then map:get($entity-instance, "$ref")
+        else
+            for $key in map:keys($entity-instance)
+            let $instance-property := map:get($entity-instance, $key)
+            where ($key castable as xs:NCName and $key ne "$type")
+            return
+                typeswitch ($instance-property)
+                (: This branch handles embedded objects.  You can choose to prune
+                   an entity's representation of extend it with lookups here. :)
+                case json:object+ 
                     return
-                        if ($val instance of json:object)
-                        then element { $key } { et-required:instance-to-canonical-xml($val) }
-                        else element { $key } { $val }
-            (: A sequence of values should be simply treated as multiple elements :)
-            case item()+
-                return 
-                    for $val in $instance-property
-                    return element { $key } { $val }
-            default return element { $key } { $instance-property }
+                        for $prop in $instance-property
+                        return element { $key } { et-required:instance-to-canonical-xml($prop) }
+                (: An array can also treated as multiple elements :)
+                case json:array
+                    return 
+                        for $val in json:array-values($instance-property)
+                        return
+                            if ($val instance of json:object)
+                            then element { $key } { et-required:instance-to-canonical-xml($val) }
+                            else element { $key } { $val }
+                (: A sequence of values should be simply treated as multiple elements :)
+                case item()+
+                    return 
+                        for $val in $instance-property
+                        return element { $key } { $val }
+                default return element { $key } { $instance-property }
     }
 };
 

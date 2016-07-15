@@ -11,7 +11,7 @@
 <lastName>some string</lastName>
 <fullName>some string</fullName>
 <address>some string</address>
-<friendOf/>
+<friendOf><Person>some string</Person></friendOf>
 </Person>
 </friendOf>
 </Person>

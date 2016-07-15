@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<x>
+  <ETOne>
+    <pk>http://example.org/some-iri/1</pk>
+    <p1>1</p1>
+    <p2>3</p2>
+    <p3>32</p3>
+    <p4>333</p4>
+    <p5>12</p5>
+    <p6>4</p6>
+  </ETOne>
+  <ETTwo>
+    <pk>http://example.org/some-iri/2</pk>
+    <parent>http://example.org/some-iri</parent>
+    <p7>3</p7>
+    <p8>23</p8>
+    <p9>19</p9>
+    <p12>
+  100293
+</p12>
+    <p13>
+  100293
+</p13>
+  </ETTwo>
+  <ETThree/>
+</x>

@@ -8,17 +8,37 @@
     "definitions": {
         "Refs": {
             "properties": {
-                "correctReference": {
+                "pk" : {
+                    "datatype":"integer"
+                },
+                "correctRef": {
                     "$ref":"#/definitions/Refs"
                 },
-                "secondCorrectReference": {
+                "secondCorrectRef": {
                     "$ref":"#/definitions/Refs"
+                },
+                "arrayRef": {
+                    "datatype":"array",
+                    "items": {
+                        "$ref": "#/definitions/Refs"
+                    }
                 },
                 "refWithDescription": {
                     "$ref":"#/definitions/Refs",
                     "description":"This reference has a description"
+                },
+                "externalRef": {
+                    "$ref":"http://imanexternalreference/definitions/Refs",
+                    "description":"This external reference has a description"
+                },
+                "externalArrayRef": {
+                    "datatype": "array",
+                    "items": {
+                        "$ref": "http://imanexternalreference/definitions/Refs"
+                    }
                 }
-            }
+            },
+            "primaryKey":"pk"
         }
     }
 }

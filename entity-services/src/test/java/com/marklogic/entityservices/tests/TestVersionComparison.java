@@ -2,6 +2,8 @@ package com.marklogic.entityservices.tests;
 
 import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.document.TextDocumentManager;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.StringHandle;
@@ -46,20 +48,31 @@ public class TestVersionComparison extends EntityServicesTestBase {
 
     @Test
     public void testVersionComparison() throws TestEvalException {
-        StringHandle handle =
-            evalOneResult("let $source := doc('"+entityTypeSource+"')=>es:entity-type-from-node() "+
+        EvalResultIterator results =
+            eval("let $source := doc('"+entityTypeSource+"')=>es:entity-type-from-node() "+
                           "let $target := doc('"+entityTypeTarget+"')=>es:entity-type-from-node() "+
-                          "return es:version-comparison-generate($source, $target)", new StringHandle());
+                          "return (es:conversion-module-generate($target), "+
+                          "es:version-comparison-generate($source, $target))");
 
         TextDocumentManager mgr = modulesClient.newTextDocumentManager();
+
+        StringHandle handle = results.next().get(new StringHandle());
+        mgr.write("/ext/comparison-0.0.2.xqy", handle);
+        handle = results.next().get(new StringHandle());
         mgr.write("/ext/version-comparison.xqy", handle);
+        results.close();
 
         String instance1 = "instance-0.0.1.xml";
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/" + instance1);
         documentManager.write(instance1, new InputStreamHandle(is).withFormat(Format.XML));
 
         handle = evalOneResult("import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-comparison.xqy';" +
-                "doc('instance-0.0.1.xml')/*[ETOne] ! c:convert-instance-ETOne(.)", new StringHandle());
+                               "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';" +
+                "<x>{" +
+                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()," +
+                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETTwo()=>m:instance-to-canonical-xml()," +
+                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETThree()=>m:instance-to-canonical-xml()" +
+                "}</x>", new StringHandle());
 
         logger.info(handle.get());
 

@@ -67,13 +67,22 @@
         "p9":{
           "datatype":"array",
           "items":{
-            "$ref":"#/definitions/ETTwo"
+            "$ref":"http://example.org/ETTwo"
           },
-          "description":"new array reference, replacing array"
+          "description":"new external array reference, replacing array"
         },
-        "p11":{
-          "datatype": "integer",
-          "description":"property not in new version"
+        "p10":{
+          "datatype":"string",
+          "description":"property not in old version"
+        },
+        "p12":{
+          "datatype":"string",
+          "description":"property was a reference before."
+        },
+        "p13":{
+          "datatype":"array",
+          "description":"property was a reference before, now an array",
+          "items":{"datatype":"string"}
         }
       },
       "primaryKey": "pk",

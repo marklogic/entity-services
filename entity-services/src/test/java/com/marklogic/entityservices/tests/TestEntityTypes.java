@@ -26,12 +26,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -171,10 +166,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
 			}
 		}
 
-		for (File f : invalidEntityTypeFiles) {
-			logger.info("Removing invalid: " + f.getName());
-			docMgr.delete(f.getName());
-		}
+		logger.info("Cleaning up invalid types");
+		Collection<String> names = new ArrayList<String>();
+		invalidEntityTypeFiles.forEach( f -> { names.add(f.getName()); });
+        docMgr.delete(names.toArray(new String[] { }));
+
     }
     
     

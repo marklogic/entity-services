@@ -26,6 +26,8 @@ import module namespace validate = "http://marklogic.com/validate" at "/MarkLogi
 
 import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
 
+import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
+
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare variable $esi:DEFAULT_BASE_URI := "http://example.org/";
@@ -379,16 +381,28 @@ declare private function esi:resolve-test-reference(
     $property-name as xs:string,
     $depth as xs:int)
 {
-    let $entity-definition := map:get(map:get($entity-type, "definitions"), $entity-type-name)
-    let $property-definition := map:get( map:get($entity-definition, "properties"), $property-name)
+    let $entity-definition := $entity-type
+            =>map:get("definitions")
+            =>map:get($entity-type-name)
+    let $property-definition := $entity-definition=>map:get("properties")=>map:get($property-name)
     let $reference-value := 
-        head( (map:get($property-definition, "$ref"),
-               map:get(map:get($property-definition, "items"), "$ref") ) )
+        head( ($property-definition=>map:get("$ref"), 
+                              $property-definition=>map:get("items")=>map:get("$ref") ) )
+    let $ref-name := functx:substring-after-last($reference-value, "/")
     (: is the reference value in this entity type document :)
     let $referenced-type :=
         if (contains($reference-value, "#/definitions"))
-        then esi:create-test-instance($entity-type, replace($reference-value, "#/definitions/", ""), $depth + 1)
-        else "externally-referenced-instance"
+        then
+            if ($depth eq $esi:MAX_TEST_INSTANCE_DEPTH - 1)
+            then
+                element {$ref-name} {
+                    esi:ref-datatype($entity-type, $entity-type-name, $property-name)
+                      =>esi:create-test-value-from-datatype()
+                }
+            else esi:create-test-instance($entity-type, $ref-name, $depth + 1)
+        else element { $ref-name } {
+            "externally-referenced-instance"
+            }
     return $referenced-type
 };
 
@@ -433,12 +447,13 @@ declare function esi:create-test-instance(
     $depth as xs:int
 )
 {
-    let $definitions := map:get($entity-type, "definitions")
-    return
     if ($depth lt $esi:MAX_TEST_INSTANCE_DEPTH)
     then
         element { $entity-type-name } {
-            let $properties := map:get(map:get($definitions, $entity-type-name),"properties")
+            let $properties := $entity-type
+                    =>map:get("definitions")
+                    =>map:get($entity-type-name)
+                    =>map:get("properties")
             let $property-keys := map:keys($properties)
             for $property in $property-keys
             return
@@ -495,7 +510,7 @@ declare function esi:database-properties-generate(
         let $range-index-properties := map:get($entity-type-map, "rangeIndex")
         for $range-index-property in json:array-values($range-index-properties)
         let $ri-map := json:object()
-        let $property := map:get(map:get($entity-type-map, "properties"), $range-index-property)
+        let $property := $entity-type-map=>map:get("properties")=>map:get($range-index-property)
         let $specified-datatype := esi:resolve-datatype($entity-type, $entity-type-name, $range-index-property)
 
         let $datatype := esi:indexable-datatype($specified-datatype)
@@ -508,10 +523,10 @@ declare function esi:database-properties-generate(
         let $_ := map:put($ri-map, "scalar-type", $datatype)
         return json:array-push($range-path-indexes, $ri-map)
         ,
-        let $word-lexicon-properties := map:get(map:get($definitions, $entity-type-name), "wordLexicon")
+        let $word-lexicon-properties := $entity-type-map=>map:get("wordLexicon")
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
         let $wl-map := json:object()
-        let $property := map:get(map:get($entity-type-map, "properties"), $word-lexicon-property)
+        let $property := $entity-type-map=>map:get("properties")=>map:get($word-lexicon-property)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($wl-map, "collation", $collation)
         let $_ := map:put($wl-map, "localname", $word-lexicon-property)
@@ -541,6 +556,7 @@ declare function esi:schema-generate(
     let $definitions := map:get($entity-type, "definitions")
     let $definition-keys := map:keys($definitions)
     let $seen-keys := map:map()
+    let $reference-declarations := map:map()
     let $element-declarations := json:array()
     (: construct all the element declarations :)
     let $_ := 
@@ -556,10 +572,19 @@ declare function esi:schema-generate(
                     if (map:contains($property-map, "$ref"))
                     then 
                         let $ref-value := map:get($property-map, "$ref")
+                        let $ref-name := functx:substring-after-last($ref-value, "/")
                         return
                         if (contains($ref-value, "#/definitions/"))
-                        then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
-                        else <xs:element name="{ $property-name }" type="xs:anyURI"/>
+                        then <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>
+                        else 
+                            (map:put($reference-declarations, $ref-name,
+                             <xs:complexType name="{ $ref-name }ReferenceType">
+                                <xs:sequence>
+                                    <xs:element name="{ $ref-name }" type="xs:anyURI" />
+                                </xs:sequence>
+                             </xs:complexType>
+                             ),
+                             <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
                     else if (map:contains($property-map, "datatype"))
                     then
                         let $datatype := map:get($property-map, "datatype")
@@ -570,10 +595,18 @@ declare function esi:schema-generate(
                                 if (map:contains($items-map, "$ref"))
                                 then
                                     let $ref-value := map:get($items-map, "$ref")
+                                    let $ref-name := functx:substring-after-last($ref-value, "/")
                                     return
                                     if (contains($ref-value, "#/definitions/"))
-                                    then <xs:element name="{ $property-name }" type="{ replace($ref-value, '#/definitions/', '') }ContainerType"/>
-                                    else <xs:element name="{ $property-name }" type="xs:anyURI"/>
+                                    then <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>
+                                    else 
+                                        (map:put($reference-declarations, $ref-name, 
+                                             <xs:complexType name="{ $ref-name }ReferenceType">
+                                                <xs:sequence>
+                                                    <xs:element name="{ $ref-name }" type="xs:anyURI" />
+                                                </xs:sequence>
+                                             </xs:complexType>),
+                                         <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
                                 else
                                     let $datatype := map:get($items-map, "datatype")
                                     return
@@ -593,6 +626,7 @@ declare function esi:schema-generate(
         xmlns:es="http://marklogic.com/entity-services">
     {
         json:array-values($element-declarations),
+        ($reference-declarations=>map:keys()) ! map:get($reference-declarations, .),
         for $entity-type-name in $definition-keys
         let $entity-type-map := map:get($definitions, $entity-type-name)
         let $primary-key-name := map:get($entity-type-map, "primaryKey")
@@ -601,13 +635,13 @@ declare function esi:schema-generate(
         let $property-keys := map:keys($properties-map)
         return
         (
-        <xs:complexType name="{ $entity-type-name }ContainerType" mixed="true">
+        <xs:complexType name="{ $entity-type-name }ContainerType">
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="{ $entity-type-name }" />
+                <xs:element ref="{ $entity-type-name }" />
             </xs:sequence>
         </xs:complexType>,
-        <xs:complexType name="{ $entity-type-name }Type">
-            <xs:sequence>
+        <xs:complexType name="{ $entity-type-name }Type" mixed="true">
+            <xs:sequence minOccurs="0">
             {
                 (: construct xs:element element for each property :)
                 for $property-name in $property-keys
@@ -653,7 +687,7 @@ declare function esi:resolve-datatype(
         if (map:get($property, "datatype") eq "array")
         then 
             if (map:contains(map:get($property, "items"), "datatype"))
-            then map:get(map:get($property, "items"), "datatype")
+            then $property=>map:get("items")=>map:get("datatype")
             else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
         else map:get($property, "datatype")
     else esi:ref-datatype($entity-type, $entity-type-name, $property-name)
@@ -698,8 +732,8 @@ declare function esi:ref-type-name(
         =>map:get($entity-type-name)
         =>map:get("properties")
         =>map:get($property-name)
-    let $ref-target := head( (map:get($property, "$ref"), 
-                              map:get(map:get($property, "items"), "$ref") ) )
+    let $ref-target := head( ($property=>map:get("$ref"), 
+                              $property=>map:get("items")=>map:get("$ref") ) )
     return replace($ref-target, "#/definitions/", "")
 };
 
@@ -722,7 +756,7 @@ declare private function esi:ref-has-no-primary-key(
 ) as xs:boolean
 {
     let $ref-type-name := esi:ref-type-name($entity-type, $entity-type-name, $property-name)
-    let $ref-target := map:get(map:get($entity-type, "definitions"), $ref-type-name)
+    let $ref-target := $entity-type=>map:get("definitions")=>map:get($ref-type-name)
     return not("primaryKey" = map:keys($ref-target))
 };
 

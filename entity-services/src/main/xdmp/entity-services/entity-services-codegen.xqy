@@ -36,7 +36,7 @@ declare private function es-codegen:casting-function-name(
 {
     if ($datatype eq "iri")
     then "sem:iri"
-    else "xs:" || $datatype
+    else "xs:" || $datatype || "#1"
 };
 
 
@@ -123,15 +123,24 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     $source-node as node()
 ) as map:map
 {{
+    (: if this $source-node is a reference without an embedded object, then short circuit. :)
+    if (empty($source-node/{$entity-type-key}/*))
+    then
+    json:object()
+        =>map:with('$type', '{ $entity-type-key }')
+        =>map:with('$ref', $source-node/{ $entity-type-key }/text())
+        =>map:with('$attachments', $source-node)
+    else
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
         =>map:with('$type', '{ $entity-type-key }')
         (: This line adds the original source document as an attachment.
-         : If this entity type is not the root of a document, you should remove this.
-         : If the source document is JSON, use 
+         : If this entity type is the root of a document, you should uncomment
+         : this line in order to include the source node as an attachment.
+         : If the source document is JSON, change the above line to
          : =>map:with('$attachments', xdmp:quote($source-node))
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
-         :)
+        :)
         =>map:with('$attachments', $source-node)
         (: The following lines are generated from the '{ $entity-type-key }' entity type 
          : You need to ensure that all of the property paths are correct for your source
@@ -164,13 +173,13 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
             eq "array"
     let $property-datatype := esi:resolve-datatype($entity-type, $entity-type-key, $property-key)
     let $casting-function-name := es-codegen:casting-function-name($property-datatype)
-    let $wrap-if-array := function($str) {
+    let $wrap-if-array := function($str, $fn) {
             if ($is-array and $is-required)
-            then concat("json:to-array(", $str, " ! ", $casting-function-name, "(.) )")
+            then concat("json:to-array(", $str, " ! ", $fn, "(.) )")
             else
             if ($is-array)
-            then concat($prefix, ":extract-array(", $str, ", ", $casting-function-name, "#1)")
-            else concat($casting-function-name, "(", $str, ")")
+            then concat($prefix, ":extract-array(", $str, ", ", $fn, ")")
+            else concat($fn, "(", $str, ")")
         }
     let $ref :=
         if ($is-array)
@@ -186,27 +195,30 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         es-codegen:comment('The following property assigment comes from an external reference.'),
         " ", (: why this is needed for alignment is a mystery so far :)
         es-codegen:comment('Its generated value probably requires developer attention.'))
+    let $ref-name := functx:substring-after-last($ref, "/")
+    let $extract-reference-fn := 
+            concat("function($path) { json:object()",
+                      "=>map:with('$type', '", $ref-name, "')",
+                      "=>map:with('$ref', $path/", $ref-name, "/text() ) }")
     let $value :=
         if (empty($ref))
         then 
-            $wrap-if-array($path-to-property)
+            $wrap-if-array($path-to-property, $casting-function-name)
         else 
-            if(contains($ref, "#/definitions"))
+            if (contains($ref, "#/definitions"))
             then
-            concat("&#10;            if (", $path-to-property, "/element())",
-                   "&#10;            then ",  $prefix, ":extract-array(",
-                    $path-to-property, ", ", $prefix, ":extract-instance-", replace($ref, "#/definitions/", ""), "#1)",
-                   "&#10;            else ", $casting-function-name, "(",
-                   $path-to-property,
-                   ")")
+                $wrap-if-array($path-to-property, concat($prefix, ":extract-instance-", $ref-name, "#1"))
             else
-               concat(
-                $path-to-property, "/node()")
+                $wrap-if-array($path-to-property, $extract-reference-fn)
+            (: note experiment to get right traversal for refs of form <prop><Name>VAL</Name></prop> 
+             : as well as
+             : <prop><Name><props/></Name><prop>
+             :)
                 
     (: if a property is required, use map:with to force inclusion :)
     let $function-call-string :=
         if ($is-required)
-        then "       =>map:with("
+        then "    =>   map:with("
         else "    =>es:optional("
     return
     concat($property-comment,
@@ -220,6 +232,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
 }};
 </extract-instance>/text()
 }
+
 
 
 (:~
@@ -254,31 +267,34 @@ declare function {$prefix}:instance-to-canonical-xml(
 {{
     (: Construct an element that is named the same as the Entity Type :)
     element {{ map:get($entity-instance, "$type") }}  {{
-        for $key in map:keys($entity-instance)
-        let $instance-property := map:get($entity-instance, $key)
-        where ($key castable as xs:NCName and $key ne "$type")
-        return
-            typeswitch ($instance-property)
-            (: This branch handles embedded objects.  You can choose to prune
-               an entity's representation of extend it with lookups here. :)
-            case json:object+ 
-                return
-                    for $prop in $instance-property
-                    return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
-            (: An array can also treated as multiple elements :)
-            case json:array
-                return 
-                    for $val in json:array-values($instance-property)
+        if ( map:contains($entity-instance, "$ref") )
+        then map:get($entity-instance, "$ref")
+        else
+            for $key in map:keys($entity-instance)
+            let $instance-property := map:get($entity-instance, $key)
+            where ($key castable as xs:NCName and $key ne "$type")
+            return
+                typeswitch ($instance-property)
+                (: This branch handles embedded objects.  You can choose to prune
+                   an entity's representation of extend it with lookups here. :)
+                case json:object+
                     return
-                        if ($val instance of json:object)
-                        then element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($val) }}
-                        else element {{ $key }} {{ $val }}
-            (: A sequence of values should be simply treated as multiple elements :)
-            case item()+
-                return 
-                    for $val in $instance-property
-                    return element {{ $key }} {{ $val }}
-            default return element {{ $key }} {{ $instance-property }}
+                        for $prop in $instance-property
+                        return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
+                (: An array can also treated as multiple elements :)
+                case json:array
+                    return
+                        for $val in json:array-values($instance-property)
+                        return
+                            if ($val instance of json:object)
+                            then element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($val) }}
+                            else element {{ $key }} {{ $val }}
+                (: A sequence of values should be simply treated as multiple elements :)
+                case item()+
+                    return
+                        for $val in $instance-property
+                        return element {{ $key }} {{ $val }}
+                default return element {{ $key }} {{ $instance-property }}
     }}
 }};
 
@@ -316,6 +332,7 @@ declare function {$prefix}:instance-to-envelope(
 
 
 };
+
 
 
 
@@ -364,8 +381,6 @@ declare private function es-codegen:value-for-conversion(
     let $path-to-property := concat("$source-node/", $target-entity-type-name, "/", $target-property-name)
         
 
-    let $_ := xdmp:log(( "SSS", $target-property, $source-correlate))
-
     
     let $comment :=
         if ($is-missing-source)
@@ -386,16 +401,14 @@ declare private function es-codegen:value-for-conversion(
         else if ($properties-correlate)
         then concat($casting-function-name, "(", $path-to-property, ")")
         else 
-        if ($is-array-from-scalar)
+        if ($is-array-from-scalar or $is-array-from-array)
         then 
             if ($is-required)
             then concat("json:to-array(", $path-to-property, " ! ", $casting-function-name, "(.) )")
-            else concat($module-prefix, ":extract-array(", $path-to-property, ", ", $casting-function-name, "#1)")
+            else concat($module-prefix, ":extract-array(", $path-to-property, ", ", $casting-function-name, ")")
         else if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
                
-        else if ($is-array-from-array)
-        then 'equivarray'
         else '"not implemented"'
 
     return
@@ -405,7 +418,6 @@ declare private function es-codegen:value-for-conversion(
             $value, 
             ")&#10;"
           )
-    
 };
     
 

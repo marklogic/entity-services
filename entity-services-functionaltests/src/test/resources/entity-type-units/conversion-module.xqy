@@ -1,3 +1,4 @@
+Text document as 
 xquery version "1.0-ml";
 
 (: 
@@ -21,7 +22,7 @@ xquery version "1.0-ml";
  : database of your application, and check it into your source control system.
  :
  : Modification History:
- :   Generated at timestamp: 2016-07-07T12:10:26.123308-07:00
+ :   Generated at timestamp: 2016-07-18T15:14:11.039248-07:00
  :   Persisted by AUTHOR
  :   Date: DATE
  :)
@@ -67,22 +68,44 @@ declare function et-required:extract-instance-ETOne(
         (: The following lines are generated from the 'ETOne' entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.  The general pattern is
-         : =>map:with('keyName', data($source-node/path/to/data/in/the/source))
+         : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
          : but you may also wish to convert values
-         : =>map:with('dateKeyName', xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", $source-node/path/to/data/in/the/source))
+         : =>map:with('dateKeyName', 
+         :            xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]", 
+         :            $source-node/path/to/data/in/the/source))
          : You can also implement lookup functions, 
-         : =>map:with('lookupKey', cts:search( collection('customers'), string($source-node/path/to/lookup/key))/id
+         : =>map:with('lookupKey', 
+         :            cts:search( collection('customers'), 
+         :                        string($source-node/path/to/lookup/key))/id
          : or populate the instance with constants.
          : =>map:with('constantValue', 10)
-         : Once you've customized this function, write a test with expected inputs, and a test instance document
+         : Once you've customized this function, write a test with expected 
+         : inputs, and a test instance document
          : created with es:entity-type-get-test-instances($entity-type)
          :)
-           =>map:with('a',                      data($source-node/ETOne/a))
-           =>map:with('b',                      data($source-node/ETOne/b))
-        =>es:optional('c',                      data($source-node/ETOne/c))
-   
+           =>map:with('a',                      xs:integer($source-node/ETOne/a))
+        =>map:with('b',                      xs:string($source-node/ETOne/b))
+     =>es:optional('c',                      xs:date($source-node/ETOne/c))
+
 };
-    
+
+
+
+(:~
+ : This function includes an array if there are items to put in it.
+ : If there are no such items, then it returns an empty sequence.
+ : TODO EA-4? move to es: module
+ :)
+declare function et-required:extract-array(
+    $path-to-property as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($path-to-property))
+    then ()
+    else json:to-array($path-to-property ! $fn(.))
+};
+
 
 (:~
  : Turns an entity instance into an XML structure.

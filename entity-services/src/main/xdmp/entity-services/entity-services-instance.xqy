@@ -39,7 +39,6 @@ declare function inst:child-instance(
     $element as element()
 ) as map:map*
 {
-    xdmp:log(("ASD", $element)),
     if (empty($element/*) and exists($element/text()))
     then json:object()
             =>map:with("$type", local-name($element))

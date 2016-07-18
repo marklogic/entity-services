@@ -407,7 +407,6 @@ declare private function es-codegen:value-for-conversion(
         }
     let $is-reference-from-scalar-or-array :=
         exists($target-ref) and empty($source-ref)
-    let $_ := xdmp:log(("AAAA", $target-property-name, $is-scalar-from-array, $is-reference-from-scalar-or-array))
     
     let $extract-reference-fn := 
             concat("function($path) { json:object()",

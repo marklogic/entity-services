@@ -15,17 +15,14 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -42,6 +39,8 @@ import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.marker.AbstractReadHandle;
+
+import static com.hp.hpl.jena.sparql.vocabulary.DOAP.os;
 
 
 public abstract class EntityServicesTestBase {
@@ -113,5 +112,22 @@ public abstract class EntityServicesTestBase {
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.transform(new DOMSource(xmldoc), new StreamResult(os));
 	 }
+
+	protected void save(String path, Document content) throws IOException, TransformerException {
+		File outputFile = new File("src/test/resources/" + path );
+		OutputStream os = new FileOutputStream(outputFile);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		transformer.transform(new DOMSource(content), new StreamResult(os));
+	}
+
+	protected void save(String path, String content) throws IOException {
+        File outputFile = new File("src/test/resources/" + path );
+        FileWriter writer = new FileWriter(outputFile);
+        writer.write(content);
+        writer.close();
+    }
 }
 

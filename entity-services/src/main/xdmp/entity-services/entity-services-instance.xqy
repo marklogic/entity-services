@@ -39,27 +39,31 @@ declare function inst:child-instance(
     $element as element()
 ) as map:map*
 {
-    let $child := json:object()
-    let $_ := 
-        for $property in $element/*
-        return
-            if ($property/element())
-                then 
+    xdmp:log(("ASD", $element)),
+    if (empty($element/*) and exists($element/text()))
+    then json:object()
+            =>map:with("$type", local-name($element))
+            =>map:with("$ref", $element/text())
+    else
+        let $child := json:object()
+        let $_ := 
+            for $property in $element/*
+            return
                 if (map:contains($child, local-name($property)))
-                    then
-                    let $existing-key := 
-                        if (map:get($child, local-name($property)) instance of json:array)
-                        then map:get($child, local-name($property))
-                        else 
-                            let $a := json:array()
-                            let $_ := json:array-push($a, map:get($child, local-name($property)))
-                            return $a
-                    let $_ := for $child in $property/* return json:array-push($existing-key, inst:child-instance($child))
-                    return map:put($child, local-name($property), $existing-key)
+                then 
+                    if (map:get($child, local-name($property)) instance of json:array)
+                    then json:array-push(map:get($child, local-name($property)),
+                                         inst:child-instance($property/*))
+                    else map:put($child, local-name($property),
+                         json:array()
+                            =>json:array-with(map:get($child, local-name($property)))
+                            =>json:array-with(inst:child-instance($property/*)))
                 else
-                    map:put($child, local-name($property), $property/* ! inst:child-instance(.))
-            else map:put($child, local-name($property), data($property))
-    return $child
+                    map:put($child, local-name($property),
+                        if ($property/element())
+                        then inst:child-instance($property/element())
+                        else data($property))
+        return $child
 };
 
 

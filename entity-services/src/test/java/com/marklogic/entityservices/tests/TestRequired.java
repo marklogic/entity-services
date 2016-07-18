@@ -27,13 +27,6 @@ public class TestRequired  extends EntityServicesTestBase {
     DocumentManager documentManager;
     String entityType = "/et-required.json";
 
-    private void save(String path, String content) throws IOException {
-        File outputFile = new File("src/test/resources/" + path );
-		FileWriter writer = new FileWriter(outputFile);
-		writer.write(content);
-        writer.close();
-    }
-
     private void compareLines(String path, String content) throws IOException {
 
         List<String> contentLines = Arrays.asList(content.split("\\n"));

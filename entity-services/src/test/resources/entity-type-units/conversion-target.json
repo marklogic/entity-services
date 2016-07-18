@@ -57,11 +57,11 @@
           "description":"local ref, in both versions"
         },
         "p7":{
-          "$ref": "#/definitions/ETThree",
+          "$ref": "#/definitions/ETTwo",
           "description":"new reference, replacing scalar"
         },
         "p8":{
-          "$ref": "#/definitions/ETThree",
+          "$ref": "#/definitions/ETTwo",
           "description":"new reference, replacing array"
         },
         "p9":{
@@ -73,7 +73,7 @@
         },
         "p10":{
           "datatype":"string",
-          "description":"property not in old version"
+          "description":"required property not in old version"
         },
         "p12":{
           "datatype":"string",
@@ -86,7 +86,7 @@
         }
       },
       "primaryKey": "pk",
-      "required": ["p7","p9"],
+      "required": ["p7","p9","p10","p12"],
       "wordLexicon": ["p9"],
       "rangeIndex": ["p8","p9"]
     },

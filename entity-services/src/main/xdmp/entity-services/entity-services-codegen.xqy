@@ -183,8 +183,8 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         }
     let $ref :=
         if ($is-array)
-        then map:get(map:get(map:get($properties-map, $property-key), "items"), "$ref")
-        else map:get(map:get($properties-map, $property-key), "$ref")
+        then $properties-map=>map:get($property-key)=>map:get("items")=>map:get("$ref")
+        else $properties-map=>map:get($property-key)=>map:get("$ref")
     let $path-to-property := concat("$source-node/", $entity-type-key, "/", $property-key)
     let $property-comment :=
         if (empty($ref))
@@ -365,27 +365,63 @@ declare private function es-codegen:value-for-conversion(
         =>map:get("properties")
     let $is-missing-source := not($target-property-name = map:keys($source-properties))
     let $source-correlate := map:get($source-properties, $target-property-name)
-    let $target-is-scalar-array := 
-        map:get($target-property, "datatype") eq 'array' and map:get($target-property, "items")=>map:contains("datatype")
-    let $source-is-scalar-array := 
-        map:get($source-correlate, "datatype") eq 'array' and map:get($source-correlate, "items")=>map:contains("datatype")
+    let $target-is-array := $target-property=>map:get("datatype") eq 'array'
+    let $source-is-array := $source-correlate=>map:get("datatype") eq 'array'
+    let $target-ref :=
+        if ($target-is-array)
+        then $target-property=>map:get("items")=>map:get("$ref")
+        else $target-property=>map:get("$ref")
+    let $source-ref :=
+        if ($source-is-array)
+        then $source-correlate=>map:get("items")=>map:get("$ref")
+        else $source-correlate=>map:get("$ref")
+    let $is-scalar-from-ref := empty($target-ref) and exists($source-ref)
+    let $target-is-scalar-array := $target-is-array and empty($target-ref)
+         and map:get($target-property, "items")=>map:contains("datatype")
+    let $source-is-scalar-array := $source-is-array and empty($source-ref)
+        and map:get($source-correlate, "items")=>map:contains("datatype")
     let $properties-correlate := not($target-is-scalar-array) and not($source-is-scalar-array) (: TODO and not ref :)
     let $is-array-from-scalar := $target-is-scalar-array and not($source-is-scalar-array)
     let $is-array-from-array := $target-is-scalar-array and $source-is-scalar-array
-    let $is-scalar-from-array := not($target-is-scalar-array) and $source-is-scalar-array
+    let $truncates-array := not($target-is-array) and $source-is-scalar-array
+    let $is-scalar-from-array := empty($target-ref) and $truncates-array
 
     let $target-datatype := esi:resolve-datatype($target-model, $target-entity-type-name, $target-property-name)
     let $casting-function-name := es-codegen:casting-function-name($target-datatype)
     let $is-required := $target-property-name = 
             ( map:get($target-entity-type, "primaryKey"), json:array-values( map:get($target-entity-type, "required")) )
     let $path-to-property := concat("$source-node/", $target-entity-type-name, "/", $target-property-name)
-        
-
+    let $target-ref-name := functx:substring-after-last($target-ref, "/")
+    let $source-ref-name := functx:substring-after-last($source-ref, "/")
+    (: warning: property path override if source is ref and target is scalar :)
+    let $path-to-property := if ($is-scalar-from-ref) 
+                            then $path-to-property || "/" || $source-ref-name  
+                            else $path-to-property
+    let $wrap-if-array := function($str, $fn) {
+            if ($target-is-array and $is-required)
+            then concat("json:to-array(", $str, " ! ", $fn, "(.) )")
+            else
+            if ($target-is-array)
+            then concat($module-prefix, ":extract-array(", $str, ", ", $fn, ")")
+            else concat($fn, "(", $str, ")")
+        }
+    let $is-reference-from-scalar-or-array :=
+        exists($target-ref) and empty($source-ref)
+    let $_ := xdmp:log(("AAAA", $target-property-name, $is-scalar-from-array, $is-reference-from-scalar-or-array))
+    
+    let $extract-reference-fn := 
+            concat("function($path) { json:object()",
+                      "=>map:with('$type', '", $target-ref-name, "')",
+                      "=>map:with('$ref', $path/", $target-ref-name, "/text() ) }")
+    let $extract-scalar-fn := 
+            concat("function($path) { json:object()",
+                      "=>map:with('$type', '", $target-ref-name, "')",
+                      "=>map:with('$ref', ", $casting-function-name, "($path)[1] ) }")
     
     let $comment :=
         if ($is-missing-source)
         then es-codegen:comment("The following property was missing from the source type")
-        else if ($is-scalar-from-array)
+        else if ($truncates-array)
         then es-codegen:comment("Warning: potential data loss, truncated array.")
         else ()
     let $function-call-string :=
@@ -397,19 +433,14 @@ declare private function es-codegen:value-for-conversion(
     let $value :=
         (: case one -- missing source :)
         if ($is-missing-source)
-        then ' () '
-        else if ($properties-correlate)
-        then concat($casting-function-name, "(", $path-to-property, ")")
-        else 
-        if ($is-array-from-scalar or $is-array-from-array)
-        then 
-            if ($is-required)
-            then concat("json:to-array(", $path-to-property, " ! ", $casting-function-name, "(.) )")
-            else concat($module-prefix, ":extract-array(", $path-to-property, ", ", $casting-function-name, ")")
+        then concat($casting-function-name, "( () )")
         else if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
-               
-        else '"not implemented"'
+        else if (empty($target-ref))
+        then $wrap-if-array($path-to-property, $casting-function-name)
+        else if ($is-reference-from-scalar-or-array)
+        then $wrap-if-array($path-to-property, $extract-scalar-fn)
+        else $wrap-if-array($path-to-property, $extract-reference-fn)
 
     return
         concat($comment,

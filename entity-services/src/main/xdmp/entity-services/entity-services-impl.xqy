@@ -704,6 +704,7 @@ declare private function esi:ref-datatype(
 ) as xs:string 
 {
     let $ref-type := esi:ref-type($entity-type, $entity-type-name, $property-name)
+    let $_ := xdmp:log(("ASKDJAS", $entity-type, $entity-type-name, $property-name, $ref-type))
     return 
         if (empty($ref-type))
         then "string"
@@ -721,6 +722,10 @@ declare private function esi:ref-datatype(
 };
 
 
+(: Given a model, an entity type name and a reference property, 
+ : return a reference's datatype.
+ : If the reference is not local to this model, return 'string'
+ :)
 declare function esi:ref-type-name(
     $entity-type as map:map,
     $entity-type-name as xs:string,

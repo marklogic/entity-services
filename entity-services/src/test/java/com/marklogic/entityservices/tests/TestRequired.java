@@ -55,7 +55,7 @@ public class TestRequired  extends EntityServicesTestBase {
     public void generateArtifacts() throws TestEvalException, IOException {
 
         setupClients();
-        InputStream is = this.getClass().getResourceAsStream("/entity-type-units" + entityType);
+        InputStream is = this.getClass().getResourceAsStream("/model-units" + entityType);
         documentManager = client.newJSONDocumentManager();
         documentManager.write("/et-required.json", new InputStreamHandle(is).withFormat(Format.JSON));
 
@@ -67,11 +67,11 @@ public class TestRequired  extends EntityServicesTestBase {
 
         JacksonHandle handle;
 
-        handle = evalOneResult("es:entity-type-from-node(fn:doc('" + entityType + "'))=>es:database-properties-generate()", new JacksonHandle());
-        // save("/entity-type-units/database-properties.json", handle.get());
+        handle = evalOneResult("es:model-from-node(fn:doc('" + entityType + "'))=>es:database-properties-generate()", new JacksonHandle());
+        // save("/model-units/database-properties.json", handle.get());
 
 		ObjectMapper mapper = new ObjectMapper();
-		InputStream is = this.getClass().getResourceAsStream("/entity-type-units/database-properties.json");
+		InputStream is = this.getClass().getResourceAsStream("/model-units/database-properties.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
 		org.hamcrest.MatcherAssert.assertThat(handle.get(), org.hamcrest.Matchers.equalTo(control));
@@ -83,10 +83,10 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testExtractionTemplatesRequired() throws TestEvalException, IOException, SAXException {
 
         DOMHandle handle;
-        handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new DOMHandle());
-        // String toWrite = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new StringHandle()).get();
-        // save("/entity-type-units/extraction-template.xml", toWrite);
-        InputStream is = this.getClass().getResourceAsStream("/entity-type-units/extraction-template.xml");
+        handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new DOMHandle());
+        // String toWrite = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new StringHandle()).get();
+        // save("/model-units/extraction-template.xml", toWrite);
+        InputStream is = this.getClass().getResourceAsStream("/model-units/extraction-template.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
 		assertXMLEqual("Control document for 'required' values extraction templates. ", filesystemXML, handle.get());
@@ -97,10 +97,10 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testSchemasRequired() throws IOException, TestEvalException, SAXException, TransformerException {
 
         DOMHandle handle;
-        handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new DOMHandle());
-        // String toWrite = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new StringHandle()).get();
-        // save("/entity-type-units/schema.xml", toWrite);
-        InputStream is = this.getClass().getResourceAsStream("/entity-type-units/schema.xml");
+        handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new DOMHandle());
+        // String toWrite = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new StringHandle()).get();
+        // save("/model-units/schema.xml", toWrite);
+        InputStream is = this.getClass().getResourceAsStream("/model-units/schema.xml");
         Document filesystemXML = builder.parse(is);
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setIgnoreComments(true);
@@ -113,11 +113,11 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testConversionModuleRequired() throws IOException, TestEvalException {
 
         StringHandle handle;
-        handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:conversion-module-generate()", new StringHandle());
-        //save("/entity-type-units/conversion-module.xqy", handle.get());
-        compareLines("/entity-type-units/conversion-module.xqy", handle.get());
-        // handle = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:version-conversion-generate()", handle);
-        // save("/entity-type-units/conversion-module.xqy", handle);
+        handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:conversion-module-generate()", new StringHandle());
+        //save("/model-units/conversion-module.xqy", handle.get());
+        compareLines("/model-units/conversion-module.xqy", handle.get());
+        // handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:version-conversion-generate()", handle);
+        // save("/model-units/conversion-module.xqy", handle);
     }
 
 

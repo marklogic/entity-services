@@ -33,10 +33,10 @@ public class TestVersionComparison extends EntityServicesTestBase {
     public void generateArtifacts() throws TestEvalException, IOException {
 
         setupClients();
-        InputStream is = this.getClass().getResourceAsStream("/entity-type-units/" + entityTypeTarget);
+        InputStream is = this.getClass().getResourceAsStream("/model-units/" + entityTypeTarget);
         documentManager = client.newJSONDocumentManager();
         documentManager.write(entityTypeTarget, new InputStreamHandle(is).withFormat(Format.JSON));
-        is = this.getClass().getResourceAsStream("/entity-type-units/" + entityTypeSource);
+        is = this.getClass().getResourceAsStream("/model-units/" + entityTypeSource);
         documentManager.write(entityTypeSource, new InputStreamHandle(is).withFormat(Format.JSON));
 
     }
@@ -55,8 +55,8 @@ public class TestVersionComparison extends EntityServicesTestBase {
     @Test
     public void testVersionComparison() throws TestEvalException, IOException, SAXException, TransformerException {
         EvalResultIterator results =
-            eval("let $source := doc('"+entityTypeSource+"')=>es:entity-type-from-node() "+
-                          "let $target := doc('"+entityTypeTarget+"')=>es:entity-type-from-node() "+
+            eval("let $source := doc('"+entityTypeSource+"')=>es:model-from-node() "+
+                          "let $target := doc('"+entityTypeTarget+"')=>es:model-from-node() "+
                           "return (es:conversion-module-generate($target), "+
                           "es:version-comparison-generate($source, $target))");
 
@@ -69,7 +69,7 @@ public class TestVersionComparison extends EntityServicesTestBase {
         results.close();
 
         String instance1 = "instance-0.0.1.xml";
-        InputStream is = this.getClass().getResourceAsStream("/entity-type-units/" + instance1);
+        InputStream is = this.getClass().getResourceAsStream("/model-units/" + instance1);
         documentManager.write(instance1, new InputStreamHandle(is).withFormat(Format.XML));
 
         DOMHandle domHandle = evalOneResult("import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-comparison.xqy';" +
@@ -81,7 +81,7 @@ public class TestVersionComparison extends EntityServicesTestBase {
                 "}</x>", new DOMHandle());
 
         String expected = "instance-0.0.2.xml";
-        is = this.getClass().getResourceAsStream("/entity-type-units/" + expected);
+        is = this.getClass().getResourceAsStream("/model-units/" + expected);
         Document expectedDoc = builder.parse(is);
         Document actualDoc = domHandle.get();
 

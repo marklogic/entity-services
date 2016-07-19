@@ -43,7 +43,7 @@ import javax.xml.transform.TransformerException;
 import static org.junit.Assert.fail;
 
 /**
- * Tests the server-side function es:echema-generate($entity-type) as
+ * Tests the server-side function es:echema-generate($model) as
  * element(xsd:schema)
  */
 public class TestSchemaGeneration extends EntityServicesTestBase {
@@ -55,12 +55,12 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 	public static void setupClass() {
 		setupClients();
 
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
 		TestSetup.getInstance().loadExtraFiles("/test-instances",".*");
 		docMgr = schemasClient.newXMLDocumentManager();
 		schemas = generateSchemas();
 
-		InputStream is = docMgr.getClass().getResourceAsStream("/entity-type-units/et-duplicate-prop.json");
+		InputStream is = docMgr.getClass().getResourceAsStream("/model-units/et-duplicate-prop.json");
 		JSONDocumentManager documentManager = client.newJSONDocumentManager();
 		documentManager.write("et-duplicate-prop.json", new InputStreamHandle(is).withFormat(Format.JSON));
 	}
@@ -81,7 +81,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 		logger.info("Generating schema: " + entityType);
 		StringHandle schema = new StringHandle();
 		try {
-			schema = evalOneResult("es:entity-type-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()",
+			schema = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()",
 					schema);
 		} catch (TestEvalException e) {
 			throw new RuntimeException(e);

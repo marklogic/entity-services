@@ -134,7 +134,7 @@ public class TestSetup {
 	    DocumentWriteSet writeSet = docMgr.newWriteSet();
 
         HashSet<String> filesLoaded = new HashSet<String>();
-		// testCaseFiles.addAll(getTestResources("/xml-entity-types"));
+		// testCaseFiles.addAll(getTestResources("/xml-models"));
 
 	    for (File f : getTestResources(dirName)) {
 	    	if (f.getName().startsWith(".")) { continue; };
@@ -148,7 +148,7 @@ public class TestSetup {
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
 	        metadata.getCollections().addAll(
-	        		"http://marklogic.com/entity-services/entity-types",
+	        		"http://marklogic.com/entity-services/models",
 	        		f.getName());
 	        
 	    	writeSet.add(f.getName(), metadata, new FileHandle(f));
@@ -190,8 +190,8 @@ public class TestSetup {
 	    Collection<String> cleanupDocuments = new ArrayList<String>();
 	    cleanupDocuments.addAll(getTestResourceNames("/source-documents"));
         cleanupDocuments.addAll(getTestResourceNames("/test-instances"));
-        cleanupDocuments.addAll(getTestResourceNames("/json-entity-types"));
-        cleanupDocuments.addAll(getTestResourceNames("/xml-entity-types"));
+        cleanupDocuments.addAll(getTestResourceNames("/json-models"));
+        cleanupDocuments.addAll(getTestResourceNames("/xml-models"));
 
         docMgr.delete(cleanupDocuments.toArray(new String[] { }));
 

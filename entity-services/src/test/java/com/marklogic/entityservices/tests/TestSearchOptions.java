@@ -42,12 +42,12 @@ public class TestSearchOptions extends EntityServicesTestBase {
     @BeforeClass
     public static void setup() {
         setupClients();
-        TestSetup.getInstance().loadEntityTypes("/json-entity-types", "SchemaCompleteEntityType-0.0.1.json");
+        TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
     }
 
 	@Test
 	public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
-		DOMHandle handle = evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:entity-type-from-node()=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:model-from-node()=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -62,7 +62,7 @@ public class TestSearchOptions extends EntityServicesTestBase {
 
 		// if this call has results, the search options are not valid.
         EvalResultIterator checkOptions = eval("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
-				               "es:entity-type-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()");
+				               "es:model-from-node(fn:doc('SchemaCompleteEntityType-0.0.1.json'))=>es:search-options-generate()=>search:check-options()");
 
         assertFalse("Too many results for check options to pass", checkOptions.hasNext());
         /* This is for diagnostics during changes:

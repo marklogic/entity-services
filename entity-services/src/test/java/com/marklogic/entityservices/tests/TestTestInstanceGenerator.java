@@ -33,7 +33,7 @@ import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
 
 /**
- * Tests server function es:entity-type-get-test-instances( $entity-type )
+ * Tests server function es:model-get-test-instances( $model )
  *
  */
 public class TestTestInstanceGenerator extends EntityServicesTestBase {
@@ -41,14 +41,14 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupTestInstances() {
 		setupClients();
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/xml-entity-types", ".*.xml$");
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/xml-models", ".*.xml$");
 	}
 	
 	@Test
 	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
 			
-			String generateTestInstances = " fn:doc('"+entityType+"')=>es:entity-type-from-node()=>es:entity-type-get-test-instances()";
+			String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-node()=>es:model-get-test-instances()";
 			
 			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);

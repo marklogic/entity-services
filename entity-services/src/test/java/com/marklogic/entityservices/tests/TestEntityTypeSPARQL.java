@@ -38,7 +38,7 @@ public class TestEntityTypeSPARQL extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setup() {
 		setupClients();
-		TestSetup.getInstance().loadEntityTypes("/json-entity-types", "SchemaCompleteEntityType-0.0.1.json");
+		TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
 		queryMgr = client.newSPARQLQueryManager();
 	}
 	@Test
@@ -46,7 +46,7 @@ public class TestEntityTypeSPARQL extends EntityServicesTestBase {
 		String docHasTypeHasPropertyHasDatatype = 
 					 "PREFIX t: <http://marklogic.com/testing-entity-type#> "
 					+"PREFIX es: <http://marklogic.com/entity-services#> "
-					+ "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:EntityServicesDocument ; "
+					+ "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:Model ; "
 					+ "   es:definitions ?types ."
 					+ "?types es:property ?property ."
 					+ "?property es:datatype ?datatype "

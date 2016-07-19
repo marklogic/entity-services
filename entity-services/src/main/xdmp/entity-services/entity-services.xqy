@@ -31,60 +31,60 @@ declare variable $ENTITY-TYPES-IRI := "http://marklogic.com/entity-services#";
 declare option xdmp:mapping "false";
 
 (:~
- : Creates an entity-type from a document node.
+ : Creates a model from a document node.
  : For JSON documents, this is equivalent to xdmp:json with validation.
  : For XML documents, we transform the input as well.
  : 
  : @param $node A JSON or XML document containing an entity type definition.
  :)
-declare function es:entity-type-from-node(
+declare function es:model-from-node(
     $node as document-node()
 ) as map:map
 {
-    let $errors := esi:entity-type-validate($node)
+    let $errors := esi:model-validate($node)
     let $root := $node/node()
     return
         if ($errors)
-        then fn:error( (), "ES-ENTITY-TYPE-INVALID", $errors)
+        then fn:error( (), "ES-MODEL-INVALID", $errors)
         else 
             if ($root/object-node()) 
             then xdmp:to-json($root)
-            else esi:entity-type-from-xml($root)
+            else esi:model-from-xml($root)
 };
 
 (:~
  : Given an entity type, returns its XML representation
  : @param An entity type document.
  :)
-declare function es:entity-type-to-xml(
-    $entity-type
-) as element(es:entity-type)
+declare function es:model-to-xml(
+    $model
+) as element(es:model)
 {
-    esi:ensure-entity-type($entity-type)=>esi:entity-type-to-xml()
+    esi:ensure-model($model)=>esi:model-to-xml()
 };
 
 (:~
  : Given an entity type, returns its JSON representation
  : @param An entity type document.
  :)
-declare function es:entity-type-to-json(
-    $entity-type
+declare function es:model-to-json(
+    $model
 ) as object-node()
 {
-    xdmp:to-json(esi:ensure-entity-type($entity-type))/node()
+    xdmp:to-json(esi:ensure-model($model))/node()
 };
 
 (:~
  : Generates an XQuery module that can be customized and used
  : to support transforms associated with an entity type
- : @param $entity-type  An entity type object.
+ : @param $model  A model.
  : @return An XQuery module (text) that can be edited and installed in a modules database.
  :)
 declare function es:conversion-module-generate(
-    $entity-type
+    $model
 ) as document-node()
 {
-    esi:ensure-entity-type($entity-type)=>es-codegen:conversion-module-generate()
+    esi:ensure-model($model)=>es-codegen:conversion-module-generate()
 };
 
 (:~
@@ -92,11 +92,11 @@ declare function es:conversion-module-generate(
  : entity type document payload.
  : @param An entity type document.
  :)
-declare function es:entity-type-get-test-instances(
-    $entity-type
+declare function es:model-get-test-instances(
+    $model
 ) as element()*
 {
-    esi:ensure-entity-type($entity-type)=>esi:entity-type-get-test-instances()
+    esi:ensure-model($model)=>esi:model-get-test-instances()
 };
 
 
@@ -110,10 +110,10 @@ declare function es:entity-type-get-test-instances(
  : @param An entity type document.
  :)
 declare function es:database-properties-generate(
-    $entity-type
+    $model
 ) as document-node()
 {
-    esi:ensure-entity-type($entity-type)=>esi:database-properties-generate()
+    esi:ensure-model($model)=>esi:database-properties-generate()
 };
 
 
@@ -124,10 +124,10 @@ declare function es:database-properties-generate(
  : @return An XSD schema that can validate entity instances in XML form.
  :)
 declare function es:schema-generate(
-    $entity-type
+    $model
 ) as element()*
 {
-    esi:ensure-entity-type($entity-type)=>esi:schema-generate()
+    esi:ensure-model($model)=>esi:schema-generate()
 };
 
 
@@ -138,11 +138,11 @@ declare function es:schema-generate(
  : @param An entity type document.
  :)
 declare function es:extraction-template-generate(
-    $entity-type
+    $model
 ) as document-node()
 {
     document {
-        esi:ensure-entity-type($entity-type)=>esi:extraction-template-generate()
+        esi:ensure-model($model)=>esi:extraction-template-generate()
     }
 };
 
@@ -154,10 +154,10 @@ declare function es:extraction-template-generate(
  : @param An entity type document.
  :)
 declare function es:search-options-generate(
-    $entity-type
+    $model
 ) 
 {
-    esi:ensure-entity-type($entity-type)=>esi:search-options-generate()
+    esi:ensure-model($model)=>esi:search-options-generate()
 };
 
 (:~
@@ -167,13 +167,13 @@ declare function es:search-options-generate(
  : @param An entity type document that describes the source type of the conversion.
  :)
 declare function es:version-comparison-generate(
-    $source-entity-type,
-    $target-entity-type
+    $source-model,
+    $target-model
 ) as document-node()
 {
     es-codegen:version-comparison-generate(
-           $source-entity-type=>esi:ensure-entity-type(),
-           $target-entity-type=>esi:ensure-entity-type())
+           $source-model=>esi:ensure-model(),
+           $target-model=>esi:ensure-model())
 };
 
 

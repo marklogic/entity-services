@@ -54,7 +54,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 		// extraction tempmlates go in schemas db.
 		docMgr = schemasClient.newXMLDocumentManager();
 
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
 		extractionTemplates = generateExtractionTemplates();
 		storeExtractionTempates(extractionTemplates);
 	}
@@ -79,7 +79,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
-				template = evalOneResult("es:entity-type-from-node( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
+				template = evalOneResult("es:model-from-node( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}

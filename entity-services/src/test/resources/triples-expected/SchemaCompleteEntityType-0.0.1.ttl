@@ -133,7 +133,7 @@ order:hexBinaryKey
         es:title "hexBinaryKey" .
 
 <http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1>
-        a       es:EntityServicesDocument ;
+        a       es:Model ;
         es:definitions type:OrderDetails , type:SchemaCompleteEntityType ;
         es:description  "All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid." ;
         es:title "SchemaCompleteEntityType" ;

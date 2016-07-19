@@ -7,7 +7,7 @@
 @prefix json: <http://marklogic.com/json#> .
 
 doc:Order-0.0.4
-        a       es:EntityServicesDocument ;
+        a       es:Model ;
         es:definitions type:OrderDetails , type:Order ;
         es:description  "A version of Order that contains OrderDetails within an array, which will change the cardinality assumptions for the relationship of Order to OrderDetails." ;
         es:title "Order" ;

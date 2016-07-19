@@ -10,9 +10,9 @@ es:EntityServices a owl:Ontology ;
     rdfs:comment "This vocabulary defines and documents IRIs used for making MarkLogic entity models." ;
 .
 
-es:EntityServicesDocument a owl:Class ;
+es:Model a owl:Class ;
     rdfs:isDefinedBy es:EntityServices ;
-    rdfs:label "EntityServicesDocument" ;
+    rdfs:label "Model" ;
     rdfs:comment "A document that contains definitions for zero or more entity types." ;
 .
 
@@ -61,26 +61,26 @@ es:title a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "title" ;
     rdfs:range xsd:NCName ;
-    rdfs:comment "An alphanumeric string (conforming to xsd:NCName) to identity an EntityServicesDocument, EntityType, or Property." ;
+    rdfs:comment "An alphanumeric string (conforming to xsd:NCName) to identity a Model, EntityType, or Property." ;
 .
 
 es:version a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "version" ;
-    rdfs:comment "A string (semver recommended) used to identify the version of an EntityServicesDocument or EntityType." ;
+    rdfs:comment "A string (semver recommended) used to identify the version of a Model or EntityType." ;
 .
  
 es:description a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "description" ;
-    rdfs:comment "A long-form textual description of an EntityServicesDocument, EntityType, or Property." ;
+    rdfs:comment "A long-form textual description of a Model, EntityType, or Property." ;
 .
  
 es:definitions a owl:ObjectProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "definitions" ;
-    rdfs:comment "A rdf:Property that links an EntityServicesDocument to its constituent EntityType definitions." ;
-    rdfs:domain es:EntityServicesDocument ;
+    rdfs:comment "A rdf:Property that links a Model to its constituent EntityType definitions." ;
+    rdfs:domain es:Model ;
     rdfs:range es:EntityType ;
 .
  

@@ -53,14 +53,14 @@ declare private function es-codegen:comment(
 };
 
 declare function es-codegen:conversion-module-generate(
-    $entity-type as map:map
+    $model as map:map
 ) as document-node()
 {
-    let $info := map:get($entity-type, "info")
+    let $info := map:get($model, "info")
     let $title := map:get($info, "title")
     let $prefix := lower-case(substring($title,1,1)) || substring($title,2)
     let $version:= map:get($info, "version")
-    let $definitions := map:get($entity-type, "definitions")
+    let $definitions := map:get($model, "definitions")
     let $base-uri := esi:resolve-base-uri($info)
     return
 document {
@@ -110,7 +110,7 @@ import module namespace es = "http://marklogic.com/entity-services"
  :  the instance-to-canonical-xml or envelope functions.
  :)
 { 
-    for $entity-type-key in map:keys(map:get($entity-type, "definitions"))
+    for $entity-type-key in map:keys(map:get($model, "definitions"))
     return 
     <extract-instance>
 (:~
@@ -158,7 +158,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
          : =>map:with('constantValue', 10)
          : Once you've customized this function, write a test with expected 
          : inputs, and a test instance document
-         : created with es:entity-type-get-test-instances($entity-type)
+         : created with es:model-get-test-instances($model)
          :)
     {
     (: Begin code generation block :)
@@ -171,7 +171,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     let $is-array := 
             map:get(map:get($properties-map, $property-key), "datatype") 
             eq "array"
-    let $property-datatype := esi:resolve-datatype($entity-type, $entity-type-key, $property-key)
+    let $property-datatype := esi:resolve-datatype($model, $entity-type-key, $property-key)
     let $casting-function-name := es-codegen:casting-function-name($property-datatype)
     let $wrap-if-array := function($str, $fn) {
             if ($is-array and $is-required)
@@ -338,8 +338,8 @@ declare function {$prefix}:instance-to-envelope(
 
 declare private function es-codegen:comment-for-conversion(
     $target-property-name as xs:string,
-    $target-entity-type as map:map,
-    $source-entity-type as map:map
+    $target-model as map:map,
+    $source-model as map:map
 ) as xs:string
 {
     es-codegen:comment("boo")

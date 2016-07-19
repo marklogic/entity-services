@@ -71,7 +71,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 		// save xquery module to modules database
 		docMgr = modulesClient.newTextDocumentManager();	
 
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-entity-types", ".*.json$");
+		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
 		conversionModules = generateConversionModules();
 		storeConversionModules(conversionModules);
 
@@ -95,7 +95,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:entity-type-from-node()=>es:conversion-module-generate()", xqueryModule);
+				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:model-from-node()=>es:conversion-module-generate()", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -108,7 +108,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	public void verifyCreateValidModule() throws TestEvalException {
 
         String initialTest = "Order-0.0.1.json";
-        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:entity-type-from-node()=>es:conversion-module-generate()", new StringHandle());
+        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:model-from-node()=>es:conversion-module-generate()", new StringHandle());
 		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
 		m.put(initialTest, moduleHandle);
 		// save conversion module into modules database
@@ -125,7 +125,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	private String moduleImport(String entityType) {
-		InputStream is = this.getClass().getResourceAsStream("/json-entity-types/" + entityType);
+		InputStream is = this.getClass().getResourceAsStream("/json-models/" + entityType);
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode controlFile = null;
 		try {

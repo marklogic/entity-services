@@ -4,7 +4,7 @@
 @prefix type: <http://example.org/mytypeschema/Person-0.0.2/> .
 @prefix prop: <http://example.org/mytypeschema/Person-0.0.2/Person/> .
 
-doc:Person-0.0.2 a es:EntityServicesDocument ;
+doc:Person-0.0.2 a es:Model ;
     es:title "Person" ;
     es:version "0.0.2" ;
     es:definitions type:Person .

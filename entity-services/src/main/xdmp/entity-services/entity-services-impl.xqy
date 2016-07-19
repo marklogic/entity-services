@@ -704,7 +704,6 @@ declare private function esi:ref-datatype(
 ) as xs:string 
 {
     let $ref-type := esi:ref-type($entity-type, $entity-type-name, $property-name)
-    let $_ := xdmp:log(("ASKDJAS", $entity-type, $entity-type-name, $property-name, $ref-type))
     return 
         if (empty($ref-type))
         then "string"

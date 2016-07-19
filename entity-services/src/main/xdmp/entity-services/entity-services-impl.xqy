@@ -30,11 +30,11 @@ import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
-declare variable $esi:DEFAULT_BASE_URI := "http://example.org/";
-declare variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
-declare variable $esi:ENTITY_TYPE_COLLECTION := "http://marklogic.com/entity-services/models";
+declare private variable $esi:DEFAULT_BASE_URI := "http://example.org/";
+declare private variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
+declare private variable $esi:ENTITY_TYPE_COLLECTION := "http://marklogic.com/entity-services/models";
 
-declare variable $esi:keys-to-element-names as map:map := 
+declare private variable $esi:keys-to-element-names as map:map := 
     let $m := map:map()
     let $_ := map:put($m, "primaryKey", xs:QName("es:primary-key"))
     let $_ := map:put($m, "rangeIndex", xs:QName("es:range-index"))
@@ -43,15 +43,15 @@ declare variable $esi:keys-to-element-names as map:map :=
     let $_ := map:put($m, "$ref", xs:QName("es:ref"))
     return $m;
 
-declare variable $esi:element-names-to-keys as map:map :=
+declare private variable $esi:element-names-to-keys as map:map :=
     let $m := map:map()
     let $_ := map:keys($esi:keys-to-element-names) !
         map:put($m, local-name-from-QName(map:get($esi:keys-to-element-names, .)), .)
     return $m;
 
-declare variable $esi:entity-services-prefix := "http://marklogic.com/entity-services#";
+declare private variable $esi:entity-services-prefix := "http://marklogic.com/entity-services#";
 
-declare variable $esi:model-schematron :=
+declare private variable $esi:model-schematron :=
     <iso:schema xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:xsl="http://www.w3.org/1999/XSL/not-Transform">
       <iso:ns prefix="es" uri="http://marklogic.com/entity-services"/>
       <iso:pattern>
@@ -150,26 +150,13 @@ declare function esi:model-graph-iri(
 ) as sem:iri
 {
     let $info := map:get($model, "info")
-    let $baseUriPrefix := esi:resolve-base-uri($info)
+    let $base-uri-prefix := esi:resolve-base-uri($info)
     return
     sem:iri(
-        concat( $baseUriPrefix, 
+        concat( $base-uri-prefix,
                map:get($info, "title"),
                "-" ,
                map:get($info, "version")))
-};
-
-
-(: 
- : This function is useful for debugging
- : and testing, but preferred access to triples
- : is via the triples index.
- :)
-declare function esi:extract-triples(
-    $model-graph-iri as xs:string
-) as sem:triple*
-{
-    sem:graph(sem:iri($model-graph-iri))
 };
 
 
@@ -209,11 +196,11 @@ declare private function esi:key-convert-to-xml(
     else ()
 };
 
-declare private function esi:put-if-exists(
+declare private function esi:with-if-exists(
     $map as map:map,
     $key-name as xs:string,
     $value as item()?
-)
+) as map:map
 {
     typeswitch($value)
     case json:array return
@@ -223,7 +210,8 @@ declare private function esi:put-if-exists(
     default return
         if (exists($value)) 
         then map:put($map, $key-name, $value)
-        else ()
+        else (),
+    $map
 };
 
 declare function esi:model-to-xml(
@@ -241,16 +229,15 @@ declare function esi:model-to-xml(
             esi:key-convert-to-xml($info, "description")
         },
         element es:definitions {
-            let $definitions := map:get($model, "definitions")
-            for $entity-type-key in map:keys($definitions)
-            let $entity-type-map := map:get($definitions, $entity-type-key)
+            for $entity-type-name in $model=>map:get("definitions")=>map:keys()
+            let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
             return
-            element { $entity-type-key } {
+            element { $entity-type-name } {
                 element es:properties {
-                    let $properties := map:get($entity-type-map, "properties")
-                    for $property-key in map:keys($properties)
-                    let $property := map:get($properties, $property-key)
-                    return element { $property-key } { 
+                    let $properties := map:get($entity-type, "properties")
+                    for $property-name in map:keys($properties)
+                    let $property := map:get($properties, $property-name)
+                    return element { $property-name } { 
                         esi:key-convert-to-xml($property, "datatype"),
                         esi:key-convert-to-xml($property, "collation"),
                         esi:key-convert-to-xml($property, "$ref"),
@@ -268,11 +255,11 @@ declare function esi:model-to-xml(
                         else ()
                     }
                 },
-                esi:key-convert-to-xml($entity-type-map, "description"),
-                esi:key-convert-to-xml($entity-type-map, "primaryKey"),
-                esi:key-convert-to-xml($entity-type-map, "required"),
-                esi:key-convert-to-xml($entity-type-map, "rangeIndex"),
-                esi:key-convert-to-xml($entity-type-map, "wordLexicon")
+                esi:key-convert-to-xml($entity-type, "description"),
+                esi:key-convert-to-xml($entity-type, "primaryKey"),
+                esi:key-convert-to-xml($entity-type, "required"),
+                esi:key-convert-to-xml($entity-type, "rangeIndex"),
+                esi:key-convert-to-xml($entity-type, "wordLexicon")
             }
         }
      }
@@ -282,48 +269,47 @@ declare function esi:model-from-xml(
     $model as element(es:model)
 ) as map:map
 {
-    let $et := json:object()
     let $info := json:object()
-    let $_ := map:put($info, "title", data($model/es:info/es:title))
-    let $_ := map:put($info, "version", data($model/es:info/es:version))
-    let $_ := esi:put-if-exists($info, "baseUri", data($model/es:info/es:base-uri))
-    let $_ := esi:put-if-exists($info, "description", data($model/es:info/es:description))
+        =>map:with("title", data($model/es:info/es:title))
+        =>map:with("version", data($model/es:info/es:version))
+        =>esi:with-if-exists("baseUri", data($model/es:info/es:base-uri))
+        =>esi:with-if-exists("description", data($model/es:info/es:description))
     let $definitions := 
         let $d := json:object()
         let $_ := 
             for $entity-type-node in $model/es:definitions/*
-            let $entity-type-map := json:object()
-            let $properties-map := json:object()
+            let $entity-type := json:object()
+            let $properties := json:object()
             let $_ := 
                 for $property-node in $entity-type-node/es:properties/*
                 let $property-attributes := json:object()
-                let $_ := esi:put-if-exists($property-attributes, "datatype", data($property-node/es:datatype))
-                let $_ := esi:put-if-exists($property-attributes, "$ref", data($property-node/es:ref))
-                let $_ := esi:put-if-exists($property-attributes, "description", data($property-node/es:description))
-                let $_ := esi:put-if-exists($property-attributes, "collation", data($property-node/es:collation))
+                    =>esi:with-if-exists("datatype", data($property-node/es:datatype))
+                    =>esi:with-if-exists("$ref", data($property-node/es:ref))
+                    =>esi:with-if-exists("description", data($property-node/es:description))
+                    =>esi:with-if-exists("collation", data($property-node/es:collation))
 
                 let $items-map := json:object()
-                let $_ := esi:put-if-exists($items-map, "datatype", data($property-node/es:items/es:datatype))
-                let $_ := esi:put-if-exists($items-map, "$ref", data($property-node/es:items/es:ref))
-                let $_ := esi:put-if-exists($items-map, "description", data($property-node/es:items/es:description))
-                let $_ := esi:put-if-exists($items-map, "collation", data($property-node/es:items/es:collation))
+                    =>esi:with-if-exists("datatype", data($property-node/es:items/es:datatype))
+                    =>esi:with-if-exists("$ref", data($property-node/es:items/es:ref))
+                    =>esi:with-if-exists("description", data($property-node/es:items/es:description))
+                    =>esi:with-if-exists("collation", data($property-node/es:items/es:collation))
                 let $_ := if (count(map:keys($items-map)) gt 0)
                         then map:put($property-attributes, "items", $items-map)
                         else ()
-                return map:put($properties-map, fn:local-name($property-node), $property-attributes)
-            let $_ := map:put($entity-type-map, "properties", $properties-map)
-            let $_ := esi:put-if-exists($entity-type-map, "primaryKey", data($entity-type-node/es:primary-key))
-            let $_ := esi:put-if-exists($entity-type-map, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
-            let $_ := esi:put-if-exists($entity-type-map, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
-            let $_ := esi:put-if-exists($entity-type-map, "wordLexicon", json:to-array($entity-type-node/es:word-lexicon/xs:string(.)))
-            let $_ := esi:put-if-exists($entity-type-map, "description", data($entity-type-node/es:description))
-            return map:put($d, fn:local-name($entity-type-node), $entity-type-map)
+                return map:put($properties, fn:local-name($property-node), $property-attributes)
+            let $_ := map:put($entity-type, "properties", $properties)
+            let $_ := esi:with-if-exists($entity-type, "primaryKey", data($entity-type-node/es:primary-key))
+            let $_ := esi:with-if-exists($entity-type, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "wordLexicon", json:to-array($entity-type-node/es:word-lexicon/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "description", data($entity-type-node/es:description))
+            return map:put($d, fn:local-name($entity-type-node), $entity-type)
         return $d
 
-    let $_ := map:put($et, "info", $info)
-    let $_ := map:put($et, "definitions", $definitions)
+    return json:object()
+        =>map:with("info", $info)
+        =>map:with("definitions", $definitions)
     
-    return $et
 };
 
 (: 
@@ -381,10 +367,11 @@ declare private function esi:resolve-test-reference(
     $property-name as xs:string,
     $depth as xs:int)
 {
-    let $entity-definition := $model
+    let $property-definition := $model
             =>map:get("definitions")
             =>map:get($entity-type-name)
-    let $property-definition := $entity-definition=>map:get("properties")=>map:get($property-name)
+            =>map:get("properties")
+            =>map:get($property-name)
     let $reference-value := 
         head( ($property-definition=>map:get("$ref"), 
                               $property-definition=>map:get("items")=>map:get("$ref") ) )
@@ -454,8 +441,7 @@ declare function esi:create-test-instance(
                     =>map:get("definitions")
                     =>map:get($entity-type-name)
                     =>map:get("properties")
-            let $property-keys := map:keys($properties)
-            for $property in $property-keys
+            for $property in map:keys($properties)
             return
                 esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth)
         }
@@ -467,9 +453,8 @@ declare function esi:model-get-test-instances(
     $model as map:map
 ) as element()*
 {
-    let $definitions := map:get($model, "definitions")
-    let $definition-keys := map:keys($definitions)
-    for $entity-type-name in $definition-keys
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
+    for $entity-type-name in $entity-type-names
     return esi:create-test-instance($model, $entity-type-name, 0)
 };
 
@@ -498,19 +483,18 @@ declare function esi:database-properties-generate(
     $model as map:map
 ) as document-node()
 {
-    let $definitions := map:get($model, "definitions")
-    let $definition-keys := map:keys($definitions)
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $range-path-indexes := json:array()
     let $word-lexicons := json:array()
     let $_ := 
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         return
         (
-        let $range-index-properties := map:get($entity-type-map, "rangeIndex")
+        let $range-index-properties := map:get($entity-type, "rangeIndex")
         for $range-index-property in json:array-values($range-index-properties)
         let $ri-map := json:object()
-        let $property := $entity-type-map=>map:get("properties")=>map:get($range-index-property)
+        let $property := $entity-type=>map:get("properties")=>map:get($range-index-property)
         let $specified-datatype := esi:resolve-datatype($model, $entity-type-name, $range-index-property)
 
         let $datatype := esi:indexable-datatype($specified-datatype)
@@ -523,10 +507,10 @@ declare function esi:database-properties-generate(
         let $_ := map:put($ri-map, "scalar-type", $datatype)
         return json:array-push($range-path-indexes, $ri-map)
         ,
-        let $word-lexicon-properties := $entity-type-map=>map:get("wordLexicon")
+        let $word-lexicon-properties := $entity-type=>map:get("wordLexicon")
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
         let $wl-map := json:object()
-        let $property := $entity-type-map=>map:get("properties")=>map:get($word-lexicon-property)
+        let $property := $entity-type=>map:get("properties")=>map:get($word-lexicon-property)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
         let $_ := map:put($wl-map, "collation", $collation)
         let $_ := map:put($wl-map, "localname", $word-lexicon-property)
@@ -553,25 +537,23 @@ declare function esi:schema-generate(
     $model as map:map
 ) as element()*
 {
-    let $definitions := map:get($model, "definitions")
-    let $definition-keys := map:keys($definitions)
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $seen-keys := map:map()
     let $reference-declarations := map:map()
     let $element-declarations := json:array()
     (: construct all the element declarations :)
     let $_ := 
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $properties-map := map:get($entity-type-map, "properties")
-        let $property-keys := map:keys($properties-map)
-        for $property-name in $property-keys
-        let $property-map := map:get($properties-map, $property-name)
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $properties := map:get($entity-type, "properties")
+        for $property-name in map:keys($properties)
+        let $property := map:get($properties, $property-name)
         return
             json:array-push($element-declarations, 
                 esi:wrap-duplicates($seen-keys, $property-name,
-                    if (map:contains($property-map, "$ref"))
+                    if (map:contains($property, "$ref"))
                     then 
-                        let $ref-value := map:get($property-map, "$ref")
+                        let $ref-value := map:get($property, "$ref")
                         let $ref-name := functx:substring-after-last($ref-value, "/")
                         return
                         if (contains($ref-value, "#/definitions/"))
@@ -585,10 +567,10 @@ declare function esi:schema-generate(
                              </xs:complexType>
                              ),
                              <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
-                    else if (map:contains($property-map, "datatype"))
+                    else if (map:contains($property, "datatype"))
                     then
-                        let $datatype := map:get($property-map, "datatype")
-                        let $items-map := map:get($property-map, "items")
+                        let $datatype := map:get($property, "datatype")
+                        let $items-map := map:get($property, "items")
                         return
                             if ($datatype eq "array")
                             then 
@@ -627,12 +609,11 @@ declare function esi:schema-generate(
     {
         json:array-values($element-declarations),
         ($reference-declarations=>map:keys()) ! map:get($reference-declarations, .),
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $primary-key-name := map:get($entity-type-map, "primaryKey")
-        let $required-properties := ( json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
-        let $properties-map := map:get($entity-type-map, "properties")
-        let $property-keys := map:keys($properties-map)
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
+        let $properties := map:get($entity-type, "properties")
         return
         (
         <xs:complexType name="{ $entity-type-name }ContainerType">
@@ -644,9 +625,9 @@ declare function esi:schema-generate(
             <xs:sequence minOccurs="0">
             {
                 (: construct xs:element element for each property :)
-                for $property-name in $property-keys
-                let $property-map := map:get($properties-map, $property-name)
-                let $datatype := map:get($property-map, "datatype")
+                for $property-name in map:keys($properties)
+                let $property := map:get($properties, $property-name)
+                let $datatype := map:get($property, "datatype")
                 return
                     element xs:element {
                     (
@@ -768,19 +749,16 @@ declare function esi:extraction-template-generate(
     $model as map:map
 ) as element(tde:template)
 {
-    let $info := map:get($model, "info")
-    let $schema-name := map:get($info, "title")
-    let $definitions := map:get($model, "definitions")
-    let $definition-keys := map:keys($definitions)
+    let $schema-name := $model=>map:get("info")=>map:get("title")
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $scalar-rows := map:map()
     let $_ :=
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $primary-key-name := map:get($entity-type-map, "primaryKey")
-        let $required-properties := ( json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
-        let $properties-map := map:get($entity-type-map, "properties")
-        let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
-        let $property-keys := map:keys($properties-map)
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
+        let $properties := map:get($entity-type, "properties")
+        let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
         return
         map:put($scalar-rows, $entity-type-name,
             <tde:rows>
@@ -789,8 +767,8 @@ declare function esi:extraction-template-generate(
                     <tde:view-name>{ $entity-type-name }</tde:view-name>
                     <tde:columns>
                     {
-                    for $property-name in $property-keys
-                    let $property-properties := map:get($properties-map, $property-name)
+                    for $property-name in map:keys($properties)
+                    let $property-properties := map:get($properties, $property-name)
                     let $items-map := map:get($property-properties, "items")
                     let $datatype := 
                         if (map:get($property-properties, "datatype") eq "iri")
@@ -825,17 +803,16 @@ declare function esi:extraction-template-generate(
             </tde:rows>)
     let $array-rows := map:map()
     let $_ := 
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $primary-key-name := map:get($entity-type-map, "primaryKey")
-        let $required-properties := (json:array-values(map:get($entity-type-map, "required")), $primary-key-name)
-        let $properties-map := map:get($entity-type-map, "properties")
-        let $primary-key-type := map:get( map:get($properties-map, $primary-key-name), "datatype" )
-        let $property-keys := map:keys($properties-map)
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $required-properties := (json:array-values(map:get($entity-type, "required")), $primary-key-name)
+        let $properties := map:get($entity-type, "properties")
+        let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
         let $column-map := map:map()
         let $_ := 
-            for $property-name in $property-keys
-            let $property-properties := map:get($properties-map, $property-name)
+            for $property-name in map:keys($properties)
+            let $property-properties := map:get($properties, $property-name)
             let $items-map := map:get($property-properties, "items")
             let $is-ref := map:contains($items-map, "$ref")
             let $is-local-ref := map:contains($items-map, "$ref") and starts-with( map:get($items-map, "$ref"), "#/definitions/")
@@ -927,10 +904,9 @@ declare function esi:extraction-template-generate(
         for $entity-type-name in map:keys($scalar-rows) 
         return
         if (empty ( ( json:array-values(
-                        map:get(
-                            map:get( $definitions, $entity-type-name ), "required")),
-                        map:get(
-                            map:get( $definitions, $entity-type-name ), "primaryKey"))))
+                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("required")),
+                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("primaryKey"))
+                    ))
         then comment { "The standalone template for " || $entity-type-name || 
                        " cannot be generated.  Each template row requires " ||
                        "a primary key or at least one required property." }
@@ -1003,16 +979,15 @@ declare function esi:search-options-generate(
 {
     let $info := map:get($model, "info")
     let $schema-name := map:get($info, "title")
-    let $definitions := map:get($model, "definitions")
-    let $definition-keys := map:keys($definitions)
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $seen-keys := map:map()
     let $all-constraints := json:array()
     let $all-tuples-definitions := json:array()
     let $_ :=
-        for $entity-type-name in $definition-keys
-        let $entity-type-map := map:get($definitions, $entity-type-name)
-        let $primary-key-name := map:get($entity-type-map, "primaryKey")
-        let $properties-map := map:get($entity-type-map, "properties")
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $properties := map:get($entity-type, "properties")
         let $tuples-range-definitions := json:array()
         let $_pk-constraint := 
             if (exists($primary-key-name))
@@ -1025,14 +1000,14 @@ declare function esi:search-options-generate(
                 </search:constraint>))
             else ()
         let $_range-constraints :=
-            for $property-name in json:array-values(map:get($entity-type-map, "rangeIndex"))
+            for $property-name in json:array-values(map:get($entity-type, "rangeIndex"))
             let $specified-datatype := esi:resolve-datatype($model,$entity-type-name,$property-name)
-            let $property-map := map:get($properties-map, $property-name)
+            let $property := map:get($properties, $property-name)
             let $datatype := esi:indexable-datatype($specified-datatype)
             let $collation := if ($datatype eq "string") 
                 then attribute
                     collation { 
-                        head( (map:get($property-map, "collation"), "http://marklogic.com/collation/en") )
+                        head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
                     }
                 else ()
             let $range-definition := 
@@ -1058,7 +1033,7 @@ declare function esi:search-options-generate(
                     </search:tuples>)
             else ()
         let $_word-constraints :=
-            for $property-name in json:array-values(map:get($entity-type-map, "wordLexicon"))
+            for $property-name in json:array-values(map:get($entity-type, "wordLexicon"))
             return
             json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name,
                 <search:constraint name="{ $property-name } ">
@@ -1067,7 +1042,7 @@ declare function esi:search-options-generate(
                     </search:word>
                 </search:constraint>))
         return ()
-    let $types-expr := string-join( $definition-keys, "|" )
+    let $types-expr := string-join( $entity-type-names, "|" )
     let $type-constraint :=
         <search:constraint name="entity-type">
             <search:value>

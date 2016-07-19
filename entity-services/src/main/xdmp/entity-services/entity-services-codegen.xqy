@@ -60,7 +60,6 @@ declare function es-codegen:conversion-module-generate(
     let $title := map:get($info, "title")
     let $prefix := lower-case(substring($title,1,1)) || substring($title,2)
     let $version:= map:get($info, "version")
-    let $definitions := map:get($model, "definitions")
     let $base-uri := esi:resolve-base-uri($info)
     return
 document {
@@ -110,30 +109,30 @@ import module namespace es = "http://marklogic.com/entity-services"
  :  the instance-to-canonical-xml or envelope functions.
  :)
 { 
-    for $entity-type-key in map:keys(map:get($model, "definitions"))
+    for $entity-type-name in map:keys(map:get($model, "definitions"))
     return 
     <extract-instance>
 (:~
  : Creates a map:map representation of an entity instance from some source
  : document.
- : @param $source-node  A document or node that contains data for populating a {$entity-type-key}
+ : @param $source-node  A document or node that contains data for populating a {$entity-type-name}
  : @return A map:map instance that holds the data for this entity type.
  :)
-declare function {$prefix}:extract-instance-{$entity-type-key}(
+declare function {$prefix}:extract-instance-{$entity-type-name}(
     $source-node as node()
 ) as map:map
 {{
     (: if this $source-node is a reference without an embedded object, then short circuit. :)
-    if (empty($source-node/{$entity-type-key}/*))
+    if (empty($source-node/{$entity-type-name}/*))
     then
     json:object()
-        =>map:with('$type', '{ $entity-type-key }')
-        =>map:with('$ref', $source-node/{ $entity-type-key }/text())
+        =>map:with('$type', '{ $entity-type-name }')
+        =>map:with('$ref', $source-node/{ $entity-type-name }/text())
         =>map:with('$attachments', $source-node)
     else
     json:object()
         (: This line identifies the type of this instance.  Do not change it. :)
-        =>map:with('$type', '{ $entity-type-key }')
+        =>map:with('$type', '{ $entity-type-name }')
         (: This line adds the original source document as an attachment.
          : If this entity type is the root of a document, you should uncomment
          : this line in order to include the source node as an attachment.
@@ -142,7 +141,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
         :)
         =>map:with('$attachments', $source-node)
-        (: The following lines are generated from the '{ $entity-type-key }' entity type 
+        (: The following lines are generated from the '{ $entity-type-name }' entity type 
          : You need to ensure that all of the property paths are correct for your source
          : data to populate instances.  The general pattern is
          : =>map:with('keyName', casting-function($source-node/path/to/data/in/the/source))
@@ -162,16 +161,15 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
          :)
     {
     (: Begin code generation block :)
-    let $this-type := map:get($definitions, $entity-type-key)
-    let $properties-map := map:get($this-type, "properties")
-    let $properties-keys := map:keys($properties-map)
-    for $property-key in map:keys($properties-map)
-    let $is-required := $property-key = 
-            ( map:get($this-type, "primaryKey"), json:array-values( map:get($this-type, "required")) )
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $properties := map:get($entity-type, "properties")
+    for $property-name in map:keys($properties)
+    let $is-required := $property-name = 
+            ( map:get($entity-type, "primaryKey"), json:array-values( map:get($entity-type, "required")) )
     let $is-array := 
-            map:get(map:get($properties-map, $property-key), "datatype") 
+            map:get(map:get($properties, $property-name), "datatype") 
             eq "array"
-    let $property-datatype := esi:resolve-datatype($model, $entity-type-key, $property-key)
+    let $property-datatype := esi:resolve-datatype($model, $entity-type-name, $property-name)
     let $casting-function-name := es-codegen:casting-function-name($property-datatype)
     let $wrap-if-array := function($str, $fn) {
             if ($is-array and $is-required)
@@ -183,9 +181,9 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
         }
     let $ref :=
         if ($is-array)
-        then $properties-map=>map:get($property-key)=>map:get("items")=>map:get("$ref")
-        else $properties-map=>map:get($property-key)=>map:get("$ref")
-    let $path-to-property := concat("$source-node/", $entity-type-key, "/", $property-key)
+        then $properties=>map:get($property-name)=>map:get("items")=>map:get("$ref")
+        else $properties=>map:get($property-name)=>map:get("$ref")
+    let $path-to-property := concat("$source-node/", $entity-type-name, "/", $property-name)
     let $property-comment :=
         if (empty($ref))
         then ""
@@ -223,7 +221,7 @@ declare function {$prefix}:extract-instance-{$entity-type-key}(
     return
     concat($property-comment,
            $function-call-string, 
-           functx:pad-string-to-length("'" || $property-key || "',", " ", max((  (string-length($property-key)+4), 25) )+1 ),
+           functx:pad-string-to-length("'" || $property-name || "',", " ", max((  (string-length($property-name)+4), 25) )+1 ),
            $value, 
            ")&#10;"
           )
@@ -505,7 +503,7 @@ import module namespace es = "http://marklogic.com/entity-services"
  :)
 
 { 
-    for $entity-type-key in $target-entity-type-names
+    for $entity-type-name in $target-entity-type-names
     return 
     <convert-instance>
 (:~
@@ -515,38 +513,37 @@ import module namespace es = "http://marklogic.com/entity-services"
  : source entity type
  : @return A map:map instance that holds the data for this entity type.
  :)
-declare function {$module-prefix}:convert-instance-{$entity-type-key}(
+declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     $source-node as node()
 ) as map:map
 {{
     json:object()
 (: The following line identifies the type of this instance.  Do not change it. :)
-        =>map:with('$type', '{ $entity-type-key }')
+        =>map:with('$type', '{ $entity-type-name }')
 {es-codegen:comment("The following lines are generated from the '"
-                     || $entity-type-key || 
+                     || $entity-type-name || 
                      "' entity type.")}
     {
     (: Begin code generation block :)
-    let $this-type := map:get($target-definitions, $entity-type-key)
-    let $properties-map := map:get($this-type, "properties")
-    let $properties-keys := map:keys($properties-map)
-    for $property-key in map:keys($properties-map)
-    let $path-to-property := concat("$source-node/", $entity-type-key, "/", $property-key)
-    let $source-entity-type := map:get($source-definitions, $entity-type-key)
+    let $entity-type := map:get($target-definitions, $entity-type-name)
+    let $properties := map:get($entity-type, "properties")
+    for $property-name in map:keys($properties)
+    let $path-to-property := concat("$source-node/", $entity-type-name, "/", $property-name)
+    let $source-entity-type := map:get($source-definitions, $entity-type-name)
     let $source-properties := map:get($source-entity-type, "properties")
     return
-        es-codegen:value-for-conversion($source-model, $target-model, $entity-type-key, $property-key, $module-prefix)
+        es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $module-prefix)
     (: end code generation block :)
     }
 }};
     </convert-instance>/text(),
 
     (: Make comments for removed ET types :)
-    for $removed-entity-type-key in map:keys($source-definitions)
-    where not( $removed-entity-type-key = $target-entity-type-names)
+    for $removed-entity-type-name in map:keys($source-definitions)
+    where not( $removed-entity-type-name = $target-entity-type-names)
     return
     <removed-type>
-(: Entity type {$removed-entity-type-key} is in source document
+(: Entity type {$removed-entity-type-name} is in source document
  : but not in target document.
  : The following XPath expressions should get values from the source
  : instances but there is no specified target

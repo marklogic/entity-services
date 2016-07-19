@@ -21,8 +21,6 @@ declare namespace tde = "http://marklogic.com/xdmp/tde";
 
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
 
-import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
-
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 

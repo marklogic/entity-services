@@ -26,8 +26,6 @@ import module namespace inst = "http://marklogic.com/entity-services-instance" a
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 declare namespace search = "http://marklogic.com/appservices/search";
 
-declare variable $ENTITY-TYPES-IRI := "http://marklogic.com/entity-services#";
-
 declare option xdmp:mapping "false";
 
 (:~

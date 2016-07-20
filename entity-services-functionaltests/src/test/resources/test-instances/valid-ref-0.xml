@@ -7,7 +7,9 @@
 <CustomerId>some string</CustomerId>
 <CompanyName>some string</CompanyName>
 <Country>some string</Country>
-<fof/>
+<fof>
+<Customer>some string</Customer>
+</fof>
 </Customer>
 </fof>
 </Customer>

@@ -10,7 +10,13 @@
 </CustomerID>
 <OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
 <ShipAddress>some string</ShipAddress>
+<OrderDetails>
 <OrderDetails>externally-referenced-instance</OrderDetails>
+</OrderDetails>
+<OrderDetails>
 <OrderDetails>externally-referenced-instance</OrderDetails>
+</OrderDetails>
+<OrderDetails>
 <OrderDetails>externally-referenced-instance</OrderDetails>
+</OrderDetails>
 </Order>

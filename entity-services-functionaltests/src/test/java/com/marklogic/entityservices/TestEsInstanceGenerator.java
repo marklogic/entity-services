@@ -54,7 +54,10 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
-			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }
+			// primary-key-as-a-ref.xml is commented for bug 40666
+			// valid-ref-value-as-nonString.json is commented for bug 40904
+			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||
+					entityType.startsWith("primary-key-")||entityType.startsWith("valid-ref-value")) { continue; }
 			
 			String generateTestInstances = "es:entity-type-get-test-instances( es:entity-type-from-node( fn:doc('"+entityType+"') ) )";
 			
@@ -82,7 +85,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 				Document controlDoc = builder.parse(is);
 				
 				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual(controlDoc, actualDoc);
+				XMLAssert.assertXMLEqual("Failed validation of : "+entityTypeFileName, controlDoc, actualDoc);
 				resultNumber++;
 			}
 		}

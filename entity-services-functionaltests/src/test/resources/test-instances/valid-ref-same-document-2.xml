@@ -5,21 +5,27 @@
 <ShipAddress>some string</ShipAddress>
 <OrderDetails>
 <OrderDetail>
-<ProductID/>
+<ProductID>
+<Product>some string</Product>
+</ProductID>
 <UnitPrice>123</UnitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>
 </OrderDetails>
 <OrderDetails>
 <OrderDetail>
-<ProductID/>
+<ProductID>
+<Product>some string</Product>
+</ProductID>
 <UnitPrice>123</UnitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>
 </OrderDetails>
 <OrderDetails>
 <OrderDetail>
-<ProductID/>
+<ProductID>
+<Product>some string</Product>
+</ProductID>
 <UnitPrice>123</UnitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>

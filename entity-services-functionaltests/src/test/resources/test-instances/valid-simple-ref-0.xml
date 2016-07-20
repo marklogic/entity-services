@@ -41,30 +41,38 @@
 <arrayStringKey>some string</arrayStringKey>
 <referenceInThisFile>
 <OrderDetails>
-<productName>some string</productName>
 <quantity>123</quantity>
+<productName>some string</productName>
 </OrderDetails>
 </referenceInThisFile>
 <arrayreferenceInThisFile>
 <OrderDetails>
-<productName>some string</productName>
 <quantity>123</quantity>
+<productName>some string</productName>
 </OrderDetails>
 </arrayreferenceInThisFile>
 <arrayreferenceInThisFile>
 <OrderDetails>
-<productName>some string</productName>
 <quantity>123</quantity>
+<productName>some string</productName>
 </OrderDetails>
 </arrayreferenceInThisFile>
 <arrayreferenceInThisFile>
 <OrderDetails>
-<productName>some string</productName>
 <quantity>123</quantity>
+<productName>some string</productName>
 </OrderDetails>
 </arrayreferenceInThisFile>
-<externalReference>externally-referenced-instance</externalReference>
-<externalArrayReference>externally-referenced-instance</externalArrayReference>
-<externalArrayReference>externally-referenced-instance</externalArrayReference>
-<externalArrayReference>externally-referenced-instance</externalArrayReference>
+<externalReference>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+</externalReference>
+<externalArrayReference>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+</externalArrayReference>
+<externalArrayReference>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+</externalArrayReference>
+<externalArrayReference>
+<OrderDetails>externally-referenced-instance</OrderDetails>
+</externalArrayReference>
 </SchemaCompleteEntityType>

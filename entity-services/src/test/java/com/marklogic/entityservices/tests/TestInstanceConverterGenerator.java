@@ -24,7 +24,6 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
-import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.*;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -48,54 +47,54 @@ import static org.junit.Assert.*;
 
 
 /**
- * Tests server function es:conversion-module-generate
- * 
+ * Tests server function es:instance-converter-generate()
+ *
  * Covered so far: validity of XQuery module generation
- * 
+ *
  * extract-instance-Order
- * 
+ *
  * The default extraction model is valid, and each function runs as though
- * the source for an entity is the same as its model.  That is, 
+ * the source for an entity is the same as its model.  That is,
  * if you extract an instance using extract-instance-Order() the original
  * generated function expects an input that corresponds exactly to the persisted
  * output of an Order.
  */
-public class TestConversionModuleGenerator extends EntityServicesTestBase {
-	
+public class TestInstanceConverterGenerator extends EntityServicesTestBase {
+
 	private static TextDocumentManager docMgr;
-	private static Map<String, StringHandle> conversionModules;
+	private static Map<String, StringHandle> converters;
 
     @BeforeClass
 	public static void setupClass() {
 		setupClients();
 		// save xquery module to modules database
-		docMgr = modulesClient.newTextDocumentManager();	
+		docMgr = modulesClient.newTextDocumentManager();
 
 		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
-		conversionModules = generateConversionModules();
-		storeConversionModules(conversionModules);
+		converters = generateConversionModules();
+		storeConverter(converters);
 
 	}
-	
-	private static void storeConversionModules(Map<String, StringHandle> moduleMap) {
+
+	private static void storeConverter(Map<String, StringHandle> moduleMap) {
 		DocumentWriteSet writeSet = docMgr.newWriteSet();
-		
+
 		for (String entityTypeName : moduleMap.keySet()) {
-			
+
 			String moduleName = "/ext/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
 			writeSet.add(moduleName, moduleMap.get(entityTypeName));
 		}
 		docMgr.write(writeSet);
 	}
-	
+
 	private static Map<String, StringHandle> generateConversionModules() {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
-		
+
 		for (String entityType : entityTypes) {
-			logger.info("Generating conversion module: " + entityType);
+			logger.info("Generating converter: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:model-from-node()=>es:conversion-module-generate()", xqueryModule);
+				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:model-from-node()=>es:instance-converter-generate()", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -103,17 +102,17 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 		}
 		return map;
 	}
-	
+
 	@Test
 	public void verifyCreateValidModule() throws TestEvalException {
 
         String initialTest = "Order-0.0.1.json";
-        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:model-from-node()=>es:conversion-module-generate()", new StringHandle());
+        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:model-from-node()=>es:instance-converter-generate()", new StringHandle());
 		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
 		m.put(initialTest, moduleHandle);
-		// save conversion module into modules database
-		storeConversionModules(m);
-		
+		// save converter into modules database
+		storeConverter(m);
+
 		String instanceDocument = "Order-Source-1.xml";
 		TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
 		StringHandle handle = evalOneResult("import module namespace conv = \"http:///Order-0.0.1\" at \"/ext/Order-0.0.1.xqy\"; "+
@@ -152,7 +151,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	/**
-	 * Rationale for this test is that default generated conversion module should
+	 * Rationale for this test is that default generated converter should
 	 * work out-of-the-box, and handle an identity transform from test instances.
 	 * This test thus tests 
 	 * instance-extract and 
@@ -172,7 +171,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 		TestSetup.getInstance().loadExtraFiles("/test-instances", ".*");
 		
 		// test them all adn remove
-		for (String entityType : conversionModules.keySet()) {
+		for (String entityType : converters.keySet()) {
 			
 			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
 			
@@ -236,7 +235,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	@Test
 	public void testEnvelopeFunction() throws TestEvalException {
 		
-		for (String entityType : conversionModules.keySet()) {
+		for (String entityType : converters.keySet()) {
 			String functionCall = moduleImport(entityType)
                 +"let $p := map:map()"
                 +"let $_ := map:put($p, '$type', 'Order')"
@@ -265,7 +264,7 @@ public class TestConversionModuleGenerator extends EntityServicesTestBase {
 	@AfterClass
 	public static void removeConversions() {
         Set<String> toDelete = new HashSet<String>();
-        conversionModules.keySet().forEach(x -> toDelete.add("/ext/" + x.replaceAll("\\.(xml|json)", ".xqy")));
+        converters.keySet().forEach(x -> toDelete.add("/ext/" + x.replaceAll("\\.(xml|json)", ".xqy")));
         //docMgr.delete(toDelete.toArray(new String[] {}));
 	}
 }

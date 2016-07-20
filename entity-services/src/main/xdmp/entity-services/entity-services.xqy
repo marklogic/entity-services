@@ -78,11 +78,11 @@ declare function es:model-to-json(
  : @param $model  A model.
  : @return An XQuery module (text) that can be edited and installed in a modules database.
  :)
-declare function es:conversion-module-generate(
+declare function es:instance-converter-generate(
     $model
 ) as document-node()
 {
-    esi:ensure-model($model)=>es-codegen:conversion-module-generate()
+    esi:ensure-model($model)=>es-codegen:instance-converter-generate()
 };
 
 (:~
@@ -164,12 +164,12 @@ declare function es:search-options-generate(
  : @param An entity type document that describes the target type of the conversion.
  : @param An entity type document that describes the source type of the conversion.
  :)
-declare function es:version-comparison-generate(
+declare function es:version-translator-generate(
     $source-model,
     $target-model
 ) as document-node()
 {
-    es-codegen:version-comparison-generate(
+    es-codegen:version-translator-generate(
            $source-model=>esi:ensure-model(),
            $target-model=>esi:ensure-model())
 };

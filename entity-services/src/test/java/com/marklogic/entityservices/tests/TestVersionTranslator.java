@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 /**
  */
-public class TestVersionComparison extends EntityServicesTestBase {
+public class TestVersionTranslator extends EntityServicesTestBase {
 
 
     DocumentManager documentManager;
@@ -47,7 +47,7 @@ public class TestVersionComparison extends EntityServicesTestBase {
         documentManager = client.newJSONDocumentManager();
         documentManager.delete(entityTypeTarget);
         documentManager.delete(entityTypeSource);
-        modulesClient.newTextDocumentManager().delete("/ext/version-comparison.xqy");
+        modulesClient.newTextDocumentManager().delete("/ext/version-converter.xqy");
 
     }
 
@@ -57,22 +57,22 @@ public class TestVersionComparison extends EntityServicesTestBase {
         EvalResultIterator results =
             eval("let $source := doc('"+entityTypeSource+"')=>es:model-from-node() "+
                           "let $target := doc('"+entityTypeTarget+"')=>es:model-from-node() "+
-                          "return (es:conversion-module-generate($target), "+
-                          "es:version-comparison-generate($source, $target))");
+                          "return (es:instance-converter-generate($target), "+
+                          "es:version-translator-generate($source, $target))");
 
         TextDocumentManager mgr = modulesClient.newTextDocumentManager();
 
         StringHandle handle = results.next().get(new StringHandle());
         mgr.write("/ext/comparison-0.0.2.xqy", handle);
         handle = results.next().get(new StringHandle());
-        mgr.write("/ext/version-comparison.xqy", handle);
+        mgr.write("/ext/version-converter.xqy", handle);
         results.close();
 
         String instance1 = "instance-0.0.1.xml";
         InputStream is = this.getClass().getResourceAsStream("/model-units/" + instance1);
         documentManager.write(instance1, new InputStreamHandle(is).withFormat(Format.XML));
 
-        DOMHandle domHandle = evalOneResult("import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-comparison.xqy';" +
+        DOMHandle domHandle = evalOneResult("import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-converter.xqy';" +
                                "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';" +
                 "<x>{" +
                 "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()," +

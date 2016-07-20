@@ -110,14 +110,12 @@ public class TestRequired  extends EntityServicesTestBase {
 
 
     @Test
-    public void testConversionModuleRequired() throws IOException, TestEvalException {
+    public void testInstanceGenerator() throws IOException, TestEvalException {
 
         StringHandle handle;
-        handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:conversion-module-generate()", new StringHandle());
-        //save("/model-units/conversion-module.xqy", handle.get());
-        compareLines("/model-units/conversion-module.xqy", handle.get());
-        // handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:version-conversion-generate()", handle);
-        // save("/model-units/conversion-module.xqy", handle);
+        handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:instance-converter-generate()", new StringHandle());
+        //save("/model-units/instance-converter.xqy", handle.get());
+        compareLines("/model-units/instance-converter.xqy", handle.get());
     }
 
 

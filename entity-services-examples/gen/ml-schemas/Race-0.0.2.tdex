@@ -2,7 +2,7 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
 Extraction Template Generated from Entity Type Document
-graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
+graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
   <context>//es:instance</context>
   <path-namespaces>
     <path-namespace>
@@ -25,7 +25,7 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
 	    </column>
 	    <column>
 	      <name>age</name>
-	      <scalar-type>int</scalar-type>
+	      <scalar-type>decimal</scalar-type>
 	      <val>age</val>
 	    </column>
 	    <column>
@@ -51,6 +51,12 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
 	      <val>name</val>
 	    </column>
 	    <column>
+	      <name>raceCategory</name>
+	      <scalar-type>string</scalar-type>
+	      <val>raceCategory/typesOfRaces</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
 	      <name>wonByRunner</name>
 	      <scalar-type>string</scalar-type>
 	      <val>wonByRunner/Runner</val>
@@ -60,7 +66,6 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
 	      <name>courseLength</name>
 	      <scalar-type>decimal</scalar-type>
 	      <val>courseLength</val>
-	      <nullable>true</nullable>
 	    </column>
 	  </columns>
 	</row>
@@ -124,6 +129,7 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
 	      <name>duration</name>
 	      <scalar-type>dayTimeDuration</scalar-type>
 	      <val>duration</val>
+	      <nullable>true</nullable>
 	    </column>
 	    <column>
 	      <name>runByRunner</name>

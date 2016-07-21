@@ -5,11 +5,14 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.marklogic:ml-gradle:2.0"
+    classpath "com.marklogic:ml-gradle:2.3.2"
   }
 }
 
 apply plugin: 'com.marklogic.ml-gradle'
+apply plugin: 'application'
+
+mainClassName = "com.marklogic.entityservices.examples.ExamplesLoader";
 
 dependencies {
     compile('com.marklogic:data-movement:1.0-SNAPSHOT') {

@@ -17,14 +17,14 @@
     "range-path-index": [
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "ignore",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/date",
             "range-value-positions": false,
             "scalar-type": "date"
         },
         {
             "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "ignore",
+            "invalid-values": "reject",
             "path-expression": "//es:instance/Run/distance",
             "range-value-positions": false,
             "scalar-type": "decimal"
@@ -42,13 +42,6 @@
             "path-expression": "//es:instance/Run/runByRunner",
             "range-value-positions": false,
             "scalar-type": "string"
-        }
-    ],
-    "element-word-lexicon": [
-        {
-            "collation": "http://marklogic.com/collation/en",
-            "localname": "runByRunner",
-            "namespace-uri": ""
         }
     ],
     "schema-database": "%%SCHEMAS_DATABASE%%",

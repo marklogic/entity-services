@@ -14,13 +14,13 @@
 -->
   <xs:element name="age" type="xs:int"/>
   <xs:element name="gender" type="xs:string"/>
-  <xs:complexType name="RaceContainerType" mixed="true">
+  <xs:complexType name="RaceContainerType">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Race"/>
+      <xs:element ref="Race"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="RaceType">
-    <xs:sequence>
+  <xs:complexType name="RaceType" mixed="true">
+    <xs:sequence minOccurs="0">
       <xs:element ref="name"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="comprisedOfRuns"/>
       <xs:element minOccurs="0" ref="wonByRunner"/>
@@ -28,13 +28,13 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Race" type="RaceType"/>
-  <xs:complexType name="RunContainerType" mixed="true">
+  <xs:complexType name="RunContainerType">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Run"/>
+      <xs:element ref="Run"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="RunType">
-    <xs:sequence>
+  <xs:complexType name="RunType" mixed="true">
+    <xs:sequence minOccurs="0">
       <xs:element ref="id"/>
       <xs:element ref="date"/>
       <xs:element ref="distance"/>
@@ -44,13 +44,13 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Run" type="RunType"/>
-  <xs:complexType name="RunnerContainerType" mixed="true">
+  <xs:complexType name="RunnerContainerType">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Runner"/>
+      <xs:element ref="Runner"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="RunnerType">
-    <xs:sequence>
+  <xs:complexType name="RunnerType" mixed="true">
+    <xs:sequence minOccurs="0">
       <xs:element ref="name"/>
       <xs:element ref="age"/>
       <xs:element minOccurs="0" ref="gender"/>

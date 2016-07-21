@@ -55,14 +55,14 @@
             },
             "duration": {
                 "datatype": "dayTimeDuration",
-                "description":"The duration of the run."
+                "description":"The duration of the run.  Optional because in some circumstances a run is not 'finished'"
             },
             "runByRunner": {
                 "$ref": "#/definitions/Runner"
             }
         },
         "primaryKey":"id",
-        "required":["date","distance","duration","runByRunner"],
+        "required":["date","distance","runByRunner"],
         "rangeIndex":["date", "distance", "duration", "runByRunner"]
     },
     "Runner": {

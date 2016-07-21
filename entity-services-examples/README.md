@@ -2,20 +2,33 @@
 
 This directory contains some examples.  This is a script to the creation/validation of the first one.
 
-To set up or re-configure examples, simply run
+There are several kinds of code here in the examples directory.
 
-`gradle mlDeploy`
+* A QConsole workspace `races-qc.xml` contains XQuery scripting to work with the Entity Services API.
+* Examples of code that has been generated and edited are in directories under 
+ * `src/main/ml-config`
+ * `src/main/ml-modules`
+ * `src/main/ml-schemas`
+* Java Applications, with source under `src/main/java` demonstrate use of the Data Movement SDK for an entity services toolchain.
 
 
-## Scenario 1, a Race entity type model.
+When you run `gradle entity-services-examples:mlDeploy` *from the parent project directory*
+these artifacts will be deployed to a MarkLogic server.  To change the location of the deployment
+edit `entity-services-examples/gradle.properties`
 
-This entity type model is very simple, but has some test data associated
+
+## A Model for Races, Runs, and Runners
+
+This entity type model is very simple.  It comes complete with some source data, a model, but has some test data associated
 with it and demonstrate the various aspects of this feature.
 
 
 ### Step 1 load `data/entity-types/simple-race.json` and instance data.
 
-EA-3 TODO
+To run a Java Application that loads all entity types, instance data, and reference data simply run
+
+When you run `gradle entity-services-examples:run` *from the parent project directory*
+
 
 There are examples in Java using the MarkLogic Data Movement SDK to load both entity type documents and instance data.
 

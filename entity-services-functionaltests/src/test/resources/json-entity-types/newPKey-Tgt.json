@@ -1,0 +1,44 @@
+{
+  "info": {
+    "title": "Test-3",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/test/"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype":"string"
+        },
+        "CompanyName": {
+          "datatype":"string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        }
+      },
+      "primaryKey":"CustomerId"
+    },
+    "Product": {
+      "properties": {
+        "ProductName": {
+          "datatype":"string"
+        },
+        "UnitPrice": {
+          "datatype":"integer"
+        },
+        "SupplierID":{
+          "datatype":"integer"
+        },
+        "Discontinued":{
+          "datatype":"boolean"
+        }
+      },
+      "description":"Entity Type product",
+      "primaryKey":"SupplierID"
+    }
+  }
+}

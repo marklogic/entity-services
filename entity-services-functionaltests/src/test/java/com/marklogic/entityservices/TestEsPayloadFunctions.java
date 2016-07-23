@@ -136,7 +136,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
         	ObjectMapper mapper = new ObjectMapper();
         	logger.info("Checking "+entityType);
         	
-        	if (entityType.contains(".xml")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
+        	if (entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains("-Tgt.json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
 
                 if ( entityType.toString().endsWith(".json")) {
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);

@@ -1,0 +1,27 @@
+{
+  "info": {
+    "title": "Test-3",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/test/",
+    "description":"Target has properties that source does not"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype":"string"
+        },
+        "CompanyName": {
+          "datatype":"string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        }
+      },
+      "primaryKey":"CustomerId"
+    }
+  }
+}

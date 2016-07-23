@@ -1,0 +1,29 @@
+{  
+   "info":{  
+      "title":"Test-2",
+      "version":"0.0.2",
+      "description":"Target model. Array to Scalar conversion test.",
+      "baseUri":"http://arr-to-scal"
+   },
+   "definitions":{  
+      "Customer":{  
+         "properties":{  
+            "CustomerId":{  
+               "datatype":"string"
+            },
+            "CompanyName":{  
+               "datatype":"string"
+            },
+            "Country":{  
+               "datatype":"string",
+               "description":"Country property Type"
+            },
+            "Address":{  
+               "datatype":"string"
+            }
+         },
+         "description":"Customer entity Type",
+         "primaryKey":"CustomerId"
+      }
+    }
+}

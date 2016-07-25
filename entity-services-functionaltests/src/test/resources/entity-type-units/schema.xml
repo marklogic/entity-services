@@ -1,26 +1,18 @@
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
-<xs:element name="a" type="xs:integer">
-</xs:element>
-<xs:element name="b" type="xs:string">
-</xs:element>
-<xs:element name="c" type="xs:date">
-</xs:element>
-<xs:complexType name="ETOneContainerType" mixed="true">
-<xs:sequence>
-<xs:element minOccurs="0" maxOccurs="unbounded" ref="ETOne">
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="ETOneType">
-<xs:sequence>
-<xs:element ref="a">
-</xs:element>
-<xs:element ref="b">
-</xs:element>
-<xs:element minOccurs="0" ref="c">
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-<xs:element name="ETOne" type="ETOneType">
-</xs:element>
+  <xs:element name="a" type="xs:integer"/>
+  <xs:element name="b" type="xs:string"/>
+  <xs:element name="c" type="xs:date"/>
+  <xs:complexType name="ETOneContainerType">
+    <xs:sequence>
+      <xs:element ref="ETOne"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ETOneType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="a"/>
+      <xs:element ref="b"/>
+      <xs:element minOccurs="0" ref="c"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ETOne" type="ETOneType"/>
 </xs:schema>

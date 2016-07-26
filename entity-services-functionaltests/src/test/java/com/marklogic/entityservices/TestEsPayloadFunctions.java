@@ -807,6 +807,20 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	}
     }
 
+	@Test
+    /* bug38353 : nested array should be disallowed in the EntityType document  */
+    public void testbug38353() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking entity-type-from-node() with rangeIndex error");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:entity-type-from-node(fn:doc('invalid-bug38353.json'))", new JacksonHandle());	
+    				
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain ES-ENTITY-TYPE-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("If present, baseUri (es:base-uri) must be an absolute URI. Property datatype cannot both be an"));
+    	}
+    }
+	
     @Test
     /* testing entity-type-from-node with required error */
     public void testInvalidRequired() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       

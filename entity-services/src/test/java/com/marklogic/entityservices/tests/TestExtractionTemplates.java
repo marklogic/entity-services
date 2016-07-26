@@ -138,7 +138,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 	public void embedChildWithNoPrimaryKey() throws XpathException, IOException, SAXException {
 		// this one has an array of refs
 		String entityTypeWithArray = "Order-0.0.4.json";
-		String arrayEntityType = extractionTemplates.get(entityTypeWithArray).get();
+		String extractionTemplate = extractionTemplates.get(entityTypeWithArray).get();
 		
 		Map<String, String> ctx = new HashMap<String, String>();
 		ctx.put("tde", "http://marklogic.com/xdmp/tde");
@@ -146,20 +146,39 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 
 		
 		XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
-		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", arrayEntityType);
-	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='OrderDetails']", arrayEntityType);
+		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", extractionTemplate);
+	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='OrderDetails']", extractionTemplate);
 
 	    // negative case -- ref with primary key in target
 	    entityTypeWithArray = "Order-0.0.5.json";
-		arrayEntityType = extractionTemplates.get(entityTypeWithArray).get();
+		extractionTemplate = extractionTemplates.get(entityTypeWithArray).get();
 		
-		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']", arrayEntityType);
-	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", arrayEntityType);
-	    XMLAssert.assertXpathExists("//tde:row[tde:view-name='OrderDetails']", arrayEntityType);
+		XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']", extractionTemplate);
+	    XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", extractionTemplate);
+	    XMLAssert.assertXpathExists("//tde:row[tde:view-name='OrderDetails']", extractionTemplate);
 
 	    
 	}
-	
+
+	@Test
+	public void testReferences() throws SAXException, IOException, XpathException {
+		String entityType  = "SchemaCompleteEntityType-0.0.1.json";
+
+		String template = extractionTemplates.get(entityType).get();
+
+		Map<String, String> ctx = new HashMap<String, String>();
+		ctx.put("tde", "http://marklogic.com/xdmp/tde");
+		//logger.debug(template);
+
+
+		XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
+		XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType_externalArrayReference']//tde:column[tde:name='externalArrayReference'][tde:val='OrderDetails']", template);
+		XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalArrayReference'][tde:val='.']", template);
+
+        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='referenceInThisFile'][tde:val='referenceInThisFile/OrderDetails']", template);
+        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalReference'][tde:val='externalReference/OrderDetails']", template);
+
+	}
 
 	@AfterClass
 	public static void removeTemplates() {

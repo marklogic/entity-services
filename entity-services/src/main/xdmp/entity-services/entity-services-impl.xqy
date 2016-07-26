@@ -676,7 +676,8 @@ declare function esi:resolve-datatype(
 
 
 (:
- : resolves a reference and returns its datatype
+ : Resolves a reference and returns its datatype
+ : If the reference is external, return 'string'
  :)
 declare private function esi:ref-datatype(
     $model as map:map,
@@ -686,9 +687,8 @@ declare private function esi:ref-datatype(
 {
     let $ref-type := esi:ref-type($model, $entity-type-name, $property-name)
     return 
-        if (empty($ref-type))
-        then "string"
-        else 
+        if (esi:is-local-reference($model, $entity-type-name, $property-name))
+        then 
             (: if the referent type has a primary key, use that type :)
             let $primary-key-property := map:get($ref-type, "primaryKey")
             return
@@ -699,12 +699,29 @@ declare private function esi:ref-datatype(
                             map:get($ref-type, "properties"), 
                             $primary-key-property), 
                         "datatype")
+        else "string"
 };
 
 
-(: Given a model, an entity type name and a reference property, 
- : return a reference's datatype.
- : If the reference is not local to this model, return 'string'
+declare private function esi:is-local-reference(
+    $model as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+)
+{
+    let $property := $model
+        =>map:get("definitions")
+        =>map:get($entity-type-name)
+        =>map:get("properties")
+        =>map:get($property-name)
+    let $ref-target := head( ($property=>map:get("$ref"), 
+                              $property=>map:get("items")=>map:get("$ref") ) )
+    return contains($ref-target, "#/definitions")
+};
+
+(: 
+ : Given a model, an entity type name and a reference property, 
+ : return a reference's type name
  :)
 declare function esi:ref-type-name(
     $model as map:map,
@@ -719,7 +736,7 @@ declare function esi:ref-type-name(
         =>map:get($property-name)
     let $ref-target := head( ($property=>map:get("$ref"), 
                               $property=>map:get("items")=>map:get("$ref") ) )
-    return replace($ref-target, "#/definitions/", "")
+    return functx:substring-after-last($ref-target, "/")
 };
 
 
@@ -768,12 +785,12 @@ declare function esi:extraction-template-generate(
                     <tde:columns>
                     {
                     for $property-name in map:keys($properties)
-                    let $property-properties := map:get($properties, $property-name)
-                    let $items-map := map:get($property-properties, "items")
+                    let $property-definition := map:get($properties, $property-name)
+                    let $items-map := map:get($property-definition, "items")
                     let $datatype := 
-                        if (map:get($property-properties, "datatype") eq "iri")
+                        if (map:get($property-definition, "datatype") eq "iri")
                         then "IRI"
-                        else map:get($property-properties, "datatype")
+                        else map:get($property-definition, "datatype")
                     let $is-nullable := 
                         if ($property-name = $required-properties)
                         then ()
@@ -782,12 +799,12 @@ declare function esi:extraction-template-generate(
                         (: if the column is an array, skip it in scalar row :)
                         if (exists($items-map)) then ()
                         else
-                            if ( map:contains($property-properties, "$ref") )
+                            if ( map:contains($property-definition, "$ref") )
                             then
                             <tde:column>
                                 <tde:name>{ $property-name }</tde:name>
                                 <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) } </tde:scalar-type>
-                                <tde:val>{ $property-name }</tde:val>
+                                <tde:val>{ $property-name }/{ esi:ref-type-name($model, $entity-type-name, $property-name) }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                             else
@@ -812,11 +829,14 @@ declare function esi:extraction-template-generate(
         let $column-map := map:map()
         let $_ := 
             for $property-name in map:keys($properties)
-            let $property-properties := map:get($properties, $property-name)
-            let $items-map := map:get($property-properties, "items")
+            let $property-definition := map:get($properties, $property-name)
+            let $items-map := map:get($property-definition, "items")
             let $is-ref := map:contains($items-map, "$ref")
             let $is-local-ref := map:contains($items-map, "$ref") and starts-with( map:get($items-map, "$ref"), "#/definitions/")
             let $is-external-ref := $is-ref and not($is-local-ref)
+            let $reference-value := 
+                      $property-definition=>map:get("items")=>map:get("$ref") 
+            let $ref-name := functx:substring-after-last($reference-value, "/")
             let $is-nullable := 
                 if ($property-name = $required-properties)
                 then ()
@@ -854,7 +874,7 @@ declare function esi:extraction-template-generate(
                                                 esi:ref-type-name($model, $entity-type-name, $property-name) } }
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
-                                    <tde:val>.</tde:val>
+                                    <tde:val>{ $ref-name }</tde:val>
                                     {$is-nullable}
                                 </tde:column>
                             else
@@ -873,7 +893,7 @@ declare function esi:extraction-template-generate(
                                     { comment { "This column joins to primary key of an external reference" } }
                                     <tde:name>{ $property-name }</tde:name>
                                     <tde:scalar-type>string</tde:scalar-type>
-                                    <tde:val>.</tde:val>
+                                    <tde:val>{ $ref-name }</tde:val>
                                     {$is-nullable}
                                 </tde:column>
                             else (),

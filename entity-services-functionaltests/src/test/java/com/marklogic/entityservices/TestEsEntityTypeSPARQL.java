@@ -46,7 +46,7 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		String docHasTypeHasPropertyHasDatatype = 
 					 "PREFIX t: <http://marklogic.com/testing-entity-type#> "
 					+"PREFIX es: <http://marklogic.com/entity-services#> "
-					+ "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:EntityServicesDocument ; "
+					+ "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:Model ; "
 					+ "   es:definitions ?types ."
 					+ "?types es:property ?property ."
 					+ "?property es:datatype ?datatype "
@@ -94,7 +94,7 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		assertEquals(6, bindings2.size());
 		// Verify that Entity type doc has RDF type in it.
 		assertEquals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", bindings2.get(0).get("p").get("value").asText());
-		assertEquals("http://marklogic.com/entity-services#EntityServicesDocument", bindings2.get(0).get("o").get("value").asText());
+		assertEquals("http://marklogic.com/entity-services#Model", bindings2.get(0).get("o").get("value").asText());
 		
 		// Verify that Entity type doc has EnityType OrderDetails in it.
 		assertEquals("http://marklogic.com/entity-services#definitions", bindings2.get(1).get("p").get("value").asText());

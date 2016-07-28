@@ -63,7 +63,7 @@ import com.marklogic.client.io.StringHandle;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 /**
- * Tests server function es:conversion-module-generate
+ * Tests server function es:instance-converter-generate
  * 
  * Covered so far: validity of XQuery module generation
  * 
@@ -130,7 +130,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
+				xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -144,7 +144,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		String arr[] = new String[2];
 		String line;
-		xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityTypeName+"')))", xqueryModule);
+		xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityTypeName+"')))", xqueryModule);
 	
 		// save xquery module to modules database
 		TextDocumentManager docMgr = modulesClient.newTextDocumentManager();
@@ -190,7 +190,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	 
 		
 		String docTitle = getDocTitle(entityTypeName);
-		EvalResultIterator results =  eval("map:keys(map:get(es:entity-type-from-node( doc('"+entityTypeName+"') ), \"definitions\"))");
+		EvalResultIterator results =  eval("map:keys(map:get(es:model-from-node( doc('"+entityTypeName+"') ), \"definitions\"))");
 		EvalResult result = null;
 
 		while (results.hasNext()) {
@@ -242,13 +242,13 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	
 	@Test
 	public void bug38517ConvModGen() {
-		logger.info("Checking conversion-module-generate() with a document node");
+		logger.info("Checking instance-converter-generate() with a document node");
 		try {
-			evalOneResult("es:conversion-module-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-ENTITYTYPE INVALID exception for conversion-module-generate() with a document node");
+			evalOneResult("es:instance-converter-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL INVALID exception for instance-converter-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+			assertTrue("Must contain ES-MODEL INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("xdmp:node-kind(es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"'))))", xqueryModule);
+				xqueryModule = evalOneResult("xdmp:node-kind(es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"'))))", xqueryModule);
 				assertEquals("Expected 'document' but got: '"+xqueryModule.get().toString()+"' for ET doc: "+entityType,xqueryModule.get().toString(),"document");
 			} catch (TestEvalException e) {
 				logger.info("Got exception: " + e);
@@ -277,7 +277,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			String docTitle = getDocTitle(entityType);		
 			
 			//Validating generated extract instances of entity type names.
-			EvalResultIterator results =  eval("map:keys(map:get(es:entity-type-from-node( doc('"+entityType+"') ), \"definitions\"))");
+			EvalResultIterator results =  eval("map:keys(map:get(es:model-from-node( doc('"+entityType+"') ), \"definitions\"))");
 			EvalResult result = null;
 			while (results.hasNext()) {
 				result = results.next();
@@ -289,7 +289,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			/*
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:conversion-module-generate( es:entity-type-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
+				xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
 				String convMod = xqueryModule.get();
 				InputStream is = this.getClass().getResourceAsStream("/test-conversion-module/"+entityType.replaceAll("\\.(xml|json)", ".xqy"));
 				String control = IOUtils.toString(is);

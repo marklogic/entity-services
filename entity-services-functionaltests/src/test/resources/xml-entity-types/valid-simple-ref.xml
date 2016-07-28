@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
   <es:info>
     <es:title>DBProp-Ref-Same</es:title>
     <es:version>0.0.1</es:version>
@@ -266,4 +266,4 @@
          <es:primary-key>quantity</es:primary-key>
       </OrderDetails>
   </es:definitions>
-</es:entity-type>
+</es:model>

@@ -40,7 +40,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
 		String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -56,7 +56,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRangeIndexandwordLexicon() throws IOException, TestEvalException {
 		String entityType = "valid-db-prop-et.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -73,7 +73,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRefSame() throws IOException, TestEvalException {
 		String entityType = "valid-simple-ref.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:entity-type-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());

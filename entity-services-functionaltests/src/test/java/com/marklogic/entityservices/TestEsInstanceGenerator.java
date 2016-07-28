@@ -59,7 +59,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||
 					entityType.startsWith("primary-key-")||entityType.startsWith("valid-ref-value")) { continue; }
 			
-			String generateTestInstances = "es:entity-type-get-test-instances( es:entity-type-from-node( fn:doc('"+entityType+"') ) )";
+			String generateTestInstances = "es:model-get-test-instances( es:model-from-node( fn:doc('"+entityType+"') ) )";
 			
 			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);
@@ -95,7 +95,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 	public void bug38517GetTestInstances() {
 		logger.info("Checking entity-type-get-test-instances() with a document node");
 		try {
-			evalOneResult("es:entity-type-get-test-instances(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+			evalOneResult("es:model-get-test-instances(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
 			fail("eval should throw an ES-ENTITYTYPE INVALID exception for entity-type-get-test-instances() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());

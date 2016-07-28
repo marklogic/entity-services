@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
   <es:info>
       <es:title>Lets-test-DB-prop-generate</es:title>
       <es:version>0.0.1</es:version>
@@ -81,4 +81,4 @@
        <es:word-lexicon>SupplierID</es:word-lexicon>
       </Product>
  </es:definitions>
-</es:entity-type>
+</es:model>

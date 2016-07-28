@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
     <es:definitions>
         <Order>
             <es:properties>
@@ -9,4 +9,4 @@
             <es:primaryKey>orderId</es:primaryKey>
         </Order>
     </es:definitions>
-</es:entity-type>
+</es:model>

@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
     <es:info>
         <es:title>invalid-missing-datatype</es:title>
         <es:version>0.0.2</es:version>
@@ -15,4 +15,4 @@
             <es:primaryKey>orderId</es:primaryKey>
         </Order>
     </es:definitions>
-</es:entity-type>
+</es:model>

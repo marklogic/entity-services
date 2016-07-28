@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
   <es:info>abcd
   </es:info>
   <es:definitions>
@@ -36,4 +36,4 @@
         </es:properties>
       </Product>
  </es:definitions>
-</es:entity-type>
+</es:model>

@@ -1,8 +1,8 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
    <es:info>
       <es:title>Entities-document-with-no-definitions-element</es:title>
       <es:baseUri>http://myorganization.com/datahub</es:baseUri>
       <es:version>0.0.1</es:version>
       <es:description>This is an entity type missing definitions element</es:description>
    </es:info>
-</es:entity-type>
+</es:model>

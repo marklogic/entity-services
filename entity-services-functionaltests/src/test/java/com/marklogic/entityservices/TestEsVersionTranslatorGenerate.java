@@ -70,7 +70,7 @@ import com.marklogic.client.io.StringHandle;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 /**
- * Tests server function es:version-comparison-generate
+ * Tests server function es:version-translator-generate
  * 
  * Covered so far: validity of XQuery module generation
  * 
@@ -119,7 +119,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			logger.info("Generating version translator module for : " + source + " & " + target);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:version-comparison-generate( es:entity-type-from-node( fn:doc( '"+source+"')),es:entity-type-from-node(fn:doc( '"+target+"')))", xqueryModule);
+				xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", xqueryModule);
 				//logger.info("Ver Trans Gen for "+part+" : \n"+xqueryModule.get());
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
@@ -159,7 +159,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		for (String entityTypeName : conversionModules.keySet()) {
 			
 			String actualDoc = conversionModules.get(entityTypeName).get();
-			logger.info("Checking version comparison for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
+			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
 			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		}
@@ -167,9 +167,9 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	
 	@Test
 	public void bug38517VersCompGen() {
-		logger.info("Checking version-comparison-generate() with a document node");
+		logger.info("Checking version-translator-generate() with a document node");
 		try {
-			evalOneResult("es:version-comparison-generate(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
 			fail("eval should throw an ES-ENTITYTYPE INVALID exception for conversion-module-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());

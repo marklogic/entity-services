@@ -89,7 +89,7 @@ declare function et-required:extract-instance-ETOne(
          : =>map:with('constantValue', 10)
          : Once you've customized this function, write a test with expected 
          : inputs, and a test instance document
-         : created with es:entity-type-get-test-instances($entity-type)
+         : created with es:model-get-test-instances($model)
          :)
         =>   map:with('a',                      xs:integer#1($source-node/ETOne/a))
      =>   map:with('b',                      xs:string#1($source-node/ETOne/b))

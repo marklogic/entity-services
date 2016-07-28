@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
   <es:info>
       <es:title>Person</es:title>
       <es:description>An-incredibly-trivial-data-integration-declaration.</es:description>
@@ -25,4 +25,4 @@
      <es:range-index>fullName</es:range-index>
    </Person>
  </es:definitions>
-</es:entity-type>
+</es:model>

@@ -1,4 +1,4 @@
-<es:entity-type xmlns:es="http://marklogic.com/entity-services">
+<es:model xmlns:es="http://marklogic.com/entity-services">
     <es:info>
         <es:title>Customer</es:title>
         <es:version>0.0.1</es:version>
@@ -18,4 +18,4 @@
             </es:properties>
         </ANATR>
     </es:definitions>
-</es:entity-type>
+</es:model>

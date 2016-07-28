@@ -38,7 +38,7 @@ import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
 /**
- * Tests the server-side function es:echema-generate($entity-type) as
+ * Tests the server-side function es:echema-generate($model) as
  * element(xsd:schema)
  * 
  * Stub - TODO implement.
@@ -81,7 +81,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			logger.info("Generating schema: " + entityType);
 			StringHandle schema = new StringHandle();
 			try {
-				schema = evalOneResult("es:schema-generate( es:entity-type-from-node( fn:doc( '" + entityType + "')))",
+				schema = evalOneResult("es:schema-generate( es:model-from-node( fn:doc( '" + entityType + "')))",
 						schema);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
@@ -103,7 +103,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				continue;
 			}
 			
-			StringHandle instances = evalOneResult("count(map:keys(map:get(es:entity-type-from-node( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
+			StringHandle instances = evalOneResult("count(map:keys(map:get(es:model-from-node( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
 			//logger.info("Count of definitions is: "+Integer.valueOf(instances.get()));
 			
 			storeSchema(entityType, schemas.get(entityType));

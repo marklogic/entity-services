@@ -123,11 +123,16 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-missing-range-index.xml", "doesn't exist");
         invalidMessages.put("invalid-missing-lexicon.json", "doesn't exist.");
         invalidMessages.put("invalid-missing-lexicon.xml", "doesn't exist.");
-          invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model document");
+        invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model document");
         invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in a model document");
         invalidMessages.put("invalid-bad-property.json", "Each property must be an object, with either \"datatype\" or \"$ref\" as a key.");
+        invalidMessages.put("invalid-bad-external.json", "ref value must end with a simple name (xs:NCName).");
+        invalidMessages.put("invalid-bad-external.xml", "ref value must end with a simple name (xs:NCName)");
+        invalidMessages.put("invalid-property-type-conflict.xml", "Property names must be distinct from type names");
+        invalidMessages.put("invalid-property-type-conflict.json", "Property names must be distinct from type names");
     }
-    
+
+
     @Test
     public void testInvalidEntityTypes() throws URISyntaxException {
 

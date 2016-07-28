@@ -179,7 +179,7 @@ public class TestSetup {
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
 	        metadata.getCollections().addAll(
-	        		"http://marklogic.com/entity-services/entity-types",
+	        		"http://marklogic.com/entity-services/models",
 	        		f.getName());
 	        
 	    	writeSet.add(f.getName(), metadata, new FileHandle(f));

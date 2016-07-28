@@ -1,0 +1,16 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>invalid-property-type-conflict</es:title>
+      <es:version>0.0.2</es:version>
+      <es:description>Invalid document, where a property conflicts with a type name</es:description>
+  </es:info>
+  <es:definitions>
+    <OrderDetails>
+        <es:properties>
+            <OrderDetails>
+                <es:datatype>integer</es:datatype>
+            </OrderDetails>
+        </es:properties>
+    </OrderDetails>
+  </es:definitions>
+</es:model>

@@ -81,11 +81,13 @@ declare private variable $esi:model-schematron :=
         </iso:rule>
         <iso:rule context="properties/*">
           <iso:assert test="./datatype|node('$ref')" id="ES-PROPERTY-IS-OBJECT">Each property must be an object, with either "datatype" or "$ref" as a key.</iso:assert>
+          <iso:assert test="not(xs:string(node-name(.)) = root(.)/definitions/*/node-name(.) ! xs:string(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
         </iso:rule>
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">
           <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If a property has es:ref as a child, then it cannot have a datatype.</iso:assert>
           <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
+          <iso:assert test="not(local-name(.) = root(.)/es:model/es:definitions/*/local-name(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
         </iso:rule>
         <iso:rule context="es:ref|node('$ref')">
           <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-x]+:')" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>

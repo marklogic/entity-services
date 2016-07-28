@@ -128,8 +128,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-property.json", "Each property must be an object, with either \"datatype\" or \"$ref\" as a key.");
         invalidMessages.put("invalid-bad-external.json", "ref value must end with a simple name (xs:NCName).");
         invalidMessages.put("invalid-bad-external.xml", "ref value must end with a simple name (xs:NCName)");
-        invalidMessages.put("invalid-property-type-conflict.xml", "Property names must be distinct from type names");
-        invalidMessages.put("invalid-property-type-conflict.json", "Property names must be distinct from type names");
+        invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct.");
+        invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct.");
     }
 
 

@@ -95,7 +95,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 
 	@Test
 	public void test1ExtractionTemplates() {
-	/*	
+	
 		    String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		    String schemaName = "SchemaCompleteEntityType";
 			logger.info("Validating extraction template: " + entityType);
@@ -151,10 +151,10 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			
 			assertEquals("View name", schemaName3, body3.get("name").asText());
 			assertTrue("View has columns", body3.get("columns").isArray());
-			*/
+			
 		
 	}
-/*	
+	
 	@Test
 	public void test2ExtractionTemplates() {
 		
@@ -243,7 +243,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
-*/
+
 	@AfterClass
 	public static void removeTemplates() {
 		for (String template : extractionTemplates.keySet()) {

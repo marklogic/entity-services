@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml  version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
-  <description>
+<description>
 Extraction Template Generated from Entity Type Document
 graph uri: http://no-prim-req#no-Primary-Required-0.0.1</description>
-  <context>//es:instance</context>
-  <path-namespaces>
-    <path-namespace>
-      <prefix>es</prefix>
-      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-    </path-namespace>
-  </path-namespaces>
-  <!--
+<context>//es:instance</context>
+<path-namespaces>
+<path-namespace>
+<prefix>es</prefix>
+<namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+</path-namespace>
+</path-namespaces>
+<!--
 An entity type must have at least one required column or a primary key to generate an extraction template.
 -->
 </template>

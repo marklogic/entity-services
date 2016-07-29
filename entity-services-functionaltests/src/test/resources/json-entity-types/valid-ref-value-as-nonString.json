@@ -17,7 +17,7 @@
                "datatype":"string"
             },
             "fof":{  
-               "$ref":"http://12.234"
+               "$ref":"http://marklogic.com/test"
             }
          },
          "primaryKey":"CustomerId"

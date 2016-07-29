@@ -241,12 +241,12 @@
             <ShipAddress>
                <es:datatype>string</es:datatype>
             </ShipAddress>
-            <OrderDetails>
+            <orderDetails>
                <es:datatype>array</es:datatype>
                <es:items>
                   <es:ref>#/definitions/OrderDetails</es:ref>
                </es:items>
-            </OrderDetails>
+            </orderDetails>
          </es:properties>
          <es:primary-key>OrderID</es:primary-key>
          <es:required>OrderID</es:required>

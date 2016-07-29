@@ -17,7 +17,7 @@
            <es:datatype>string</es:datatype>
         </Country>
         <fof>
-            <es:ref>http://12.234</es:ref>
+            <es:ref>http://marklogic.com/test</es:ref>
         </fof>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>

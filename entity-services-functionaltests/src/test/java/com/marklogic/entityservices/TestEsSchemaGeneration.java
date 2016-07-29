@@ -84,7 +84,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				schema = evalOneResult("es:schema-generate( es:model-from-node( fn:doc( '" + entityType + "')))",
 						schema);
 			} catch (TestEvalException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(e+"for "+entityType);
 			}
 			map.put(entityType, schema);
 		}

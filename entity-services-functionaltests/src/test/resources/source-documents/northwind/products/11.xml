@@ -3,7 +3,7 @@
 	<SupplierID>5</SupplierID>
 	<CategoryID>4</CategoryID>
 	<QuantityPerUnit>1 kg pkg.</QuantityPerUnit>
-	<UnitPrice>21.0000</UnitPrice>
+	<UnitPrice>21</UnitPrice>
 	<UnitsInStock>22</UnitsInStock>
 	<UnitsOnOrder>30</UnitsOnOrder>
 	<ReorderLevel>30</ReorderLevel>

@@ -113,17 +113,18 @@ import module namespace es = "http://marklogic.com/entity-services"
     return 
     <extract-instance>
 (:~
- : Creates a map:map representation of an entity instance from some source
- : document.
- : @param $source-node  A document or node that contains data for populating a {$entity-type-name}
- : @return A map:map instance that holds the data for this entity type.
+ : Creates a map:map instance from some source document.
+ : @param $source-node  A document or node that contains 
+ :   data for populating a {$entity-type-name}
+ : @return A map:map instance with extracted data and 
+ :   metadata about the instance.
  :)
 declare function {$prefix}:extract-instance-{$entity-type-name}(
     $source-node as node()
 ) as map:map
 {{
     (: if this $source-node is a reference without an embedded object, then short circuit. :)
-    if (empty($source-node/{$entity-type-name}/*))
+    if (empty($source-node/element()/*))
     then
     json:object()
         =>map:with('$type', '{ $entity-type-name }')

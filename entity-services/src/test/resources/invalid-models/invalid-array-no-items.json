@@ -9,8 +9,7 @@
         "Customer": {
             "properties": {
                 "fof": {
-                    "datatype":"array",
-                    "items": { "datatype": "array" }
+                    "datatype":"array"
                 }
             }
         }

@@ -95,7 +95,7 @@
             "ShipAddress":{  
                "datatype":"string"
             },
-            "OrderDetails":{  
+            "orderDetails":{  
                "datatype":"array",
                "items":{  
                   "$ref":"#/definitions/OrderDetails"

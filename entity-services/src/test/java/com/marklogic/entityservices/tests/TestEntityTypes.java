@@ -130,6 +130,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-external.xml", "ref value must end with a simple name (xs:NCName)");
         invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct.");
         invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct.");
+        invalidMessages.put("invalid-ref-pk.json", "A reference cannot be primary key.");
+        invalidMessages.put("invalid-ref-pk.xml", "A reference cannot be primary key.");
     }
 
 

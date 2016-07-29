@@ -1,0 +1,17 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>invalid-ref-pk</es:title>
+      <es:version>0.0.1</es:version>
+      <es:base-uri>http://marklogic.com/test</es:base-uri>
+  </es:info>
+  <es:definitions>
+    <Customer>
+     <es:properties>
+        <fof>
+           <es:ref>#/definitions/Customer</es:ref>
+        </fof>
+       </es:properties>
+       <es:primary-key>fof</es:primary-key>
+     </Customer>
+  </es:definitions>
+</es:model>

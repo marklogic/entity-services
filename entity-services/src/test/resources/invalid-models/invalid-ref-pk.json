@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title": "invalid-ref-pk.json",
+    "version": "0.0.1",
+    "description": "A primary key cannot be a reference"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "fof": {
+          "$ref": "#/definitions/Customer"
+        }
+      },
+      "primaryKey": "fof"
+    }
+  }
+}

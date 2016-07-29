@@ -80,11 +80,13 @@ declare private variable $esi:model-schematron :=
           <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
         </iso:rule>
         <iso:rule context="properties/*">
+          <iso:assert test="if (exists(./node('$ref'))) then (xs:string(node-name(.)) ne xs:string(../../primaryKey)) else true()" id="ES-REF-NOT-PK">Property <xsl:value-of select="xs:string(node-name(.))"/>: A reference cannot be primary key.</iso:assert>
           <iso:assert test="./datatype|node('$ref')" id="ES-PROPERTY-IS-OBJECT">Each property must be an object, with either "datatype" or "$ref" as a key.</iso:assert>
           <iso:assert test="not(xs:string(node-name(.)) = root(.)/definitions/*/node-name(.) ! xs:string(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
         </iso:rule>
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">
+          <iso:assert test="if (empty(./es:ref)) then true() else not(local-name(.) = xs:string(../../es:primary-key))" id="ES-REF-NOT-PK">Property <xsl:value-of select="local-name(.)"/>:  A reference cannot be primary key.</iso:assert>
           <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If a property has es:ref as a child, then it cannot have a datatype.</iso:assert>
           <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
           <iso:assert test="not(local-name(.) = root(.)/es:model/es:definitions/*/local-name(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
@@ -110,6 +112,12 @@ declare private variable $esi:model-schematron :=
         <iso:rule context="es:collation|collation">
          <!-- this function throws an error for invalid collations, so must be caught in alidate function -->
          <iso:assert test="xdmp:collation-canonical-uri(.)">Collation <xsl:value-of select="." /> is not valid.</iso:assert>
+        </iso:rule>
+        <iso:rule context="primaryKey">
+         <iso:assert test="xs:string(.) = (../properties/*/node-name() ! xs:string(.))">Primary Key <xsl:value-of select="." /> doesn't exist.</iso:assert>
+        </iso:rule>
+        <iso:rule context="primary-key">
+         <iso:assert test="xs:string(.) = (../es:properties/*/local-name())">Primary Key <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="required">
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
@@ -1122,7 +1130,7 @@ declare function esi:ensure-model(
 {
     if ($model instance of map:map)
     then $model
-    else fn:error( (), "ES-ENTITY-TYPE-INVALID", "Entity types must be map:map (or its subtype json:object)")
+    else fn:error( (), "ES-MODEL-INVALID", "Entity types must be map:map (or its subtype json:object)")
 };
 
 

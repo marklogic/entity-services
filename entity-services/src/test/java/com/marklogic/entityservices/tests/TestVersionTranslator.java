@@ -90,7 +90,7 @@ public class TestVersionTranslator extends EntityServicesTestBase {
 
         XMLUnit.setIgnoreWhitespace(true);
         XMLAssert.assertXMLEqual("checking instance conversion to target", actualDoc, expectedDoc);
-        logger.info(handle.get());
+        //logger.info(handle.get());
 
 
     }

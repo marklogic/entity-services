@@ -170,10 +170,10 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		logger.info("Checking version-translator-generate() with a document node");
 		try {
 			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-ENTITYTYPE INVALID exception for conversion-module-generate() with a document node");
+			fail("eval should throw an ES-MODEL-INVALID exception for conversion-module-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
 

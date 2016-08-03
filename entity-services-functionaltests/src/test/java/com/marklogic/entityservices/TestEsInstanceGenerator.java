@@ -102,4 +102,26 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
+	
+	@Test
+	/* test for bug 40904 to verify error msg when $ref has non string value */
+	public void bug40904GetTestInstances() {
+		logger.info("Checking model-get-test-instances() with a non string value as ref");
+		try {
+			evalOneResult("es:model-get-test-instances( es:model-from-node(fn:doc('invalid-bug40904.json')))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: http://123.24: ref value must end with a simple name (xs:NCName)."));
+		}
+		
+		try {
+			evalOneResult("es:model-get-test-instances( es:model-from-node(fn:doc('invalid-bug40904.xml')))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: http://123.24: ref value must end with a simple name (xs:NCName)."));
+		}
+	}
+	
 }

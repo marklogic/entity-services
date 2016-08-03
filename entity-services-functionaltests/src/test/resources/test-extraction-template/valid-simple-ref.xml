@@ -394,11 +394,11 @@ This column joins to primary key of an external reference
 </rows>
 <templates>
 <template>
-<context>./OrderDetails</context>
+<context>./orderDetails</context>
 <rows>
 <row>
 <schema-name>DBProp-Ref-Same</schema-name>
-<view-name>Order_OrderDetails</view-name>
+<view-name>Order_orderDetails</view-name>
 <columns>
 <column>
 <!--
@@ -412,7 +412,7 @@ This column joins to property OrderID of Order
 <!--
 This column joins to primary key of OrderDetails
 -->
-<name>OrderDetails</name>
+<name>orderDetails</name>
 <scalar-type>integer</scalar-type>
 <val>OrderDetails</val>
 <nullable>true</nullable>

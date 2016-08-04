@@ -41,7 +41,7 @@ The standalone template for Product cannot be generated.  Each template row requ
 <column>
 <name>fof</name>
 <scalar-type>string</scalar-type>
-<val>fof/12.234</val>
+<val>fof/test</val>
 <nullable>true</nullable>
 </column>
 </columns>

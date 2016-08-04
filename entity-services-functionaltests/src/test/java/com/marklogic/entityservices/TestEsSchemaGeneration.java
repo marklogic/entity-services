@@ -138,10 +138,31 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		logger.info("Checking schema-generate() with a document node");
 		try {
 			evalOneResult("es:schema-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-			fail("eval should throw an ES-ENTITYTYPE INVALID exception for schema-generate() with a document node");
+			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-ENTITYTYPE INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
+		}
+	}
+	
+	@Test
+	/* Test for bug 40766 to verify error msg when ET and property names are not distinct*/
+	public void bug40766SchemaGen() {
+		logger.info("Checking schema-generate() when ET and prop names are not distinct");
+		try {
+			evalOneResult("es:schema-generate( es:model-from-node(fn:doc('invalid-bug40766.json')))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct."));
+		}
+		
+		try {
+			evalOneResult("es:schema-generate( es:model-from-node(fn:doc('invalid-bug40766.xml')))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct."));
 		}
 	}
 

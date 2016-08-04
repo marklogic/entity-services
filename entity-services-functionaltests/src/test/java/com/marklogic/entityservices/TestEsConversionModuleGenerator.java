@@ -245,10 +245,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		logger.info("Checking instance-converter-generate() with a document node");
 		try {
 			evalOneResult("es:instance-converter-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL INVALID exception for instance-converter-generate() with a document node");
+			fail("eval should throw an ES-MODEL-INVALID exception for instance-converter-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Entity types must be map:map (or its subtype json:object)"));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
 		}
 	}
 	

@@ -595,6 +595,21 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     	}
     }
     
+    @Test
+    /* testing model-from-node for an xml entity type where info is not an object */
+    public void testbug40666() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-primary-key-as-ref.json");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("es:model-from-node(fn:doc('invalid-primary-key-as-ref.json'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-primary-key-as-ref.json");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("A reference cannot be primary key"));
+    	}
+    }
+    
+    
     /* BUG 38392
     @Test
     // testing model-from-node for an xml entity type where info is not an object 

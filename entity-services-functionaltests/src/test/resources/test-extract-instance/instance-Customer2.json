@@ -1,5 +1,5 @@
 {
 "$type": "Customer", 
-"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Product ProductID=\"42\">\n\t<ProductName>Singaporean Hokkien Fried Mee</ProductName>\n\t<SupplierID>20</SupplierID>\n\t<CategoryID>5</CategoryID>\n\t<QuantityPerUnit>32 - 1 kg pkgs.</QuantityPerUnit>\n\t<UnitPrice>14.0000</UnitPrice>\n\t<UnitsInStock>26</UnitsInStock>\n\t<UnitsOnOrder>0</UnitsOnOrder>\n\t<ReorderLevel>0</ReorderLevel>\n\t<Discontinued>true</Discontinued>\n</Product>", 
-"CustomerId": null
+"$ref": null, 
+"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Product ProductID=\"42\">\n\t<ProductName>Singaporean Hokkien Fried Mee</ProductName>\n\t<SupplierID>20</SupplierID>\n\t<CategoryID>5</CategoryID>\n\t<QuantityPerUnit>32 - 1 kg pkgs.</QuantityPerUnit>\n\t<UnitPrice>14</UnitPrice>\n\t<UnitsInStock>26</UnitsInStock>\n\t<UnitsOnOrder>0</UnitsOnOrder>\n\t<ReorderLevel>0</ReorderLevel>\n\t<Discontinued>true</Discontinued>\n</Product>"
 }

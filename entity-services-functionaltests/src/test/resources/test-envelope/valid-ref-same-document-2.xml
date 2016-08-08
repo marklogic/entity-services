@@ -1,39 +1,62 @@
-<es:envelope xmlns:es="http://marklogic.com/entity-services"><es:instance><es:info>
-      <es:title>Order</es:title>
-      <es:version>0.0.1</es:version>
-    </es:info><Order>
-      <CustomerID>123</CustomerID>
-      <OrderDate>1996-07-05T06:39:18</OrderDate>
-      <ShipAddress>Luisenstr. 48</ShipAddress>
-      <OrderDetails>
-	<OrderDetail><ProductID>14</ProductID><ProductID>51</ProductID><UnitPrice>18</UnitPrice><UnitPrice>42</UnitPrice><Quantity>9</Quantity><Quantity>40</Quantity></OrderDetail>
-      </OrderDetails>
-    </Order></es:instance><es:attachments><Order OrderID="10249">
-      <CustomerID>123</CustomerID>
-      <EmployeeID>6</EmployeeID>
-      <OrderDate>1996-07-05T06:39:18</OrderDate>
-      <RequiredDate>1996-08-16T03:39:38</RequiredDate>
-      <ShippedDate>1996-07-10T14:39:39</ShippedDate>
-      <ShipVia>1</ShipVia>
-      <Freight>11.6100</Freight>
-      <ShipName>Toms Spezialitäten</ShipName>
-      <ShipAddress>Luisenstr. 48</ShipAddress>
-      <ShipCity>Münster</ShipCity>
-      <ShipRegion/>
-      <ShipPostalCode>44087</ShipPostalCode>
-      <ShipCountry>Germany</ShipCountry>
-      <OrderDetails>
-	<OrderDetail>
-			<ProductID>14</ProductID>
-			<UnitPrice>18</UnitPrice>
-			<Quantity>9</Quantity>
-			<Discount>0</Discount>
-		</OrderDetail>
-	<OrderDetail>
-			<ProductID>51</ProductID>
-			<UnitPrice>42</UnitPrice>
-			<Quantity>40</Quantity>
-			<Discount>0</Discount>
-		</OrderDetail>
-      </OrderDetails>
-    </Order></es:attachments></es:envelope>
+<?xml  version="1.0" encoding="UTF-8"?>
+<es:envelope xmlns:es="http://marklogic.com/entity-services">
+<es:instance>
+<es:info>
+<es:title>Order</es:title>
+<es:version>0.0.1</es:version>
+</es:info>
+<Order>
+<CustomerID>123</CustomerID>
+<OrderDate>1996-07-05T06:39:18</OrderDate>
+<ShipAddress>Luisenstr. 48</ShipAddress>
+<OrderDetails>
+<OrderDetail>
+<ProductID>
+<Product>
+</Product>
+</ProductID>
+<ProductID>
+<Product>
+</Product>
+</ProductID>
+<UnitPrice>18</UnitPrice>
+<UnitPrice>42</UnitPrice>
+<Quantity>9</Quantity>
+<Quantity>40</Quantity>
+</OrderDetail>
+</OrderDetails>
+</Order>
+</es:instance>
+<es:attachments>
+<Order OrderID="10249">
+<CustomerID>123</CustomerID>
+<EmployeeID>6</EmployeeID>
+<OrderDate>1996-07-05T06:39:18</OrderDate>
+<RequiredDate>1996-08-16T03:39:38</RequiredDate>
+<ShippedDate>1996-07-10T14:39:39</ShippedDate>
+<ShipVia>1</ShipVia>
+<Freight>11.6100</Freight>
+<ShipName>Toms Spezialitäten</ShipName>
+<ShipAddress>Luisenstr. 48</ShipAddress>
+<ShipCity>Münster</ShipCity>
+<ShipRegion>
+</ShipRegion>
+<ShipPostalCode>44087</ShipPostalCode>
+<ShipCountry>Germany</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<ProductID>14</ProductID>
+<UnitPrice>18</UnitPrice>
+<Quantity>9</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+<OrderDetail>
+<ProductID>51</ProductID>
+<UnitPrice>42</UnitPrice>
+<Quantity>40</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+</es:attachments>
+</es:envelope>

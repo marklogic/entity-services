@@ -114,7 +114,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
+			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("sameTgt-")) {continue; }
 			
 			String part = entityType.replaceAll("\\-(Src|Tgt)", "");
 			String source = part.replaceAll("\\.json", "-Src.json");
@@ -190,11 +190,77 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	}
 	
 	@Test
+	public void testSrcTgtSameDiffTitle() throws TransformerException, IOException, SAXException {
+
+		String source = "sameTgt-Src.json";
+		String target = "sameTgt-Tgt.json";
+			
+		StringHandle xqueryModule;
+		try {
+			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", new StringHandle());
+			String actualDoc = xqueryModule.get();
+			//logger.info(actualDoc);
+			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
+			compareLines("/test-version-translator/"+target.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
+
+		} catch (TestEvalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testMissingSrc() {
+		logger.info("Checking version-translator-generate() with a missing document node");
+		try {
+			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with a missing document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Too few args, expected 2 but got 1"));
+		}
+	}
+	
+	@Test
+	public void testInvalidETDocAsSrcTgt() {
+		logger.info("Checking version-translator-generate() with invalid document node");
+		try {
+			evalOneResult("es:version-translator-generate(es:model-from-node(fn:doc('invalid-missing-info.json')),es:model-from-node(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
+			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with invalid document node");
+		} catch (TestEvalException e) {
+			logger.info(e.getMessage());
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one info section. Primary Key orderId doesn't exist."));
+		}
+	}
+	
+	@Test
+	public void testSrcRefDiffDatatype() throws TransformerException, IOException, SAXException {
+
+		String source = "srcRefDiffDatatype-Src.json";
+		String target = "srcRefDiffDatatype-Tgt.json";
+			
+		StringHandle xqueryModule;
+		try {
+			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", new StringHandle());
+			String actualDoc = xqueryModule.get();
+			//logger.info(actualDoc);
+			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
+			compareLines("/test-version-translator/"+target.replaceAll("\\-Tgt.json", ".xqy"), actualDoc);
+
+		} catch (TestEvalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
 	public void bug38517VersCompGen() {
 		logger.info("Checking version-translator-generate() with a document node");
 		try {
 			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for conversion-module-generate() with a document node");
+			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with a document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
 			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));

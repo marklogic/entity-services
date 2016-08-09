@@ -59,12 +59,15 @@ import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.function.library.e;
 import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.Format;
+import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 import com.sun.org.apache.xerces.internal.parsers.XMLParser;
@@ -159,10 +162,31 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		for (String entityTypeName : conversionModules.keySet()) {
 			
 			String actualDoc = conversionModules.get(entityTypeName).get();
+			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
 			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		}
+	}
+	
+	@Test
+	public void testSrcAndTgtSame() throws TransformerException, IOException, SAXException {
+
+		String entityTypeName = "sameTgt-Src.json";
+			
+		StringHandle xqueryModule;
+		try {
+			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+entityTypeName+"')),es:model-from-node(fn:doc( '"+entityTypeName+"')))", new StringHandle());
+			String actualDoc = xqueryModule.get();
+			//logger.info(actualDoc);
+			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
+			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
+
+		} catch (TestEvalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Test

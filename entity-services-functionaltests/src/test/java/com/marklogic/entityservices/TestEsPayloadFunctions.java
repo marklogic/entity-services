@@ -610,9 +610,8 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     }
     
     
-    /* BUG 38392
     @Test
-    // testing model-from-node for an xml entity type where info is not an object 
+    //  BUG 38392 - testing model-from-node for an xml entity type where info is not an object 
     public void testFromNodeMissingItemsXml() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-items-when-datatype-array.xml");
     			JacksonHandle handle = null;
@@ -621,10 +620,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-items-when-datatype-array.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().equals("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain an \"items\" declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain an \"items\" declaration."));
     	}
     }
-    */
+    
     
     @Test
     /* testing model-to-xml with a document node */

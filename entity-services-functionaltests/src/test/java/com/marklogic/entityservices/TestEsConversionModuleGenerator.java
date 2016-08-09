@@ -143,6 +143,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public String[] storeConversionModuleAsXqy(String entityTypeName) throws IOException, TestEvalException {
 		
 		String arr[] = new String[2];
+		int lineNumber = 0;
 		String line;
 		xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityTypeName+"')))", xqueryModule);
 	
@@ -156,12 +157,19 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		while((line=bf.readLine()) != null){
 		    if(line.startsWith("module namespace ")) {
-		        arr = line.substring(17).split(" = ");
-		        int len = arr[1].length();
-		        arr[1] = arr[1].substring(1, len-2);
-		        //logger.info("\n" + arr[0] + "\n" + arr[1]);
-		        break;
+		    	lineNumber++;
+		        arr[0] = line.substring(17).trim();
+		        //logger.info("Doc Title: "+arr[0]);
+		        
 		    } else {
+		    	if (lineNumber == 1) {
+		    		arr[1] = line;
+		    		int len = arr[1].length();
+		    		arr[1] = arr[1].substring(7, len-2);
+		    		//logger.info("Namespace :"+arr[1]);
+		    		lineNumber=0;
+		    		break;
+		    	} else {}
 		    }
 		}
 		
@@ -273,7 +281,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public void testConversionModuleGenerate() throws TestEvalException, IOException {
 		
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
+			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("-Tgt.json")||entityType.contains("-Src.json")) {continue; }
 			String docTitle = getDocTitle(entityType);		
 			
 			//Validating generated extract instances of entity type names.
@@ -404,6 +412,21 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
 		org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(extractInstanceResult));
+		
+	}
+	
+	@Test
+	public void testExtractInstanceBug38816() throws IOException, TestEvalException {
+		
+		String entityType = "valid-ref-combo-sameDocument-subIri.json";
+		
+		StringHandle handle = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"')))", new StringHandle());
+		String xqueryHandle = handle.get();
+		//InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/xqueryBug38816.xqy");
+
+		
+		assertTrue("Validation error."+xqueryHandle,xqueryHandle.contains("The following property assigment comes from an external reference"));
+		assertTrue("Validation error."+xqueryHandle,xqueryHandle.contains("Its generated value probably requires developer attention."));
 		
 	}
 	

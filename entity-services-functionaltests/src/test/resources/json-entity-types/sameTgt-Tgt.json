@@ -1,0 +1,43 @@
+{
+  "info": {
+    "title": "Test-9",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/test/",
+    "description":"Source and Target have same ET and properties but different title"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype":"string"
+        },
+        "CompanyName": {
+          "datatype":"string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        }
+      },
+      "primaryKey":"CustomerId"
+    },
+    "Product": {
+      "properties": {
+        "ProductName": {
+          "datatype":"string"
+        },
+        "UnitPrice": {
+          "datatype":"integer"
+        },
+        "SupplierID":{
+          "datatype":"integer"
+        },
+        "Discontinued":{
+          "datatype":"boolean"
+        }
+      }
+    }
+  }
+}

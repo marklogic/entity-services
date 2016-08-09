@@ -1,0 +1,45 @@
+{
+  "info": {
+    "title": "Test-8",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/test/",
+    "description":"Source has a ref that has a different datatype than that in target"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerId": {
+          "datatype":"integer"
+        },
+        "CompanyName": {
+          "datatype":"string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        }
+      },
+      "primaryKey":"CustomerId"
+    },
+    "Product": {
+      "properties": {
+        "CustomerId": {
+          "$ref":"#/definitions/Customer"
+        },
+        "UnitPrice": {
+          "datatype":"integer"
+        },
+        "SupplierID":{
+          "datatype":"integer"
+        },
+        "Discontinued":{
+          "datatype":"boolean"
+        }
+      },
+      "description":"Entity Type product",
+      "primaryKey":"SupplierID"
+    }
+  }
+}

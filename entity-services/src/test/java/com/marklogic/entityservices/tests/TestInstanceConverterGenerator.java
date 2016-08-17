@@ -94,7 +94,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 			logger.info("Generating converter: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:model-from-node()=>es:instance-converter-generate()", xqueryModule);
+				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:instance-converter-generate()", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -107,7 +107,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 	public void verifyCreateValidModule() throws TestEvalException {
 
         String initialTest = "Order-0.0.1.json";
-        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:model-from-node()=>es:instance-converter-generate()", new StringHandle());
+        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:instance-converter-generate()", new StringHandle());
 		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
 		m.put(initialTest, moduleHandle);
 		// save converter into modules database

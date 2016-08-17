@@ -22,10 +22,6 @@ import static org.junit.Assert.fail;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,7 +65,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         entityTypes.addAll(TestSetup.getInstance().loadEntityTypes("/xml-models", ".*.xml$"));
     }
 
-    private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
+    private void checkModelJSON(String message, JsonNode original, JsonNode actual) {
         assertEquals(message, original, actual);
     }
     
@@ -163,13 +159,24 @@ public class TestEntityTypes extends EntityServicesTestBase {
             @SuppressWarnings("unused")
             JacksonHandle handle = null;
             try {
-                handle = evalOneResult("es:model-from-node(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
+                handle = evalOneResult("es:model-validate(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
                 fail("eval should throw an exception for invalid cases." + entityType);
+
             } catch (TestEvalException e) {
                 assertTrue("Must contain invalidity message. Message was " + e.getMessage(),
                         e.getMessage().contains("ES-MODEL-INVALID"));
 
                 assertTrue("Message must be expected one for " + entityType.toString() + ".  Was " + e.getMessage(), e.getMessage().contains(invalidMessages.get(entityType)));
+
+                // check once more for validating map representation
+                if (entityType.endsWith(".json")) {
+                    try {
+                        handle = evalOneResult("es:model-validate(xdmp:fron-json(fn:doc('"+ entityType.toString()  + "')))", new JacksonHandle());
+                        fail("eval should throw an exception for invalid cases." + entityType);
+                    } catch (TestEvalException e1) {
+                        // pass
+                    }
+                }
             }
         }
 
@@ -179,8 +186,22 @@ public class TestEntityTypes extends EntityServicesTestBase {
         docMgr.delete(names.toArray(new String[] { }));
 
     }
-    
-    
+
+
+    @Test
+    public void testModelValidate() {
+        for (String entityType : entityTypes) {
+            ObjectMapper mapper = new ObjectMapper();
+            logger.info("Checking validation " + entityType);
+            StringHandle handle = new StringHandle();
+            try {
+                handle = evalOneResult("es:model-validate(fn:doc('" + entityType + "'))", handle);
+            } catch (TestEvalException e) {
+                fail("A valid entity type " + entityType + " did not pass validation: " + handle.get());
+            }
+        }
+    }
+
     @Test
     /*
      * For each entity type in the test directory, verify that
@@ -190,15 +211,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
      * This test cycles through each test entity type.
      * If the entity type file name contains "invalid-" then it must
      * throw a validation exception.
-     * 
-     * Otherwise, the entity type is tested in comparison to an equivalent entity type in
-     * xml-models
-     * 
-     * model-from-node   Serialized JSON equal to JSON file
-     * model-to-json     JSON equal to JSON file
-     * model-to-xml       Serialization to XML.
      */
-    public void testEntityTypeParse() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    public void testModelXmlConverstion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
             ObjectMapper mapper = new ObjectMapper();
             logger.info("Checking "+entityType);
@@ -209,12 +223,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 InputStream is = this.getClass().getResourceAsStream("/json-models/"+entityType);
                 JsonNode original = mapper.readValue(is, JsonNode.class);
                 is.close();
-                JacksonHandle handle  = evalOneResult("es:model-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+                JacksonHandle handle  = evalOneResult("fn:doc('"+ entityType  + "')", new JacksonHandle());
                 JsonNode actual = handle.get();
                 
-                checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
-                
-                checkEntityTypeToXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
+                checkModelXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
             } else {
                 String jsonFileName = entityType.toString().replace(".xml", ".json");
 
@@ -222,14 +234,14 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
                 JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
                 jsonInputStreamControl.close();
-                logger.debug("Validating and parsing " + entityType);
-                JacksonHandle handle  = evalOneResult("es:model-from-node(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+                logger.debug("Parsing " + entityType);
+                JacksonHandle handle  = evalOneResult("es:model-from-xml(fn:doc('"+ entityType  + "'))", new JacksonHandle());
                 JsonNode jsonActual = handle.get();
-                checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
+                checkModelJSON("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
 
                 InputStream xmlControl = this.getClass().getResourceAsStream("/xml-models/"+entityType);
                 Document xmloriginal = builder.parse(xmlControl);
-                DOMHandle xmlhandle  = evalOneResult("es:model-to-xml(es:model-from-node(fn:doc('"+ entityType  + "')))", new DOMHandle());
+                DOMHandle xmlhandle  = evalOneResult("es:model-to-xml(es:model-from-xml(fn:doc('"+ entityType  + "')))", new DOMHandle());
                 Document xmlactual = xmlhandle.get();
 
                 //debugOutput(xmloriginal);
@@ -247,12 +259,12 @@ public class TestEntityTypes extends EntityServicesTestBase {
     /*
      * Checks parity of XML payload when retrieved from entity type.
      */
-    private void checkEntityTypeToXML(String message, String entityTypeFile) throws TestEvalException, SAXException, IOException, ParserConfigurationException, TransformerException {
+    private void checkModelXML(String message, String entityTypeFile) throws TestEvalException, SAXException, IOException, ParserConfigurationException, TransformerException {
         String xmlFileName = entityTypeFile.replace(".json", ".xml");
         InputStream xmlFile = this.getClass().getResourceAsStream("/xml-models/" + xmlFileName);
 
         Document expectedXML = builder.parse(xmlFile);
-        String evalXML =  "es:model-to-xml(es:model-from-node(fn:doc('" + entityTypeFile + "')))";
+        String evalXML =  "es:model-to-xml(fn:doc('" + entityTypeFile + "'))";
 
         DOMHandle handle = evalOneResult(evalXML, new DOMHandle());
         Document actualXML = handle.get();
@@ -276,7 +288,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
     private void checkEntityTypeToJSON(String message, String entityTypeUri, String jsonUri) throws TestEvalException {
         String evalJSONEqual =  "deep-equal("
                    + "fn:doc('"+ jsonUri  +"')/node(), "
-                   + "es:model-to-json(es:model-from-node(fn:doc('" + entityTypeUri + "')))"
+                   + "xdmp:to-json(es:model-from-xml(fn:doc('" + entityTypeUri + "')))/node()"
                    + ")";
 
         StringHandle handle = evalOneResult(evalJSONEqual, new StringHandle());

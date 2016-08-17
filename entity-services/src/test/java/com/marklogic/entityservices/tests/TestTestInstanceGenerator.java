@@ -48,7 +48,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
 	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
 			
-			String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-node()=>es:model-get-test-instances()";
+			String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-xml()=>es:model-get-test-instances()";
 			
 			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);

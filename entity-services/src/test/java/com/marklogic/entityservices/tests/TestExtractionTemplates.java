@@ -79,7 +79,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
-				template = evalOneResult("es:model-from-node( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
+				template = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", template);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}

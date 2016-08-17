@@ -28,104 +28,107 @@ declare namespace search = "http://marklogic.com/appservices/search";
 
 declare option xdmp:mapping "false";
 
+
 (:~
- : Creates a model from a document node.
+ : Validates a model.  This function will validate documents or nodes, or
+ : in-memory instances of models as map:map or json:object
+ :
+ : @param $model Any representation of a model.
+ : @return A valid representation of the model, converted to map:map as needed.
+ : @throws Validation errors.
+ :)
+declare function es:model-validate(
+    $model-descriptor
+) as map:map
+{
+    esi:model-validate($model-descriptor)
+};
+
+
+
+(:~
+ : Creates a model from an XML document or element
  : For JSON documents, this is equivalent to xdmp:json with validation.
  : For XML documents, we transform the input as well.
  : 
- : @param $node A JSON or XML document containing an entity type definition.
+ : @param $node A JSON or XML document containing an entity model.
  :)
-declare function es:model-from-node(
-    $node as document-node()
+declare function es:model-from-xml(
+    $node
 ) as map:map
 {
-    let $errors := esi:model-validate($node)
-    let $root := $node/node()
-    return
-        if ($errors)
-        then fn:error( (), "ES-MODEL-INVALID", $errors)
-        else 
-            if ($root/object-node()) 
-            then xdmp:to-json($root)
-            else esi:model-from-xml($root)
+    if ($node instance of document-node())
+    then 
+        esi:model-from-xml($node/node())
+    else esi:model-from-xml($node)
 };
 
 (:~
- : Given an entity type, returns its XML representation
- : @param An entity type document.
+ : Given a model, returns its XML representation
+ : @param A model
  :)
 declare function es:model-to-xml(
-    $model
+    $model as map:map
 ) as element(es:model)
 {
-    esi:ensure-model($model)=>esi:model-to-xml()
+    esi:model-to-xml($model)
 };
 
-(:~
- : Given an entity type, returns its JSON representation
- : @param An entity type document.
- :)
-declare function es:model-to-json(
-    $model
-) as object-node()
-{
-    xdmp:to-json(esi:ensure-model($model))/node()
-};
 
 (:~
  : Generates an XQuery module that can be customized and used
- : to support transforms associated with an entity type
+ : to support transforms associated with a model
  : @param $model  A model.
  : @return An XQuery module (text) that can be edited and installed in a modules database.
  :)
 declare function es:instance-converter-generate(
-    $model
+    $model as map:map
 ) as document-node()
 {
-    esi:ensure-model($model)=>es-codegen:instance-converter-generate()
+    es-codegen:instance-converter-generate($model)
 };
 
 (:~
  : Generate one test instance in XML for each entity type in the 
- : entity type document payload.
- : @param An entity type document.
+ : model.
+ : @param A model.
  :)
 declare function es:model-get-test-instances(
-    $model
+    $model as map:map
 ) as element()*
 {
-    esi:ensure-model($model)=>esi:model-get-test-instances()
+    esi:model-get-test-instances($model)
 };
 
 
 
 (:~
  : Generate a JSON node that can be used with the Management Client API
- : to configure a database for this entity type.
+ : to configure a database for this model
  : Portions of this complete database properties file can be used 
  : as building-blocks for the completed database properties 
  : index configuration.
- : @param An entity type document.
+ : @param A model.
  :)
 declare function es:database-properties-generate(
-    $model
+    $model as map:map
 ) as document-node()
 {
-    esi:ensure-model($model)=>esi:database-properties-generate()
+    esi:database-properties-generate($model)
 };
 
 
 
 (:~
  : Generate a schema that can validate entity instance documents.
- : @param An entity type document.
+ : @param A model.
  : @return An XSD schema that can validate entity instances in XML form.
  :)
 declare function es:schema-generate(
-    $model
+    $model as map:map
 ) as element()*
 {
-    esi:ensure-model($model)=>esi:schema-generate()
+    esi:schema-generate($model)
 };
 
 
@@ -133,14 +136,14 @@ declare function es:schema-generate(
 (:~
  : Generates an extraction template that can surface the entity.
  : instance as a view in the rows index.
- : @param An entity type document.
+ : @param A model.
  :)
 declare function es:extraction-template-generate(
-    $model
+    $model as map:map
 ) as document-node()
 {
     document {
-        esi:ensure-model($model)=>esi:extraction-template-generate()
+        esi:extraction-template-generate($model)
     }
 };
 
@@ -149,29 +152,29 @@ declare function es:extraction-template-generate(
  : Generates an element for configuring Search API applications
  : Intended as a starting point for developing a search grammar tailored
  : for entity and relationship searches.
- : @param An entity type document.
+ : @param An entity model
  :)
 declare function es:search-options-generate(
-    $model
+    $model as map:map
 ) 
 {
-    esi:ensure-model($model)=>esi:search-options-generate()
+    esi:search-options-generate($model)
 };
 
 (:~
  : Generates an XQuery module that can create an instance of one
  : type from documents saved by code from another type.
- : @param An entity type document that describes the target type of the conversion.
- : @param An entity type document that describes the source type of the conversion.
+ : @param A model that describes the target type of the conversion.
+ : @param A model that describes the source type of the conversion.
  :)
 declare function es:version-translator-generate(
-    $source-model,
-    $target-model
+    $source-model as map:map,
+    $target-model as map:map
 ) as document-node()
 {
     es-codegen:version-translator-generate(
-           $source-model=>esi:ensure-model(),
-           $target-model=>esi:ensure-model())
+           $source-model,
+           $target-model)
 };
 
 

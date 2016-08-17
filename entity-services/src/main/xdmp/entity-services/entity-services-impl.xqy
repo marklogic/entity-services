@@ -141,7 +141,7 @@ declare private variable $esi:model-schematron :=
     </iso:schema>
 ;
 
-declare function esi:model-validate(
+declare private function esi:model-validate-document(
     $model as document-node()
 ) as xs:string*
 {
@@ -153,6 +153,46 @@ declare function esi:model-validate(
         then "There is an invalid collation in the model."
         else xdmp:rethrow()
     }
+};
+
+declare private function esi:model-create(
+    $model-descriptor
+) as map:map
+{
+    typeswitch ($model-descriptor)
+    case document-node() return 
+        if ($model-descriptor/object-node())
+        then xdmp:from-json($model-descriptor)
+        else esi:model-from-xml($model-descriptor/node())
+    case element() return
+        esi:model-from-xml($model-descriptor)
+    case object-node() return 
+        xdmp:from-json($model-descriptor)
+    case map:map return $model-descriptor
+    default return fn:error( (), "ES-MODEL-INVALID", 
+        "Valid models must be JSON, XML or map:map")
+};
+    
+declare function esi:model-validate(
+    $model-descriptor
+) as map:map
+{
+    let $errors := 
+        typeswitch ($model-descriptor)
+        case document-node() return 
+            esi:model-validate-document($model-descriptor)
+        case element() return
+            esi:model-validate-document(document { $model-descriptor } )
+        case object-node() return 
+            esi:model-validate-document(document { $model-descriptor } )
+        case map:map return 
+            esi:model-validate-document(xdmp:to-json($model-descriptor))
+        default return fn:error( (), "ES-MODEL-INVALID", 
+            "Valid models must be JSON, XML or map:map")
+    return
+        if ($errors)
+        then fn:error( (), "ES-MODEL-INVALID", $errors)
+        else esi:model-create($model-descriptor)
 };
 
 
@@ -1120,20 +1160,6 @@ declare function esi:search-options-generate(
 
 
 
-(: This function has no argument type because the XQuery engine otherwise
- : casts nodes to map:map, which would be confusing for this particular
- : function
- :)
-declare function esi:ensure-model(
-    $model
-) as map:map
-{
-    if ($model instance of map:map)
-    then $model
-    else fn:error( (), "ES-MODEL-INVALID", "Entity types must be map:map (or its subtype json:object)")
-};
-
-
 (: resolves the default URI from a model's info section :)
 declare function esi:resolve-base-uri(
     $info as map:map
@@ -1145,3 +1171,4 @@ declare function esi:resolve-base-uri(
         then $base-uri 
         else concat($base-uri, "#")
 };
+

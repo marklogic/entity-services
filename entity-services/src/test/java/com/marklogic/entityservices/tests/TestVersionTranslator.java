@@ -55,8 +55,8 @@ public class TestVersionTranslator extends EntityServicesTestBase {
     @Test
     public void testVersionComparison() throws TestEvalException, IOException, SAXException, TransformerException {
         EvalResultIterator results =
-            eval("let $source := doc('"+entityTypeSource+"')=>es:model-from-node() "+
-                          "let $target := doc('"+entityTypeTarget+"')=>es:model-from-node() "+
+            eval("let $source := doc('"+entityTypeSource+"') "+
+                          "let $target := doc('"+entityTypeTarget+"') "+
                           "return (es:instance-converter-generate($target), "+
                           "es:version-translator-generate($source, $target))");
 

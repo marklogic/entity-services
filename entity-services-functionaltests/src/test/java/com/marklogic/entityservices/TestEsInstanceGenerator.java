@@ -59,7 +59,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||
 					entityType.startsWith("primary-key-")||entityType.startsWith("valid-ref-value")) { continue; }
 			
-			String generateTestInstances = "es:model-get-test-instances( es:model-from-node( fn:doc('"+entityType+"') ) )";
+			String generateTestInstances = "es:model-get-test-instances( es:model-from-xml( fn:doc('"+entityType+"') ) )";
 			
 			logger.info("Creating test instances from " + entityType);
 			EvalResultIterator results = eval(generateTestInstances);
@@ -92,23 +92,11 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
-	public void bug38517GetTestInstances() {
-		logger.info("Checking model-get-test-instances() with a document node");
-		try {
-			evalOneResult("es:model-get-test-instances(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
-	
-	@Test
 	/* test for bug 40904 to verify error msg when $ref has non string value */
 	public void bug40904GetTestInstances() {
 		logger.info("Checking model-get-test-instances() with a non string value as ref");
 		try {
-			evalOneResult("es:model-get-test-instances( es:model-from-node(fn:doc('invalid-bug40904.json')))", new JacksonHandle());	
+			evalOneResult("es:model-validate(fn:doc('invalid-bug40904.json'))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -116,7 +104,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 		}
 		
 		try {
-			evalOneResult("es:model-get-test-instances( es:model-from-node(fn:doc('invalid-bug40904.xml')))", new JacksonHandle());	
+			evalOneResult("es:model-get-test-instances(es:model-validate(fn:doc('invalid-bug40904.xml')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());

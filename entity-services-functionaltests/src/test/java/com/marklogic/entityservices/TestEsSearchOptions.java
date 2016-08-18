@@ -45,7 +45,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		
-		DOMHandle handle = evalOneResult("es:model-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("es:model-validate(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -63,7 +63,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsGenerate2() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-db-prop-et.json";
 		
-		DOMHandle handle = evalOneResult("es:model-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -81,7 +81,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsWithXML() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-northwind1.xml";
 		
-		DOMHandle handle = evalOneResult("es:model-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("es:model-from-xml(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -93,12 +93,11 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 				searchOptions);
 	}
 	
-	/* uncomment this test when bug#40666 gets fixed
 	@Test
 	public void testSearchOptions3() throws IOException, TestEvalException, SAXException, TransformerException {
-		String entityType = "primary-key-as-a-ref.xml";
+		String entityType = "invalid-primary-key-as-ref.json";
 		
-		DOMHandle handle = evalOneResult("es:model-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -109,13 +108,12 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
-	*/
 	
 	@Test
 	public void testSearchOptionsGenerate3() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-no-baseUri.json";
 		
-		DOMHandle handle = evalOneResult("es:model-from-node(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -126,19 +124,5 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
-	
-	@Test
-	public void bug38517SearchOptionsGen() {
-		logger.info("Checking search-options-generate() with a document node");
-		try {
-			evalOneResult("es:search-options-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for search-options-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
-
-
 	
 }

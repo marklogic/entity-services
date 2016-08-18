@@ -81,7 +81,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			logger.info("Generating schema: " + entityType);
 			StringHandle schema = new StringHandle();
 			try {
-				schema = evalOneResult("es:schema-generate( es:model-from-node( fn:doc( '" + entityType + "')))",
+				schema = evalOneResult("es:schema-generate( es:model-from-xml( fn:doc( '" + entityType + "')))",
 						schema);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e+"for "+entityType);
@@ -103,7 +103,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				continue;
 			}
 			
-			StringHandle instances = evalOneResult("count(map:keys(map:get(es:model-from-node( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
+			StringHandle instances = evalOneResult("count(map:keys(map:get(es:model-validate( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
 			//logger.info("Count of definitions is: "+Integer.valueOf(instances.get()));
 			
 			storeSchema(entityType, schemas.get(entityType));
@@ -134,23 +134,11 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	}
 	
 	@Test
-	public void bug38517SchemaGen() {
-		logger.info("Checking schema-generate() with a document node");
-		try {
-			evalOneResult("es:schema-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
-	
-	@Test
 	/* Test for bug 40766 to verify error msg when ET and property names are not distinct*/
 	public void bug40766SchemaGen() {
 		logger.info("Checking schema-generate() when ET and prop names are not distinct");
 		try {
-			evalOneResult("es:schema-generate( es:model-from-node(fn:doc('invalid-bug40766.json')))", new JacksonHandle());	
+			evalOneResult("es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.json')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -158,7 +146,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		}
 		
 		try {
-			evalOneResult("es:schema-generate( es:model-from-node(fn:doc('invalid-bug40766.xml')))", new JacksonHandle());	
+			evalOneResult("es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.xml')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());

@@ -122,7 +122,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			logger.info("Generating version translator module for : " + source + " & " + target);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", xqueryModule);
+				xqueryModule = evalOneResult("es:version-translator-generate(fn:doc('"+source+"'),fn:doc('"+target+"'))", xqueryModule);
 				//logger.info("Ver Trans Gen for "+part+" : \n"+xqueryModule.get());
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
@@ -176,7 +176,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+entityTypeName+"')),es:model-from-node(fn:doc( '"+entityTypeName+"')))", new StringHandle());
+			xqueryModule = evalOneResult("es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
@@ -197,7 +197,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", new StringHandle());
+			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
@@ -226,7 +226,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	public void testInvalidETDocAsSrcTgt() {
 		logger.info("Checking version-translator-generate() with invalid document node");
 		try {
-			evalOneResult("es:version-translator-generate(es:model-from-node(fn:doc('invalid-missing-info.json')),es:model-from-node(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
+			evalOneResult("es:version-translator-generate(es:model-validate(fn:doc('invalid-missing-info.json')),es:model-validate(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with invalid document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -242,7 +242,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate( es:model-from-node( fn:doc( '"+source+"')),es:model-from-node(fn:doc( '"+target+"')))", new StringHandle());
+			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
@@ -253,18 +253,6 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	@Test
-	public void bug38517VersCompGen() {
-		logger.info("Checking version-translator-generate() with a document node");
-		try {
-			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
 	}
 
 }

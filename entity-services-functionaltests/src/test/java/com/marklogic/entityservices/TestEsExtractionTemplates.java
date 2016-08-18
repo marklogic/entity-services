@@ -83,7 +83,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
-				template = evalOneResult("es:model-from-node( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
+				template = evalOneResult("es:model-from-xml( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
 			} catch (TestEvalException e) {
 				System.out.println("Generating extrtaction template"+entityType);
 				throw new RuntimeException(e);
@@ -212,7 +212,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			DOMHandle res = new DOMHandle();
 			logger.info("Validating extraction template for:" + entityType);
 			try {
-				res = evalOneResult("es:model-from-node( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", res);
+				res = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -231,18 +231,6 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 					template);
 			
 		}
-	
-	@Test
-	public void bug38517ExtTempGen() {
-		logger.info("Checking extraction-template-generate() with a document node");
-		try {
-			evalOneResult("es:extraction-template-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for extraction-template-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
 
 	@AfterClass
 	public static void removeTemplates() {

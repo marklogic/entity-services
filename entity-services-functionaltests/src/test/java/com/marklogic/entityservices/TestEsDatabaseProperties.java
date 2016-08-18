@@ -40,7 +40,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
 		String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -56,7 +56,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRangeIndexandwordLexicon() throws IOException, TestEvalException {
 		String entityType = "valid-db-prop-et.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -73,7 +73,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRefSame() throws IOException, TestEvalException {
 		String entityType = "valid-simple-ref.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(es:model-from-node(fn:doc('"+entityType+"')))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -85,18 +85,5 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 
 		//org.hamcrest.MatcherAssert.assertThat("Expected: "+control+"\n\tGot: "+databaseConfiguration,control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
 	}
-	
-	@Test
-	public void bug38517DBPropsGen() {
-		logger.info("Checking database-properties-generate() with a document node");
-		try {
-			evalOneResult("es:database-properties-generate(fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for database-properties-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
-
 	
 }

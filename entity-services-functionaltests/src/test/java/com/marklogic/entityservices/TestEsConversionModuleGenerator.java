@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,33 +33,23 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hp.hpl.jena.sparql.algebra.Transformer;
-import com.hp.hpl.jena.sparql.function.library.e;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-//import com.marklogic.entityservices.tests.TestEvalException;
-import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 /**
  * Tests server function es:instance-converter-generate
@@ -130,7 +119,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"')))", xqueryModule);
+				xqueryModule = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -140,18 +129,13 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 
 	
-	public String[] storeConversionModuleAsXqy(String entityTypeName) throws IOException, TestEvalException {
+	public String[] getDocInfo(String entityTypeName) throws IOException, TestEvalException {
 		
 		String arr[] = new String[2];
 		int lineNumber = 0;
 		String line;
-		xqueryModule = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityTypeName+"')))", xqueryModule);
-	
-		// save xquery module to modules database
-		TextDocumentManager docMgr = modulesClient.newTextDocumentManager();
-		String moduleName = "/conv/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
-		docMgr.write(moduleName, xqueryModule);
-		
+		xqueryModule = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityTypeName+"'))", xqueryModule);
+				
 		//Below code is to get docTitle and namespace in the generated xqy  module
 		BufferedReader bf = new BufferedReader(new StringReader(xqueryModule.get()));
 		
@@ -180,15 +164,16 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public String getDocTitle(String entityTypeName) throws IOException, TestEvalException {
 		
 		String docTitle = null;		
-		docTitle = this.storeConversionModuleAsXqy(entityTypeName)[0];
+		docTitle = this.getDocInfo(entityTypeName)[0];
 		return docTitle;
 		
 	}
 	
 	public String getNameSpace(String entityTypeName) throws IOException, TestEvalException {
 		
-		String ns = null;		
-		ns = this.storeConversionModuleAsXqy(entityTypeName)[1];
+		String ns = null;
+		entityTypeName = entityTypeName.replaceAll("\\.(xml|json)", ".json");
+		ns = this.getDocInfo(entityTypeName)[1];
 		return ns;
 		
 	}
@@ -236,7 +221,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -249,18 +233,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}*/
 	
 	@Test
-	public void bug38517ConvModGen() {
-		logger.info("Checking instance-converter-generate() with a document node");
-		try {
-			evalOneResult("es:instance-converter-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
-			fail("eval should throw an ES-MODEL-INVALID exception for instance-converter-generate() with a document node");
-		} catch (TestEvalException e) {
-			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity types must be map:map (or its subtype json:object)"));
-		}
-	}
-	
-	@Test
 	//This test verifies that conversion module generates a document as output and not text
 	public void testConvModOutputNodeKind() {
 		
@@ -268,7 +240,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("xdmp:node-kind(es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"'))))", xqueryModule);
+				xqueryModule = evalOneResult("xdmp:node-kind(es:instance-converter-generate( fn:doc( '"+entityType+"')))", xqueryModule);
 				assertEquals("Expected 'document' but got: '"+xqueryModule.get().toString()+"' for ET doc: "+entityType,xqueryModule.get().toString(),"document");
 			} catch (TestEvalException e) {
 				logger.info("Got exception: " + e);
@@ -285,7 +257,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			String docTitle = getDocTitle(entityType);		
 			
 			//Validating generated extract instances of entity type names.
-			EvalResultIterator results =  eval("map:keys(map:get(es:model-from-node( doc('"+entityType+"') ), \"definitions\"))");
+			EvalResultIterator results =  eval("map:keys(map:get(es:model-validate(doc('"+entityType+"')), \"definitions\"))");
 			EvalResult result = null;
 			while (results.hasNext()) {
 				result = results.next();
@@ -313,15 +285,11 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	//This test verifies that conversion module does not throw an error when an invalid ET( missing info section ) is input
 	public void testConvModGenForInvalidET() throws TestEvalException, IOException {
 		
-		String entityType = "valid-missing-info.json";
-		String[] res = null;
+		String entityType = "invalid-missing-info.json";
 		try {
-			res = storeConversionModuleAsXqy(entityType);
-		if(res[0]!=null) {
-			fail("Testing for conversion module with missing info section. Check the input ET doc file: "+entityType);
-		} 
+			evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle()); 
 		} catch (Exception e) {
-			logger.info("Got exception: "+e.getMessage());
+			fail("Testing for conversion module with "+entityType+"\nGot exception: "+e.getMessage());
 		}
 	
 	}
@@ -420,7 +388,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		String entityType = "valid-ref-combo-sameDocument-subIri.json";
 		
-		StringHandle handle = evalOneResult("es:instance-converter-generate( es:model-from-node( fn:doc( '"+entityType+"')))", new StringHandle());
+		StringHandle handle = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle());
 		String xqueryHandle = handle.get();
 		//InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/xqueryBug38816.xqy");
 
@@ -502,7 +470,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
 		String ns = getNameSpace(entityType);
 		try{
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
 		              "ext:extract-instance-Order()", new StringHandle());
 		
 		} catch (Exception e) {
@@ -520,7 +488,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 
 		try {
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
 		              "ext:extract-instance-Order( doc('"+source1+"'),doc('"+source2+"'))", new StringHandle());
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("Too many args, expected 1 but got 2"));
@@ -552,7 +520,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -588,7 +555,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -624,7 +590,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -659,7 +624,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -695,7 +659,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -748,7 +711,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -780,7 +742,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		try {
 	    		transformer = tf.newTransformer();
 		} catch (TransformerConfigurationException e) {
-		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		transformer.transform(domSource, result);
@@ -790,15 +751,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		XMLUnit.setIgnoreWhitespace(true);
 		XMLAssert.assertXMLEqual("Expected: \n" +writer.toString()+ "\n but got: \n"+actualDoc,writer.toString(), actualDoc);
 	}
-	
-	/*
-	 * TODO 1
-	 * Add tests for RefCombo for all 3 instance-from-document APIs after getting more info for bug 38883
-	 * 
-	 * TODO 2
-	 * Add tests for RefSame for instance-json-from-document and instance-from-document after bug 39018 is fixed
-	 * 
-	 */
 	
 	@Test
 	public void testInstanceJsonFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {

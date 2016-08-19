@@ -146,6 +146,6 @@ public class ExamplesLoader extends ExamplesBase {
         loader.secondSourceHarmonize();
 
         CodeGenerator generator = new CodeGenerator();
-        //generator.generate();
+        generator.generate();
     }
 }

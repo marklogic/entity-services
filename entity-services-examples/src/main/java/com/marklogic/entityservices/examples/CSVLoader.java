@@ -48,12 +48,11 @@ public class CSVLoader extends ExamplesBase {
     private CsvSchema bootstrapSchema;
     private ObjectMapper csvMapper;
 
-    public CSVLoader() throws IOException {
+    public CSVLoader() {
         super();
 
         bootstrapSchema = CsvSchema.emptySchema().withHeader();
         csvMapper = new CsvMapper();
-
     }
 
     public void go() throws InterruptedException {

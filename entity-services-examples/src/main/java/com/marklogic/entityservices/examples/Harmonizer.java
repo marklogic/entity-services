@@ -73,7 +73,7 @@ public class Harmonizer extends ExamplesBase {
 
         QueryHostBatcher queryHostBatcher = moveMgr //
                 .newQueryHostBatcher(qdef) //
-                .withBatchSize(10) //
+                .withBatchSize(100) //
                 .withThreadCount(5) //
                 .onUrisReady(listener) //
                 .onQueryFailure((client3, exception) -> {

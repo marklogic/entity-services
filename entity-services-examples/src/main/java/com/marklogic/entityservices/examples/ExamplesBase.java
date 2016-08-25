@@ -82,11 +82,11 @@ abstract class ExamplesBase {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 if (entry.toFile().isDirectory()) {
-                    logger.info("Reading subdirectory " + entry.getFileName().toString());
+                    logger.info("Reading subdirectory " + entry.getFileName().toString().replaceAll("\\\\","/"));
                     importOrDescend(entry, batcher, collection, format);
                 } else {
                     logger.debug("Adding " + entry.getFileName().toString());
-                    String uri = entry.toString();
+                    String uri = entry.toString().replaceAll("\\\\","/");
                     if (collection != null) {
                         DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
                                 .withPermission("race-reader", Capability.READ) //

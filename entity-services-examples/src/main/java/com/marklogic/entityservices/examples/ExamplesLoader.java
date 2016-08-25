@@ -38,8 +38,6 @@ public class ExamplesLoader {
         CSVLoader integrator = new CSVLoader();
         integrator.go();
 
-        logger.info("Pausing to let load proceed before harmonize");
-        Thread.sleep(20000);
         logger.info("Starting harmonize");
         Harmonizer harmonizer = new Harmonizer();
         harmonizer.harmonize();

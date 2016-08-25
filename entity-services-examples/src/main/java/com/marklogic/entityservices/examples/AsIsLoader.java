@@ -62,9 +62,18 @@ public class AsIsLoader extends ExamplesBase {
     }
 
     public void loadAsIs() {
-        modelsLoad().start();
-        instanceLoad().start();
-        rdfLoad().start();
+        Thread modelThread = modelsLoad();
+        modelThread.start();
+        Thread instanceThread = instanceLoad();
+        instanceThread.start();
+        Thread rdfThread = rdfLoad();
+        rdfThread.start();
+        try {
+            modelThread.join();
+            instanceThread.join();
+            rdfThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
-
 }

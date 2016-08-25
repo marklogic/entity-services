@@ -81,7 +81,7 @@ public class CSVLoader extends ExamplesBase {
                     ObjectNode jsonNode = it.next();
                     String jsonString = mapper.writeValueAsString(jsonNode);
 
-                    String uri = entry.getFileName().toString() + "-" + Long.toString(i++) + ".json";
+                    String uri = entry.getFileName().toString().replaceAll("\\\\","/") + "-" + Long.toString(i++) + ".json";
                     DocumentMetadataHandle metadata = new DocumentMetadataHandle() //
                             .withCollections("raw", "csv") //
                             .withPermission("race-reader", Capability.READ) //

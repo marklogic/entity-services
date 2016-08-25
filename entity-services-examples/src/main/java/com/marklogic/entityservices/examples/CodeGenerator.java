@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -38,6 +40,7 @@ public class CodeGenerator extends ResourceManager {
     private String codeGenDir;
     private String modelsDir;
     private DatabaseClient client;
+    private String projectDir;
 
     private Properties props;
 
@@ -45,8 +48,11 @@ public class CodeGenerator extends ResourceManager {
         super();
         props = new Properties();
         props.load(this.getClass().getClassLoader().getResourceAsStream("application.properties"));
-        codeGenDir = props.getProperty("projectDir") + "/gen";
-        modelsDir = props.getProperty("projectDir") + "/data/models";
+        Path currentRelativePath = Paths.get("");
+        String projectDir = currentRelativePath.toAbsolutePath().toString();
+        if (!projectDir.endsWith("examples")) projectDir += "/entity-services-examples";
+        codeGenDir = projectDir + "/gen";
+        modelsDir = projectDir + "/data/models";
 
         client = DatabaseClientFactory.newClient(props.getProperty("mlHost"),
                 Integer.parseInt(props.getProperty("mlRestPort")), new DatabaseClientFactory.DigestAuthContext(

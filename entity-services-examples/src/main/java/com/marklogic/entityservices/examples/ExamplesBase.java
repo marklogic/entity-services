@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,15 +67,11 @@ abstract class ExamplesBase {
                         props.getProperty("mlUsername"), props.getProperty("mlPassword")));
 
         Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        System.out.println("Current relative path is: " + s);
+        projectDir = currentRelativePath.toAbsolutePath().toString();
+        logger.debug("Current relative path is: " + projectDir);
 
         // FIXME this is a hack for intellij.
-        if (s.endsWith("examples")) {
-            projectDir = currentRelativePath.toAbsolutePath().toString();
-        } else {
-            projectDir = currentRelativePath.toAbsolutePath().toString() + "/entity-services-examples";
-        }
+        if (!projectDir.endsWith("examples")) projectDir += "/entity-services-examples";
 
         moveMgr = DataMovementManager.newInstance().withClient(client);
         mapper = new ObjectMapper();
@@ -122,9 +119,11 @@ abstract class ExamplesBase {
                 .onBatchFailure((client, batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     System.err.println(throwable.getMessage());
-                    System.err.print(String.join("\n",
-                            (CharSequence[]) Arrays.stream(batch.getItems()).map(item -> item.getTargetUri()).toArray())
-                            + "\n\n");
+                    System.err.println(
+                            Arrays.stream(batch.getItems())
+                                    .map(item -> item.getTargetUri())
+                                    .collect(Collectors.joining("\n"))
+                    );
                     // throwable.printStackTrace();
                 });
         ;
@@ -148,9 +147,11 @@ abstract class ExamplesBase {
                 .onBatchSuccess((client, batch) -> logger.info("Loaded batch of JSON documents"))
                 .onBatchFailure((client, batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-                    System.err.print(String.join("\n",
-                            (CharSequence[]) Arrays.stream(batch.getItems()).map(item -> item.getTargetUri()).toArray())
-                            + "\n\n");
+                    System.err.println(throwable.getMessage());
+                    System.err.println(
+                            Arrays.stream(batch.getItems())
+                                    .map(item -> item.getTargetUri())
+                                    .collect(Collectors.joining("\n")));
                     // throwable.printStackTrace();
                 });
 

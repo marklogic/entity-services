@@ -59,7 +59,7 @@ public class CSVLoader extends ExamplesBase {
 
         logger.info("job started.");
 
-        File dir = new File(props.getProperty("projectDir") + "/data/third-party/csv");
+        File dir = new File(projectDir + "/data/third-party/csv");
 
         WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(10)
                 .onBatchSuccess((client, batch) -> logger.info(getSummaryReport(batch)))

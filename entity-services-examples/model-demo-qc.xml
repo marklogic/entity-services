@@ -1,16 +1,16 @@
-<export><workspace name="Model Demos"><query name="models" focus="true" listorder="1" taborder="1" active="true" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var es = require("/MarkLogic/entity-services/entity-services.xqy");
+<export><workspace name="Model Demos"><query name="models" focus="false" listorder="1" taborder="1" active="true" database="12548380120383803910" server="14413040253700882037" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var es = require("/MarkLogic/entity-services/entity-services.xqy");
 var sem = require("/MarkLogic/semantics.xqy");
 
-var model = fn.doc("/MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json");
+var model = fn.doc("file:///MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json");
 
 model;
 //es.modelValidate(model);
 //es.modelToXml(model)
 //cts.triples(null, null, null, null, null, cts.documentQuery("/MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json"));
-</query><query name="testInstances" focus="false" listorder="2" taborder="3" active="true" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var es = require("/MarkLogic/entity-services/entity-services.xqy");
+</query><query name="testInstances" focus="true" listorder="2" taborder="3" active="true" database="12548380120383803910" server="14413040253700882037" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var es = require("/MarkLogic/entity-services/entity-services.xqy");
 var sem = require("/MarkLogic/semantics.xqy");
 
-var model = fn.doc("/MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json");
+var model = fn.doc("file:///MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json");
 
 var testInstances = es.modelGetTestInstances(model);
 var testRace = testInstances[0];
@@ -18,7 +18,7 @@ var testRun = testInstances[1];
 
 
 model;
-testInstances;</query><query name="tde experiments" focus="false" listorder="3" taborder="" active="false" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">let $col-prefix := "http://marklogic.com/column/id/"
+testInstances;</query><query name="tde experiments" focus="false" listorder="3" taborder="3" active="false" database="12548380120383803910" server="14413040253700882037" database-name="" server-name="" mode="xquery">let $col-prefix := "http://marklogic.com/column/id/"
 let $row-prefix := "http://marklogic.com/row/"
 let $race-view := tde:get-view("Race", "Race")
 
@@ -51,10 +51,10 @@ xdmp:sql("select wonByRunner from Race.Race")
 ) 
 (: .columns.forEach( function(x) { var o = { x.column.name : x.column.id }; m.push( o ) }); :)
 
-</query><query name="codegen" focus="false" listorder="4" taborder="2" active="true" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
+</query><query name="codegen" focus="false" listorder="4" taborder="2" active="true" database="12548380120383803910" server="14413040253700882037" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 
-let $model := fn:doc("/MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json")
+let $model := fn:doc("file:///MarkLogic/git/entity-services/entity-services-examples/data/models/simple-race.json")
 
 return $model
 =&gt;es:version-translator-generate( $model)
@@ -66,7 +66,7 @@ return $model
 =&gt;es:instance-converter-generate()
 =&gt;es:schema-generate()
 
-:)</query><query name="Query 1" focus="false" listorder="5" taborder="" active="false" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(:
+:)</query><query name="Query 1" focus="false" listorder="5" taborder="5" active="false" database="12548380120383803910" server="14413040253700882037" database-name="" server-name="" mode="xquery">(:
 sem:sparql-update('
 prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 prefix my: &lt;http://ontology-test/&gt;
@@ -83,7 +83,7 @@ xdmp:document-insert("/sql-ontology.xml",
 &lt;/sem:triple&gt;
 &lt;/sem:triples&gt;)
 
-</query><query name="Query 2" focus="false" listorder="6" taborder="" active="false" database="1864503829138194350" server="4141854128175404443" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
+</query><query name="Query 2" focus="false" listorder="6" taborder="6" active="false" database="12548380120383803910" server="14413040253700882037" database-name="" server-name="" mode="xquery">xquery version "1.0-ml";
 doc("/sql-ontology.xml"),
 
 sem:sparql('

@@ -7,6 +7,46 @@
 @prefix race: <http://grechaw.github.io/entity-types/Race-0.0.1/> .
 @prefix Runner: <http://grechaw.github.io/entity-types#Runner/> .
 @prefix sport: <http://www.bbc.co.uk/ontologies/sport/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix racing: <http://example.org/ontologies/> .
 
 race:Runner rdfs:subClassOf sport:Person .
 race:Race rdfs:subClassOf sport:Competition .
+race:raceCategory rdfs:subPropertyOf dc:subject .
+
+racing:Running a skos:ConceptScheme .
+racing:RunningRaces a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:prefLabel "Running"@en .
+racing:TrailRuns a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:RunningRaces ;
+    skos:prefLabel "TrailRuns"@en .
+racing:Marathons a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:RunningRaces ;
+    skos:prefLabel "Marathons"@en .
+racing:TrailMarathons a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:Marathons ;
+    skos:broader racing:TrailRuns ;
+    skos:prefLabel "Trail Marathons"@en .
+racing:HalfMarathons a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:RunningRaces ;
+    skos:prefLabel "Marathons"@en .
+racing:TrailHalfMarathons a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:HalfMarathons ;
+    skos:broader racing:TrailRuns ;
+    skos:prefLabel "Trail Half Marathons"@en .
+racing:TenKs a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:RunningRaces ;
+    skos:prefLabel "10k Races"@en .
+racing:TrailTenKs a skos:Concept ;
+    skos:inScheme racing:Running ;
+    skos:broader racing:TenKs ;
+    skos:broader racing:TrailRuns ;
+    skos:prefLabel "Trail 10k Races"@en .

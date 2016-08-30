@@ -43,6 +43,10 @@ public class ExamplesLoader {
         harmonizer.harmonize();
         harmonizer.secondSourceHarmonize();
 
+        logger.info("Starting translate of Races");
+        Translator translator = new Translator();
+        translator.translate();
+
         CodeGenerator generator = new CodeGenerator();
         generator.generate();
     }

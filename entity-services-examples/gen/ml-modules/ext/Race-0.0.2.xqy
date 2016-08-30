@@ -20,7 +20,7 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-08-25T15:37:25.431589-07:00                         :)
+(: Generated at timestamp: 2016-08-29T17:10:26.288471-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
 module namespace race 
@@ -91,7 +91,7 @@ declare function race:extract-instance-Race(
  =>   map:with('name',                   xs:string($source-node/Race/name))
  (: The following property assigment comes from an external reference.               :)
  (: Its generated value probably requires developer attention.                       :)
- =>es:optional('raceCategory',           function($path) { json:object()=>map:with('$type', 'typesOfRaces')=>map:with('$ref', $path/typesOfRaces/text() ) }($source-node/Race/raceCategory))
+ =>es:optional('raceCategory',           function($path) { json:object()=>map:with('$type', 'Running')=>map:with('$ref', $path/Running/text() ) }($source-node/Race/raceCategory))
  (: The following property is a local reference.                                     :)
  =>es:optional('comprisedOfRuns',        race:extract-array($source-node/Race/comprisedOfRuns, race:extract-instance-Run#1))
  (: The following property is a local reference.                                     :)

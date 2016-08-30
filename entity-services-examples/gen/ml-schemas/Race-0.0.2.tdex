@@ -65,7 +65,7 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	    <column>
 	      <name>raceCategory</name>
 	      <scalar-type>string</scalar-type>
-	      <val>raceCategory/typesOfRaces</val>
+	      <val>raceCategory/Running</val>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>

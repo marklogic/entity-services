@@ -4,8 +4,6 @@ module namespace ingester = "http://marklogic.com/rest-api/transform/ingester";
 import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1"
     at "/ext/Race-0.0.1.xqy";
 
-import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
-
 (:~
 : User: cgreer
 : Date: 7/21/16

@@ -37,12 +37,12 @@ declare function race:extract-instance-Race(
          : If the source document is JSON, you should wrap the $source-node in xdmp:quote()
          : because you cannot preserve JSON nodes with the XML envelope verbatim.
          :)
-         =>   map:with('name',                   xs:string#1($source-node/name))
+         =>   map:with('name',                   xs:string($source-node/name))
          (: The following property is a local reference.                                     :)
          =>es:optional('comprisedOfRuns',        race:extract-array($source-node/comprisedOfRuns, function($x) { json:object()=>map:with("$type", "Run")=>map:with("$ref", xs:string($x)) } ))
          (: The following property is a local reference.                                     :)
-         =>es:optional('wonByRunner',            race:extract-instance-Runner#1($runnerDoc))
-         =>es:optional('courseLength',           xs:decimal#1($source-node/courseLength))
+         =>es:optional('wonByRunner',            race:extract-instance-Runner($runnerDoc))
+         =>es:optional('courseLength',           xs:decimal($source-node/courseLength))
         =>map:with('$attachments', xdmp:quote($source-node))
 };
 

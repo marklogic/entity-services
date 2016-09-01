@@ -73,6 +73,9 @@ required.
  loading and transforming steps.  In a regular workflow, one would generate
  code first, then modify it, deploy, and iterate.
 
+Note that some of these classes have `main` methods of their own in case you
+want to run them independently.
+
 Step Three. QConsole
 --------------------
 

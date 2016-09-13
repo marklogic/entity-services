@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,104 +45,121 @@ import com.marklogic.datamovement.WriteHostBatcher;
  */
 abstract class ExamplesBase {
 
-	private static Logger logger = LoggerFactory.getLogger(ExamplesBase.class);
+    private static Logger logger = LoggerFactory.getLogger(ExamplesBase.class);
 
-	protected DataMovementManager moveMgr;
-	protected JobTicket ticket;
-	protected ObjectMapper mapper;
-	protected Properties props;
-	protected DatabaseClient client;
+    protected DataMovementManager moveMgr;
+    protected JobTicket ticket;
+    protected ObjectMapper mapper;
+    protected Properties props;
+    protected DatabaseClient client;
+	protected String projectDir;
 
-	public ExamplesBase() throws IOException {
-		props = new Properties();
-		props.load(this.getClass().getClassLoader().getResourceAsStream("application.properties"));
+    public ExamplesBase() {
+        props = new Properties();
+        try {
+            props.load(this.getClass().getClassLoader().getResourceAsStream("application.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading application.properties file");
+        }
 
-		client = DatabaseClientFactory.newClient(props.getProperty("mlHost"),
-				Integer.parseInt(props.getProperty("mlRestPort")), new DatabaseClientFactory.DigestAuthContext(
-						props.getProperty("mlUsername"), props.getProperty("mlPassword")));
+        client = DatabaseClientFactory.newClient(props.getProperty("mlHost"),
+                Integer.parseInt(props.getProperty("mlRestPort")), new DatabaseClientFactory.DigestAuthContext(
+                        props.getProperty("mlUsername"), props.getProperty("mlPassword")));
 
-		moveMgr = DataMovementManager.newInstance().withClient(client);
-		mapper = new ObjectMapper();
-	}
+        Path currentRelativePath = Paths.get("");
+        projectDir = currentRelativePath.toAbsolutePath().toString();
+        logger.debug("Current relative path is: " + projectDir);
 
-	private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-			for (Path entry : stream) {
-				if (entry.toFile().isDirectory()) {
-					logger.info("Reading subdirectory " + entry.getFileName().toString());
-					importOrDescend(entry, batcher, collection, format);
-				} else {
-					logger.debug("Adding " + entry.getFileName().toString());
-					String uri = entry.toString();
-					if (collection != null) {
-						DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
-								.withPermission("race-reader", Capability.READ) //
-								.withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
-						batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
-					} else {
-						batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
-					}
-					logger.debug("Inserted " + format.toString() + " document " + uri);
-				}
-			}
+        // FIXME this is a hack for intellij.
+        if (!projectDir.endsWith("examples")) projectDir += "/entity-services-examples";
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        moveMgr = DataMovementManager.newInstance().withClient(client);
+        mapper = new ObjectMapper();
 
-	/*
-	 * This method uses a document-centric approach to RDF reference data, by
-	 * invoking a server-side transform that parses turtle into MarkLogic XML
-	 * triples.
-	 */
-	public void importRDF(Path referenceDataDir, String collection) {
+    }
 
-		logger.info("RDF Load Job started");
+    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path entry : stream) {
+                if (entry.toFile().isDirectory()) {
+                    logger.info("Reading subdirectory " + entry.getFileName().toString());
+                    importOrDescend(entry, batcher, collection, format);
+                } else {
+                    logger.debug("Adding " + entry.getFileName().toString());
+                    String uri = entry.toUri().toString();
+                    if (collection != null) {
+                        DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
+                                .withPermission("race-reader", Capability.READ) //
+                                .withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
+                        batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
+                    } else {
+                        batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
+                    }
+                    logger.debug("Inserted " + format.toString() + " document " + uri);
+                }
+            }
 
-		WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(10).withThreadCount(1)
-				.withTransform(new ServerTransform("turtle-to-xml"))
-				.onBatchSuccess((client, batch) -> logger.info("Loaded rdf data batch"))
-				.onBatchFailure((client, batch, throwable) -> {
-					logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-					System.err.println(throwable.getMessage());
-					System.err.print(String.join("\n",
-							(CharSequence[]) Arrays.stream(batch.getItems()).map(item -> item.getTargetUri()).toArray())
-							+ "\n\n");
-					// throwable.printStackTrace();
-				});
-		;
-		ticket = moveMgr.startJob(batcher);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
+    /*
+     * This method uses a document-centric approach to RDF reference data, by
+     * invoking a server-side transform that parses turtle into MarkLogic XML
+     * triples.
+     */
+    public void importRDF(Path referenceDataDir, String collection) {
 
-		batcher.flush();
+        logger.info("RDF Load Job started");
 
-	}
+        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(10).withThreadCount(1)
+                .withTransform(new ServerTransform("turtle-to-xml"))
+                .onBatchSuccess((client, batch) -> logger.info("Loaded rdf data batch"))
+                .onBatchFailure((client, batch, throwable) -> {
+                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
+                    System.err.println(throwable.getMessage());
+                    System.err.println(
+                            Arrays.stream(batch.getItems())
+                                    .map(item -> item.getTargetUri())
+                                    .collect(Collectors.joining("\n"))
+                    );
+                    // throwable.printStackTrace();
+                });
+        ;
+        ticket = moveMgr.startJob(batcher);
 
-	public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
-		importJSON(jsonDirectory, null);
-	}
+        importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
 
-	public void importJSON(Path jsonDirectory, String toCollection) throws IOException {
+        batcher.flush();
 
-		logger.info("job started.");
+    }
 
-		WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
-				.onBatchSuccess((client, batch) -> logger.info("Loaded batch of JSON documents"))
-				.onBatchFailure((client, batch, throwable) -> {
-					logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-					System.err.print(String.join("\n",
-							(CharSequence[]) Arrays.stream(batch.getItems()).map(item -> item.getTargetUri()).toArray())
-							+ "\n\n");
-					// throwable.printStackTrace();
-				});
+    public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
+        importJSON(jsonDirectory, null);
+    }
 
-		ticket = moveMgr.startJob(batcher);
+    public void importJSON(Path jsonDirectory, String toCollection) throws IOException {
 
-		importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
+        logger.info("job started.");
 
-		batcher.flush();
-	}
+        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
+                .onBatchSuccess((client, batch) -> logger.info("Loaded batch of JSON documents"))
+                .onBatchFailure((client, batch, throwable) -> {
+                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
+                    System.err.println(throwable.getMessage());
+                    System.err.println(
+                            Arrays.stream(batch.getItems())
+                                    .map(item -> item.getTargetUri())
+                                    .collect(Collectors.joining("\n")));
+                    // throwable.printStackTrace();
+                });
+
+        ticket = moveMgr.startJob(batcher);
+
+        importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
+
+        batcher.flush();
+    }
 
 }

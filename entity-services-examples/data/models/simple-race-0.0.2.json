@@ -8,12 +8,16 @@
   "definitions": {
     "Race": {
         "properties": {
+            "id": {
+                "datatype": "iri",
+                "description":"A unique identifier for a race."
+            },
             "name": {
                 "datatype": "string",
                 "description":"The name of the race."
             },
             "raceCategory" : {
-                "$ref":"http://example.org/typesOfRaces",
+                "$ref":"http://example.org/ontologies/Running",
                 "description":"A reference to an external taxonomy of race types."
             },
             "comprisedOfRuns": {
@@ -32,14 +36,14 @@
                 "description":"Length of the course in a scalar unit (decimal miles)"
             }
         },
-        "primaryKey":"name",
+        "primaryKey":"raceIri",
         "required": ["name", "courseLength"]
     },
     "Run": {
         "properties": {
             "id": {
-                "datatype": "string",
-                "description":"A unique id for the run. maybe date/runByRunner (assumes one run per day per person)"
+                "datatype": "iri",
+                "description":"A unique iri for the run."
             },
             "date": {
                 "datatype": "date",
@@ -67,6 +71,10 @@
     },
     "Runner": {
         "properties": {
+            "id": {
+                "datatype":"iri",
+                "description":"A unique IRI for a runner. Can be used to dedupe instances of runners."
+            },
             "name": {
                 "datatype": "string",
                 "description":"The name of the runner.  In this early model, unique and a PK."

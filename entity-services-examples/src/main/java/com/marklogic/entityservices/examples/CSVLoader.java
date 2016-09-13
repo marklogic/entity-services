@@ -48,19 +48,18 @@ public class CSVLoader extends ExamplesBase {
     private CsvSchema bootstrapSchema;
     private ObjectMapper csvMapper;
 
-    public CSVLoader() throws IOException {
+    public CSVLoader() {
         super();
 
         bootstrapSchema = CsvSchema.emptySchema().withHeader();
         csvMapper = new CsvMapper();
-
     }
 
     public void go() throws InterruptedException {
 
         logger.info("job started.");
 
-        File dir = new File(props.getProperty("projectDir") + "/data/third-party/csv");
+        File dir = new File(projectDir + "/data/third-party/csv");
 
         WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(10)
                 .onBatchSuccess((client, batch) -> logger.info(getSummaryReport(batch)))
@@ -82,7 +81,7 @@ public class CSVLoader extends ExamplesBase {
                     ObjectNode jsonNode = it.next();
                     String jsonString = mapper.writeValueAsString(jsonNode);
 
-                    String uri = entry.getFileName().toString() + "-" + Long.toString(i++) + ".json";
+                    String uri = entry.toUri().toString() + "-" + Long.toString(i++) + ".json";
                     DocumentMetadataHandle metadata = new DocumentMetadataHandle() //
                             .withCollections("raw", "csv") //
                             .withPermission("race-reader", Capability.READ) //

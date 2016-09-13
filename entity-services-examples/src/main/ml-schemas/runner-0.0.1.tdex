@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>
+A custom TDE for tagging instances of Runner as instance of RDFS class Runner.
+</description>
+  <context>//es:instance//Runner</context>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>.</context>
+      <vars>
+          <var><name>RDF</name><val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val></var>
+          <var><name>RDF_TYPE</name><val>sem:iri(concat($RDF, "type"))</val></var>
+      </vars>
+      <triples>
+        <triple>
+            <subject><val>sem:iri(concat("http://grechaw.github.io/entity-types/Race-0.0.1/Runner/", fn:encode-for-uri(./name)))</val></subject>
+          <predicate><val>$RDF_TYPE</val></predicate>
+          <object><val>sem:iri("http://grechaw.github.io/entity-types/Race-0.0.1/Runner")</val></object>
+        </triple>
+        <triple>
+            <subject><val>sem:iri(concat("http://grechaw.github.io/entity-types/Race-0.0.1/Runner/", fn:encode-for-uri(./name)))</val></subject>
+            <predicate><val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val></predicate>
+          <object><val>fn:base-uri(.)</val></object>
+        </triple>
+      </triples>
+    </template>
+  </templates>
+</template>

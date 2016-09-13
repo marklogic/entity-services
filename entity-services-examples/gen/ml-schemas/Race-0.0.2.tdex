@@ -19,6 +19,12 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	  <view-name>Runner</view-name>
 	  <columns>
 	    <column>
+	      <name>id</name>
+	      <scalar-type>IRI</scalar-type>
+	      <val>id</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
 	      <name>name</name>
 	      <scalar-type>string</scalar-type>
 	      <val>name</val>
@@ -46,6 +52,12 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	  <view-name>Race</view-name>
 	  <columns>
 	    <column>
+	      <name>id</name>
+	      <scalar-type>IRI</scalar-type>
+	      <val>id</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
 	      <name>name</name>
 	      <scalar-type>string</scalar-type>
 	      <val>name</val>
@@ -53,7 +65,7 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	    <column>
 	      <name>raceCategory</name>
 	      <scalar-type>string</scalar-type>
-	      <val>raceCategory/typesOfRaces</val>
+	      <val>raceCategory/Running</val>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
@@ -79,15 +91,15 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	      <view-name>Race_comprisedOfRuns</view-name>
 	      <columns>
 		<column>
-		  <!--This column joins to property name of Race-->
-		  <name>name</name>
-		  <scalar-type>string</scalar-type>
-		  <val>../name</val>
+		  <!--This column joins to property raceIri of Race-->
+		  <name>raceIri</name>
+		  <scalar-type/>
+		  <val>../raceIri</val>
 		</column>
 		<column>
 		  <!--This column joins to primary key of Run-->
 		  <name>comprisedOfRuns</name>
-		  <scalar-type>string</scalar-type>
+		  <scalar-type>iri</scalar-type>
 		  <val>Run</val>
 		  <nullable>true</nullable>
 		</column>
@@ -106,7 +118,7 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	  <columns>
 	    <column>
 	      <name>id</name>
-	      <scalar-type>string</scalar-type>
+	      <scalar-type>IRI</scalar-type>
 	      <val>id</val>
 	    </column>
 	    <column>

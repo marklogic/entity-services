@@ -1,5 +1,5 @@
 plugins {
-    id "com.marklogic.ml-gradle" version "2.3.2"
+    id "com.marklogic.ml-gradle" version "2.3.3"
 }
 
 subprojects {
@@ -11,7 +11,7 @@ subprojects {
     targetCompatibility = "1.8"
 
     configure(allprojects){
-        ext.slf4jVersion = '1.7.12'
+        ext.slf4jVersion = '1.7.21'
         ext.logbackVersion = '1.1.7'
     }
 
@@ -22,21 +22,20 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'org.apache.httpcomponents:httpclient:4.1.1'
-        testCompile 'commons-io:commons-io:2.5'
+        testCompile 'org.apache.httpcomponents:httpclient:4.5.2'
         testCompile('com.marklogic:marklogic-jena:1.0.0') {
             //exclude(group: 'org.slf4j')
             exclude(group: 'ch.qos.logback')
             exclude(group: 'log4j')
         }
-        testCompile 'com.jayway.restassured:rest-assured:2.4.1'
+        testCompile 'com.jayway.restassured:rest-assured:2.9.0'
         testCompile 'xmlunit:xmlunit:1.6'
         testCompile 'junit:junit:4.12'
-        testCompile 'org.assertj:assertj-core:3.4.1'
-        testCompile 'ch.qos.logback:logback-classic:1.1.7'
+        testCompile 'org.assertj:assertj-core:3.5.2'
+        testCompile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
     }
-    
-    
+
+
     test {
         systemProperties System.properties
         testClassesDir file('build/classes/test')
@@ -45,5 +44,5 @@ subprojects {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.6'
+    gradleVersion = '2.14'
 }

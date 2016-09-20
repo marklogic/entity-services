@@ -2,13 +2,17 @@ apply plugin: 'com.marklogic.ml-gradle'
 apply plugin: 'application'
 
 mainClassName = "com.marklogic.entityservices.examples.ExamplesLoader";
-
-dependencies {
-    compile('com.marklogic:data-movement:1.0-SNAPSHOT') {
-        exclude(group: 'com.google.guava')
-    }
-    compile('ch.qos.logback:logback-classic:1.1.7')
-    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.7.0')
+repositories { 
+  maven { 
+    url "http://developer.marklogic.com/maven2"
+  } 
+}
+dependencies{
+  compile('com.marklogic:data-movement:1.0-SNAPSHOT') {
+    exclude(group: 'com.google.guava')
+  }
+  compile('ch.qos.logback:logback-classic:1.1.7')
+  compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')
 }
 
 ext {

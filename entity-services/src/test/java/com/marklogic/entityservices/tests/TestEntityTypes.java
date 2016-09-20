@@ -22,6 +22,8 @@ import static org.junit.Assert.fail;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,8 +31,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.custommonkey.xmlunit.DetailedDiff;
@@ -132,13 +132,16 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
 
     @Test
-    public void testInvalidEntityTypes() throws URISyntaxException {
+    public void testInvalidEntityTypes() throws URISyntaxException, IOException {
 
         URL sourcesFilesUrl = client.getClass().getResource("/invalid-models");
 
         @SuppressWarnings("unchecked")
-        Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
-                FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+        Collection<File> invalidEntityTypeFiles = new ArrayList<>();
+        Files.walk(Paths.get(sourcesFilesUrl.getPath())).forEach(filePath -> {
+            invalidEntityTypeFiles.add(filePath.toFile());
+
+        });
         Set<String> invalidEntityTypes = new HashSet<String>();
 
 

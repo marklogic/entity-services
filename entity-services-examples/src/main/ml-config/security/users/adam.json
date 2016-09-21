@@ -1,6 +1,6 @@
 {
   "user-name": "adam",
-  "description": "",
+  "description": "The administrator of an entity-services example application",
   "password": "********",
   "role": ["race-admin"]
 }

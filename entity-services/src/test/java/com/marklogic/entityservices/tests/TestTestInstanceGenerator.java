@@ -38,45 +38,45 @@ import com.marklogic.client.io.DOMHandle;
  */
 public class TestTestInstanceGenerator extends EntityServicesTestBase {
 
-	@BeforeClass
-	public static void setupTestInstances() {
-		setupClients();
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/xml-models", ".*.xml$");
-	}
-	
-	@Test
-	public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
-		for (String entityType : entityTypes) {
-			
-			String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-xml()=>es:model-get-test-instances()";
-			
-			logger.info("Creating test instances from " + entityType);
-			EvalResultIterator results = eval(generateTestInstances);
-			int resultNumber = 0;
-			while (results.hasNext()) {
-				EvalResult result =  results.next();
-				DOMHandle handle = result.get(new DOMHandle());
-				Document actualDoc = handle.get();
-				
-				//debugOutput(actualDoc);
-				String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
+    @BeforeClass
+    public static void setupTestInstances() {
+        setupClients();
+        entityTypes = TestSetup.getInstance().loadEntityTypes("/xml-models", ".*.xml$");
+    }
+
+    @Test
+    public void verifyTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
+        for (String entityType : entityTypes) {
+
+            String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-xml()=>es:model-get-test-instances()";
+
+            logger.info("Creating test instances from " + entityType);
+            EvalResultIterator results = eval(generateTestInstances);
+            int resultNumber = 0;
+            while (results.hasNext()) {
+                EvalResult result =  results.next();
+                DOMHandle handle = result.get(new DOMHandle());
+                Document actualDoc = handle.get();
+
+                //debugOutput(actualDoc);
+                String entityTypeFileName = entityType.replace(".xml", "-" + resultNumber + ".xml");
 
 // this is a one-time utility to auto-populate verification keys, not for checking them!
-	/*		File outputFile = new File("src/test/resources/test-instances/" + entityTypeFileName );
-				FileOutputStream os = new FileOutputStream(outputFile);
-				debugOutput(actualDoc, os);
-				logger.debug("Saved file to " + outputFile.getName());
-				os.close(); */
-				
-				 debugOutput(actualDoc, System.out);
-				// logger.debug("Control document: " + entityTypeFileName);
-				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
-				Document controlDoc = builder.parse(is);
-				
-				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual(controlDoc, actualDoc);
-				resultNumber++;
-			}
-		}
-	}
+    /*        File outputFile = new File("src/test/resources/test-instances/" + entityTypeFileName );
+                FileOutputStream os = new FileOutputStream(outputFile);
+                debugOutput(actualDoc, os);
+                logger.debug("Saved file to " + outputFile.getName());
+                os.close(); */
+
+                 debugOutput(actualDoc, System.out);
+                // logger.debug("Control document: " + entityTypeFileName);
+                InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
+                Document controlDoc = builder.parse(is);
+
+                XMLUnit.setIgnoreWhitespace(true);
+                XMLAssert.assertXMLEqual(controlDoc, actualDoc);
+                resultNumber++;
+            }
+        }
+    }
 }

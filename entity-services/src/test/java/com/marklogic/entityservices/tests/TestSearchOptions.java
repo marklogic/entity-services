@@ -38,31 +38,31 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class TestSearchOptions extends EntityServicesTestBase {
-	
+
     @BeforeClass
     public static void setup() {
         setupClients();
         TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
     }
 
-	@Test
-	public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
-		DOMHandle handle = evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:search-options-generate()", new DOMHandle());
-		Document searchOptions = handle.get();
+    @Test
+    public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
+        DOMHandle handle = evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:search-options-generate()", new DOMHandle());
+        Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
 
 
-		InputStream is = this.getClass().getResourceAsStream("/expected-search-options/SchemaCompleteEntityType-0.0.1.xml");
-		Document filesystemXML = builder.parse(is);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
-		XMLAssert.assertXMLEqual("Search options validation failed.", filesystemXML, searchOptions);
+        InputStream is = this.getClass().getResourceAsStream("/expected-search-options/SchemaCompleteEntityType-0.0.1.xml");
+        Document filesystemXML = builder.parse(is);
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setIgnoreComments(true);
+        XMLAssert.assertXMLEqual("Search options validation failed.", filesystemXML, searchOptions);
 
 
-		// if this call has results, the search options are not valid.
+        // if this call has results, the search options are not valid.
         EvalResultIterator checkOptions = eval("import module namespace search = 'http://marklogic.com/appservices/search' at '/MarkLogic/appservices/search/search.xqy';"+
-				               "fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:search-options-generate()=>search:check-options()");
+                               "fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:search-options-generate()=>search:check-options()");
 
         assertFalse("Too many results for check options to pass", checkOptions.hasNext());
         /* This is for diagnostics during changes:
@@ -76,6 +76,6 @@ public class TestSearchOptions extends EntityServicesTestBase {
         */
 
 
-	}
+    }
 
 }

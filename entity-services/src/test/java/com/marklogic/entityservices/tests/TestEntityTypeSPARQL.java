@@ -33,43 +33,43 @@ import com.marklogic.client.semantics.SPARQLQueryManager;
 
 public class TestEntityTypeSPARQL extends EntityServicesTestBase {
 
-	private static SPARQLQueryManager queryMgr;
-	
-	@BeforeClass
-	public static void setup() {
-		setupClients();
-		TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
-		queryMgr = client.newSPARQLQueryManager();
-	}
-	@Test
-	public void sampleSPARQLQueries() throws JsonGenerationException, JsonMappingException, IOException {
-		String docHasTypeHasPropertyHasDatatype = 
-					 "PREFIX t: <http://marklogic.com/testing-entity-type#> "
-					+"PREFIX es: <http://marklogic.com/entity-services#> "
-					+ "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:Model ; "
-					+ "   es:definitions ?types ."
-					+ "?types es:property ?property ."
-					+ "?property es:datatype ?datatype "
-					+ "}";
-		
-		assertTrue(queryMgr.executeAsk(queryMgr.newQueryDefinition(docHasTypeHasPropertyHasDatatype)));
-		
-		String assertTypeHasProperties =  "PREFIX t: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/> "
-				+"PREFIX es: <http://marklogic.com/entity-services#> "
-				+"SELECT ?version where {"
-				+ "t:SchemaCompleteEntityType ?version \"0.0.1\" ."
-				+ "}";
-		
-		JacksonHandle handle = queryMgr.executeSelect(queryMgr.newQueryDefinition(assertTypeHasProperties), new JacksonHandle());
-		JsonNode results = handle.get();
-		
-		// to see on System.out
-		// new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(System.out, results);
-		
-		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
-		assertEquals(1, bindings.size());
-		assertEquals("http://marklogic.com/entity-services#version", bindings.get(0).get("version").get("value").asText());
-		
-	}
-	
+    private static SPARQLQueryManager queryMgr;
+
+    @BeforeClass
+    public static void setup() {
+        setupClients();
+        TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
+        queryMgr = client.newSPARQLQueryManager();
+    }
+    @Test
+    public void sampleSPARQLQueries() throws JsonGenerationException, JsonMappingException, IOException {
+        String docHasTypeHasPropertyHasDatatype =
+                     "PREFIX t: <http://marklogic.com/testing-entity-type#> "
+                    +"PREFIX es: <http://marklogic.com/entity-services#> "
+                    + "ASK where { t:SchemaCompleteEntityType-0.0.1 a es:Model ; "
+                    + "   es:definitions ?types ."
+                    + "?types es:property ?property ."
+                    + "?property es:datatype ?datatype "
+                    + "}";
+
+        assertTrue(queryMgr.executeAsk(queryMgr.newQueryDefinition(docHasTypeHasPropertyHasDatatype)));
+
+        String assertTypeHasProperties =  "PREFIX t: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/> "
+                +"PREFIX es: <http://marklogic.com/entity-services#> "
+                +"SELECT ?version where {"
+                + "t:SchemaCompleteEntityType ?version \"0.0.1\" ."
+                + "}";
+
+        JacksonHandle handle = queryMgr.executeSelect(queryMgr.newQueryDefinition(assertTypeHasProperties), new JacksonHandle());
+        JsonNode results = handle.get();
+
+        // to see on System.out
+        // new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(System.out, results);
+
+        ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+        assertEquals(1, bindings.size());
+        assertEquals("http://marklogic.com/entity-services#version", bindings.get(0).get("version").get("value").asText());
+
+    }
+
 }

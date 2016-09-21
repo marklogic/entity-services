@@ -21,3 +21,7 @@ ext {
         createTriggersDatabase = false
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+}

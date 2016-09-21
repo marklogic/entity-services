@@ -61,210 +61,210 @@ import static org.junit.Assert.*;
  */
 public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
-	private static TextDocumentManager docMgr;
-	private static Map<String, StringHandle> converters;
+    private static TextDocumentManager docMgr;
+    private static Map<String, StringHandle> converters;
 
     @BeforeClass
-	public static void setupClass() {
-		setupClients();
-		// save xquery module to modules database
-		docMgr = modulesClient.newTextDocumentManager();
+    public static void setupClass() {
+        setupClients();
+        // save xquery module to modules database
+        docMgr = modulesClient.newTextDocumentManager();
 
-		entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
-		converters = generateConversionModules();
-		storeConverter(converters);
+        entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
+        converters = generateConversionModules();
+        storeConverter(converters);
 
-	}
+    }
 
-	private static void storeConverter(Map<String, StringHandle> moduleMap) {
-		DocumentWriteSet writeSet = docMgr.newWriteSet();
+    private static void storeConverter(Map<String, StringHandle> moduleMap) {
+        DocumentWriteSet writeSet = docMgr.newWriteSet();
 
-		for (String entityTypeName : moduleMap.keySet()) {
+        for (String entityTypeName : moduleMap.keySet()) {
 
-			String moduleName = "/ext/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
-			writeSet.add(moduleName, moduleMap.get(entityTypeName));
-		}
-		docMgr.write(writeSet);
-	}
+            String moduleName = "/ext/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
+            writeSet.add(moduleName, moduleMap.get(entityTypeName));
+        }
+        docMgr.write(writeSet);
+    }
 
-	private static Map<String, StringHandle> generateConversionModules() {
-		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
+    private static Map<String, StringHandle> generateConversionModules() {
+        Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
-		for (String entityType : entityTypes) {
-			logger.info("Generating converter: " + entityType);
-			StringHandle xqueryModule = new StringHandle();
-			try {
-				xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:instance-converter-generate()", xqueryModule);
-			} catch (TestEvalException e) {
-				throw new RuntimeException(e);
-			}
-			map.put(entityType, xqueryModule);
-		}
-		return map;
-	}
+        for (String entityType : entityTypes) {
+            logger.info("Generating converter: " + entityType);
+            StringHandle xqueryModule = new StringHandle();
+            try {
+                xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:instance-converter-generate()", xqueryModule);
+            } catch (TestEvalException e) {
+                throw new RuntimeException(e);
+            }
+            map.put(entityType, xqueryModule);
+        }
+        return map;
+    }
 
-	@Test
-	public void verifyCreateValidModule() throws TestEvalException {
+    @Test
+    public void verifyCreateValidModule() throws TestEvalException {
 
         String initialTest = "Order-0.0.1.json";
         StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:instance-converter-generate()", new StringHandle());
-		HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
-		m.put(initialTest, moduleHandle);
-		// save converter into modules database
-		storeConverter(m);
+        HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
+        m.put(initialTest, moduleHandle);
+        // save converter into modules database
+        storeConverter(m);
 
-		String instanceDocument = "Order-Source-1.xml";
-		TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
-		StringHandle handle = evalOneResult("import module namespace conv = \"http:///Order-0.0.1\" at \"/ext/Order-0.0.1.xqy\"; "+
-		              "conv:extract-instance-Order( doc('"+instanceDocument+"') )", new StringHandle());
-		
-		String extractInstanceResult = handle.get();
-		assertNotNull("Extract Instance Result must not be null (and should not throw error) ", extractInstanceResult);
-		
-	}
-	
-	private String moduleImport(String entityType) {
-		InputStream is = this.getClass().getResourceAsStream("/json-models/" + entityType);
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode controlFile = null;
-		try {
-			controlFile = (ObjectNode) mapper.readTree(is);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		JsonNode baseUriNode = controlFile.get("info").get("baseUri");
-		String baseUri = null;
-		if (baseUriNode == null) {
-			baseUri = "http://example.org/";
-		} else {
-			baseUri = baseUriNode.asText();
-		}
-		String uriPrefix = baseUri;
-		if (!baseUri.matches(".*[#/]$")) {
-			uriPrefix += "#";
-		}
+        String instanceDocument = "Order-Source-1.xml";
+        TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
+        StringHandle handle = evalOneResult("import module namespace conv = \"http:///Order-0.0.1\" at \"/ext/Order-0.0.1.xqy\"; "+
+                      "conv:extract-instance-Order( doc('"+instanceDocument+"') )", new StringHandle());
 
-		String entityTypeName = entityType.replace(".json",  "");
-		String moduleName = "/ext/" + entityTypeName + ".xqy";
-		
-		return "import module namespace conv = \""+uriPrefix + entityTypeName +"\" at \""+moduleName+"\"; ";		
-	}
-	
-	/**
-	 * Rationale for this test is that default generated converter should
-	 * work out-of-the-box, and handle an identity transform from test instances.
-	 * This test thus tests 
-	 * instance-extract and 
-	 * instance-to-canonical-xml
-	 * instance-from-document
-	 * instance-json-from-document
-	 * instance-xml-from-document
-	 * instance-attachments-from-document
-	 * 
-	 * @throws IOException 
-	 * @throws JsonProcessingException 
-	 * @throws TransformerException 
-	 */
-	@Test
-	public void testConversionModuleExtractions() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
+        String extractInstanceResult = handle.get();
+        assertNotNull("Extract Instance Result must not be null (and should not throw error) ", extractInstanceResult);
 
-		TestSetup.getInstance().loadExtraFiles("/test-instances", ".*");
-		
-		// test them all adn remove
-		for (String entityType : converters.keySet()) {
-			
-			String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
-			
-			String entityTypeName = entityType.replace(".json",  "");
-			String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
-			
-			logger.debug("Checking canonical XML function and envelope function and empty extraction: " + entityType);
+    }
 
-			DOMHandle handle =
-					evalOneResult(
-				moduleImport(entityType) +
-				"let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
-				+"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
+    private String moduleImport(String entityType) {
+        InputStream is = this.getClass().getResourceAsStream("/json-models/" + entityType);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode controlFile = null;
+        try {
+            controlFile = (ObjectNode) mapper.readTree(is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        JsonNode baseUriNode = controlFile.get("info").get("baseUri");
+        String baseUri = null;
+        if (baseUriNode == null) {
+            baseUri = "http://example.org/";
+        } else {
+            baseUri = baseUriNode.asText();
+        }
+        String uriPrefix = baseUri;
+        if (!baseUri.matches(".*[#/]$")) {
+            uriPrefix += "#";
+        }
+
+        String entityTypeName = entityType.replace(".json",  "");
+        String moduleName = "/ext/" + entityTypeName + ".xqy";
+
+        return "import module namespace conv = \""+uriPrefix + entityTypeName +"\" at \""+moduleName+"\"; ";
+    }
+
+    /**
+     * Rationale for this test is that default generated converter should
+     * work out-of-the-box, and handle an identity transform from test instances.
+     * This test thus tests
+     * instance-extract and
+     * instance-to-canonical-xml
+     * instance-from-document
+     * instance-json-from-document
+     * instance-xml-from-document
+     * instance-attachments-from-document
+     *
+     * @throws IOException
+     * @throws JsonProcessingException
+     * @throws TransformerException
+     */
+    @Test
+    public void testConversionModuleExtractions() throws TestEvalException, JsonProcessingException, IOException, SAXException, TransformerException {
+
+        TestSetup.getInstance().loadExtraFiles("/test-instances", ".*");
+
+        // test them all adn remove
+        for (String entityType : converters.keySet()) {
+
+            String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
+
+            String entityTypeName = entityType.replace(".json",  "");
+            String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
+
+            logger.debug("Checking canonical XML function and envelope function and empty extraction: " + entityType);
+
+            DOMHandle handle =
+                    evalOneResult(
+                moduleImport(entityType) +
+                "let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
+                +"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
                 +"let $empty-extraction := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( <bah/> ) )"
-				+"return (xdmp:document-insert('"+entityTypeTestFileName+ "-envelope.xml', $envelope), " +
-						" xdmp:document-insert('"+entityTypeTestFileName+"-empty.xml' ,$empty-extraction), " +
-						"$canonical)",
-							new DOMHandle());
+                +"return (xdmp:document-insert('"+entityTypeTestFileName+ "-envelope.xml', $envelope), " +
+                        " xdmp:document-insert('"+entityTypeTestFileName+"-empty.xml' ,$empty-extraction), " +
+                        "$canonical)",
+                            new DOMHandle());
 
-			Document actualInstance = handle.get();
-			assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
-			
-			// dom returned from extraction must equal test instance.
-			String controlFilePath = "/test-instances/" + entityTypeTestFileName;
-			Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
+            Document actualInstance = handle.get();
+            assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
+
+            // dom returned from extraction must equal test instance.
+            String controlFilePath = "/test-instances/" + entityTypeTestFileName;
+            Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
 
             //logger.debug("Control doc");
-			//debugOutput(controlDom);
-			//logger.debug("Actual doc wrapped");
-			//debugOutput(actualInstance);
-			
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
-			
-			// test that XML from envelope returns the instance.
-			String testToInstance = moduleImport(entityType) 
-					+"es:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
-			handle = evalOneResult(testToInstance, new DOMHandle());
-			actualInstance = handle.get();
-			XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
+            //debugOutput(controlDom);
+            //logger.debug("Actual doc wrapped");
+            //debugOutput(actualInstance);
 
-			// extract instance, returned as JSON, matches instance-json-from-document
-			JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType) + "es:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
-			JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType) + "es:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
-			JsonNode instance = instanceJSONHandle.get();
-			JsonNode jsonInstance = instanceAsJSONHandle.get();
-			org.hamcrest.MatcherAssert.assertThat(instance, org.hamcrest.Matchers.equalTo(jsonInstance));
+            XMLUnit.setIgnoreWhitespace(true);
+            XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
 
-			// moreover, extracting the attachments also will result in identity.
-			DOMHandle domHandle = evalOneResult(moduleImport(entityType) + "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )", new DOMHandle());
-			Document originalDocument = domHandle.get();
-			XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
+            // test that XML from envelope returns the instance.
+            String testToInstance = moduleImport(entityType)
+                    +"es:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
+            handle = evalOneResult(testToInstance, new DOMHandle());
+            actualInstance = handle.get();
+            XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
 
-			logger.debug("Removing test data");
-			docMgr.delete(entityTypeTestFileName +"-envelope.xml", entityTypeTestFileName + "-empty.xml");
-			
-		}
-	}
+            // extract instance, returned as JSON, matches instance-json-from-document
+            JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType) + "es:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
+            JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType) + "es:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )", new JacksonHandle());
+            JsonNode instance = instanceJSONHandle.get();
+            JsonNode jsonInstance = instanceAsJSONHandle.get();
+            org.hamcrest.MatcherAssert.assertThat(instance, org.hamcrest.Matchers.equalTo(jsonInstance));
+
+            // moreover, extracting the attachments also will result in identity.
+            DOMHandle domHandle = evalOneResult(moduleImport(entityType) + "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )", new DOMHandle());
+            Document originalDocument = domHandle.get();
+            XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
+
+            logger.debug("Removing test data");
+            docMgr.delete(entityTypeTestFileName +"-envelope.xml", entityTypeTestFileName + "-empty.xml");
+
+        }
+    }
 
 
-	@Test
-	public void testEnvelopeFunction() throws TestEvalException {
-		
-		for (String entityType : converters.keySet()) {
-			String functionCall = moduleImport(entityType)
+    @Test
+    public void testEnvelopeFunction() throws TestEvalException {
+
+        for (String entityType : converters.keySet()) {
+            String functionCall = moduleImport(entityType)
                 +"let $p := map:map()"
                 +"let $_ := map:put($p, '$type', 'Order')"
                 +"let $_ := map:put($p, 'prop', 'val')"
                 +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
-			    +"return conv:instance-to-envelope( $p )";
-			
-			DOMHandle handle = evalOneResult(functionCall, new DOMHandle());
-			Document document = handle.get();
-			Element docElement = document.getDocumentElement();
-			assertEquals("envelope function verification", "envelope", docElement.getLocalName());
-			NodeList nl = docElement.getChildNodes();
-			assertEquals("Envelope must have two children.", 2, nl.getLength());
-			for (int i=0; i<nl.getLength(); i++) {
-				Node n = nl.item(i);
-				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					logger.debug("Checking node name " + n.getLocalName());
-					Element e = (Element) n;
-					assertTrue(e.getLocalName().equals("instance") || e.getLocalName().equals("attachments"));
-				}
-			}
-        }
-	
-	}
+                +"return conv:instance-to-envelope( $p )";
 
-	@AfterClass
-	public static void removeConversions() {
+            DOMHandle handle = evalOneResult(functionCall, new DOMHandle());
+            Document document = handle.get();
+            Element docElement = document.getDocumentElement();
+            assertEquals("envelope function verification", "envelope", docElement.getLocalName());
+            NodeList nl = docElement.getChildNodes();
+            assertEquals("Envelope must have two children.", 2, nl.getLength());
+            for (int i=0; i<nl.getLength(); i++) {
+                Node n = nl.item(i);
+                if (n.getNodeType() == Node.ELEMENT_NODE) {
+                    logger.debug("Checking node name " + n.getLocalName());
+                    Element e = (Element) n;
+                    assertTrue(e.getLocalName().equals("instance") || e.getLocalName().equals("attachments"));
+                }
+            }
+        }
+
+    }
+
+    @AfterClass
+    public static void removeConversions() {
         Set<String> toDelete = new HashSet<String>();
         converters.keySet().forEach(x -> toDelete.add("/ext/" + x.replaceAll("\\.(xml|json)", ".xqy")));
         //docMgr.delete(toDelete.toArray(new String[] {}));
-	}
+    }
 }

@@ -19,9 +19,9 @@ import com.marklogic.client.FailedRequestException;
 
 @SuppressWarnings("serial")
 public class TestEvalException extends RuntimeException {
-	
-	public TestEvalException(Exception e) {
-		super(e);
-	}
+
+    public TestEvalException(Exception e) {
+        super(e);
+    }
 
 }

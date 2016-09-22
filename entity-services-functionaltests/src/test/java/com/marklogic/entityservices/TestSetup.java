@@ -29,6 +29,8 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,22 +128,8 @@ public class TestSetup {
 	Collection<File> getTestResources(String dirName) {
 		URL filesUrl = _client.getClass().getResource(dirName);
 
-		Collection<File> files = new ArrayList<>();
-
-		try {
-			Files.walkFileTree(Paths.get(filesUrl.getPath()), new SimpleFileVisitor<Path>() {
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    files.add(file.toFile());
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-		} catch (IOException e) {
-			throw new TestEvalException(e);
-		}
-
-		return files;
+		return FileUtils.listFiles(new File(filesUrl.getPath()),
+	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	
 	private void loadInvalidEntityTypes() {

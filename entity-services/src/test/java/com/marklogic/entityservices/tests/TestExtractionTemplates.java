@@ -108,6 +108,9 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
             JsonNode body = schemaJson.get("view");
             assertEquals("View name", schemaName, body.get("name").asText());
             assertTrue("View has columns", body.get("columns").isArray());
+
+            logger.debug( body.asText() );
+            // assertTrue("Extraction has two triples", body.get("triples").isArray());
         }
     }
 
@@ -179,6 +182,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalReference'][tde:val='externalReference/OrderDetails']", template);
 
     }
+
 
     @AfterClass
     public static void removeTemplates() {

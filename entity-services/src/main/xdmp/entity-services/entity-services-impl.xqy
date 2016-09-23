@@ -201,7 +201,7 @@ declare function esi:model-graph-iri(
 ) as sem:iri
 {
     let $info := map:get($model, "info")
-    let $base-uri-prefix := esi:resolve-base-uri($info)
+    let $base-uri-prefix := esi:resolve-base-prefix($info)
     return
     sem:iri(
         concat( $base-uri-prefix,
@@ -870,11 +870,16 @@ declare function esi:extraction-template-generate(
                 </tde:row>
             </tde:rows>)
     let $array-rows := map:map()
+    let $triples-templates := map:map()
     let $_ := 
+        (: this is a long loop.  It creates row-based templates for each
+         :  entity-type name, as well as two triples that tie an entity
+         :  instance document to its type and document IRI :)
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
-        let $required-properties := (json:array-values(map:get($entity-type, "required")), $primary-key-name)
+        let $required-properties := ($primary-key-name, json:array-values(map:get($entity-type, "required")))
+        let $identifying-field-name := fn:head($required-properties)
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
         let $column-map := map:map()
@@ -915,39 +920,6 @@ declare function esi:extraction-template-generate(
                                 <tde:val>../{ $primary-key-name }</tde:val>
                             </tde:column>
                             {
-                            if ($is-ref and esi:ref-has-no-primary-key($model, $entity-type-name, $property-name))
-                            then 
-                                ()
-                            else if ($is-ref)
-                            then
-                                <tde:column>
-                                    { comment { "This column joins to primary key of",
-                                                esi:ref-type-name($model, $entity-type-name, $property-name) } }
-                                    <tde:name>{ $property-name }</tde:name>
-                                    <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
-                                    <tde:val>{ $ref-name }</tde:val>
-                                    {$is-nullable}
-                                </tde:column>
-                            else
-                                <tde:column>
-                                    { comment { "This column holds array values from property",
-                                                $primary-key-name, "of",
-                                                $entity-type-name } }
-                                    <tde:name>{ $property-name }</tde:name>
-                                    <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
-                                    <tde:val>.</tde:val>
-                                    {$is-nullable}
-                                </tde:column>,
-                            if ($is-external-ref)
-                            then
-                                <tde:column>
-                                    { comment { "This column joins to primary key of an external reference" } }
-                                    <tde:name>{ $property-name }</tde:name>
-                                    <tde:scalar-type>string</tde:scalar-type>
-                                    <tde:val>{ $ref-name }</tde:val>
-                                    {$is-nullable}
-                                </tde:column>
-                            else (),
                             if ($is-local-ref and esi:ref-has-no-primary-key($model, $entity-type-name, $property-name))
                             then 
                                 let $ref-type-name := esi:ref-type-name($model, $entity-type-name, $property-name)
@@ -960,7 +932,36 @@ declare function esi:extraction-template-generate(
                                             }
                                         )
                                 )
-                            else ()
+                            else if ($is-local-ref)
+                            then
+                                <tde:column>
+                                    { comment { "This column joins to primary key of",
+                                                esi:ref-type-name($model, $entity-type-name, $property-name) } }
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
+                                    <tde:val>{ $ref-name }</tde:val>
+                                    {$is-nullable}
+                                </tde:column>
+                            else
+                            if ($is-external-ref)
+                            then
+                                <tde:column>
+                                    { comment { "This column joins to primary key of an external reference" } }
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>string</tde:scalar-type>
+                                    <tde:val>{ $ref-name }</tde:val>
+                                    {$is-nullable}
+                                </tde:column>
+                            else
+                                <tde:column>
+                                    { comment { "This column holds array values from property",
+                                                $primary-key-name, "of",
+                                                $entity-type-name } }
+                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
+                                    <tde:val>.</tde:val>
+                                    {$is-nullable}
+                                </tde:column>
                             }
                         </tde:columns>
                       </tde:row>
@@ -968,9 +969,35 @@ declare function esi:extraction-template-generate(
                 </tde:template>
             )
         return 
+        (
+        if (exists($identifying-field-name))
+        then
+        map:put($triples-templates, $entity-type-name,
+            <tde:template>
+                <tde:context>./{ $entity-type-name }</tde:context>
+                <tde:vars>
+                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-iri($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $identifying-field-name })))</tde:val></tde:var>
+                </tde:vars>
+                <tde:triples>
+                    <tde:triple>
+                        <tde:subject><tde:val>$subject-iri</tde:val></tde:subject>
+                        <tde:predicate><tde:val>$RDF_TYPE</tde:val></tde:predicate>
+                        <tde:object><tde:val>sem:iri("{ esi:model-graph-iri($model) }/{ $entity-type-name }")</tde:val></tde:object>
+                    </tde:triple>
+                    <tde:triple>
+                        <tde:subject><tde:val>$subject-iri</tde:val></tde:subject>
+                        <tde:predicate><tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val></tde:predicate>
+                        <tde:object><tde:val>fn:base-uri(.)</tde:val></tde:object>
+                    </tde:triple>
+                </tde:triples>
+            </tde:template>)
+        else (),
         if (exists(map:keys($column-map)))
         then map:put($array-rows, $entity-type-name, $column-map)
         else ()
+        )
+
+
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows) 
         return
@@ -983,6 +1010,8 @@ declare function esi:extraction-template-generate(
                        "a primary key or at least one required property." }
         else 
 
+        (
+        map:get($triples-templates, $entity-type-name), 
         <tde:template>
             <tde:context>./{ $entity-type-name }</tde:context>
             { 
@@ -995,6 +1024,7 @@ declare function esi:extraction-template-generate(
             else ()
             }
         </tde:template>
+        )
     return
     <tde:template xmlns="http://marklogic.com/xdmp/tde">
         <tde:description>
@@ -1002,6 +1032,10 @@ Extraction Template Generated from Entity Type Document
 graph uri: {esi:model-graph-iri($model)}
         </tde:description>
         <tde:context>//es:instance</tde:context>
+        <tde:vars>
+            <tde:var><tde:name>RDF</tde:name><tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val></tde:var>
+            <tde:var><tde:name>RDF_TYPE</tde:name><tde:val>sem:iri(concat($RDF, "type"))</tde:val></tde:var>
+        </tde:vars>
         <tde:path-namespaces>
             <tde:path-namespace>
                 <tde:prefix>es</tde:prefix>
@@ -1170,5 +1204,12 @@ declare function esi:resolve-base-uri(
         if (fn:matches($base-uri, "[#/]$")) 
         then $base-uri 
         else concat($base-uri, "#")
+};
+
+declare private function esi:resolve-base-prefix(
+    $info as map:map
+) as xs:string
+{
+    replace(esi:resolve-base-uri($info), "#", "/")
 };
 

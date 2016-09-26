@@ -231,6 +231,33 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 					template);
 			
 		}
+	
+	@Test
+	public void verifyExtractionTempGenNoPKey() throws TestEvalException, SAXException, IOException, TransformerException {
+
+			String entityType = "no-primary-yes-required.json";
+			DOMHandle res = new DOMHandle();
+			logger.info("Validating extraction template for:" + entityType);
+			try {
+				res = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
+			} catch (TestEvalException e) {
+				throw new RuntimeException(e);
+			}
+			//logger.info(docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new StringHandle()).get());
+			//DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
+			Document template = res.get();
+			
+			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType.replace(".json",".xml"));
+			Document filesystemXML = builder.parse(is);
+
+
+            //debugOutput(template);
+
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					template);
+			
+	}
 
 	@AfterClass
 	public static void removeTemplates() {

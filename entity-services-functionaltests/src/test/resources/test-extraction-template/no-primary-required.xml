@@ -4,6 +4,16 @@
 Extraction Template Generated from Entity Type Document
 graph uri: http://no-prim-req#no-Primary-Required-0.0.1</description>
 <context>//es:instance</context>
+<vars>
+<var>
+<name>RDF</name>
+<val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+</var>
+<var>
+<name>RDF_TYPE</name>
+<val>sem:iri(concat($RDF, "type"))</val>
+</var>
+</vars>
 <path-namespaces>
 <path-namespace>
 <prefix>es</prefix>

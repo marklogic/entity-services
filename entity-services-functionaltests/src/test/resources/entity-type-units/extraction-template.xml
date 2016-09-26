@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
-  <description>
-Extraction Template Generated from Entity Type Document
+  <description>Extraction Template Generated from Entity Type Document
 graph uri: http://baloo/et-required-0.0.1</description>
   <context>//es:instance</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
   <path-namespaces>
     <path-namespace>
       <prefix>es</prefix>
@@ -13,29 +22,62 @@ graph uri: http://baloo/et-required-0.0.1</description>
   <templates>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./ETOne</context>
+      <vars>
+        <var>
+          <name>subject-iri</name>
+          <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(./a)))</val>
+        </var>
+      </vars>
+      <triples>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>$RDF_TYPE</val>
+          </predicate>
+          <object>
+            <val>sem:iri("http://baloo/et-required-0.0.1/ETOne")</val>
+          </object>
+        </triple>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+          </predicate>
+          <object>
+            <val>fn:base-uri(.)</val>
+          </object>
+        </triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./ETOne</context>
       <rows>
-	<row>
-	  <schema-name>et-required</schema-name>
-	  <view-name>ETOne</view-name>
-	  <columns>
-	    <column>
-	      <name>a</name>
-	      <scalar-type>integer</scalar-type>
-	      <val>a</val>
-	    </column>
-	    <column>
-	      <name>b</name>
-	      <scalar-type>string</scalar-type>
-	      <val>b</val>
-	    </column>
-	    <column>
-	      <name>c</name>
-	      <scalar-type>date</scalar-type>
-	      <val>c</val>
-		  <nullable>true</nullable>
-	    </column>
-	  </columns>
-	</row>
+        <row>
+          <schema-name>et-required</schema-name>
+          <view-name>ETOne</view-name>
+          <columns>
+            <column>
+              <name>a</name>
+              <scalar-type>integer</scalar-type>
+              <val>a</val>
+            </column>
+            <column>
+              <name>b</name>
+              <scalar-type>string</scalar-type>
+              <val>b</val>
+            </column>
+            <column>
+              <name>c</name>
+              <scalar-type>date</scalar-type>
+              <val>c</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
       </rows>
     </template>
   </templates>

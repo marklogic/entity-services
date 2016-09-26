@@ -1,8 +1,8 @@
 {  
    "info":{  
-      "title":"no-Primary-Required",
+      "title":"no-Primary-Yes-Required",
       "version":"0.0.1",
-      "baseUri":"http://no-prim-req"
+      "baseUri":"http://no-prim-yes-req"
    },
    "definitions":{  
       "Customer":{  
@@ -19,7 +19,8 @@
             "Address":{  
                "datatype":"string"
             }
-         }
+         },
+         "required": [ "CustomerID", "Address" ]
       },
       "Product":{  
          "properties":{  
@@ -38,7 +39,8 @@
             "Discontinued":{  
                "datatype":"boolean"
             }
-         }
+         },
+         "required": [ "ProductID" ]
       },
       "Order":{  
          "properties":{  
@@ -57,7 +59,8 @@
             "ShipAddress":{  
                "datatype":"string"
             }
-         }
+         },
+         "required": [ "OrderID" ]
       }
    }
 }

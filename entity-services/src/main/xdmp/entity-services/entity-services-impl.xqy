@@ -879,7 +879,6 @@ declare function esi:extraction-template-generate(
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $required-properties := ($primary-key-name, json:array-values(map:get($entity-type, "required")))
-        let $identifying-field-name := fn:head($required-properties)
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
         let $column-map := map:map()
@@ -970,13 +969,13 @@ declare function esi:extraction-template-generate(
             )
         return 
         (
-        if (exists($identifying-field-name))
+        if (exists($primary-key-name))
         then
         map:put($triples-templates, $entity-type-name,
             <tde:template>
                 <tde:context>./{ $entity-type-name }</tde:context>
                 <tde:vars>
-                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-iri($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $identifying-field-name })))</tde:val></tde:var>
+                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-iri($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
                 </tde:vars>
                 <tde:triples>
                     <tde:triple>

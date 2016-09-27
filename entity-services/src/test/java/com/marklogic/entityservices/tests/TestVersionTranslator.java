@@ -72,13 +72,15 @@ public class TestVersionTranslator extends EntityServicesTestBase {
         InputStream is = this.getClass().getResourceAsStream("/model-units/" + instance1);
         documentManager.write(instance1, new InputStreamHandle(is).withFormat(Format.XML));
 
-        DOMHandle domHandle = evalOneResult("import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-converter.xqy';" +
-                               "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';" +
-                "<x>{" +
+        DOMHandle domHandle = evalOneResult(
+            "<x>{" +
                 "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()," +
                 "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETTwo()=>m:instance-to-canonical-xml()," +
                 "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETThree()=>m:instance-to-canonical-xml()" +
-                "}</x>", new DOMHandle());
+                "}</x>",
+            "import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-converter.xqy';" +
+            "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';",
+            new DOMHandle());
 
         String expected = "instance-0.0.2.xml";
         is = this.getClass().getResourceAsStream("/model-units/" + expected);
@@ -87,6 +89,9 @@ public class TestVersionTranslator extends EntityServicesTestBase {
 
         //save("expected.xml", expectedDoc);
         //save("actual.xml", actualDoc);
+
+        // debugOutput(expectedDoc);
+        // debugOutput(actualDoc);
 
         XMLUnit.setIgnoreWhitespace(true);
         XMLAssert.assertXMLEqual("checking instance conversion to target", actualDoc, expectedDoc);

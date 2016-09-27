@@ -236,8 +236,8 @@ declare function es:instance-get-attachments(
 (:~
  : Fluent method to add key/value pairs to an entity instance, if the value exists.
  : @param $instance An instance of map:map to add a key to.
- : @param $property-key - The key to add to $instance.
- : @param $value - the value to add to $instance for the given key.
+ : @param $property-key  The key to add to $instance.
+ : @param $value The value to add to $instance for the given key.
 :)
 declare function es:optional(
     $instance as map:map,
@@ -250,4 +250,43 @@ declare function es:optional(
     map:put($instance, $property-key, $value) 
     else (),
     $instance
+};
+
+
+(:~
+ : Extract values from a sequence of nodes into an property of type array.
+ : If there are no nodes on input, then this function returns the empty sequence.
+ : @param $source-nodes The node(s) from which to extract values into an array.
+ : @param $fn The function to be applied to each sequence item
+ : @param $value - the value to add to $instance for the given key.
+ :)
+declare function es:extract-array(
+    $source-nodes as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($source-nodes))
+    then ()
+    else json:to-array($source-nodes ! $fn(.))
+};
+    
+(:~
+ : Creates a map:map instance that encodes a reference
+ : to another entity instance.
+ : The form of this reference is a map with the
+ : referent's type at key '$type' and the referent's
+ : identifier value (probably its primary key) at key
+ : '$ref'.
+ : @param $source-node A node that contains a reference to another entity instance.
+ :  This node has the form <Name>value</Name> where Name is the name of the 
+ : referent's entity type.
+ : @param $entity-type-name. The name of the referent's type.
+ :)
+declare function es:extract-reference(
+    $instance as map:map,
+    $source-node as item()?, 
+    $entity-type-name as xs:string
+) as map:map
+{
+    $instance=>map:with('$ref', $source-node/text())
 };

@@ -174,7 +174,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 // check once more for validating map representation
                 if (entityType.endsWith(".json")) {
                     try {
-                        handle = evalOneResult("es:model-validate(xdmp:fron-json(fn:doc('"+ entityType.toString()  + "')))", new JacksonHandle());
+                        handle = evalOneResult("es:model-validate(xdmp:from-json(fn:doc('"+ entityType.toString()  + "')))", new JacksonHandle());
                         fail("eval should throw an exception for invalid cases." + entityType);
                     } catch (TestEvalException e1) {
                         // pass

@@ -73,6 +73,10 @@ public abstract class EntityServicesTestBase {
     }
 
     protected static EvalResultIterator eval(String functionCall) throws TestEvalException {
+        return eval(functionCall, "");
+    }
+
+    protected static EvalResultIterator eval(String functionCall, String imports) throws TestEvalException {
 
         String entityServicesImport =
                 "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
@@ -80,8 +84,10 @@ public abstract class EntityServicesTestBase {
                 "import module namespace i = 'http://marklogic.com/entity-services-instance' at '/MarkLogic/entity-services/entity-services-instance.xqy';\n" +
                 "import module namespace sem = 'http://marklogic.com/semantics' at '/MarkLogic/semantics.xqy';\n";
 
+        String option = "declare option xdmp:mapping \"false\";";
+
         ServerEvaluationCall call =
-                client.newServerEval().xquery(entityServicesImport + functionCall);
+                client.newServerEval().xquery(entityServicesImport + imports + option + functionCall);
         EvalResultIterator results = null;
         try {
             results = call.eval();
@@ -91,8 +97,8 @@ public abstract class EntityServicesTestBase {
         return results;
     }
 
-    protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
-        EvalResultIterator results =  eval(functionCall);
+    protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, String imports, T handle) throws TestEvalException {
+        EvalResultIterator results =  eval(functionCall, imports);
         EvalResult result = null;
         if (results.hasNext()) {
             result = results.next();
@@ -100,6 +106,10 @@ public abstract class EntityServicesTestBase {
         } else {
             return null;
         }
+    }
+
+    protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) {
+        return evalOneResult(functionCall, "", handle);
     }
    
     protected void debugOutput(Document xmldoc) throws TransformerException {

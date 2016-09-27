@@ -4,6 +4,16 @@
 Extraction Template Generated from Entity Type Document
 graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
   <context>//es:instance</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
   <path-namespaces>
     <path-namespace>
       <prefix>es</prefix>
@@ -11,6 +21,39 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
     </path-namespace>
   </path-namespaces>
   <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Runner</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://grechaw.github.io/entity-types/Race-0.0.2/Runner/", fn:encode-for-uri(./name)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://grechaw.github.io/entity-types/Race-0.0.2/Runner")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
+    </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Runner</context>
       <rows>
@@ -43,6 +86,39 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	  </columns>
 	</row>
       </rows>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Race</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://grechaw.github.io/entity-types/Race-0.0.2/Race/", fn:encode-for-uri(./raceIri)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://grechaw.github.io/entity-types/Race-0.0.2/Race")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
     </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Race</context>
@@ -108,6 +184,39 @@ graph uri: http://grechaw.github.io/entity-types#Race-0.0.2</description>
 	  </rows>
 	</template>
       </templates>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Run</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://grechaw.github.io/entity-types/Race-0.0.2/Run/", fn:encode-for-uri(./id)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://grechaw.github.io/entity-types/Race-0.0.2/Run")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
     </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Run</context>

@@ -20,15 +20,16 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-08-29T17:10:26.288471-07:00                         :)
+(: Generated at timestamp: 2016-10-07T09:50:11.798636-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
-module namespace race 
+module namespace race
     = "http://grechaw.github.io/entity-types#Race-0.0.2";
 
-import module namespace es = "http://marklogic.com/entity-services" 
+import module namespace es = "http://marklogic.com/entity-services"
     at "/MarkLogic/entity-services/entity-services.xqy";
 
+declare option xdmp:mapping "false";
 
 
 (:  extract-instance-{entity-type} functions                                        :)
@@ -44,29 +45,36 @@ import module namespace es = "http://marklogic.com/entity-services"
 
 (:~
  : Creates a map:map instance from some source document.
- : @param $source-node  A document or node that contains 
+ : @param $source-node  A document or node that contains
  :   data for populating a Race
- : @return A map:map instance with extracted data and 
+ : @return A map:map instance with extracted data and
  :   metadata about the instance.
  :)
 declare function race:extract-instance-Race(
-    $source-node as node()
+    $source as node()?
 ) as map:map
 {
-(: if this $source-node is a reference to another instance, then short circuit.     :)
-    if (empty($source-node/element()/*))
-    then json:object()
+    let $source-node :=
+        if ( ($source instance of document-node())
+            or (exists($source/Race)))
+        then $source/node()
+        else $source
+    let $instance := json:object()
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', 'Race')
-        =>map:with('$ref', $source-node/Race/text())
-        =>map:with('$attachments', $source-node)
-(: otherwise populate this instance :)
-    else json:object()
+    return
+(: if this $source-node is a reference to another instance, then extract its key    :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+(: Otherwise, this source node contains instance data, so populate it.              :)
+    else
+        $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)
-        =>map:with('$type', 'Race')
-(: The following line adds the original source document as an attachment.           :)
-        =>map:with('$attachments', $source-node)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source-node))                             :)
 (: because this implementation uses an XML envelope.                                :)
 (:                                                                                  :)
 (: The following code populates the properties of the                               :)
@@ -87,44 +95,51 @@ declare function race:extract-instance-Race(
 (: The output of this function should structurally match the output of              :)
 (: es:model-get-test-instances($model)                                              :)
 (:                                                                                  :)
- =>es:optional('id',                     sem:iri($source-node/Race/id))
- =>   map:with('name',                   xs:string($source-node/Race/name))
+ =>es:optional('id',                     sem:iri($source-node/id))
+ =>   map:with('name',                   xs:string($source-node/name))
  (: The following property assigment comes from an external reference.               :)
  (: Its generated value probably requires developer attention.                       :)
- =>es:optional('raceCategory',           function($path) { json:object()=>map:with('$type', 'Running')=>map:with('$ref', $path/Running/text() ) }($source-node/Race/raceCategory))
+ =>es:optional('raceCategory',           function($path) { json:object()=>map:with('$type', 'Running')=>map:with('$ref', $path/Running/text() ) }($source-node/raceCategory))
  (: The following property is a local reference.                                     :)
- =>es:optional('comprisedOfRuns',        race:extract-array($source-node/Race/comprisedOfRuns, race:extract-instance-Run#1))
+ =>es:optional('comprisedOfRuns',        es:extract-array($source-node/comprisedOfRuns, race:extract-instance-Run#1))
  (: The following property is a local reference.                                     :)
- =>es:optional('wonByRunner',            race:extract-instance-Runner($source-node/Race/wonByRunner))
- =>   map:with('courseLength',           xs:decimal($source-node/Race/courseLength))
+ =>es:optional('wonByRunner',            race:extract-instance-Runner($source-node/wonByRunner))
+ =>   map:with('courseLength',           xs:decimal($source-node/courseLength))
 
 };
 
 (:~
  : Creates a map:map instance from some source document.
- : @param $source-node  A document or node that contains 
+ : @param $source-node  A document or node that contains
  :   data for populating a Run
- : @return A map:map instance with extracted data and 
+ : @return A map:map instance with extracted data and
  :   metadata about the instance.
  :)
 declare function race:extract-instance-Run(
-    $source-node as node()
+    $source as node()?
 ) as map:map
 {
-(: if this $source-node is a reference to another instance, then short circuit.     :)
-    if (empty($source-node/element()/*))
-    then json:object()
+    let $source-node :=
+        if ( ($source instance of document-node())
+            or (exists($source/Run)))
+        then $source/node()
+        else $source
+    let $instance := json:object()
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', 'Run')
-        =>map:with('$ref', $source-node/Run/text())
-        =>map:with('$attachments', $source-node)
-(: otherwise populate this instance :)
-    else json:object()
+    return
+(: if this $source-node is a reference to another instance, then extract its key    :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+(: Otherwise, this source node contains instance data, so populate it.              :)
+    else
+        $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)
-        =>map:with('$type', 'Run')
-(: The following line adds the original source document as an attachment.           :)
-        =>map:with('$attachments', $source-node)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source-node))                             :)
 (: because this implementation uses an XML envelope.                                :)
 (:                                                                                  :)
 (: The following code populates the properties of the                               :)
@@ -145,41 +160,48 @@ declare function race:extract-instance-Run(
 (: The output of this function should structurally match the output of              :)
 (: es:model-get-test-instances($model)                                              :)
 (:                                                                                  :)
- =>   map:with('id',                     sem:iri($source-node/Run/id))
- =>   map:with('date',                   xs:date($source-node/Run/date))
- =>   map:with('distance',               xs:decimal($source-node/Run/distance))
- =>es:optional('distanceLabel',          xs:string($source-node/Run/distanceLabel))
- =>es:optional('duration',               xs:dayTimeDuration($source-node/Run/duration))
+ =>   map:with('id',                     sem:iri($source-node/id))
+ =>   map:with('date',                   xs:date($source-node/date))
+ =>   map:with('distance',               xs:decimal($source-node/distance))
+ =>es:optional('distanceLabel',          xs:string($source-node/distanceLabel))
+ =>es:optional('duration',               xs:dayTimeDuration($source-node/duration))
  (: The following property is a local reference.                                     :)
- =>   map:with('runByRunner',            race:extract-instance-Runner($source-node/Run/runByRunner))
+ =>   map:with('runByRunner',            race:extract-instance-Runner($source-node/runByRunner))
 
 };
 
 (:~
  : Creates a map:map instance from some source document.
- : @param $source-node  A document or node that contains 
+ : @param $source-node  A document or node that contains
  :   data for populating a Runner
- : @return A map:map instance with extracted data and 
+ : @return A map:map instance with extracted data and
  :   metadata about the instance.
  :)
 declare function race:extract-instance-Runner(
-    $source-node as node()
+    $source as node()?
 ) as map:map
 {
-(: if this $source-node is a reference to another instance, then short circuit.     :)
-    if (empty($source-node/element()/*))
-    then json:object()
+    let $source-node :=
+        if ( ($source instance of document-node())
+            or (exists($source/Runner)))
+        then $source/node()
+        else $source
+    let $instance := json:object()
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', 'Runner')
-        =>map:with('$ref', $source-node/Runner/text())
-        =>map:with('$attachments', $source-node)
-(: otherwise populate this instance :)
-    else json:object()
+    return
+(: if this $source-node is a reference to another instance, then extract its key    :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+(: Otherwise, this source node contains instance data, so populate it.              :)
+    else
+        $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)
-        =>map:with('$type', 'Runner')
-(: The following line adds the original source document as an attachment.           :)
-        =>map:with('$attachments', $source-node)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source-node))                             :)
 (: because this implementation uses an XML envelope.                                :)
 (:                                                                                  :)
 (: The following code populates the properties of the                               :)
@@ -200,30 +222,15 @@ declare function race:extract-instance-Runner(
 (: The output of this function should structurally match the output of              :)
 (: es:model-get-test-instances($model)                                              :)
 (:                                                                                  :)
- =>es:optional('id',                     sem:iri($source-node/Runner/id))
- =>   map:with('name',                   xs:string($source-node/Runner/name))
- =>   map:with('age',                    xs:decimal($source-node/Runner/age))
- =>es:optional('gender',                 xs:string($source-node/Runner/gender))
+ =>es:optional('id',                     sem:iri($source-node/id))
+ =>   map:with('name',                   xs:string($source-node/name))
+ =>   map:with('age',                    xs:decimal($source-node/age))
+ =>es:optional('gender',                 xs:string($source-node/gender))
 
 };
 
 
 
-
-(:~
- : This function includes an array if there are items to put in it.
- : If there are no such items, then it returns an empty sequence.
- : TODO EA-4? move to es: module
- :)
-declare function race:extract-array(
-    $path-to-property as item()*,
-    $fn as function(*)
-) as json:array?
-{
-    if (empty($path-to-property))
-    then ()
-    else json:to-array($path-to-property ! $fn(.))
-};
 
 
 (:~
@@ -262,8 +269,12 @@ declare function race:instance-to-canonical-xml(
                         for $val in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then element { $key } { race:instance-to-canonical-xml($val) }
-                            else element { $key } { $val }
+                            then element { $key } { 
+                                attribute datatype { "array" },
+                                race:instance-to-canonical-xml($val) }
+                            else element { $key } {
+                                attribute datatype { "array" },
+                                $val }
                 (: A sequence of values should be simply treated as multiple elements :)
                 case item()+
                     return
@@ -274,7 +285,7 @@ declare function race:instance-to-canonical-xml(
 };
 
 
-(: 
+(:
  : Wraps a canonical instance (returned by instance-to-canonical-xml())
  : within an envelope patterned document, along with the source
  : document, which is stored in an attachments section.
@@ -296,7 +307,7 @@ declare function race:instance-to-envelope(
                 race:instance-to-canonical-xml($entity-instance)
             },
             element es:attachments {
-                map:get($entity-instance, "$attachments") 
+                map:get($entity-instance, "$attachments")
             }
         }
     }

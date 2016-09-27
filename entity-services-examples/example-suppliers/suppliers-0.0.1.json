@@ -1,0 +1,63 @@
+{
+  "info": {
+    "description": "The suppliers-and-parts schema of CJ Date's relational pedagogy.",
+    "title": "SP",
+    "version": "0.0.1",
+    "baseUri": "https://en.wikipedia.org/wiki/Suppliers_and_Parts_database"
+  },
+  "definitions": {
+    "Supplier":{
+      "properties":{
+        "sid":{
+          "datatype":"integer"
+        },
+        "sName":{
+          "datatype":"string"
+        },
+        "status":{
+          "datatype":"integer"
+        },
+        "city":{
+          "datatype":"string"
+        }
+      },
+      "primaryKey":"sid",
+      "required":["sName", "status", "city"]
+    },
+    "Part":{
+      "properties":{
+        "pid":{
+          "datatype":"integer"
+        },
+        "pName":{
+          "datatype":"string"
+        },
+        "color":{
+          "datatype":"integer"
+        },
+        "weight":{
+          "datatype":"decimal"
+        },
+        "city":{
+          "datatype":"string"
+        }
+      },
+      "primaryKey":"pid",
+      "required":["pName", "color", "weight", "city"]
+    },
+    "Shipment":{
+      "properties":{
+        "sid":{
+          "$ref":"#/definitions/Supplier"
+        },
+        "pid":{
+          "$ref":"#/definitions/Part"
+        },
+        "qty":{
+          "datatype":"integer"
+        }
+      },
+      "required":["sid", "pid", "qty"]
+    }
+  }
+}

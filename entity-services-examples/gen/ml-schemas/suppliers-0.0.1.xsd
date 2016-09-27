@@ -1,0 +1,59 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+  <xs:element name="sid" type="xs:integer"/>
+  <xs:element name="sName" type="xs:string"/>
+  <xs:element name="status" type="xs:integer"/>
+  <xs:element name="city" type="xs:string"/>
+  <xs:element name="pid" type="xs:integer"/>
+  <xs:element name="pName" type="xs:string"/>
+  <xs:element name="color" type="xs:integer"/>
+  <xs:element name="weight" type="xs:decimal"/>
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="city" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="sid" type="SupplierContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="pid" type="PartContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:element name="qty" type="xs:integer"/>
+  <xs:complexType name="SupplierContainerType">
+    <xs:sequence>
+      <xs:element ref="Supplier"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
+  <xs:complexType name="PartContainerType">
+    <xs:sequence>
+      <xs:element ref="Part"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
+  <xs:complexType name="SupplierType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="sid"/>
+      <xs:element ref="sName"/>
+      <xs:element ref="status"/>
+      <xs:element ref="city"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Supplier" type="SupplierType"/>
+  <xs:complexType name="PartType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="pid"/>
+      <xs:element ref="pName"/>
+      <xs:element ref="color"/>
+      <xs:element ref="weight"/>
+      <xs:element ref="city"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Part" type="PartType"/>
+  <xs:complexType name="ShipmentType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="sid"/>
+      <xs:element ref="pid"/>
+      <xs:element ref="qty"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Shipment" type="ShipmentType"/>
+</xs:schema>

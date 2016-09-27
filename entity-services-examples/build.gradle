@@ -1,13 +1,12 @@
 apply plugin: 'com.marklogic.ml-gradle'
-apply plugin: 'application'
 
-mainClassName = "com.marklogic.entityservices.examples.ExamplesLoader";
 repositories { 
   maven { 
     url "http://developer.marklogic.com/maven2"
   } 
 }
-dependencies{
+
+dependencies {
   compile('com.marklogic:java-client-api:4.0-SNAPSHOT') {
     exclude(group: 'com.google.guava')
   }
@@ -15,11 +14,29 @@ dependencies{
   compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')
 }
 
+// default run the person example
+def exampleDir = project.findProperty('exampleDir') ?: 'example'
+
 ext {
     mlAppConfig {
-        modulePaths.add("entity-services-examples/src/main/ml-modules")
+        modulePaths.add( exampleDir + "/ml-modules")
+        schemasPath = exampleDir + "/ml-schemas"
+        configPath = exampleDir + "/ml-config"
         createTriggersDatabase = false
     }
+}
+
+task runExamplePerson(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.examples.person.PersonExplorer'
+}
+task runExampleRaces(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.examples.race.ExamplesLoader'
+}
+task genCode(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.examples.CodeGenerator'
 }
 
 task wrapper(type: Wrapper) {

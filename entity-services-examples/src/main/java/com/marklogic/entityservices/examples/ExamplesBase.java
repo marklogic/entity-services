@@ -43,16 +43,20 @@ import com.marklogic.client.datamovement.WriteHostBatcher;
  * Base class for examples. See the importJSON method for generic loading of
  * JSON from a directory tree.
  */
-abstract class ExamplesBase {
+public abstract class ExamplesBase {
 
     private static Logger logger = LoggerFactory.getLogger(ExamplesBase.class);
 
     protected DataMovementManager moveMgr;
-    protected JobTicket ticket;
     protected ObjectMapper mapper;
     protected Properties props;
     protected DatabaseClient client;
 	protected String projectDir;
+
+    // this is just the first example, TODO refactor.
+    protected String getExampleName() {
+        return "example-races";
+    };
 
     public ExamplesBase() {
         props = new Properties();
@@ -68,39 +72,58 @@ abstract class ExamplesBase {
 
         Path currentRelativePath = Paths.get("");
         projectDir = currentRelativePath.toAbsolutePath().toString();
-        logger.debug("Current relative path is: " + projectDir);
-
         // FIXME this is a hack for intellij.
         if (!projectDir.endsWith("examples")) projectDir += "/entity-services-examples";
 
+        projectDir += "/" + getExampleName();
+        logger.debug("Project path is: " + projectDir);
         moveMgr = DataMovementManager.newInstance().withClient(client);
         mapper = new ObjectMapper();
 
     }
 
-    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-            for (Path entry : stream) {
-                if (entry.toFile().isDirectory()) {
-                    logger.info("Reading subdirectory " + entry.getFileName().toString());
-                    importOrDescend(entry, batcher, collection, format);
-                } else {
-                    logger.debug("Adding " + entry.getFileName().toString());
-                    String uri = entry.toUri().toString();
-                    if (collection != null) {
-                        DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
-                                .withPermission("race-reader", Capability.READ) //
-                                .withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
-                        batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
-                    } else {
-                        batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
-                    }
-                    logger.debug("Inserted " + format.toString() + " document " + uri);
-                }
-            }
+    private WriteHostBatcher newBatcher() {
+        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
+                .onBatchSuccess((client, batch) -> logger.info("Loaded batch of documents"))
+                .onBatchFailure((client, batch, throwable) -> {
+                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
+                    System.err.println(throwable.getMessage());
+                    System.err.println(
+                            Arrays.stream(batch.getItems())
+                                    .map(item -> item.getTargetUri())
+                                    .collect(Collectors.joining("\n")));
+                    // throwable.printStackTrace();
+                });
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        moveMgr.startJob(batcher);
+
+        return batcher;
+    }
+
+    private void importOrDescend(Path entry, WriteHostBatcher batcher, String collection, Format format) {
+        if (entry.toFile().isFile()) {
+            logger.debug("Adding " + entry.getFileName().toString());
+            String uri = entry.toUri().toString();
+            if (collection != null) {
+                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
+                    .withPermission("race-reader", Capability.READ) //
+                    .withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
+                batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
+            } else {
+                batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
+            }
+            logger.debug("Inserted " + format.toString() + " document " + uri);
+        }
+        else {
+            logger.info("Reading subdirectory " + entry.getFileName().toString());
+            // importOrDescend(entry, batcher, collection, format);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(entry)) {
+                for (Path child : stream) {
+                    importOrDescend(child, batcher, collection, format);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -113,21 +136,7 @@ abstract class ExamplesBase {
 
         logger.info("RDF Load Job started");
 
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(10).withThreadCount(1)
-                .withTransform(new ServerTransform("turtle-to-xml"))
-                .onBatchSuccess((client, batch) -> logger.info("Loaded rdf data batch"))
-                .onBatchFailure((client, batch, throwable) -> {
-                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-                    System.err.println(throwable.getMessage());
-                    System.err.println(
-                            Arrays.stream(batch.getItems())
-                                    .map(item -> item.getTargetUri())
-                                    .collect(Collectors.joining("\n"))
-                    );
-                    // throwable.printStackTrace();
-                });
-        ;
-        ticket = moveMgr.startJob(batcher);
+        WriteHostBatcher batcher = newBatcher().withTransform(new ServerTransform("turtle-to-xml"));
 
         importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
 
@@ -141,23 +150,21 @@ abstract class ExamplesBase {
 
     public void importJSON(Path jsonDirectory, String toCollection) throws IOException {
 
-        logger.info("job started.");
+        logger.info("JSON job started.");
 
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
-                .onBatchSuccess((client, batch) -> logger.info("Loaded batch of JSON documents"))
-                .onBatchFailure((client, batch, throwable) -> {
-                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-                    System.err.println(throwable.getMessage());
-                    System.err.println(
-                            Arrays.stream(batch.getItems())
-                                    .map(item -> item.getTargetUri())
-                                    .collect(Collectors.joining("\n")));
-                    // throwable.printStackTrace();
-                });
-
-        ticket = moveMgr.startJob(batcher);
-
+        WriteHostBatcher batcher = newBatcher();
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
+
+        batcher.flush();
+    }
+
+    public void importXML(Path xmlDirectory, String toCollection) throws IOException {
+
+        logger.info("JSON job started.");
+
+        WriteHostBatcher batcher = newBatcher();
+
+        importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
 
         batcher.flush();
     }

@@ -1,0 +1,5 @@
+{
+  "role-name": "race-internal",
+  "description": "Internal role used for amping",
+  "role": ["race-writer"]
+}

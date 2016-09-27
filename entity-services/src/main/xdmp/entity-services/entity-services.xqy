@@ -74,6 +74,14 @@ declare function es:model-to-xml(
     esi:model-to-xml($model)
 };
 
+(: experiment :)
+declare function es:model-to-triples(
+    $model as map:map
+)
+{
+    esi:model-to-triples($model)
+};
+    
 
 (:~
  : Generates an XQuery module that can be customized and used
@@ -274,4 +282,5 @@ declare function es:extract-array(
     then ()
     else json:to-array($source-nodes ! $fn(.))
 };
+
 

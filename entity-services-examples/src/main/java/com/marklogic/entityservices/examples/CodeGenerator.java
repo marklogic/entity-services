@@ -52,7 +52,6 @@ public class CodeGenerator extends ResourceManager {
         String projectDir = currentRelativePath.toAbsolutePath().toString();
         if (!projectDir.endsWith("examples")) projectDir += "/entity-services-examples";
         codeGenDir = projectDir + "/gen";
-        modelsDir = projectDir + "/data/models";
 
         client = DatabaseClientFactory.newClient(props.getProperty("mlHost"),
                 Integer.parseInt(props.getProperty("mlRestPort")), new DatabaseClientFactory.DigestAuthContext(
@@ -65,7 +64,6 @@ public class CodeGenerator extends ResourceManager {
         logger.info("Generating fresh artifacts for examples");
         RequestParameters parameters = new RequestParameters();
         parameters.add("codegen-dir", codeGenDir);
-        parameters.add("models-dir", modelsDir);
 
         StringHandle input = new StringHandle().with("{}").withFormat(Format.JSON);
 

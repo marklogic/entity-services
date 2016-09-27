@@ -1,4 +1,4 @@
-package com.marklogic.entityservices.examples;
+package com.marklogic.entityservices.examples.race;
 
 import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.query.StructuredQueryBuilder;
@@ -6,12 +6,13 @@ import com.marklogic.client.query.StructuredQueryDefinition;
 import com.marklogic.client.datamovement.ApplyTransformListener;
 import com.marklogic.client.datamovement.JobTicket;
 import com.marklogic.client.datamovement.QueryHostBatcher;
+import com.marklogic.entityservices.examples.ExamplesBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class Translator  extends ExamplesBase {
+public class Translator extends ExamplesBase {
 
     private static Logger logger = LoggerFactory.getLogger(Translator.class);
 

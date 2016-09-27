@@ -9,7 +9,11 @@
         </encoder>
     </appender>
 
-    <logger name="com.marklogic.client" level="INFO" additivity="false">
+    <logger name="ch.qos.logback" level="WARN" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="com.marklogic.client" level="WARN" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
@@ -25,7 +29,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
     
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
     

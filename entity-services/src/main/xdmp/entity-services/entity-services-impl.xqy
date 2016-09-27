@@ -363,6 +363,17 @@ declare function esi:model-from-xml(
         =>map:with("definitions", $definitions)
 };
 
+
+(: experiment :)
+declare function esi:model-to-triples(
+    $model as map:map
+) 
+{
+    tde:node-data-extract(xdmp:to-json($model))
+};
+
+
+
 (:
  : Returns a constant value for each data type
  : -- TODO make other value generator method

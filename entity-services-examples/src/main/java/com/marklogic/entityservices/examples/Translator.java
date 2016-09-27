@@ -3,9 +3,9 @@ package com.marklogic.entityservices.examples;
 import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.query.StructuredQueryBuilder;
 import com.marklogic.client.query.StructuredQueryDefinition;
-import com.marklogic.datamovement.ApplyTransformListener;
-import com.marklogic.datamovement.JobTicket;
-import com.marklogic.datamovement.QueryHostBatcher;
+import com.marklogic.client.datamovement.ApplyTransformListener;
+import com.marklogic.client.datamovement.JobTicket;
+import com.marklogic.client.datamovement.QueryHostBatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

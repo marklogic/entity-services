@@ -21,7 +21,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.marklogic.datamovement.*;
+import com.marklogic.client.datamovement.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

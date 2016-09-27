@@ -35,9 +35,9 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.DocumentMetadataHandle.Capability;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
-import com.marklogic.datamovement.DataMovementManager;
-import com.marklogic.datamovement.JobTicket;
-import com.marklogic.datamovement.WriteHostBatcher;
+import com.marklogic.client.datamovement.DataMovementManager;
+import com.marklogic.client.datamovement.JobTicket;
+import com.marklogic.client.datamovement.WriteHostBatcher;
 
 /**
  * Base class for examples. See the importJSON method for generic loading of

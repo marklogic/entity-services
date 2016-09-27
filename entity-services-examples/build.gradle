@@ -8,7 +8,7 @@ repositories {
   } 
 }
 dependencies{
-  compile('com.marklogic:data-movement:1.0-SNAPSHOT') {
+  compile('com.marklogic:java-client-api:4.0-SNAPSHOT') {
     exclude(group: 'com.google.guava')
   }
   compile('ch.qos.logback:logback-classic:1.1.7')

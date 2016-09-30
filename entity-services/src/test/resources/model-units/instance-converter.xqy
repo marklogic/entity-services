@@ -20,7 +20,7 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-09-29T14:47:00.605124-07:00                         :)
+(: Generated at timestamp: 2016-09-30T11:12:32.722741-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
 module namespace et-required
@@ -54,20 +54,17 @@ declare function et-required:extract-instance-ETOne(
     $source as node()?
 ) as map:map
 {
-xdmp:log(("HERE!", $source)),
+    let $source-node :=
+        if ($source instance of document-node()
+            or exists($source/ETOne))
+        then $source/node()
+        else $source
     let $instance := json:object()
         =>map:with('$attachments', $source)
 (: The previous line adds the original source document as an attachment.            :)
 (: If the source document is JSON, remove the previous line and replace it with     :)
 (: =>map:with('$attachments', xdmp:quote($source))                                  :)
         =>map:with('$type', 'ETOne')
-    let $source-node :=
-        if ($source instance of document-node()
-            or (exists($source/element())
-                and
-                fn:node-name($source/element()[1]) eq xs:QName('ETOne')))
-        then $source/node()
-        else $source
 (: if this $source-node is a reference to another instance, then extract its key :)
     return
     if (empty($source-node/*))

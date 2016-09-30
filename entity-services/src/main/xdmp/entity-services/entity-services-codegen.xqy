@@ -124,19 +124,17 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     $source as node()?
 ) as map:map
 {{
+    let $source-node :=
+        if ($source instance of document-node()
+            or exists($source/{$entity-type-name}))
+        then $source/node()
+        else $source
     let $instance := json:object()
         =>map:with('$attachments', $source)
 (: The previous line adds the original source document as an attachment.            :)
 (: If the source document is JSON, remove the previous line and replace it with     :)
 (: =>map:with('$attachments', xdmp:quote($source))                                  :)
         =>map:with('$type', '{ $entity-type-name }')
-    let $source-node :=
-        if ($source instance of document-node()
-            or (exists($source/element())
-                and
-                fn:node-name($source/element()[1]) eq xs:QName('{$entity-type-name}')))
-        then $source/node()
-        else $source
 (: if this $source-node is a reference to another instance, then extract its key :)
     return
     if (empty($source-node/*))

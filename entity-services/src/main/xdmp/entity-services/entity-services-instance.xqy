@@ -56,10 +56,20 @@ declare function inst:child-instance(
                             =>json:array-with(map:get($child, local-name($property)))
                             =>json:array-with(inst:child-instance($property/*)))
                 else
-                    map:put($child, local-name($property),
-                        if ($property/element())
-                        then inst:child-instance($property/element())
-                        else data($property))
+                    if ($property[@datatype eq "array"])
+                    then
+                        map:put($child, local-name($property),
+                            json:array()
+                            =>json:array-with(
+                                if ($property/element())
+                                then inst:child-instance($property/element())
+                                else data($property))
+                            )
+                    else
+                        map:put($child, local-name($property),
+                            if ($property/element())
+                            then inst:child-instance($property/element())
+                            else data($property))
         return $child
 };
 

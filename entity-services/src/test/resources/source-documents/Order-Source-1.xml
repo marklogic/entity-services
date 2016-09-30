@@ -1,13 +1,13 @@
 <Order>
     <orderId>10249</orderId>
     <orderDate>1996-07-05</orderDate>
-    <hasOrderDetails>
+    <hasOrderDetails datatype="array">
         <OrderDetails>
             <quantity>9</quantity>
             <productName>Chucks</productName>
         </OrderDetails>
     </hasOrderDetails>
-    <hasOrderDetails>
+    <hasOrderDetails datatype="array">
         <OrderDetails>
             <quantity>40</quantity>
             <productName>Capris</productName>

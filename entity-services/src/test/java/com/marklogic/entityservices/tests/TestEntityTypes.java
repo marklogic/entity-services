@@ -215,7 +215,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
      * If the entity type file name contains "invalid-" then it must
      * throw a validation exception.
      */
-    public void testModelXmlConverstion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    public void testModelXmlConversion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
             ObjectMapper mapper = new ObjectMapper();
             logger.info("Checking "+entityType);

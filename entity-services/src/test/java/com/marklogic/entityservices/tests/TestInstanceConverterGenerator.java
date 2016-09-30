@@ -292,7 +292,6 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
     }
 
     @Test
-    @Ignore
     public void testJSONSerialization() throws IOException, ParserConfigurationException, SAXException {
 
         String initialTest = "Order-0.0.4.json";
@@ -310,11 +309,39 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         evalOneResult(
             moduleImport(initialTest),
             "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-2.xml') ) )"
-            +"return xdmp:document-insert('Order-Source-2.xml-envelope.xml', $envelope) ",
+                +"return xdmp:document-insert('Order-Source-2.xml-envelope.xml', $envelope) ",
             new StringHandle());
 
         JacksonHandle instanceAsJSONHandle =
             evalOneResult("", "es:instance-json-from-document( doc('Order-Source-2.xml-envelope.xml') )", new JacksonHandle());
+
+        JsonNode jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+    }
+
+    @Test
+    public void testJSONEmptyArray() throws IOException, ParserConfigurationException, SAXException {
+
+        String initialTest = "Order-0.0.4.json";
+        String instanceDocument = "Order-Source-3.xml";
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document instanceWithArryayOfOne =
+            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-3.xml"));
+        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArryayOfOne));
+
+        JsonNode control = new ObjectMapper()
+            .readValue(
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-3.json"),
+                JsonNode.class);
+
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-3.xml') ) )"
+            +"return xdmp:document-insert('Order-Source-3.xml-envelope.xml', $envelope) ",
+            new StringHandle());
+
+        JacksonHandle instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-3.xml-envelope.xml') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));

@@ -20,7 +20,7 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-09-30T20:09:21.872239-07:00                         :)
+(: Generated at timestamp: 2016-10-04T10:23:37.501015-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
 module namespace et-required
@@ -141,8 +141,12 @@ declare function et-required:instance-to-canonical-xml(
                         for $val in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then element { $key } { et-required:instance-to-canonical-xml($val) }
-                            else element { $key } { $val }
+                            then element { $key } { 
+                                attribute datatype { "array" },
+                                et-required:instance-to-canonical-xml($val) }
+                            else element { $key } {
+                                attribute datatype { "array" },
+                                $val }
                 (: A sequence of values should be simply treated as multiple elements :)
                 case item()+
                     return

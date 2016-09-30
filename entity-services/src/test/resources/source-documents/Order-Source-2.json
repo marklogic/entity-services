@@ -1,0 +1,11 @@
+{
+  "orderId": "10248",
+  "orderDate": "1995-07-05",
+  "hasOrderDetails": [
+    {
+    "quantity": "40",
+    "productName": "Capris"
+    }
+  ]
+}
+

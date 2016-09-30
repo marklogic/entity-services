@@ -1,10 +1,12 @@
+<?xml version="1.0"?>
 <Order>
-<orderId>some string</orderId>
-<orderDate>2000-01-23</orderDate>
-<hasOrderDetails>
-<OrderDetails>
-<quantity>123</quantity>
-<productName>some string</productName>
-</OrderDetails>
-</hasOrderDetails>
+  <orderId>some string</orderId>
+  <orderDate>2000-01-23</orderDate>
+  <hasOrderDetails>
+    <OrderDetails>
+      <quantity>123</quantity>
+      <productName>some string</productName>
+    </OrderDetails>
+  </hasOrderDetails>
 </Order>
+

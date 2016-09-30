@@ -1,7 +1,9 @@
+<?xml version="1.0"?>
 <Order>
-<orderId>some string</orderId>
-<orderDate>2000-01-23</orderDate>
-<hasOrderDetails>
+  <orderId>some string</orderId>
+  <orderDate>2000-01-23</orderDate>
+  <hasOrderDetails>
     <OrderDetails>externally-referenced-instance</OrderDetails>
-</hasOrderDetails>
+  </hasOrderDetails>
 </Order>
+

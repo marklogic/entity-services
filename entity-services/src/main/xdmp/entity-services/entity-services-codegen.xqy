@@ -274,8 +274,12 @@ declare function {$prefix}:instance-to-canonical-xml(
                         for $val in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($val) }}
-                            else element {{ $key }} {{ $val }}
+                            then element {{ $key }} {{ 
+                                attribute datatype {{ "array" }},
+                                {$prefix}:instance-to-canonical-xml($val) }}
+                            else element {{ $key }} {{
+                                attribute datatype {{ "array" }},
+                                $val }}
                 (: A sequence of values should be simply treated as multiple elements :)
                 case item()+
                     return

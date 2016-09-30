@@ -24,6 +24,7 @@
         <es:primary-key>orderId</es:primary-key>
         <es:required>orderId</es:required>
         <es:required>orderDate</es:required>
+        <es:required>hasOrderDetails</es:required>
     </Order>
     <OrderDetails>
         <es:properties>

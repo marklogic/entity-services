@@ -91,7 +91,7 @@ public class TestVersionTranslator extends EntityServicesTestBase {
         // debugOutput(actualDoc);
 
         XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual("checking instance conversion to target", actualDoc, expectedDoc);
+        XMLAssert.assertXMLEqual("checking instance conversion to target", expectedDoc, actualDoc);
         //logger.info(handle.get());
 
 

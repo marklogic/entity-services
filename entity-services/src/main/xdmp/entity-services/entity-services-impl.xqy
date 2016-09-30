@@ -29,6 +29,7 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
+(: declare option xdmp:mapping "false"; :)
 
 declare private variable $esi:DEFAULT_BASE_URI := "http://example.org/";
 declare private variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;
@@ -465,7 +466,8 @@ declare function esi:create-test-value(
     $entity-name as xs:string,
     $property-name as xs:string,
     $property as map:map,
-    $depth as xs:int
+    $depth as xs:int,
+    $parent-type as xs:string
 ) as element()+
 {
     let $datatype := map:get($property,"datatype")
@@ -476,18 +478,20 @@ declare function esi:create-test-value(
         then
             if ($datatype eq "array")
             then 
-            (
-            esi:create-test-value($model, $entity-name, $property-name, $items, $depth) ,
-            esi:create-test-value($model, $entity-name, $property-name, $items, $depth) ,
-            esi:create-test-value($model, $entity-name, $property-name, $items, $depth) 
-            )
+                esi:create-test-value($model, $entity-name, $property-name, $items, $depth, "array")
             else 
-            element { $property-name } {
-                esi:create-test-value-from-datatype($datatype)
-            }
+                element { $property-name } {
+                    if ($parent-type eq "array")
+                    then attribute datatype { "array" }
+                    else (),
+                    esi:create-test-value-from-datatype($datatype)
+                }
         else if (exists($ref))
         then 
             element { $property-name } { 
+                if ($parent-type eq "array")
+                then attribute datatype { "array" }
+                else (),
                 esi:resolve-test-reference($model, $entity-name, $property-name, $depth) 
         }
         else 
@@ -509,7 +513,7 @@ declare function esi:create-test-instance(
                     =>map:get("properties")
             for $property in map:keys($properties)
             return
-                esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth)
+                esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth, "none")
         }
     else ()
 };
@@ -599,6 +603,83 @@ declare function esi:database-properties-generate(
     return xdmp:to-json($database-properties)
 };
 
+
+
+
+
+(: used to switch on datatype to provide the right XSD element for
+ : (scalar) arrays, IRIs and scalars
+ :)
+declare private function esi:element-for-datatype(
+    $property-name as xs:string, 
+    $datatype as xs:string
+) as element(xs:element)
+{
+    if ($datatype eq "iri")
+    then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
+    else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+};
+
+
+declare private function esi:array-element-for-datatype(
+    $reference-declarations as map:map,
+    $property-name as xs:string, 
+    $datatype as xs:string
+)
+{
+    (map:put($reference-declarations, $property-name || "ARRAY",
+        (
+        <xs:complexType name="{ $property-name }ArrayType">
+            <xs:simpleContent>
+                <xs:extension base="{ $property-name }SimpleType">
+                    <xs:attribute name="datatype" />
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>,
+        <xs:simpleType name="{ $property-name }SimpleType">
+            {
+            if ($datatype eq "iri")
+            then <xs:restriction base="sem:iri" />
+            else <xs:restriction base="xs:{ $datatype }" />
+            }
+        </xs:simpleType>
+        )),
+    <xs:element name="{ $property-name }" type="{ $property-name }ArrayType"/>
+    )
+};
+
+
+declare private function esi:element-for-reference(
+    $reference-declarations as map:map,
+    $property-name as xs:string, 
+    $ref-value as xs:string
+) as element(xs:element)
+{
+    let $ref-name := functx:substring-after-last($ref-value, "/")
+    return
+    if (contains($ref-value, "#/definitions/"))
+    then 
+        (map:put($reference-declarations, $ref-name || "CONTAINER",
+            <xs:complexType name="{ $ref-name }ContainerType">
+                <xs:sequence>
+                    <xs:element ref="{ $ref-name }" />
+                </xs:sequence>
+                <xs:attribute name="datatype" />
+            </xs:complexType>),
+        <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>)
+    else 
+        (map:put($reference-declarations, $ref-name || "REFERENCE", 
+             <xs:complexType name="{ $ref-name }ReferenceType">
+                <xs:sequence>
+                    <xs:element name="{ $ref-name }" type="xs:anyURI" />
+                </xs:sequence>
+                <xs:attribute name="datatype" />
+             </xs:complexType>),
+         <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
+};
+
+
+
 declare function esi:schema-generate(
     $model as map:map
 ) as element()*
@@ -619,20 +700,10 @@ declare function esi:schema-generate(
                 esi:wrap-duplicates($seen-keys, $property-name,
                     if (map:contains($property, "$ref"))
                     then 
-                        let $ref-value := map:get($property, "$ref")
-                        let $ref-name := functx:substring-after-last($ref-value, "/")
-                        return
-                        if (contains($ref-value, "#/definitions/"))
-                        then <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>
-                        else 
-                            (map:put($reference-declarations, $ref-name,
-                             <xs:complexType name="{ $ref-name }ReferenceType">
-                                <xs:sequence>
-                                    <xs:element name="{ $ref-name }" type="xs:anyURI" />
-                                </xs:sequence>
-                             </xs:complexType>
-                             ),
-                             <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
+                        esi:element-for-reference(
+                            $reference-declarations, 
+                            $property-name, 
+                            map:get($property, "$ref"))
                     else if (map:contains($property, "datatype"))
                     then
                         let $datatype := map:get($property, "datatype")
@@ -641,29 +712,16 @@ declare function esi:schema-generate(
                             if ($datatype eq "array")
                             then 
                                 if (map:contains($items-map, "$ref"))
-                                then
-                                    let $ref-value := map:get($items-map, "$ref")
-                                    let $ref-name := functx:substring-after-last($ref-value, "/")
-                                    return
-                                    if (contains($ref-value, "#/definitions/"))
-                                    then <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>
-                                    else 
-                                        (map:put($reference-declarations, $ref-name, 
-                                             <xs:complexType name="{ $ref-name }ReferenceType">
-                                                <xs:sequence>
-                                                    <xs:element name="{ $ref-name }" type="xs:anyURI" />
-                                                </xs:sequence>
-                                             </xs:complexType>),
-                                         <xs:element name="{ $property-name }" type="{ $ref-name }ReferenceType"/>)
+                                then esi:element-for-reference(
+                                    $reference-declarations, 
+                                    $property-name, 
+                                    map:get($items-map, "$ref"))
                                 else
-                                    let $datatype := map:get($items-map, "datatype")
-                                    return
-                                        if ($datatype eq "iri")
-                                        then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
-                                        else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
-                            else if ($datatype eq "iri")
-                            then <xs:element name="{ $property-name }" type="sem:{ $datatype }"/>
-                            else <xs:element name="{ $property-name }" type="xs:{ $datatype }"/>
+                                    esi:array-element-for-datatype(
+                                        $reference-declarations, 
+                                        $property-name, 
+                                        map:get($items-map, "datatype"))
+                            else esi:element-for-datatype($property-name, $datatype)
                     else ()
                 ))
     return
@@ -682,11 +740,6 @@ declare function esi:schema-generate(
         let $properties := map:get($entity-type, "properties")
         return
         (
-        <xs:complexType name="{ $entity-type-name }ContainerType">
-            <xs:sequence>
-                <xs:element ref="{ $entity-type-name }" />
-            </xs:sequence>
-        </xs:complexType>,
         <xs:complexType name="{ $entity-type-name }Type" mixed="true">
             <xs:sequence minOccurs="0">
             {

@@ -35,7 +35,7 @@ type:OrderDetails  a  es:EntityType ;
         es:version   "0.0.4" .
 
 order:hasOrderDetails
-        a         es:Property ;
+        a         es:Property, es:RequiredProperty ;
         es:datatype json:array ;
         es:items  <http://marklogic.com/entity-services/test/Order-0.0.4/Order/hasOrderDetails/items> ;
         es:title  "hasOrderDetails" .

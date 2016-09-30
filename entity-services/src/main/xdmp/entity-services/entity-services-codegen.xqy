@@ -125,21 +125,23 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
 ) as map:map
 {{
     let $source-node :=
-        if ($source instance of document-node()
-            or exists($source/{$entity-type-name}))
+        if ( ($source instance of document-node())
+            or (exists($source/{$entity-type-name})))
         then $source/node()
         else $source
     let $instance := json:object()
-        =>map:with('$attachments', $source)
-(: The previous line adds the original source document as an attachment.            :)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source))                                  :)
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', '{ $entity-type-name }')
-(: if this $source-node is a reference to another instance, then extract its key :)
     return
+(: if this $source-node is a reference to another instance, then extract its key    :)
     if (empty($source-node/*))
     then $instance=>map:with('$ref', $source-node/text())
-(: If this source node contains instance data, populate it.                         :)
+(: Otherwise, this source node contains instance data, so populate it.              :)
     else
         $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)

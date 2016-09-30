@@ -20,7 +20,7 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-09-30T11:12:32.722741-07:00                         :)
+(: Generated at timestamp: 2016-09-30T12:37:35.251622-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
 module namespace et-required
@@ -55,21 +55,23 @@ declare function et-required:extract-instance-ETOne(
 ) as map:map
 {
     let $source-node :=
-        if ($source instance of document-node()
-            or exists($source/ETOne))
+        if ( ($source instance of document-node())
+            or (exists($source/ETOne)))
         then $source/node()
         else $source
     let $instance := json:object()
-        =>map:with('$attachments', $source)
-(: The previous line adds the original source document as an attachment.            :)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source))                                  :)
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', 'ETOne')
-(: if this $source-node is a reference to another instance, then extract its key :)
     return
+(: if this $source-node is a reference to another instance, then extract its key    :)
     if (empty($source-node/*))
     then $instance=>map:with('$ref', $source-node/text())
-(: If this source node contains instance data, populate it.                         :)
+(: Otherwise, this source node contains instance data, so populate it.              :)
     else
         $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)

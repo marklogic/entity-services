@@ -124,7 +124,6 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     $source as node()?
 ) as map:map
 {{
-xdmp:log(("HERE!", $source)),
     let $instance := json:object()
         =>map:with('$attachments', $source)
 (: The previous line adds the original source document as an attachment.            :)

@@ -270,23 +270,3 @@ declare function es:extract-array(
     else json:to-array($source-nodes ! $fn(.))
 };
     
-(:~
- : Creates a map:map instance that encodes a reference
- : to another entity instance.
- : The form of this reference is a map with the
- : referent's type at key '$type' and the referent's
- : identifier value (probably its primary key) at key
- : '$ref'.
- : @param $source-node A node that contains a reference to another entity instance.
- :  This node has the form <Name>value</Name> where Name is the name of the 
- : referent's entity type.
- : @param $entity-type-name. The name of the referent's type.
- :)
-declare function es:extract-reference(
-    $instance as map:map,
-    $source-node as item()?, 
-    $entity-type-name as xs:string
-) as map:map
-{
-    $instance=>map:with('$ref', $source-node/text())
-};

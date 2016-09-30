@@ -67,7 +67,7 @@ public class TestRequired  extends EntityServicesTestBase {
 
         JacksonHandle handle;
 
-        handle = evalOneResult("fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
+        handle = evalOneResult("", "fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
         // save("/model-units/database-properties.json", handle.get());
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -83,7 +83,7 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testExtractionTemplatesRequired() throws TestEvalException, IOException, SAXException {
 
         DOMHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new DOMHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new DOMHandle());
         // String toWrite = evalOneResult("fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new StringHandle()).get();
         // save("/model-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/model-units/extraction-template.xml");
@@ -97,7 +97,7 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testSchemasRequired() throws IOException, TestEvalException, SAXException, TransformerException {
 
         DOMHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:schema-generate()", new DOMHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:schema-generate()", new DOMHandle());
         // String toWrite = evalOneResult("fn:doc( '" + entityType + "')=>es:schema-generate()", new StringHandle()).get();
         // save("/model-units/schema.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/model-units/schema.xml");
@@ -113,7 +113,7 @@ public class TestRequired  extends EntityServicesTestBase {
     public void testInstanceGenerator() throws IOException, TestEvalException {
 
         StringHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:instance-converter-generate()", new StringHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:instance-converter-generate()", new StringHandle());
         // save("/model-units/instance-converter.xqy", handle.get());
         compareLines("/model-units/instance-converter.xqy", handle.get());
     }

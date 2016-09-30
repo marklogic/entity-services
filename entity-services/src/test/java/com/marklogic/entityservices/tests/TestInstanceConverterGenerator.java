@@ -32,6 +32,7 @@ import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -97,7 +98,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             logger.info("Generating converter: " + entityType);
             StringHandle xqueryModule = new StringHandle();
             try {
-                xqueryModule = evalOneResult(" fn:doc( '"+entityType+"')=>es:instance-converter-generate()", xqueryModule);
+                xqueryModule = evalOneResult("", " fn:doc( '"+entityType+"')=>es:instance-converter-generate()", xqueryModule);
             } catch (TestEvalException e) {
                 throw new RuntimeException(e);
             }
@@ -126,7 +127,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         }
 
 
-        StringHandle moduleHandle =  evalOneResult("fn:doc( '"+ initialTest +"')=>es:instance-converter-generate()", new StringHandle());
+        StringHandle moduleHandle =  evalOneResult("", "fn:doc( '"+ initialTest +"')=>es:instance-converter-generate()", new StringHandle());
         // logger.debug(moduleHandle.get());
         HashMap<String, StringHandle> m = new HashMap<String, StringHandle>();
         m.put(initialTest, moduleHandle);
@@ -135,8 +136,9 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
         TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
         DOMHandle handle = evalOneResult(
+            "import module namespace conv = \"http://marklogic.com/entity-services/test#Order-0.0.4\" at \"/ext/Order-0.0.4.xqy\"; ",
             "conv:extract-instance-Order( doc('"+instanceDocument+"') )=>conv:instance-to-canonical-xml()",
-            "import module namespace conv = \"http://marklogic.com/entity-services/test#Order-0.0.4\" at \"/ext/Order-0.0.4.xqy\"; " , new DOMHandle());
+            new DOMHandle());
         Document extractInstanceResult = handle.get();
 
         debugOutput(extractInstanceResult);
@@ -206,14 +208,13 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
             DOMHandle handle =
                     evalOneResult(
-                 "let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
+                        moduleImport(entityType), "let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
                 +"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
                 +"let $empty-extraction := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( <bah/> ) )"
                 +"return (xdmp:document-insert('"+entityTypeTestFileName+ "-envelope.xml', $envelope), " +
                         " xdmp:document-insert('"+entityTypeTestFileName+"-empty.xml' ,$empty-extraction), " +
                         "$canonical)",
-                        moduleImport(entityType),
-                            new DOMHandle());
+                        new DOMHandle());
 
             Document actualInstance = handle.get();
             assertEquals("extract-canonical returns an instance", actualInstance.getDocumentElement().getLocalName(), entityTypeNoVersion);
@@ -232,25 +233,25 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
             // test that XML from envelope returns the instance.
             String testToInstance = "es:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
-            handle = evalOneResult(testToInstance, moduleImport(entityType), new DOMHandle());
+            handle = evalOneResult(moduleImport(entityType), testToInstance, new DOMHandle());
             actualInstance = handle.get();
             XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
 
             // extract instance, returned as JSON, matches instance-json-from-document
-            JacksonHandle instanceJSONHandle = evalOneResult("es:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
-                                                             moduleImport(entityType),
-                                                             new JacksonHandle());
-            JacksonHandle instanceAsJSONHandle = evalOneResult("es:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
-                                                             moduleImport(entityType),
-                                                             new JacksonHandle());
+            JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType),
+                "es:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
+                new JacksonHandle());
+            JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType),
+                "es:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
+                new JacksonHandle());
             JsonNode instance = instanceJSONHandle.get();
             JsonNode jsonInstance = instanceAsJSONHandle.get();
             org.hamcrest.MatcherAssert.assertThat(instance, org.hamcrest.Matchers.equalTo(jsonInstance));
 
             // moreover, extracting the attachments also will result in identity.
-            DOMHandle domHandle = evalOneResult("es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )",
-                                                moduleImport(entityType),
-                                                new DOMHandle());
+            DOMHandle domHandle = evalOneResult(moduleImport(entityType),
+                "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )",
+                new DOMHandle());
             Document originalDocument = domHandle.get();
             XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
 
@@ -272,7 +273,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
                 +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
                 +"return conv:instance-to-envelope( $p )";
 
-            DOMHandle handle = evalOneResult(functionCall, moduleImport(entityType), new DOMHandle());
+            DOMHandle handle = evalOneResult(moduleImport(entityType), functionCall, new DOMHandle());
             Document document = handle.get();
             Element docElement = document.getDocumentElement();
             assertEquals("envelope function verification", "envelope", docElement.getLocalName());
@@ -288,6 +289,35 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             }
         }
 
+    }
+
+    @Test
+    @Ignore
+    public void testJSONSerialization() throws IOException, ParserConfigurationException, SAXException {
+
+        String initialTest = "Order-0.0.4.json";
+        String instanceDocument = "Order-Source-2.xml";
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document instanceWithArryayOfOne =
+            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-2.xml"));
+        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArryayOfOne));
+
+        JsonNode control = new ObjectMapper()
+            .readValue(
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-2.json"),
+                JsonNode.class);
+
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-2.xml') ) )"
+            +"return xdmp:document-insert('Order-Source-2.xml-envelope.xml', $envelope) ",
+            new StringHandle());
+
+        JacksonHandle instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-2.xml-envelope.xml') )", new JacksonHandle());
+
+        JsonNode jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
     }
 
     @AfterClass

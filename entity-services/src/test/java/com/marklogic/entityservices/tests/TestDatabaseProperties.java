@@ -36,7 +36,7 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
     @Test
     public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
         JacksonHandle handle =
-                evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:database-properties-generate()", new JacksonHandle());
+                evalOneResult("","fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:database-properties-generate()", new JacksonHandle());
         JsonNode databaseConfiguration = handle.get();
 
         //logger.debug(databaseConfiguration.toString());

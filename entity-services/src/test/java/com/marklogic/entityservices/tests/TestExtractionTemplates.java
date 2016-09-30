@@ -79,7 +79,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
             logger.info("Generating extraction template: " + entityType);
             StringHandle template = new StringHandle();
             try {
-                template = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", template);
+                template = evalOneResult("", "fn:doc( '"+entityType+"')=>es:extraction-template-generate()", template);
             } catch (TestEvalException e) {
                 throw new RuntimeException(e);
             }
@@ -95,7 +95,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
             logger.info("Validating extraction template: " + entityType);
             JacksonHandle template = new JacksonHandle();
             try {
-                template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+                template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
             } catch (TestEvalException e) {
                 // Some of the tests do not generate views
                 if (schemaName.equals("NoProperties")) continue;

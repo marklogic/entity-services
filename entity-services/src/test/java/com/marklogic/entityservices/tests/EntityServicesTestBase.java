@@ -18,7 +18,6 @@ package com.marklogic.entityservices.tests;
 import java.io.*;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,8 +25,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.marklogic.client.query.StructuredQueryBuilder;
-import com.marklogic.client.query.StructuredQueryDefinition;
 import org.junit.AfterClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +36,6 @@ import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.marker.AbstractReadHandle;
-
-import static com.hp.hpl.jena.sparql.vocabulary.DOAP.os;
 
 
 public abstract class EntityServicesTestBase {
@@ -72,11 +67,7 @@ public abstract class EntityServicesTestBase {
         testSetup.teardownClass();
     }
 
-    protected static EvalResultIterator eval(String functionCall) throws TestEvalException {
-        return eval(functionCall, "");
-    }
-
-    protected static EvalResultIterator eval(String functionCall, String imports) throws TestEvalException {
+    protected static EvalResultIterator eval(String imports, String functionCall) throws TestEvalException {
 
         String entityServicesImport =
                 "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
@@ -97,8 +88,8 @@ public abstract class EntityServicesTestBase {
         return results;
     }
 
-    protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, String imports, T handle) throws TestEvalException {
-        EvalResultIterator results =  eval(functionCall, imports);
+    protected static <T extends AbstractReadHandle> T evalOneResult(String imports, String functionCall, T handle) throws TestEvalException {
+        EvalResultIterator results =  eval(imports, functionCall);
         EvalResult result = null;
         if (results.hasNext()) {
             result = results.next();
@@ -108,10 +99,6 @@ public abstract class EntityServicesTestBase {
         }
     }
 
-    protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) {
-        return evalOneResult(functionCall, "", handle);
-    }
-   
     protected void debugOutput(Document xmldoc) throws TransformerException {
         debugOutput(xmldoc, System.out);
     }

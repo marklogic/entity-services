@@ -51,7 +51,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
             String generateTestInstances = " fn:doc('"+entityType+"')=>es:model-from-xml()=>es:model-get-test-instances()";
 
             logger.info("Creating test instances from " + entityType);
-            EvalResultIterator results = eval(generateTestInstances);
+            EvalResultIterator results = eval("", generateTestInstances);
             int resultNumber = 0;
             while (results.hasNext()) {
                 EvalResult result =  results.next();

@@ -81,7 +81,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
         logger.info("Generating schema: " + entityType);
         StringHandle schema = new StringHandle();
         try {
-            schema = evalOneResult("fn:doc( '" + entityType + "')=>es:schema-generate()",
+            schema = evalOneResult("", "fn:doc( '" + entityType + "')=>es:schema-generate()",
                     schema);
         } catch (TestEvalException e) {
             throw new RuntimeException(e);
@@ -106,7 +106,7 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
             String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-0.xml");
 
             storeSchema(entityType, schemas.get(entityType));
-            DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
+            DOMHandle validateResult = evalOneResult("", "validate strict { doc('" + testInstanceName + "') }",
                     new DOMHandle());
 
             InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
@@ -129,10 +129,10 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
         String integerValidates = "<ETTwo><a>123</a></ETTwo>";
         String stringShouldnt = "<ETTwo><a>asdf</a></ETTwo>";
 
-        DOMHandle validateResult = evalOneResult("validate strict { " + integerValidates + "}", new DOMHandle());
+        DOMHandle validateResult = evalOneResult("", "validate strict { " + integerValidates + "}", new DOMHandle());
         //debugOutput(validateResult.get());
         try {
-            validateResult = evalOneResult("validate strict { " + stringShouldnt + "}", new DOMHandle());
+            validateResult = evalOneResult("", "validate strict { " + stringShouldnt + "}", new DOMHandle());
             fail("Should be a validation error here.");
         } catch (TestEvalException e) {
             //pass

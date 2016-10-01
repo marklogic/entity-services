@@ -201,6 +201,20 @@ declare function esi:model-graph-iri(
 ) as sem:iri
 {
     let $info := map:get($model, "info")
+    let $base-uri-prefix := esi:resolve-base-uri($info)
+    return
+    sem:iri(
+        concat( $base-uri-prefix,
+               map:get($info, "title"),
+               "-" ,
+               map:get($info, "version")))
+};
+
+declare function esi:model-graph-prefix(
+    $model as map:map
+) as sem:iri
+{
+    let $info := map:get($model, "info")
     let $base-uri-prefix := esi:resolve-base-prefix($info)
     return
     sem:iri(
@@ -209,6 +223,7 @@ declare function esi:model-graph-iri(
                "-" ,
                map:get($info, "version")))
 };
+
 
 
 declare private function esi:element-name-to-key(
@@ -975,13 +990,13 @@ declare function esi:extraction-template-generate(
             <tde:template>
                 <tde:context>./{ $entity-type-name }</tde:context>
                 <tde:vars>
-                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-iri($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
+                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
                 </tde:vars>
                 <tde:triples>
                     <tde:triple>
                         <tde:subject><tde:val>$subject-iri</tde:val></tde:subject>
                         <tde:predicate><tde:val>$RDF_TYPE</tde:val></tde:predicate>
-                        <tde:object><tde:val>sem:iri("{ esi:model-graph-iri($model) }/{ $entity-type-name }")</tde:val></tde:object>
+                        <tde:object><tde:val>sem:iri("{ esi:model-graph-prefix($model) }/{ $entity-type-name }")</tde:val></tde:object>
                     </tde:triple>
                     <tde:triple>
                         <tde:subject><tde:val>$subject-iri</tde:val></tde:subject>

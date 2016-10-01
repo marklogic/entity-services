@@ -2,7 +2,7 @@
   "info": {
     "title": "et-required",
     "version": "0.0.1",
-    "baseUri": "http://baloo/"
+    "baseUri": "http://baloo"
   },
   "definitions": {
     "ETOne": {

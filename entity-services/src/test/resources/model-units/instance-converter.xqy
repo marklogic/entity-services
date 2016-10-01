@@ -20,11 +20,11 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-09-30T12:37:35.251622-07:00                         :)
+(: Generated at timestamp: 2016-09-30T20:09:21.872239-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
 module namespace et-required
-    = "http://baloo/et-required-0.0.1";
+    = "http://baloo#et-required-0.0.1";
 
 import module namespace es = "http://marklogic.com/entity-services"
     at "/MarkLogic/entity-services/entity-services.xqy";

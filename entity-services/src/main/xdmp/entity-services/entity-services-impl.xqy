@@ -44,12 +44,6 @@ declare private variable $esi:keys-to-element-names as map:map :=
     let $_ := map:put($m, "$ref", xs:QName("es:ref"))
     return $m;
 
-declare private variable $esi:element-names-to-keys as map:map :=
-    let $m := map:map()
-    let $_ := map:keys($esi:keys-to-element-names) !
-        map:put($m, local-name-from-QName(map:get($esi:keys-to-element-names, .)), .)
-    return $m;
-
 declare private variable $esi:entity-services-prefix := "http://marklogic.com/entity-services#";
 
 declare private variable $esi:model-schematron :=
@@ -226,16 +220,6 @@ declare function esi:model-graph-prefix(
 };
 
 
-
-declare private function esi:element-name-to-key(
-    $key as xs:string
-) as xs:string
-{
-    if (map:contains($esi:element-names-to-keys, $key))
-    then map:get($esi:element-names-to-keys, $key)
-    else $key
-};
-
 declare private function esi:key-convert-to-xml(
     $map as map:map?,
     $key as item()
@@ -376,7 +360,6 @@ declare function esi:model-from-xml(
     return json:object()
         =>map:with("info", $info)
         =>map:with("definitions", $definitions)
-    
 };
 
 (: 

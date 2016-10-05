@@ -20,15 +20,16 @@ xquery version "1.0-ml";
 (: database of your application, and check it into your source control system.      :)
 (:                                                                                  :)
 (: Modification History:                                                            :)
-(: Generated at timestamp: 2016-08-08T12:04:27.212622-07:00                         :)
+(: Generated at timestamp: 2016-10-01T21:15:17.691943-07:00                         :)
 (:   Persisted by AUTHOR                                                            :)
 (:   Date: DATE                                                                     :)
-module namespace et-required 
+module namespace et-required
     = "http://baloo/et-required-0.0.1";
 
-import module namespace es = "http://marklogic.com/entity-services" 
+import module namespace es = "http://marklogic.com/entity-services"
     at "/MarkLogic/entity-services/entity-services.xqy";
 
+declare option xdmp:mapping "false";
 
 
 (:  extract-instance-{entity-type} functions                                        :)
@@ -44,29 +45,36 @@ import module namespace es = "http://marklogic.com/entity-services"
 
 (:~
  : Creates a map:map instance from some source document.
- : @param $source-node  A document or node that contains 
+ : @param $source-node  A document or node that contains
  :   data for populating a ETOne
- : @return A map:map instance with extracted data and 
+ : @return A map:map instance with extracted data and
  :   metadata about the instance.
  :)
 declare function et-required:extract-instance-ETOne(
-    $source-node as node()
+    $source as node()?
 ) as map:map
 {
-(: if this $source-node is a reference to another instance, then short circuit.     :)
-    if (empty($source-node/element()/*))
-    then json:object()
+    let $source-node :=
+        if ( ($source instance of document-node())
+            or (exists($source/ETOne)))
+        then $source/node()
+        else $source
+    let $instance := json:object()
+(: Add the original source document as an attachment.                               :)
+        =>map:with('$attachments',
+            typeswitch($source-node)
+            case object-node() return xdmp:quote($source)
+            case array-node() return xdmp:quote($source)
+            default return $source)
         =>map:with('$type', 'ETOne')
-        =>map:with('$ref', $source-node/ETOne/text())
-        =>map:with('$attachments', $source-node)
-(: otherwise populate this instance :)
-    else json:object()
+    return
+(: if this $source-node is a reference to another instance, then extract its key    :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+(: Otherwise, this source node contains instance data, so populate it.              :)
+    else
+        $instance
 (: The following line identifies the type of this instance.  Do not change it.      :)
-        =>map:with('$type', 'ETOne')
-(: The following line adds the original source document as an attachment.           :)
-        =>map:with('$attachments', $source-node)
-(: If the source document is JSON, remove the previous line and replace it with     :)
-(: =>map:with('$attachments', xdmp:quote($source-node))                             :)
 (: because this implementation uses an XML envelope.                                :)
 (:                                                                                  :)
 (: The following code populates the properties of the                               :)
@@ -87,29 +95,14 @@ declare function et-required:extract-instance-ETOne(
 (: The output of this function should structurally match the output of              :)
 (: es:model-get-test-instances($model)                                              :)
 (:                                                                                  :)
- =>   map:with('a',                      xs:integer($source-node/ETOne/a))
- =>   map:with('b',                      xs:string($source-node/ETOne/b))
- =>es:optional('c',                      xs:date($source-node/ETOne/c))
+ =>   map:with('a',                      xs:integer($source-node/a))
+ =>   map:with('b',                      xs:string($source-node/b))
+ =>es:optional('c',                      xs:date($source-node/c))
 
 };
 
 
 
-
-(:~
- : This function includes an array if there are items to put in it.
- : If there are no such items, then it returns an empty sequence.
- : TODO EA-4? move to es: module
- :)
-declare function et-required:extract-array(
-    $path-to-property as item()*,
-    $fn as function(*)
-) as json:array?
-{
-    if (empty($path-to-property))
-    then ()
-    else json:to-array($path-to-property ! $fn(.))
-};
 
 
 (:~
@@ -160,7 +153,7 @@ declare function et-required:instance-to-canonical-xml(
 };
 
 
-(: 
+(:
  : Wraps a canonical instance (returned by instance-to-canonical-xml())
  : within an envelope patterned document, along with the source
  : document, which is stored in an attachments section.
@@ -182,7 +175,7 @@ declare function et-required:instance-to-envelope(
                 et-required:instance-to-canonical-xml($entity-instance)
             },
             element es:attachments {
-                map:get($entity-instance, "$attachments") 
+                map:get($entity-instance, "$attachments")
             }
         }
     }

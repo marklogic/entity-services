@@ -140,7 +140,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
                 if ( entityType.toString().endsWith(".json")) {
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
                 	JsonNode original = mapper.readValue(is, JsonNode.class);
-                	JacksonHandle handle  = evalOneResult("fn:doc('"+ entityType  + "')", new JacksonHandle());
+                	JacksonHandle handle  = evalOneResult("", "fn:doc('"+ entityType  + "')", new JacksonHandle());
             		JsonNode actual = handle.get();
                     
                     checkRoundTrip("Original node should equal serialized retrieved one: " +entityType, original, actual);
@@ -163,13 +163,13 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
                
             	JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
-            	JacksonHandle handle  = evalOneResult("es:model-from-xml(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+            	JacksonHandle handle  = evalOneResult("", "es:model-from-xml(fn:doc('"+ entityType  + "'))", new JacksonHandle());
         		JsonNode jsonActual = handle.get();
                 checkRoundTrip("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
         		
                 InputStream xmlControl = this.getClass().getResourceAsStream("/xml-entity-types/"+entityType);
             	Document xmloriginal = builder.parse(xmlControl);
-            	DOMHandle xmlhandle  = evalOneResult("es:model-to-xml(es:model-from-xml(fn:doc('"+ entityType  + "')))", new DOMHandle());
+            	DOMHandle xmlhandle  = evalOneResult("", "es:model-to-xml(es:model-from-xml(fn:doc('"+ entityType  + "')))", new DOMHandle());
         		Document xmlactual = xmlhandle.get();
         		
         		//debugOutput(xmloriginal);
@@ -187,7 +187,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-definitions-empty.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-definitions-empty.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-definitions-empty.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -203,7 +203,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-definitions-empty.xml");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-definitions-empty.xml'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-definitions-empty.xml'))", new JacksonHandle());	
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -219,7 +219,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-baseUri-colon.xml");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-baseUri-colon.xml'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-baseUri-colon.xml'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid baseUri. invalid-baseUri-colon.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -235,7 +235,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking bug38858.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('bug38858.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('bug38858.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid ET.");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -251,7 +251,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-casesensitive-datatype.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-casesensitive-datatype.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-casesensitive-datatype.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases. invalid-casesensitive-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -266,7 +266,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking for no arg");
         		JacksonHandle handle = null;
         	    try {
-        			handle = evalOneResult("es:model-validate(fn:doc(''))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc(''))", new JacksonHandle());	
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
         		    assertTrue("Must contain XDMP-ARGTYPE but got: "+e.getMessage(),e.getMessage().contains("XDMP-URI"));
@@ -280,7 +280,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
           		logger.info("Checking binary: New-Year-Sayings.jpg" );
            		JacksonHandle handle = null;
           		try {
-           			handle = evalOneResult("es:model-validate(fn:doc('New-Year-Sayings.jpg'))", new JacksonHandle());	
+           			handle = evalOneResult("", "es:model-validate(fn:doc('New-Year-Sayings.jpg'))", new JacksonHandle());	
                		fail("eval should throw an exception for invalid cases. New-Year-Sayings.jpg");
            		} catch (TestEvalException e) {
            			logger.info(e.getMessage());             			
@@ -294,7 +294,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-datatype.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-datatype.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-datatype.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -308,7 +308,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-datatype.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-datatype.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-datatype.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -322,7 +322,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 				logger.info("Checking invalid-bad-datatype.xml");
 				JacksonHandle handle = null;
 				try {
-					handle = evalOneResult("es:model-validate(fn:doc('invalid-bad-datatype.xml'))", new JacksonHandle());	
+					handle = evalOneResult("", "es:model-validate(fn:doc('invalid-bad-datatype.xml'))", new JacksonHandle());	
 					fail("eval should throw an exception for unsupported datatypes");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
@@ -337,7 +337,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-bad-datatype.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-bad-datatype.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-bad-datatype.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases. invalid-bad-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -353,7 +353,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-title-whiteSpace.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-title-whiteSpace.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-title-whiteSpace.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases. invalid-title-whiteSpace.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -369,7 +369,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-range-index.json");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-range-index.json'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-range-index.json'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases. invalid-range-index.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -385,7 +385,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             	logger.info("Checking invalid-range-index.xml");
             	JacksonHandle handle = null;
             	try {
-        			handle = evalOneResult("es:model-validate(fn:doc('invalid-range-index.xml'))", new JacksonHandle());	
+        			handle = evalOneResult("", "es:model-validate(fn:doc('invalid-range-index.xml'))", new JacksonHandle());	
             		fail("eval should throw an exception for invalid cases. invalid-range-index.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
@@ -400,7 +400,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 				logger.info("Checking invalid-missing-info.xml");
 				JacksonHandle handle = null;
 				try {
-					handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-info.xml'))", new JacksonHandle());	
+					handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-info.xml'))", new JacksonHandle());	
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
@@ -414,7 +414,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 				logger.info("Checking invalid-missing-info.json");
 				JacksonHandle handle = null;
 				try {
-					handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-info.json'))", new JacksonHandle());	
+					handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-info.json'))", new JacksonHandle());	
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
@@ -428,7 +428,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-datatype-ref-together.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-datatype-ref-together.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-datatype-ref-together.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -442,7 +442,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-datatype-ref-together.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-datatype-ref-together.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-datatype-ref-together.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -456,7 +456,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-title.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-title.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-title.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-title.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -470,7 +470,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-title.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-title.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-title.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-title.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -484,7 +484,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-definitions.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-definitions.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-definitions.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -498,7 +498,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-definitions.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-definitions.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-definitions.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -512,7 +512,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-version.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-version.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-version.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-version.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -526,7 +526,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-version.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-version.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-version.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-version.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -540,7 +540,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-multiple-primarykey.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-multiple-primarykey.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-multiple-primarykey.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-multiple-primarykey.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -554,7 +554,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-multiple-pkey.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-multiple-pkey.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-multiple-pkey.json'))", new JacksonHandle());	
     				logger.info("After eval");
     				fail("eval should throw an exception for invalid cases: invalid-multiple-pkey.json");
     			} catch (TestEvalException e) {
@@ -569,7 +569,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-info-notobject.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-info-notobject.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-info-notobject.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-info-notobject.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -583,7 +583,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-info-notobject.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-info-notobject.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-info-notobject.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-info-notobject.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -597,7 +597,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-primary-key-as-ref.json");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-primary-key-as-ref.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-primary-key-as-ref.json'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-primary-key-as-ref.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -612,7 +612,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking invalid-missing-items-when-datatype-array.xml");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-items-when-datatype-array.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-items-when-datatype-array.xml'))", new JacksonHandle());	
     				fail("eval should throw an exception for invalid cases: invalid-missing-items-when-datatype-array.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -626,7 +626,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking bug38517");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate('valid-datatype-array.xml')", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate('valid-datatype-array.xml')", new JacksonHandle());	
     				fail("eval should throw an ES-MODEL-INVALID exception for model-validate() with a document");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -640,7 +640,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-to-xml() with no args");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-to-xml()", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-to-xml()", new JacksonHandle());	
     				fail("eval should throw XDMP-TOOFEWARGS exception for model-to-xml() with no args");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -654,7 +654,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-to-xml() with too many args");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-to-xml(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-to-xml(fn:doc('valid-datatype-array.xml'),fn:doc('valid-datatype-array.json'))", new JacksonHandle());	
     				fail("eval should throw XDMP-TOOMANYARGS exception for model-to-xml() with no args");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -668,7 +668,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-validate() with schematron error");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-missing-version.xml'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-version.xml'))", new JacksonHandle());	
     				fail("eval should throw ES-MODEL-INVALID  exception for model-validate() with schematron error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -779,7 +779,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-validate() with rangeIndex error");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:database-properties-generate(es:model-validate(fn:doc('invalid-db-prop-rangeindex.json')))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:database-properties-generate(es:model-validate(fn:doc('invalid-db-prop-rangeindex.json')))", new JacksonHandle());	
     				//fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -793,7 +793,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-validate() with rangeIndex error");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-bug38353.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-bug38353.json'))", new JacksonHandle());	
     				
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -807,7 +807,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			logger.info("Checking model-validate() with rangeIndex error");
     			JacksonHandle handle = null;
     			try {
-    				handle = evalOneResult("es:model-validate(fn:doc('invalid-required.json'))", new JacksonHandle());	
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-required.json'))", new JacksonHandle());	
     				//fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
@@ -831,7 +831,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		Document expectedXML = builder.parse(xmlFile);
 		String evalXML =  "es:model-to-xml(es:model-validate(fn:doc('" + entityTypeFile + "')))";
 		
-		DOMHandle handle = evalOneResult(evalXML, new DOMHandle());
+		DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
 		Document actualXML = handle.get();
 		XMLUnit.setIgnoreWhitespace(true);
 		//debugOutput(expectedXML);
@@ -852,7 +852,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
      */
     
 	private void checkTriples(String entityTypeUri) throws TestEvalException {
-        InputStreamHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
+        InputStreamHandle rdfHandle = evalOneResult("", "xdmp:set-response-output-method('n-triples'), xdmp:quote(esi:extract-triples(fn:doc('"+entityTypeUri + "')))", new InputStreamHandle() );
 
         Graph actualTriples = GraphFactory.createGraphMem();
         RDFDataMgr.read(actualTriples, rdfHandle.get(), Lang.NTRIPLES);

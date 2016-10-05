@@ -121,7 +121,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			logger.info("Generating version translator module for : " + source + " & " + target);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:version-translator-generate(fn:doc('"+source+"'),fn:doc('"+target+"'))", xqueryModule);
+				xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc('"+source+"'),fn:doc('"+target+"'))", xqueryModule);
 				//logger.info("Ver Trans Gen for "+part+" : \n"+xqueryModule.get());
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
@@ -149,6 +149,8 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
                         softly.assertThat(expectedLine)
                                 .as("Mismatch in conversion module line " + Long.toString(i++))
                                 .isEqualToIgnoringWhitespace(line);
+                } else {
+                    fail("Expected result has more lines than actual results");
                 }
             }
             softly.assertAll();
@@ -161,8 +163,8 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		for (String entityTypeName : conversionModules.keySet()) {
 			
 			String actualDoc = conversionModules.get(entityTypeName).get();
-			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
+			//logger.info(actualDoc+"\n************************************************************\n");
 			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		}
@@ -175,7 +177,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
@@ -196,7 +198,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
@@ -213,7 +215,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	public void testMissingSrc() {
 		logger.info("Checking version-translator-generate() with a missing document node");
 		try {
-			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			evalOneResult("", "es:version-translator-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with a missing document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -225,7 +227,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	public void testInvalidETDocAsSrcTgt() {
 		logger.info("Checking version-translator-generate() with invalid document node");
 		try {
-			evalOneResult("es:version-translator-generate(es:model-validate(fn:doc('invalid-missing-info.json')),es:model-validate(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
+			evalOneResult("", "es:version-translator-generate(es:model-validate(fn:doc('invalid-missing-info.json')),es:model-validate(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with invalid document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -241,7 +243,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));

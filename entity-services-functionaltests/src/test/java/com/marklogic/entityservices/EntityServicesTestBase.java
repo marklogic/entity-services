@@ -15,19 +15,20 @@
  */
 package com.marklogic.entityservices;
 
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import com.marklogic.client.query.StructuredQueryBuilder;
+import com.marklogic.client.query.StructuredQueryDefinition;
+import org.junit.AfterClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -38,6 +39,8 @@ import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.marker.AbstractReadHandle;
+
+import static com.hp.hpl.jena.sparql.vocabulary.DOAP.os;
 
 
 public abstract class EntityServicesTestBase {
@@ -72,34 +75,38 @@ public abstract class EntityServicesTestBase {
 		testSetup.teardownClass();
 	}
 	
-	public static EvalResultIterator eval(String functionCall) throws TestEvalException {
-	    
-	    String entityServicesImport = 
-	            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
-	    		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
-	
-	    ServerEvaluationCall call = 
-	            client.newServerEval().xquery(entityServicesImport + functionCall);
-	    EvalResultIterator results = null;
-	    try {
-	    	results = call.eval();
-	    } catch (FailedRequestException e) {
-	    	throw new TestEvalException(e);
-	    }
-	    return results;
-	}
+    protected static EvalResultIterator eval(String imports, String functionCall) throws TestEvalException {
 
-	protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
-		EvalResultIterator results =  eval(functionCall);
-		EvalResult result = null;
-		if (results.hasNext()) {
-			result = results.next();
-			return result.get(handle);
-		} else {
-			return null;
-		}
-	}
-   
+        String entityServicesImport =
+                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
+                "import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n" +
+                "import module namespace i = 'http://marklogic.com/entity-services-instance' at '/MarkLogic/entity-services/entity-services-instance.xqy';\n" +
+                "import module namespace sem = 'http://marklogic.com/semantics' at '/MarkLogic/semantics.xqy';\n";
+
+        String option = "declare option xdmp:mapping \"false\";";
+
+        ServerEvaluationCall call =
+                client.newServerEval().xquery(entityServicesImport + imports + option + functionCall);
+        EvalResultIterator results = null;
+        try {
+            results = call.eval();
+        } catch (FailedRequestException e) {
+            throw new TestEvalException(e);
+        }
+        return results;
+    }
+
+    protected static <T extends AbstractReadHandle> T evalOneResult(String imports, String functionCall, T handle) throws TestEvalException {
+        EvalResultIterator results =  eval(imports, functionCall);
+        EvalResult result = null;
+        if (results.hasNext()) {
+            result = results.next();
+            return result.get(handle);
+        } else {
+            return null;
+        }
+    }
+
 	protected void debugOutput(Document xmldoc) throws TransformerException {
 		debugOutput(xmldoc, System.out);
 	}

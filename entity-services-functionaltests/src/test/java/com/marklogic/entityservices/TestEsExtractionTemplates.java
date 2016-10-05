@@ -83,7 +83,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
-				template = evalOneResult("es:model-from-xml( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
+				template = evalOneResult("", "es:model-from-xml( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
 			} catch (TestEvalException e) {
 				System.out.println("Generating extrtaction template"+entityType);
 				throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template = new JacksonHandle();
 			try {
-				template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+				template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName + " didn't exist");
 			}
@@ -120,7 +120,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			//logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template2 = new JacksonHandle();
 			try {
-				template2 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName2+"')", template2);
+				template2 = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName2+"')", template2);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName2 + " didn't exist");
 			}
@@ -138,7 +138,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			//logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template3 = new JacksonHandle();
 			try {
-				template3 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName3+"')", template3);
+				template3 = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName3+"')", template3);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName3 + " didn't exist");
 			}
@@ -163,7 +163,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template = new JacksonHandle();
 			try {
-				template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+				template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName + " didn't exist");
 			}
@@ -212,7 +212,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			DOMHandle res = new DOMHandle();
 			logger.info("Validating extraction template for:" + entityType);
 			try {
-				res = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
+				res = evalOneResult("", "fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -239,7 +239,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			DOMHandle res = new DOMHandle();
 			logger.info("Validating extraction template for:" + entityType);
 			try {
-				res = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
+				res = evalOneResult("", "fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}

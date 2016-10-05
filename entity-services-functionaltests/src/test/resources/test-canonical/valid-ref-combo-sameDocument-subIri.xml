@@ -1,7 +1,6 @@
 <Order>
 <CustomerID>
-<Customer>
-</Customer>
+<Customer>VINET</Customer>
 </CustomerID>
 <OrderDate>1996-07-04T14:25:55</OrderDate>
 <ShipAddress>59 rue de l'Abbaye</ShipAddress>

@@ -1,7 +1,7 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
 Extraction Template Generated from Entity Type Document
-graph uri: http://marklogic.com/testing-entity-type/DBProp-Ref-Same-0.0.1</description>
+graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</description>
   <context>//es:instance</context>
   <vars>
     <var>

@@ -1,11 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Order>
-<CustomerID>
-<Customer>VINET</Customer>
-</CustomerID>
-<OrderDate>1996-07-04T14:25:55</OrderDate>
-<ShipAddress>59 rue de l'Abbaye</ShipAddress>
-<OrderDetails>
-<OrderDetails>
-</OrderDetails>
-</OrderDetails>
+  <CustomerID>
+    <Customer>VINET</Customer>
+  </CustomerID>
+  <OrderDate>1996-07-04T14:25:55</OrderDate>
+  <ShipAddress>59 rue de l'Abbaye</ShipAddress>
+  <OrderDetails datatype="array">
+    <OrderDetails />
+  </OrderDetails>
 </Order>

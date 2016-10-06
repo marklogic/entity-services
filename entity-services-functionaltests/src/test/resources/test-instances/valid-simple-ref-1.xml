@@ -8,19 +8,7 @@
 </productName>
 <OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
 <ShipAddress>some string</ShipAddress>
-<orderDetails>
-<OrderDetails>
-<quantity>123</quantity>
-<productName>some string</productName>
-</OrderDetails>
-</orderDetails>
-<orderDetails>
-<OrderDetails>
-<quantity>123</quantity>
-<productName>some string</productName>
-</OrderDetails>
-</orderDetails>
-<orderDetails>
+<orderDetails datatype="array">
 <OrderDetails>
 <quantity>123</quantity>
 <productName>some string</productName>

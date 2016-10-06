@@ -14,23 +14,7 @@
 <dateofOrder>2000-01-23T17:00:26.789186-08:00</dateofOrder>
 <CustSince>P1D</CustSince>
 <DaysofSurfing>123</DaysofSurfing>
-<ProductsPurchased>
-<Product>
-<ProductName>some string</ProductName>
-<UnitPrice>123</UnitPrice>
-<SupplierID>123</SupplierID>
-<Discontinued>true</Discontinued>
-</Product>
-</ProductsPurchased>
-<ProductsPurchased>
-<Product>
-<ProductName>some string</ProductName>
-<UnitPrice>123</UnitPrice>
-<SupplierID>123</SupplierID>
-<Discontinued>true</Discontinued>
-</Product>
-</ProductsPurchased>
-<ProductsPurchased>
+<ProductsPurchased datatype="array">
 <Product>
 <ProductName>some string</ProductName>
 <UnitPrice>123</UnitPrice>

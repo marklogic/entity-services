@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -124,7 +122,6 @@ public class TestSetup {
     
     
 
-	@SuppressWarnings("unchecked")
 	Collection<File> getTestResources(String dirName) {
 		URL filesUrl = _client.getClass().getResource(dirName);
 

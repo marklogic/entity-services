@@ -2,7 +2,6 @@ package com.marklogic.entityservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.util.*;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
 
 /**
  * This class tests the various artifacts for required vs. non-required handling.

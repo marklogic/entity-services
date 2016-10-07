@@ -90,8 +90,6 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-//import com.marklogic.entityservices.tests.TestEvalException;
-import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 
 @SuppressWarnings("unused")

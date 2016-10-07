@@ -63,18 +63,11 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		docMgr.write(moduleName, schemaHandle);
 	}
 
-	private static void removeSchema(String entityTypeName) {
-		logger.debug("Removing schema " + entityTypeName);
-		String moduleName = entityTypeName.replaceAll("\\.(xml|json)", ".xsd");
-		docMgr.delete(moduleName);
-	}
-
 	private static Map<String, StringHandle> generateSchemas() {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
-					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {
 				continue;
 			}
 
@@ -95,11 +88,9 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			// primary-key-as-a-ref.xml is commented for bug 40666
-			// valid-ref-value-as-nonString.json is commented for bug 40904
 			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
-					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")||
-					entityType.contains("primary-key-as")||entityType.contains("valid-ref-value")) {
+			        ||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")
+			    ) {
 				continue;
 			}
 			
@@ -113,7 +104,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-"+i+".xml");
 				logger.info("Validating for instance: "+testInstanceName);
 				try{
-				DOMHandle validateResult = evalOneResult("",
+				DOMHandle validateResult = evalOneResult("import schema \"\" at \""+entityType.replaceAll("\\.(xml|json)", ".xsd")+"\";\n",
 					"validate strict { doc('" + testInstanceName + "') }", new DOMHandle());
 				
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
@@ -126,8 +117,6 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 					throw new RuntimeException("Error validating "+entityType,e);
 				}	
 			}
-			
-			removeSchema(entityType);
 
 		}
 

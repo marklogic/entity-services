@@ -18,8 +18,6 @@ package com.marklogic.entityservices;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -51,13 +49,10 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 	@Test
 	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
-			String entityTypeLocation = null;
+			//String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
-			// primary-key-as-a-ref.xml is commented for bug 40666
-			// valid-ref-value-as-nonString.json is commented for bug 40904
-			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||
-					entityType.startsWith("primary-key-")||entityType.startsWith("valid-ref-value")) { continue; }
+			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }
 			
 			String generateTestInstances = "es:model-get-test-instances( es:model-from-xml( fn:doc('"+entityType+"') ) )";
 			

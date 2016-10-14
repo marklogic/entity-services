@@ -122,7 +122,7 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 	public void testSPARQLEntityType() throws JsonGenerationException, JsonMappingException, IOException {
 		
 		// This test verifies that EntityType doc SchemaCompleteEntityType-0.0.1 has all the ET in it and version and title
-		String assertEachEntityTypeHasProperties =  "PREFIX t: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/>"
+		String assertEachEntityTypeHasProperties =  "PREFIX t: <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/>"
 				+"SELECT ?p ?o "
 				+"WHERE {  t:OrderDetails ?p ?o    }"
 				+"order by ?s";
@@ -140,19 +140,19 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		
 		//Entity type has property ProductName
 		assertEquals("http://marklogic.com/entity-services#property", bindings.get(1).get("p").get("value").asText());
-		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/productName", bindings.get(1).get("o").get("value").asText());
+		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/productName", bindings.get(1).get("o").get("value").asText());
 		
-		//Entity type has property ProductName
+		//Entity type has primaryKey quantity
 		assertEquals("http://marklogic.com/entity-services#primaryKey", bindings.get(2).get("p").get("value").asText());
-		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/quantity", bindings.get(2).get("o").get("value").asText());
+		assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/quantity", bindings.get(2).get("o").get("value").asText());
      
 		//Entity type has property quantity
 	    assertEquals("http://marklogic.com/entity-services#property", bindings.get(3).get("p").get("value").asText());
-	    assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/quantity", bindings.get(3).get("o").get("value").asText());
+	    assertEquals("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/quantity", bindings.get(3).get("o").get("value").asText());
 	
 	   //Entity type has version
 	    assertEquals("http://marklogic.com/entity-services#version", bindings.get(4).get("p").get("value").asText());
-	    assertEquals("0.0.1", bindings.get(4).get("o").get("value").asText());
+	    assertEquals("0.0.2", bindings.get(4).get("o").get("value").asText());
 	    
 	    //Entity type has title
 	    assertEquals("http://marklogic.com/entity-services#title", bindings.get(5).get("p").get("value").asText());

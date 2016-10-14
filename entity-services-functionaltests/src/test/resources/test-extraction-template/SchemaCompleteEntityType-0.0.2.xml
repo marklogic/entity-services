@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
-graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.1</description>
+graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.2</description>
   <context>//es:instance</context>
   <vars>
     <var>
@@ -25,7 +25,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
       <vars>
         <var>
           <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/", fn:encode-for-uri(./orderId)))</val>
+          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType/", fn:encode-for-uri(./orderId)))</val>
         </var>
       </vars>
       <triples>
@@ -37,7 +37,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
             <val>$RDF_TYPE</val>
           </predicate>
           <object>
-            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType")</val>
+            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType")</val>
           </object>
         </triple>
         <triple>
@@ -397,7 +397,7 @@ This column joins to primary key of an external reference
       <vars>
         <var>
           <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails/", fn:encode-for-uri(./quantity)))</val>
+          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/", fn:encode-for-uri(./quantity)))</val>
         </var>
       </vars>
       <triples>
@@ -409,7 +409,7 @@ This column joins to primary key of an external reference
             <val>$RDF_TYPE</val>
           </predicate>
           <object>
-            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/OrderDetails")</val>
+            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails")</val>
           </object>
         </triple>
         <triple>

@@ -141,7 +141,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		}
 	}
 
-	//@AfterClass
+	@AfterClass
 	public static void cleanupSchemas() {
 		for (String entityType : schemas.keySet()) {
 

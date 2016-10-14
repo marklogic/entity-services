@@ -1,5 +1,5 @@
 (:
- Copyright 2002-2016 MarkLogic Corporation.  All Rights Reserved. 
+ Copyright 2002-2016 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ declare function es:model-validate(
  : Creates a model from an XML document or element
  : For JSON documents, this is equivalent to xdmp:json with validation.
  : For XML documents, we transform the input as well.
- : 
+ :
  : @param $node A JSON or XML document containing an entity model.
  :)
 declare function es:model-from-xml(
@@ -58,7 +58,7 @@ declare function es:model-from-xml(
 ) as map:map
 {
     if ($node instance of document-node())
-    then 
+    then
         esi:model-from-xml($node/node())
     else esi:model-from-xml($node)
 };
@@ -89,7 +89,7 @@ declare function es:instance-converter-generate(
 };
 
 (:~
- : Generate one test instance in XML for each entity type in the 
+ : Generate one test instance in XML for each entity type in the
  : model.
  : @param A model.
  :)
@@ -105,8 +105,8 @@ declare function es:model-get-test-instances(
 (:~
  : Generate a JSON node that can be used with the Management Client API
  : to configure a database for this model
- : Portions of this complete database properties file can be used 
- : as building-blocks for the completed database properties 
+ : Portions of this complete database properties file can be used
+ : as building-blocks for the completed database properties
  : index configuration.
  : @param A model.
  :)
@@ -156,7 +156,7 @@ declare function es:extraction-template-generate(
  :)
 declare function es:search-options-generate(
     $model as map:map
-) 
+)
 {
     esi:search-options-generate($model)
 };
@@ -179,7 +179,7 @@ declare function es:version-translator-generate(
 
 
 (:~
- : Given a document, gets the instance data 
+ : Given a document, gets the instance data
  : from it and returns instances as maps.
  : @param a document, usually es:envelope.
  : @return zero or more entity instances extracted from the document.
@@ -193,7 +193,7 @@ declare function es:instance-from-document(
 
 (:~
  : Return the canonical XML representation of an instance from
- : a document.  This function does not transform; it's just a 
+ : a document.  This function does not transform; it's just a
  : projection of elements from a document.
  : @param a document, usually es:envelope.
  : @return zero or more elements that represent instances.
@@ -245,10 +245,15 @@ declare function es:optional(
     $value as item()*
 ) as map:map
 {
-    if (exists($value))
-    then 
-    map:put($instance, $property-key, $value) 
-    else (),
+    typeswitch($value)
+    case empty-sequence() return ()
+    (: this case handles empty extractions :)
+    case map:map return
+        if (map:contains($value, "$ref") and empty(map:get($value, "$ref")))
+        then ()
+        else map:put($instance, $property-key, $value)
+    default return map:put($instance, $property-key, $value)
+    ,
     $instance
 };
 
@@ -269,4 +274,4 @@ declare function es:extract-array(
     then ()
     else json:to-array($source-nodes ! $fn(.))
 };
-    
+

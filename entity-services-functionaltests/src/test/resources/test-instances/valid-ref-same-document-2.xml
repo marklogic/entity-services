@@ -5,10 +5,10 @@
 <ShipAddress>some string</ShipAddress>
 <OrderDetails datatype="array">
 <OrderDetail>
-<ProductID>
+<productID>
 <Product>some string</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
+</productID>
+<unitPrice>123</unitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>
 </OrderDetails>

@@ -232,9 +232,9 @@
             <OrderID>
                <es:datatype>integer</es:datatype>
             </OrderID>
-            <productName>
+            <prodName>
                <es:ref>#/definitions/OrderDetails</es:ref>
-            </productName>
+            </prodName>
             <OrderDate>
                <es:datatype>dateTime</es:datatype>
             </OrderDate>
@@ -251,7 +251,7 @@
          <es:primary-key>OrderID</es:primary-key>
          <es:required>OrderID</es:required>
          <es:range-index>OrderDate</es:range-index>
-         <es:range-index>productName</es:range-index>
+         <es:range-index>prodName</es:range-index>
          <es:range-index>OrderID</es:range-index>
       </Order>
       <OrderDetails>

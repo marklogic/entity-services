@@ -88,9 +88,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
-			        ||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")
-			    ) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {
 				continue;
 			}
 			
@@ -143,7 +141,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		}
 	}
 
-	@AfterClass
+	//@AfterClass
 	public static void cleanupSchemas() {
 		for (String entityType : schemas.keySet()) {
 

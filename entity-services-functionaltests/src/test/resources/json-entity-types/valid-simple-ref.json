@@ -86,7 +86,7 @@
             "OrderID":{  
                "datatype":"integer"
             },
-            "productName":{  
+            "prodName":{  
                "$ref":"#/definitions/OrderDetails"
             },
             "OrderDate":{  
@@ -104,7 +104,7 @@
          },
          "primaryKey":"OrderID",
          "required":["OrderID"],
-         "rangeIndex":["OrderDate", "productName", "OrderID"]
+         "rangeIndex":["OrderDate", "prodName", "OrderID"]
     },
     "OrderDetails": {
       "properties": {

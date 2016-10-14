@@ -66,10 +66,10 @@
       },
       "OrderDetail":{  
          "properties":{  
-            "ProductID":{  
+            "productID":{  
                "$ref":"#/definitions/Product"
             },
-            "UnitPrice":{  
+            "unitPrice":{  
                "datatype":"integer"
             },
             "Quantity":{  

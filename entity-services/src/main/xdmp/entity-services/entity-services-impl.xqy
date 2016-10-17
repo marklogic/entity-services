@@ -51,8 +51,8 @@ declare private variable $esi:model-schematron :=
       <iso:ns prefix="es" uri="http://marklogic.com/entity-services"/>
       <iso:pattern>
         <iso:rule context="es:model|/object-node()">
-          <iso:assert test="count(es:info|info) eq 1" id="ES-INFOKEY">Entity Type Document must contain exactly one info section.</iso:assert>
-          <iso:assert test="count(es:definitions|definitions) eq 1" id="ES-DEFINITIONSKEY">Entity Type Document must contain exactly one definitions section.</iso:assert>
+          <iso:assert test="count(es:info|info) eq 1" id="ES-INFOKEY">Model descriptor must contain exactly one info section.</iso:assert>
+          <iso:assert test="count(es:definitions|definitions) eq 1" id="ES-DEFINITIONSKEY">Model descriptor must contain exactly one definitions section.</iso:assert>
         </iso:rule>
         <iso:rule context="es:info|/info">
           <iso:assert test="count(es:title|title) eq 1" id="ES-TITLEKEY">"info" section must be an object and contain exactly one title declaration.</iso:assert>
@@ -60,46 +60,46 @@ declare private variable $esi:model-schematron :=
           <iso:assert test="empty(es:base-uri|baseUri) or matches(es:base-uri|baseUri, '^[a-z]+:')" id="ES-BASEURI">If present, baseUri (es:base-uri) must be an absolute URI.</iso:assert>
           <iso:assert test="(title|es:title) castable as xs:NCName">Title must have no whitespace and must start with a letter.</iso:assert>
         </iso:rule>
-        <iso:rule context="(definitions|es:definitions)"><iso:assert test="count(./*) ge 1" id="ES-DEFINITIONS">There must be at least one entity type in a model document.</iso:assert>
+        <iso:rule context="(definitions|es:definitions)"><iso:assert test="count(./*) ge 1" id="ES-DEFINITIONS">There must be at least one entity type in a model descriptor.</iso:assert>
         </iso:rule>
         <!-- XML version of primary key rule -->
         <iso:rule context="es:definitions/node()[es:primary-key]">
-          <iso:assert test="count(./es:primary-key) eq 1" id="ES-PRIMARYKEY">For each Entity Type, only one primary key allowed.</iso:assert>
+          <iso:assert test="count(./es:primary-key) eq 1" id="ES-PRIMARYKEY">For each Entity Type ('<xsl:value-of select="xs:string(node-name(.))"/>'), only one primary key allowed.</iso:assert>
         </iso:rule>
         <!-- JSON version of primary key rule -->
         <iso:rule context="object-node()/*[primaryKey]">
-          <iso:assert test="count(./primaryKey) eq 1" id="ES-PRIMARYKEY">For each Entity Type, only one primary key allowed.</iso:assert>
+          <iso:assert test="count(./primaryKey) eq 1" id="ES-PRIMARYKEY">For each Entity Type ('<xsl:value-of select="xs:string(node-name(.))"/>'), only one primary key allowed.</iso:assert>
         </iso:rule>
         <iso:rule context="properties/object-node()">
-          <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">If a property has $ref as a child, then it cannot have a datatype.</iso:assert>
-          <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
+          <iso:assert test="if (./*[local-name(.) eq '$ref']) then count(./* except description) eq 1 else true()" id="ES-REF-ONLY">Property '<xsl:value-of select="xs:string(node-name(.))"/>' has $ref as a child, so it cannot have a datatype.</iso:assert>
+          <iso:assert test="if (not(./*[local-name(.) eq '$ref'])) then ./datatype else true()" id="ES-DATATYPE-REQUIRED">Property '<xsl:value-of select="xs:string(node-name(.))"/>' is not a reference, so it must have a datatype.</iso:assert>
         </iso:rule>
         <iso:rule context="properties/*">
           <iso:assert test="if (exists(./node('$ref'))) then not(xs:string(node-name(.)) = xs:string(../../primaryKey)) else true()" id="ES-REF-NOT-PK">Property <xsl:value-of select="xs:string(node-name(.))"/>: A reference cannot be primary key.</iso:assert>
-          <iso:assert test="./datatype|node('$ref')" id="ES-PROPERTY-IS-OBJECT">Each property must be an object, with either "datatype" or "$ref" as a key.</iso:assert>
-          <iso:assert test="not(xs:string(node-name(.)) = root(.)/definitions/*/node-name(.) ! xs:string(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
+          <iso:assert test="./datatype|node('$ref')" id="ES-PROPERTY-IS-OBJECT">Property '<xsl:value-of select="xs:string(node-name(.))"/>' must be an object with either "datatype" or "$ref" as a key.</iso:assert>
+          <iso:assert test="not(xs:string(node-name(.)) = root(.)/definitions/*/node-name(.) ! xs:string(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct ('<xsl:value-of select="xs:string(node-name(.))"/>').</iso:assert>
         </iso:rule>
         <!-- xml version of properties -->
         <iso:rule context="es:properties/*">
           <iso:assert test="if (empty(./es:ref)) then true() else not(local-name(.) = xs:string(../../es:primary-key))" id="ES-REF-NOT-PK">Property <xsl:value-of select="local-name(.)"/>:  A reference cannot be primary key.</iso:assert>
-          <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">If a property has es:ref as a child, then it cannot have a datatype.</iso:assert>
-          <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">If a property is not a reference, then it must have a datatype.</iso:assert>
-          <iso:assert test="not(local-name(.) = root(.)/es:model/es:definitions/*/local-name(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct.</iso:assert>
+          <iso:assert test="if (exists(./es:ref)) then count(./* except es:description) eq 1 else true()" id="ES-REF-ONLY">Property '<xsl:value-of select="xs:string(node-name(.))"/>' has es:ref as a child, so it cannot have a datatype.</iso:assert>
+          <iso:assert test="if (not(./*[local-name(.) eq 'ref'])) then ./es:datatype else true()" id="ES-DATATYPE-REQUIRED">Property '<xsl:value-of select="xs:string(node-name(.))"/>' is not a reference, so it must have a datatype.</iso:assert>
+          <iso:assert test="not(local-name(.) = root(.)/es:model/es:definitions/*/local-name(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct ('<xsl:value-of select="xs:string(node-name(.))"/>')</iso:assert>
         </iso:rule>
         <iso:rule context="es:ref|node('$ref')">
-          <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-x]+:')" id="ES-REF-VALUE">es:ref must start with "#/definitions/" or be an absolute IRI.</iso:assert>
+          <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-x]+:')" id="ES-REF-VALUE">es:ref (property '<xsl:value-of select="xs:string(node-name(.))"/>') must start with "#/definitions/" or be an absolute IRI.</iso:assert>
           <iso:assert test="replace(xs:string(.), '.*/', '') castable as xs:NCName" id="ES-REF-VALUE"><xsl:value-of select="."/>: ref value must end with a simple name (xs:NCName).</iso:assert>
           <iso:assert test="if (starts-with(xs:string(.), '#/definitions/')) then replace(xs:string(.), '#/definitions/', '') = (root(.)/definitions/*/node-name(.) ! xs:string(.), root(.)/es:model/es:definitions/*/local-name(.)) else true()" id="ES-LOCAL-REF">Local reference <xsl:value-of select="."/> must resolve to local entity type.</iso:assert>
           <iso:assert test="if (not(contains(xs:string(.), '#/definitions/'))) then matches(xs:string(.), '^[a-z]+:') else true()" id="ES-ABSOLUTE-REF">Non-local reference <xsl:value-of select="."/> must be a valid URI.</iso:assert>
         </iso:rule>
         <iso:rule context="es:datatype">
-         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(..))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../es:items) else true()">Property <xsl:value-of select="local-name(..)" /> is of type "array" and must contain an "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../es:items/es:datatype = 'array') else true()">Property <xsl:value-of select="local-name(..)" /> cannot both be an "array" and have items of type "array".</iso:assert>
          <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and local-name(..) = ../../../es:range-index/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="datatype">
-         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
+         <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(.))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../items) else true()">Property <xsl:value-of select="node-name(.)" /> is of type "array" and must contain an "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../items/datatype = 'array') else true()">Property <xsl:value-of select="node-name(.)" /> cannot both be an "array" and have items of type "array".</iso:assert>
          <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and node-name(..) = ../../../rangeIndex)"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>

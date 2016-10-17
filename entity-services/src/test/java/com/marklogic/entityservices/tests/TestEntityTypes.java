@@ -77,21 +77,21 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
     static {
-        invalidMessages.put("invalid-bad-datatype.json", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.json", "If a property is not a reference, then it must have a datatype.");
-        invalidMessages.put("invalid-missing-info.json", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-bad-datatype.json", "unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.json", "is not a reference, so it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.json", "Model descriptor must contain exactly one info section.");
         invalidMessages.put("invalid-missing-title.json",   "section must be an object and contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.json", "section must be an object and contain exactly one version declaration.");
-        invalidMessages.put("invalid-property-ref-with-others.json", "If a property has $ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-property-ref-with-others.json", "has $ref as a child, so it cannot have a datatype.");
         invalidMessages.put("invalid-multiple-pk.json", "only one primary key allowed.");
         invalidMessages.put("invalid-range-index-key.json", "unsupported for a range index.");
-        invalidMessages.put("invalid-bad-datatype.xml", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.xml", "If a property is not a reference, then it must have a datatype.");
-        invalidMessages.put("invalid-missing-info.xml", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-bad-datatype.xml", "unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.xml", "is not a reference, so it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.xml", "Model descriptor must contain exactly one info section.");
         invalidMessages.put("invalid-missing-title.xml", "section must be an object and contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.xml", "section must be an object and contain exactly one version declaration.");
         invalidMessages.put("invalid-multiple-pk.xml", "only one primary key allowed");
-        invalidMessages.put("invalid-property-ref-with-others.xml", "If a property has es:ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-property-ref-with-others.xml", "has es:ref as a child, so it cannot have a datatype.");
         invalidMessages.put("invalid-range-index-key.xml", "unsupported for a range index.");
         invalidMessages.put("invalid-bad-absolute-reference.json", "must be a valid URI.");
         invalidMessages.put("invalid-bad-absolute-reference.xml", "must be a valid URI.");
@@ -119,13 +119,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-missing-range-index.xml", "doesn't exist");
         invalidMessages.put("invalid-missing-lexicon.json", "doesn't exist.");
         invalidMessages.put("invalid-missing-lexicon.xml", "doesn't exist.");
-        invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model document");
-        invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in a model document");
-        invalidMessages.put("invalid-bad-property.json", "Each property must be an object, with either \"datatype\" or \"$ref\" as a key.");
+        invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model descriptor");
+        invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in a model descriptor");
+        invalidMessages.put("invalid-bad-property.json", "must be an object with either \"datatype\" or \"$ref\" as a key.");
         invalidMessages.put("invalid-bad-external.json", "ref value must end with a simple name (xs:NCName).");
         invalidMessages.put("invalid-bad-external.xml", "ref value must end with a simple name (xs:NCName)");
-        invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct.");
-        invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct.");
+        invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct");
+        invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct");
         invalidMessages.put("invalid-ref-pk.json", "A reference cannot be primary key.");
         invalidMessages.put("invalid-ref-pk.xml", "A reference cannot be primary key.");
     }

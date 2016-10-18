@@ -595,7 +595,7 @@ map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
 let $values :=
     for $removed-property-name in $removed-entity-type=>map:get("properties")=>map:keys()
     return es-codegen:extraction-for($module-prefix, $source-model, $removed-entity-type-name, $removed-property-name)
-return fn:string-join($values)
+return fn:string-join($values, "&#10;")
 }
 :)
 </removed-type>

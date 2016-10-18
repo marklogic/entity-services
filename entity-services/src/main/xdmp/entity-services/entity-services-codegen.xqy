@@ -169,7 +169,7 @@ declare option xdmp:mapping "false";
 (:
   extract-instance-{{entity-type}} functions
 
-  These functions take together take a source document and create a nested
+  These functions together take a source document and create a nested
   map structure from it.
   The resulting map is used by instance-to-canonical-xml to create documents
   in the database.
@@ -645,9 +645,11 @@ map:keys($target-info) !
    }(.)
 }:)
 
-{$convert-instance/text()}
+{
+(: this flowr makes order deterministic, which is better for dev UX. :)
+for $c in $convert-instance order by $c return $c/text()}
 
-{$removed-type/text()}
+{for $r in $removed-type order by $r return $r/text()}
 
 
 </module>/text()

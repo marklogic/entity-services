@@ -115,6 +115,7 @@ declare private variable $esi:model-schematron :=
          <iso:assert test="xs:string(.) = (../es:properties/*/local-name())">Primary Key <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="required">
+         <iso:assert test="../../array-node()">value of property 'required' must be an array.</iso:assert>
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="es:required">

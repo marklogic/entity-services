@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title":"invalid-required",
+    "version": "0.0.3",
+    "description":"This invalid document doe not use an array for required."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "required": "orderId"
+    }
+  }
+}

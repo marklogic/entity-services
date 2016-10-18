@@ -113,6 +113,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-local-item-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-required.json", "doesn't exist.");
         invalidMessages.put("invalid-required.xml", "doesn't exist.");
+        invalidMessages.put("invalid-required2.json", "must be an array.");
         invalidMessages.put("invalid-bad-title.json", "Title must have no whitespace and must start with a letter.");
         invalidMessages.put("invalid-bad-title.xml", "Title must have no whitespace and must start with a letter.");
         invalidMessages.put("invalid-missing-range-index.json", "doesn't exist.");

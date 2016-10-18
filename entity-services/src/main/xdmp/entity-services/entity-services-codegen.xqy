@@ -43,10 +43,10 @@ declare private function es-codegen:casting-function-name(
 
 
 declare private function es-codegen:comment(
-    $comment-text as xs:string
+    $comment-text as xs:string*
 ) as xs:string
 {
-    concat('    (: ', $comment-text, ' :)&#10;')
+    concat('    (: ', string-join($comment-text, "&#10;       "), '  :)&#10;')
 };
 
 
@@ -87,10 +87,10 @@ declare private function es-codegen:extraction-for(
         then ""
         else if (contains($ref, "#/definitions"))
         then es-codegen:comment("The following property is a local reference.")
-        else concat(
-        es-codegen:comment('The following property assigment comes from an external reference.'),
-        "&#10; ",
-        es-codegen:comment('Its generated value probably requires developer attention.'))
+        else
+        es-codegen:comment((
+            'The following property assigment comes from an external reference.',
+            'Its generated value probably requires developer attention.'))
     let $ref-name := functx:substring-after-last($ref, "/")
     let $extract-reference-fn :=
             concat("function($path) { json:object()",
@@ -217,9 +217,9 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     (: Otherwise, this source node contains instance data. Populate it. :)
     else
 
-    (: 
-    The following code populates the properties of the '{$entity-type-name}' 
-    entity type. Ensure that all of the property paths are correct for your 
+    (:
+    The following code populates the properties of the '{$entity-type-name}'
+    entity type. Ensure that all of the property paths are correct for your
     source data.  The general pattern is
     =>map:with('keyName', casting-function($source-node/path/to/data))
     but you may also wish to convert values
@@ -290,7 +290,7 @@ declare function {$prefix}:instance-to-canonical-xml(
                         for $val in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then element {{ $key }} {{ 
+                            then element {{ $key }} {{
                                 attribute datatype {{ "array" }},
                                 {$prefix}:instance-to-canonical-xml($val) }}
                             else element {{ $key }} {{
@@ -358,18 +358,18 @@ declare private function es-codegen:value-for-conversion(
     let $source-entity-type := $source-model
         =>map:get("definitions")
         =>map:get($target-entity-type-name)    (: this function is only called with matching types/props :)
-    let $source-properties :=  
+    let $source-properties :=
         if (exists($source-entity-type))
         then $source-entity-type=>map:get("properties")
         else ()
-    let $is-missing-source := 
+    let $is-missing-source :=
         (empty($source-properties) or not($target-property-name = map:keys($source-properties)))
-    let $source-correlate := 
+    let $source-correlate :=
         if (exists($source-properties))
         then map:get($source-properties, $target-property-name)
         else ()
     let $target-is-array := $target-property=>map:get("datatype") eq 'array'
-    let $source-is-array := 
+    let $source-is-array :=
         exists($source-correlate) and $source-correlate=>map:get("datatype") eq 'array'
     let $target-ref :=
         if ($target-is-array)
@@ -378,7 +378,7 @@ declare private function es-codegen:value-for-conversion(
     let $source-ref :=
         if ($source-is-array)
         then $source-correlate=>map:get("items")=>map:get("$ref")
-        else 
+        else
         if (exists($source-correlate))
         then $source-correlate=>map:get("$ref")
         else ()
@@ -429,7 +429,9 @@ declare private function es-codegen:value-for-conversion(
 
     let $comment :=
         if ($is-missing-source)
-        then es-codegen:comment("The following property was missing from the source type")
+        then es-codegen:comment((
+                "The following property was missing from the source type.",
+                "The XPath will not up-convert without intervention."))
         else if ($truncates-array)
         then es-codegen:comment("Warning: potential data loss, truncated array.")
         else ""
@@ -440,10 +442,7 @@ declare private function es-codegen:value-for-conversion(
     let $property-padding :=
         functx:pad-string-to-length("'" || $target-property-name || "',", " ", max((  (string-length($target-property-name)+4), 25) )+1 )
     let $value :=
-        (: case one -- missing source :)
-        if ($is-missing-source)
-        then concat($casting-function-name, "( () )")
-        else if ($is-scalar-from-array)
+        if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
         else if (empty($target-ref))
         then $wrap-if-array($path-to-property, $casting-function-name, true())
@@ -492,9 +491,9 @@ declare function es-codegen:version-translator-generate(
         "-",
         $source-version)
     let $target-info := json:object()
-    
+
 (: BEGIN convert instance block :)
-    let $convert-instance := 
+    let $convert-instance :=
         for $entity-type-name in $target-entity-type-names
         let $info-map := json:object()
         let $_ := map:put($target-info, $entity-type-name, $info-map)
@@ -557,7 +556,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
                     else "None")
             )
     let $properties := map:get($entity-type, "properties")
-    let $values := 
+    let $values :=
         for $property-name in map:keys($properties)
         return
             es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $module-prefix)
@@ -568,7 +567,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     </convert-instance>
 (: END convert instance block :)
 
-    let $removed-type := 
+    let $removed-type :=
         (: Make comments for removed ET types :)
         for $removed-entity-type-name in map:keys($source-definitions)
         let $removed-entity-type := map:get($source-definitions, $removed-entity-type-name)
@@ -626,13 +625,13 @@ declare option xdmp:mapping "false";
  Target Model {$target-title || "-" || $target-version} Info:
 
  {
-map:keys($target-info) ! 
-    function($et) { 
+map:keys($target-info) !
+    function($et) {
         let $et-report := map:get($target-info, $et)
         return
         fn:concat("Type ", $et, ": &#10;",
             fn:string-join(
-               map:keys($et-report) ! 
+               map:keys($et-report) !
                     function($report-key) {
                         "    ",
                         $report-key,

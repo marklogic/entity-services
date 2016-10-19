@@ -325,10 +325,9 @@ This column joins to property orderId of SchemaCompleteEntityType
                   <!--
 This column joins to primary key of OrderDetails
 -->
-                  <name>arrayreferenceInThisFile</name>
+                  <name>quantity</name>
                   <scalar-type>integer</scalar-type>
                   <val>OrderDetails</val>
-                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>

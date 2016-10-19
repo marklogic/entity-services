@@ -228,17 +228,20 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
               <view-name>Customer_ProductsPurchased</view-name>
               <columns>
                 <column>
-                  <!--This column joins to property CustomerId of Customer-->
+                  <!--
+This column joins to property CustomerId of Customer
+-->
                   <name>CustomerId</name>
                   <scalar-type>integer</scalar-type>
                   <val>../CustomerId</val>
                 </column>
                 <column>
-                  <!--This column joins to primary key of Product-->
-                  <name>ProductsPurchased</name>
+                  <!--
+This column joins to primary key of Product
+-->
+                  <name>ProductName</name>
                   <scalar-type>string</scalar-type>
                   <val>Product</val>
-                  <nullable>true</nullable>
                 </column>
               </columns>
             </row>

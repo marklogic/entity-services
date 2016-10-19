@@ -189,7 +189,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model document."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model descriptor."));    		
     	}
     		
     }
@@ -205,7 +205,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model document."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model descriptor."));    		
     	}
     		
     }
@@ -227,7 +227,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     }
     
     @Test
-    /* testing bug38858 */
+    /* testing bug38858 and bug41677*/
     public void testEachPropertymusthaveObj() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     		
             	logger.info("Checking bug38858.json");
@@ -237,7 +237,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid ET.");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Each property must be an object"));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Property 'primaryKey' must be an object with either \"datatype\" or \"$ref\" as a key. Type names and property names must be distinct ('OrderDetails'). Primary Key orderId doesn't exist. value of property 'required' must be an array. \"Required\" property OrderID doesn't exist."));    		
     	}
     		
     }
@@ -253,7 +253,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-casesensitive-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Unsupported datatype: String."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'datatype' has unsupported datatype: String."));    		
     	}
     		
     }
@@ -296,7 +296,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: If a property is not a reference, then it must have a datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' is not a reference, so it must have a datatype. Property 'orderId' must be an object with either \"datatype\" or \"$ref\" as a key."));
     	}
     }
     
@@ -310,7 +310,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: If a property is not a reference, then it must have a datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' is not a reference, so it must have a datatype"));
     	}
     }
     
@@ -324,7 +324,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for unsupported datatypes");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Unsupported datatype: botcheddt."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' has unsupported datatype: botcheddt."));
 		}
     }
     
@@ -339,7 +339,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-bad-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Unsupported datatype: anySimpleType."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'datatype' has unsupported datatype: anySimpleType."));    		
     	}
     		
     }
@@ -402,7 +402,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one info section."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section."));
 		}
     }
     
@@ -416,7 +416,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one info section."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
 		}
     }
     
@@ -430,7 +430,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: If a property has $ref as a child, then it cannot have a datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'companyName' has $ref as a child, so it cannot have a datatype. es:ref (property '$ref') must start with \"#/definitions/\" or be an absolute IRI. Non-local reference #definitions/EntityTypeName3 must be a valid URI."));
 		}
 	}
 
@@ -444,7 +444,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: If a property has es:ref as a child, then it cannot have a datatype."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'companyName' has es:ref as a child, so it cannot have a datatype. Local reference #/definitions/EntityTypeName3 must resolve to local entity type."));
 		}
 	}
     
@@ -486,7 +486,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one definitions section."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one definitions section."));
     	}
     }
     
@@ -500,7 +500,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one definitions section."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one definitions section."));
     	}
     }
 
@@ -542,7 +542,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-multiple-primarykey.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type, only one primary key allowed."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type ('Customer'), only one primary key allowed."));
     	}
     }
     
@@ -557,7 +557,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-multiple-pkey.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type, only one primary key allowed."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type ('Customer'), only one primary key allowed. Primary Key CustomerId doesn't exist. Primary Key CompanyName doesn't exist."));
     	}
     }
      

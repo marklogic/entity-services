@@ -3,7 +3,7 @@
     "title": "DBProp-Ref-Same",
     "version": "0.0.1",
     "baseUri": "http://marklogic.com/testing-entity-type",
-    "description":"All Schema Elements represented in this type. Ref within document."
+    "description":"Model descriptor for bug 38858 and 41677"
   },
   "definitions": {
     "SchemaCompleteEntityType": {
@@ -103,7 +103,7 @@
             }
          },
          "primaryKey":"OrderID",
-         "required":["OrderID"],
+         "required": "OrderID",
          "rangeIndex":["OrderDate", "productName", "OrderID"]
     },
     "OrderDetails": {

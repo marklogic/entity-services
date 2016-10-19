@@ -346,7 +346,7 @@ declare private function es-codegen:value-for-conversion(
     $target-model as map:map,
     $target-entity-type-name as xs:string,
     $target-property-name as xs:string,
-    $module-prefix
+    $display-property-name as xs:string
 ) as xs:string
 {
     let $target-entity-type := $target-model
@@ -368,13 +368,19 @@ declare private function es-codegen:value-for-conversion(
         if (exists($source-properties))
         then map:get($source-properties, $target-property-name)
         else ()
-    let $target-is-array := $target-property=>map:get("datatype") eq 'array'
+    let $target-is-array :=
+        if (exists($target-property))
+        then $target-property=>map:get("datatype") eq 'array'
+        else false()
     let $source-is-array :=
         exists($source-correlate) and $source-correlate=>map:get("datatype") eq 'array'
     let $target-ref :=
-        if ($target-is-array)
-        then $target-property=>map:get("items")=>map:get("$ref")
-        else $target-property=>map:get("$ref")
+        if (exists($target-property))
+        then
+            if ($target-is-array)
+            then $target-property=>map:get("items")=>map:get("$ref")
+            else $target-property=>map:get("$ref")
+        else ()
     let $source-ref :=
         if ($source-is-array)
         then $source-correlate=>map:get("items")=>map:get("$ref")
@@ -387,7 +393,7 @@ declare private function es-codegen:value-for-conversion(
          and map:get($target-property, "items")=>map:contains("datatype")
     let $source-is-scalar-array := $source-is-array and empty($source-ref)
         and map:get($source-correlate, "items")=>map:contains("datatype")
-    let $properties-correlate := not($target-is-scalar-array) and not($source-is-scalar-array) (: TODO and not ref :)
+    let $properties-correlate := not($target-is-scalar-array) and not($source-is-scalar-array)
     let $is-array-from-scalar := $target-is-scalar-array and not($source-is-scalar-array)
     let $is-array-from-array := $target-is-scalar-array and $source-is-scalar-array
     let $truncates-array := not($target-is-array) and $source-is-scalar-array
@@ -440,7 +446,7 @@ declare private function es-codegen:value-for-conversion(
         then "    =>   map:with("
         else "    =>es:optional("
     let $property-padding :=
-        functx:pad-string-to-length("'" || $target-property-name || "',", " ", max((  (string-length($target-property-name)+4), 25) )+1 )
+        functx:pad-string-to-length("'" || $display-property-name || "',", " ", max((  (string-length($target-property-name)+4), 25) )+1 )
     let $value :=
         if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
@@ -559,8 +565,17 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     let $values :=
         for $property-name in map:keys($properties)
         return
-            es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $module-prefix)
-    return fn:string-join($values)
+            es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $property-name)
+    let $missing-properties :=
+        for $property-name in map:keys(map:get($source-entity-type, "properties"))
+            return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
+    return
+        fn:concat(
+            fn:string-join($values),
+            es-codegen:comment(fn:string-join(
+                ("The following properties are in the source, but not the target: &#10;",
+                $missing-properties)))
+            )
     (: end code generation block :)
     }
 }};

@@ -567,8 +567,11 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
         return
             es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $property-name)
     let $missing-properties :=
-        for $property-name in map:keys(map:get($source-entity-type, "properties"))
-            return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
+        if (exists($source-entity-type))
+        then
+            for $property-name in map:keys(map:get($source-entity-type, "properties"))
+                return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
+        else "No missing properties."
     return
         fn:concat(
             fn:string-join($values),

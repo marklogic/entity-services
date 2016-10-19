@@ -20,7 +20,7 @@ xquery version "1.0-ml";
  database of your application, and check it into your source control system.
 
  Modification History:
- Generated at timestamp: 2016-10-12T15:40:56.171153-07:00
+ Generated at timestamp: 2016-10-18T17:14:44.347011-07:00
  Persisted by AUTHOR
  Date: DATE
  :)
@@ -37,7 +37,7 @@ declare option xdmp:mapping "false";
 (:
   extract-instance-{entity-type} functions
 
-  These functions take together take a source document and create a nested
+  These functions together take a source document and create a nested
   map structure from it.
   The resulting map is used by instance-to-canonical-xml to create documents
   in the database.
@@ -82,9 +82,9 @@ declare function et-required:extract-instance-ETOne(
     (: Otherwise, this source node contains instance data. Populate it. :)
     else
 
-    (: 
-    The following code populates the properties of the 'ETOne' 
-    entity type. Ensure that all of the property paths are correct for your 
+    (:
+    The following code populates the properties of the 'ETOne'
+    entity type. Ensure that all of the property paths are correct for your
     source data.  The general pattern is
     =>map:with('keyName', casting-function($source-node/path/to/data))
     but you may also wish to convert values
@@ -147,7 +147,7 @@ declare function et-required:instance-to-canonical-xml(
                         for $val in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then element { $key } { 
+                            then element { $key } {
                                 attribute datatype { "array" },
                                 et-required:instance-to-canonical-xml($val) }
                             else element { $key } {

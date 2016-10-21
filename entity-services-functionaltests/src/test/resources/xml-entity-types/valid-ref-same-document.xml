@@ -48,7 +48,7 @@
              <es:datatype>integer</es:datatype>
 	 </OrderID>
 	 <CustomerID>
-             <es:datatype>integer</es:datatype>
+             <es:datatype>string</es:datatype>
 	 </CustomerID>
 	 <OrderDate>
              <es:datatype>dateTime</es:datatype>

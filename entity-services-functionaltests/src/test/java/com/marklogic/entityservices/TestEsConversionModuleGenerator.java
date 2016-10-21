@@ -575,7 +575,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "ALFKI.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/valid-ref-same-doc-gen.xqy\"; ",
                           "ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
@@ -609,7 +609,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "10249.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/valid-ref-same-doc-gen.xqy\"; ",
                           "ext:instance-to-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
@@ -727,7 +727,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	@Test
 	public void testInstanceXmlFromDocumentRefSame() throws IOException, TestEvalException, SAXException, TransformerException {
 		
-		String sourceDocument = "10248.xml";
+		String sourceDocument = "10249.xml";
 		
 		StringHandle handle = evalOneResult("import module namespace gen = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; ",
                           "es:instance-xml-from-document(gen:instance-to-envelope(gen:extract-instance-Order( doc('"+sourceDocument+"'))))", new StringHandle());

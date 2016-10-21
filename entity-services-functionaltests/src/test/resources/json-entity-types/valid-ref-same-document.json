@@ -48,7 +48,7 @@
                "datatype":"integer"
             },
             "CustomerID":{  
-               "datatype":"integer"
+               "datatype":"string"
             },
             "OrderDate":{  
                "datatype":"dateTime"

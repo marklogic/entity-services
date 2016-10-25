@@ -141,6 +141,7 @@ public abstract class ExamplesBase {
 
         importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
 
+        batcher.flushAsync();
     }
 
     public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
@@ -153,6 +154,8 @@ public abstract class ExamplesBase {
 
         WriteBatcher batcher = newBatcher();
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
+
+        batcher.flushAsync();
     }
 
     public void importXML(Path xmlDirectory, String toCollection) throws IOException {
@@ -162,6 +165,8 @@ public abstract class ExamplesBase {
         WriteBatcher batcher = newBatcher();
 
         importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
+
+        batcher.flushAsync();
     }
 
 }

@@ -95,11 +95,10 @@ public class CSVLoader extends ExamplesBase {
             }
         }
 
-        catch (IOException e)
-
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
+        batcher.flushAsync();
     }
 
     private String getSummaryReport(Batch<WriteEvent> batch) {

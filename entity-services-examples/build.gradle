@@ -34,6 +34,10 @@ task runExampleRaces(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.marklogic.entityservices.examples.race.ExamplesLoader'
 }
+task runExampleSuppliers(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.examples.suppliers.SuppliersParts'
+}
 task genCode(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.marklogic.entityservices.examples.CodeGenerator'

@@ -62,7 +62,7 @@ public class CSVLoader extends ExamplesBase {
 
         File dir = new File(projectDir + "/data/third-party/csv");
 
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(10)
+        WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(10)
                 .onBatchSuccess((client, batch) -> logger.info(getSummaryReport(batch)))
                 .onBatchFailure((client, batch, throwable) -> {
                     logger.warn("FAILURE on batch:" + batch.toString() + "\n", throwable);
@@ -100,8 +100,6 @@ public class CSVLoader extends ExamplesBase {
         {
             e.printStackTrace();
         }
-
-        batcher.flush();
     }
 
     private String getSummaryReport(Batch<WriteEvent> batch) {

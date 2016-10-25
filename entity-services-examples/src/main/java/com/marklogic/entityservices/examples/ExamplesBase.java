@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import com.marklogic.client.datamovement.WriteBatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.datamovement.DataMovementManager;
 import com.marklogic.client.datamovement.JobTicket;
-import com.marklogic.client.datamovement.WriteHostBatcher;
+import com.marklogic.client.datamovement.WriteBatcher;
 
 /**
  * Base class for examples. See the importJSON method for generic loading of
@@ -77,13 +78,13 @@ public abstract class ExamplesBase {
 
         projectDir += "/" + getExampleName();
         logger.debug("Project path is: " + projectDir);
-        moveMgr = DataMovementManager.newInstance().withClient(client);
+        moveMgr = client.newDataMovementManager();
         mapper = new ObjectMapper();
 
     }
 
-    private WriteHostBatcher newBatcher() {
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
+    private WriteBatcher newBatcher() {
+        WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(5)
                 .onBatchSuccess((client, batch) -> logger.info("Loaded batch of documents"))
                 .onBatchFailure((client, batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
@@ -100,7 +101,7 @@ public abstract class ExamplesBase {
         return batcher;
     }
 
-    private void importOrDescend(Path entry, WriteHostBatcher batcher, String collection, Format format) {
+    private void importOrDescend(Path entry, WriteBatcher batcher, String collection, Format format) {
         if (entry.toFile().isFile()) {
             logger.debug("Adding " + entry.getFileName().toString());
             String uri = entry.toUri().toString();
@@ -136,11 +137,9 @@ public abstract class ExamplesBase {
 
         logger.info("RDF Load Job started");
 
-        WriteHostBatcher batcher = newBatcher().withTransform(new ServerTransform("turtle-to-xml"));
+        WriteBatcher batcher = newBatcher().withTransform(new ServerTransform("turtle-to-xml"));
 
         importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
-
-        batcher.flush();
 
     }
 
@@ -152,21 +151,17 @@ public abstract class ExamplesBase {
 
         logger.info("JSON job started.");
 
-        WriteHostBatcher batcher = newBatcher();
+        WriteBatcher batcher = newBatcher();
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
-
-        batcher.flush();
     }
 
     public void importXML(Path xmlDirectory, String toCollection) throws IOException {
 
         logger.info("JSON job started.");
 
-        WriteHostBatcher batcher = newBatcher();
+        WriteBatcher batcher = newBatcher();
 
         importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
-
-        batcher.flush();
     }
 
 }

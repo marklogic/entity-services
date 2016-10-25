@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.expression.PlanBuilder;
 import com.marklogic.client.expression.PlanBuilder.Plan;
-import com.marklogic.client.expression.Xs;
+import com.marklogic.client.expression.XsExpr;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.query.StructuredQueryBuilder;
 import com.marklogic.client.query.StructuredQueryDefinition;
@@ -18,7 +18,7 @@ import com.marklogic.client.semantics.SPARQLQueryDefinition;
 import com.marklogic.client.semantics.SPARQLQueryManager;
 import com.marklogic.client.datamovement.ApplyTransformListener;
 import com.marklogic.client.datamovement.JobTicket;
-import com.marklogic.client.datamovement.QueryHostBatcher;
+import com.marklogic.client.datamovement.QueryBatcher;
 import com.marklogic.entityservices.examples.ExamplesBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,13 +139,13 @@ public class PersonExplorer extends ExamplesBase {
                     System.err.print(String.join("\n", inPlaceBatch.getItems()) + "\n");
                 });
 
-        QueryHostBatcher queryHostBatcher = moveMgr.newQueryHostBatcher(qdef).withBatchSize(100)
+        QueryBatcher queryBatcher = moveMgr.newQueryBatcher(qdef).withBatchSize(100)
                 .withThreadCount(5).onUrisReady(listener).onQueryFailure((client3, exception) -> {
                     logger.error("Query error");
                 });
 
-        JobTicket ticket = moveMgr.startJob(queryHostBatcher);
-        queryHostBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        JobTicket ticket = moveMgr.startJob(queryBatcher);
+        queryBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
         moveMgr.stopJob(ticket);
     }
 
@@ -175,7 +175,7 @@ public class PersonExplorer extends ExamplesBase {
     public void runOpticQuery() {
         RowManager rowManager = client.newRowManager();
         PlanBuilder pb = rowManager.newPlanBuilder();
-        Xs xs = pb.xs;
+        XsExpr xs = pb.xs;
 
 
         // Plan p = pb.fromView("Person", "Person").where(pb.fn.contains(xs.string(pb.col("id")), xs.string("122")));

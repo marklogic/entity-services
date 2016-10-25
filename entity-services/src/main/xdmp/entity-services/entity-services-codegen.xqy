@@ -570,14 +570,18 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
         if (exists($source-entity-type))
         then
             for $property-name in map:keys(map:get($source-entity-type, "properties"))
+            where not($property-name = map:keys(map:get($entity-type, "properties")))
                 return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
         else "No missing properties."
     return
         fn:concat(
             fn:string-join($values),
-            es-codegen:comment(fn:string-join(
-                ("The following properties are in the source, but not the target: &#10;",
-                $missing-properties)))
+            if (exists($missing-properties))
+            then
+                es-codegen:comment(fn:string-join(
+                    ("The following properties are in the source, but not the target: &#10;",
+                    $missing-properties)))
+            else ()
             )
     (: end code generation block :)
     }

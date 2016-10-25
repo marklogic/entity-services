@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.custommonkey.xmlunit.DetailedDiff;
@@ -138,13 +140,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
         URL sourcesFilesUrl = client.getClass().getResource("/invalid-models");
 
         @SuppressWarnings("unchecked")
-        Collection<File> invalidEntityTypeFiles = new ArrayList<>();
-        Files.walk(Paths.get(sourcesFilesUrl.getPath())).forEach(filePath -> {
-            invalidEntityTypeFiles.add(filePath.toFile());
-
-        });
+        Collection<File> invalidEntityTypeFiles =
+		    FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
+	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
         Set<String> invalidEntityTypes = new HashSet<String>();
-
 
         JSONDocumentManager docMgr = client.newJSONDocumentManager();
         DocumentWriteSet writeSet = docMgr.newWriteSet();

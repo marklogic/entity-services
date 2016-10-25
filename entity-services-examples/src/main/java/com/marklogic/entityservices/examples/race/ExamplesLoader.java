@@ -45,8 +45,5 @@ public class ExamplesLoader {
         logger.info("Starting translate of Races");
         Translator translator = new Translator();
         translator.translate();
-
-        CodeGenerator generator = new CodeGenerator();
-        generator.generate();
     }
 }

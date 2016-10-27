@@ -275,7 +275,7 @@ declare function {$prefix}:instance-to-canonical-xml(
         else
             for $key in map:keys($entity-instance)
             let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName and $key ne "$type")
+            where ($key castable as xs:NCName)
             return
                 typeswitch ($instance-property)
                 (: This branch handles embedded objects.  You can choose to prune

@@ -1,5 +1,5 @@
 <Order OrderID="10254">
-	<CustomerID>CHOPS</CustomerID>
+	<CustomerID>10254</CustomerID>
 	<EmployeeID>5</EmployeeID>
 	<OrderDate>1996-07-11T08:19:58</OrderDate>
 	<RequiredDate>1996-08-08T04:13:44</RequiredDate>
@@ -15,21 +15,9 @@
 	<OrderDetails>
 		<OrderDetail>
 			<ProductID>24</ProductID>
-			<UnitPrice>3.6000</UnitPrice>
+			<UnitPrice>3</UnitPrice>
 			<Quantity>15</Quantity>
 			<Discount>0.15</Discount>
-		</OrderDetail>
-		<OrderDetail>
-			<ProductID>55</ProductID>
-			<UnitPrice>19.2000</UnitPrice>
-			<Quantity>21</Quantity>
-			<Discount>0.15</Discount>
-		</OrderDetail>
-		<OrderDetail>
-			<ProductID>74</ProductID>
-			<UnitPrice>8.0000</UnitPrice>
-			<Quantity>21</Quantity>
-			<Discount>0</Discount>
 		</OrderDetail>
 	</OrderDetails>
 </Order>

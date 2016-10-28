@@ -772,4 +772,34 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 
 		org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
 	}
+	
+	@Test
+    public void testJSONSerialization() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';",
+                          "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Order(doc('10254.xml'))))", new JacksonHandle());
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as input stream
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/jsonSerialization.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
+    }
+	
+	@Test
+    public void testJSONEmptyArray() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';",
+                "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Order(doc('10253.xml'))))", new JacksonHandle());
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as input stream
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/jsonEmptyArray.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
+    }
 }

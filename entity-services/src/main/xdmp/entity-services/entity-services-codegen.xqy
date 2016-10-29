@@ -29,8 +29,10 @@ import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx
 
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
+declare namespace xq = "http://www.w3.org/2012/xquery";
 
 declare option xdmp:mapping "false";
+declare option xq:require-feature "xdmp:three-one";
 
 declare private function es-codegen:casting-function-name(
     $datatype as xs:string

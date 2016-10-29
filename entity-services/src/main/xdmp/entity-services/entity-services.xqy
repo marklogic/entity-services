@@ -25,8 +25,10 @@ import module namespace inst = "http://marklogic.com/entity-services-instance" a
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 declare namespace search = "http://marklogic.com/appservices/search";
+declare namespace xq = "http://www.w3.org/2012/xquery";
 
 declare option xdmp:mapping "false";
+declare option xq:require-feature "xdmp:three-one";
 
 
 (:~

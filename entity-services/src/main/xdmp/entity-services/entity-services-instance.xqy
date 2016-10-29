@@ -18,11 +18,14 @@ xquery version "1.0-ml";
 module namespace inst = "http://marklogic.com/entity-services-instance";
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
+declare namespace xq = "http://www.w3.org/2012/xquery";
 
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
+(: declare option xdmp:mapping "false"; :)
+declare option xq:require-feature "xdmp:three-one";
 
 declare function inst:instance-from-document(
     $document as document-node()

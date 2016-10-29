@@ -18,7 +18,7 @@ xquery version "1.0-ml";
 module namespace esi = "http://marklogic.com/entity-services-impl";
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
-
+declare namespace xq = "http://www.w3.org/2012/xquery";
 
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
 
@@ -29,7 +29,11 @@ import module namespace search = "http://marklogic.com/appservices/search" at "/
 import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
+
 (: declare option xdmp:mapping "false"; :)
+declare option xq:require-feature "xdmp:three-one";
+
+
 
 declare private variable $esi:DEFAULT_BASE_URI := "http://example.org/";
 declare private variable $esi:MAX_TEST_INSTANCE_DEPTH := 2;

@@ -77,20 +77,26 @@ public class PersonExplorer extends ExamplesBase {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         StringBuffer sb = new StringBuffer();
-        // sb.append(mapper.writeValueAsString(sparqlResults));
+        logger.info(mapper.writeValueAsString(sparqlResults));
 
-        ArrayNode columns = (ArrayNode) sparqlResults.get("head").get("vars");
-        columns.forEach( c -> { sb.append(c + "\t"); });
-        sb.append("\n");
-        ArrayNode bindings = (ArrayNode) sparqlResults.get("results").get("bindings");
-        bindings.forEach( b -> {
-            b.forEach( col -> {
-                sb.append(valueFor(col));
-                sb.append("\t");
-            });
+
+        if (!sparqlResults.has("head")) {
+           return "No results";
+        }
+        else {
+            ArrayNode columns = (ArrayNode) sparqlResults.get("head").get("vars");
+            columns.forEach( c -> { sb.append(c + "\t"); });
             sb.append("\n");
-        });
-        return sb.toString();
+            ArrayNode bindings = (ArrayNode) sparqlResults.get("results").get("bindings");
+            bindings.forEach( b -> {
+                b.forEach( col -> {
+                    sb.append(valueFor(col));
+                    sb.append("\t");
+                });
+                sb.append("\n");
+            });
+            return sb.toString();
+        }
     }
 
     private void verifyPersonModel() {
@@ -129,9 +135,9 @@ public class PersonExplorer extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("raw");
         ServerTransform ingester = new ServerTransform("person-harmonizer");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess( inPlaceBatch -> {
                     logger.debug("Batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     // logger.warn("FAILURE on batch:" + inPlaceBatch.toString()
                     // + "\n", throwable);
                     // throwable.printStackTrace();
@@ -140,7 +146,7 @@ public class PersonExplorer extends ExamplesBase {
                 });
 
         QueryBatcher queryBatcher = moveMgr.newQueryBatcher(qdef).withBatchSize(100)
-                .withThreadCount(5).onUrisReady(listener).onQueryFailure((client3, exception) -> {
+                .withThreadCount(5).onUrisReady(listener).onQueryFailure( batch -> {
                     logger.error("Query error");
                 });
 
@@ -187,7 +193,7 @@ public class PersonExplorer extends ExamplesBase {
 //                .select(pb.col("firstName"));
 
         Plan p = pb.fromTriples(pb.pattern(pb.subjects(pb.col("s")),
-            pb.predicates(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#")),
+            pb.predicates(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")),
             pb.objects(pb.col("o"))));
         JsonNode results = rowManager.resultDoc(p, new JacksonHandle()).get();
 

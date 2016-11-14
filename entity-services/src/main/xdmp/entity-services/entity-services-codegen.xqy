@@ -532,6 +532,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     let $ts-func :=
         function($value) {
             typeswitch($value)
+            case empty-sequence() return "None"
             case json:array return fn:string-join(json:array-values($value), ", ")
             default return $value
         }
@@ -546,22 +547,10 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
         }
     let $_ :=
             (
-                map:put($info-map, "primaryKey: ",
-                    if (map:contains($entity-type, "primaryKey"))
-                    then $compare("primaryKey")
-                    else "None"),
-                map:put($info-map, "required: ",
-                    if (map:contains($entity-type, "required"))
-                    then $compare("required")
-                    else "None"),
-                map:put($info-map, "range indexes: ",
-                    if (map:contains($entity-type, "rangeIndex"))
-                    then $compare("rangeIndex")
-                    else "None"),
-                map:put($info-map, "word lexicons: ",
-                    if (map:contains($entity-type, "wordLexicon"))
-                    then $compare("wordLexicon")
-                    else "None")
+                map:put($info-map, "primaryKey: ", $compare("primaryKey")),
+                map:put($info-map, "required: ", $compare("required")),
+                map:put($info-map, "range indexes: ", $compare("rangeIndex")),
+                map:put($info-map, "word lexicons: ", $compare("wordLexicon"))
             )
     let $properties := map:get($entity-type, "properties")
     let $values :=

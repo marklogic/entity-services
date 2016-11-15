@@ -196,20 +196,14 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     $source as node()?
 ) as map:map
 {{
-    let $source-node :=
-        if ( ($source instance of document-node())
-            or (exists($source/{$entity-type-name})))
-        then $source/node()
-        else $source
+    let $source-node := {$prefix}:init-source($source, '{$entity-type-name}')
+
     let $instance := json:object()
-    (: Add the original source document as an attachment. (optional, for lineage) :)
-        =>map:with('$attachments',
-            typeswitch($source-node)
-            case object-node() return xdmp:quote($source)
-            case array-node() return xdmp:quote($source)
-            default return $source)
+    (: If desired, add the original source document as an attachment. :)
+        =>{$prefix}:add-attachments($source-node, $source)
     (: Add type information to the entity instance (required, do not change) :)
         =>map:with('$type', '{ $entity-type-name }')
+
     return
 
     (: The following logic may not be required for every extraction       :)
@@ -336,6 +330,34 @@ declare function {$prefix}:instance-to-envelope(
     }}
 }};
 
+
+declare private function {$prefix}:init-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{{
+    if ( ($source instance of document-node())
+        or (exists
+            ($source/element()[fn:node-name(.) eq xs:QName($entity-type-name)] )))
+    then $source/node()
+    else $source
+}};
+
+
+declare private function {$prefix}:add-attachments(
+    $instance as json:object,
+    $source-node as node()*,
+    $source as node()*
+) as json:object
+{{
+    $instance
+    =>map:with('$attachments',
+        typeswitch($source-node)
+        case object-node() return xdmp:quote($source)
+        case array-node() return xdmp:quote($source)
+        default return $source)
+}};
+
 </module>/text()
 }
 
@@ -365,7 +387,7 @@ declare private function es-codegen:value-for-conversion(
         then $source-entity-type=>map:get("properties")
         else ()
     let $is-missing-source :=
-        (empty($source-properties) or not($target-property-name = map:keys($source-properties)))
+        (exists($source-properties) and ($target-property-name = map:keys($source-properties)))
     let $source-correlate :=
         if (exists($source-properties))
         then map:get($source-properties, $target-property-name)
@@ -408,7 +430,7 @@ declare private function es-codegen:value-for-conversion(
         else json:array-values( map:get($target-entity-type, "required") )
     let $is-required := $target-property-name =
             ( map:get($target-entity-type, "primaryKey"), $required-properties )
-    let $path-to-property := concat("$source-node/", $target-entity-type-name, "/", $target-property-name)
+    let $path-to-property := concat("$source-node/", $target-property-name)
     let $target-ref-name := functx:substring-after-last($target-ref, "/")
     let $source-ref-name := functx:substring-after-last($source-ref, "/")
     (: warning: property path override if source is ref and target is scalar :)
@@ -508,17 +530,28 @@ declare function es-codegen:version-translator-generate(
         return
     <convert-instance>
 (:~
- : Creates a map:map instance representation of the target entity type
- : from a document that contains the source entity instance.
+ : Creates a map:map instance representation of the target
+ : entity type {$entity-type-name} from a document that
+ : contains the source entity instance.
  : @param $source-node  A document or node that contains data conforming to the
  : source entity type
  : @return A map:map instance that holds the data for this entity type.
  :)
+{ if (not($entity-type-name = map:keys($source-definitions)))
+    then "
+(: Type " || $entity-type-name || "is not in the source model.
+ : XPath expressions are created as though there were no change between source and target type.
+ :)"
+    else () }
 declare function {$module-prefix}:convert-instance-{$entity-type-name}(
-    $source-node as node()
+    $source as node()
 ) as map:map
 {{
+    let $source-node := {$module-prefix}:init-source($source, '{$entity-type-name}')
+
+    return
     json:object()
+    =>{$module-prefix}:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', '{ $entity-type-name }')
     (: The following lines are generated from the '{$entity-type-name}' entity type. :)
@@ -563,7 +596,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
             for $property-name in map:keys(map:get($source-entity-type, "properties"))
             where not($property-name = map:keys(map:get($entity-type, "properties")))
                 return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
-        else "No missing properties."
+        else ()
     return
         fn:concat(
             fn:string-join($values),
@@ -663,6 +696,27 @@ for $c in $convert-instance order by $c return $c/text()}
 
 {for $r in $removed-type order by $r return $r/text()}
 
+
+declare private function {$module-prefix}:init-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{{
+    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
+    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
+    else $source
+}};
+
+
+declare private function {$module-prefix}:copy-attachments(
+    $instance as json:object,
+    $source as node()*
+) as json:object
+{{
+    $instance
+    =>es:optional('$attachments',
+        $source ! fn:root(.)/es:envelope/es:attachments/node())
+}};
 
 </module>/text()
     }

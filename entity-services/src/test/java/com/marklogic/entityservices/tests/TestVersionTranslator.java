@@ -72,11 +72,18 @@ public class TestVersionTranslator extends EntityServicesTestBase {
 
         DOMHandle domHandle = evalOneResult(
             "import module namespace c = 'http://example.org/tests/conversion-0.0.2-from-conversion-0.0.1' at '/ext/version-converter.xqy';" +
-            "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';", "<x>{" +
-                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()," +
-                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETTwo()=>m:instance-to-canonical-xml()," +
-                "doc('instance-0.0.1.xml')/x=>c:convert-instance-ETThree()=>m:instance-to-canonical-xml()" +
-                "}</x>",
+            "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';",
+            "<x xmlns:es=\"http://marklogic.com/entity-services\">" +
+                "<es:instance>{" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()" +
+                "}</es:instance>" +
+                "<es:instance>{" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETTwo()=>m:instance-to-canonical-xml()" +
+                "}</es:instance>" +
+                "<es:instance>{" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETThree()=>m:instance-to-canonical-xml()" +
+                "}</es:instance>" +
+                "</x>",
             new DOMHandle());
 
         String expected = "instance-0.0.2.xml";

@@ -20,7 +20,7 @@ xquery version "1.0-ml";
  database of your application, and check it into your source control system.
 
  Modification History:
- Generated at timestamp: 2016-10-18T17:14:44.347011-07:00
+ Generated at timestamp: 2016-11-14T15:03:42.384326-08:00
  Persisted by AUTHOR
  Date: DATE
  :)
@@ -59,20 +59,14 @@ declare function et-required:extract-instance-ETOne(
     $source as node()?
 ) as map:map
 {
-    let $source-node :=
-        if ( ($source instance of document-node())
-            or (exists($source/ETOne)))
-        then $source/node()
-        else $source
+    let $source-node := et-required:init-source($source, 'ETOne')
+
     let $instance := json:object()
-    (: Add the original source document as an attachment. (optional, for lineage) :)
-        =>map:with('$attachments',
-            typeswitch($source-node)
-            case object-node() return xdmp:quote($source)
-            case array-node() return xdmp:quote($source)
-            default return $source)
+    (: If desired, add the original source document as an attachment. :)
+        =>et-required:add-attachments($source-node, $source)
     (: Add type information to the entity instance (required, do not change) :)
         =>map:with('$type', 'ETOne')
+
     return
 
     (: The following logic may not be required for every extraction       :)
@@ -189,5 +183,33 @@ declare function et-required:instance-to-envelope(
             }
         }
     }
+};
+
+
+declare private function et-required:init-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{
+    if ( ($source instance of document-node())
+        or (exists
+            ($source/element()[fn:node-name(.) eq xs:QName($entity-type-name)] )))
+    then $source/node()
+    else $source
+};
+
+
+declare private function et-required:add-attachments(
+    $instance as json:object,
+    $source-node as node()*,
+    $source as node()*
+) as json:object
+{
+    $instance
+    =>map:with('$attachments',
+        typeswitch($source-node)
+        case object-node() return xdmp:quote($source)
+        case array-node() return xdmp:quote($source)
+        default return $source)
 };
 

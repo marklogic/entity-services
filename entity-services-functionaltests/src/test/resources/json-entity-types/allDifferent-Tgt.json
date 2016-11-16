@@ -1,8 +1,8 @@
 {
   "info": {
-    "title": "Test-3",
-    "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "title": "allDifferentTgt",
+    "version": "0.0.2",
+    "baseUri":"http://marklogic.com/versionTrans/",
     "description":"Target and Source have different ETs and Properties"
   },
   "definitions": {

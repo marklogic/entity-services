@@ -1,14 +1,14 @@
 {
   "info": {
-    "title": "Test-5",
+    "title": "srcHasETSrc",
     "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "baseUri":"http://marklogic.com/srcHasETTgtDsnt/",
     "description":"Source has entities that target does not"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"string"
         },
         "CompanyName": {
@@ -21,7 +21,7 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     },
     "Product": {
       "properties": {

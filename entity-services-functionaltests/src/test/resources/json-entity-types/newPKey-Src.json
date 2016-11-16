@@ -1,14 +1,14 @@
 {
   "info": {
-    "title": "Test-7",
+    "title": "newPKeySrc",
     "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "baseUri":"http://marklogic.com/newPKey/",
     "description":"Target has primary key defined but source does not"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"string"
         },
         "CompanyName": {
@@ -21,7 +21,7 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     },
     "Product": {
       "properties": {

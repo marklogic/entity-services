@@ -1,14 +1,14 @@
 {
   "info": {
-    "title": "Test-9",
-    "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "title": "sameTgt",
+    "version": "0.0.2",
+    "baseUri":"http://marklogic.com/sameSrcTgt/",
     "description":"Source and Target have same ET and properties but different title"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"string"
         },
         "CompanyName": {
@@ -21,7 +21,7 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     },
     "Product": {
       "properties": {

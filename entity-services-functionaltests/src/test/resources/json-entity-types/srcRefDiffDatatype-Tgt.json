@@ -1,14 +1,14 @@
 {
   "info": {
-    "title": "Test-8",
-    "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "title": "srcRefDatatypeTgt",
+    "version": "0.0.2",
+    "baseUri":"http://marklogic.com/srcRefDatatype/",
     "description":"Source has a ref that has a different datatype than that in target"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"integer"
         },
         "CompanyName": {
@@ -21,11 +21,11 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     },
     "Product": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "$ref":"#/definitions/Customer"
         },
         "UnitPrice": {

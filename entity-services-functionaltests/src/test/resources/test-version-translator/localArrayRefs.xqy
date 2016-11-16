@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  localArrayRefSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-10-27T22:22:01.068666-07:00
+ Generated at timestamp: 2016-11-16T00:32:56.076042-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -25,7 +25,7 @@ declare option xdmp:mapping "false";
  Type Order: 
     primaryKey: CustomerID, ( in source: CustomerID )
     required: CustomerID, ( in source: CustomerID )
-    range indexes: None ( in source: CustomerID, OrderDate )
+    range indexes: None, ( in source: CustomerID, OrderDate )
     word lexicons: CustomerID, ( in source: CustomerID, OrderDate )
  
  Type OrderDetail: 
@@ -38,46 +38,80 @@ declare option xdmp:mapping "false";
 
 
 (:~
- : Creates a map:map instance representation of the target entity type
- : from a document that contains the source entity instance.
+ : Creates a map:map instance representation of the target
+ : entity type Order from a document that
+ : contains the source entity instance.
  : @param $source-node  A document or node that contains data conforming to the
  : source entity type
  : @return A map:map instance that holds the data for this entity type.
  :)
+
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
-    $source-node as node()
+    $source as node()
 ) as map:map
 {
+    let $source-node := localArrayRefTgt-from-localArrayRefSrc:init-source($source, 'Order')
+
+    return
     json:object()
+    =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'Order')
     (: The following lines are generated from the 'Order' entity type. :)
-    =>   map:with('CustomerID',             xs:string($source-node/Order/CustomerID))
-    =>es:optional('OrderDate',              xs:dateTime($source-node/Order/OrderDate))
-    =>es:optional('ShipAddress',            xs:string($source-node/Order/ShipAddress))
-    =>es:optional('arr2arr',                es:extract-array($source-node/Order/arr2arr, xs:string#1))
-    =>es:optional('OrderDetails',           es:extract-array($source-node/Order/OrderDetails/*, localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail#1))
-    (:function($path) { json:object()=>map:with('$type', 'OrderDetail')=>map:with('$ref', $path/OrderDetail/text() ) })):)
+    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
+    =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
+    =>es:optional('arr2arr',                es:extract-array($source-node/arr2arr, xs:string#1))
+    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails, function($path) { json:object()=>map:with('$type', 'OrderDetail')=>map:with('$ref', $path/OrderDetail/text() ) }))
 
 };
     
 (:~
- : Creates a map:map instance representation of the target entity type
- : from a document that contains the source entity instance.
+ : Creates a map:map instance representation of the target
+ : entity type OrderDetail from a document that
+ : contains the source entity instance.
  : @param $source-node  A document or node that contains data conforming to the
  : source entity type
  : @return A map:map instance that holds the data for this entity type.
  :)
+
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail(
-    $source-node as node()
+    $source as node()
 ) as map:map
 {
+    let $source-node := localArrayRefTgt-from-localArrayRefSrc:init-source($source, 'OrderDetail')
+
+    return
     json:object()
+    =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'OrderDetail')
     (: The following lines are generated from the 'OrderDetail' entity type. :)
-    =>   map:with('ProductID',              xs:integer($source-node/OrderDetail/ProductID))
-    =>es:optional('UnitPrice',              xs:integer($source-node/OrderDetail/UnitPrice))
-    =>es:optional('Quantity',               xs:integer($source-node/OrderDetail/Quantity))
+    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
+    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
+    =>es:optional('Quantity',               xs:integer($source-node/Quantity))
 
+};
+    
+
+
+declare private function localArrayRefTgt-from-localArrayRefSrc:init-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{
+    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
+    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
+    else $source
+};
+
+
+declare private function localArrayRefTgt-from-localArrayRefSrc:copy-attachments(
+    $instance as json:object,
+    $source as node()*
+) as json:object
+{
+    $instance
+    =>es:optional('$attachments',
+        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

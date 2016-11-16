@@ -1,14 +1,14 @@
 {  
    "info":{  
-      "title":"Test-1",
+      "title":"scalar2ArrayTgt",
       "version":"0.0.2",
       "description":"Target model. Scalar to Array conversion test.",
-      "baseUri":"http://arr-to-scal"
+      "baseUri":"http://scal-to-arr"
    },
    "definitions":{  
       "Customer":{  
          "properties":{  
-            "CustomerId":{  
+            "CustomerID":{  
                "datatype":"string"
             },
             "CompanyName":{  
@@ -24,7 +24,7 @@
             }
          },
          "description":"Customer entity Type",
-         "primaryKey":"CustomerId"
+         "primaryKey":"CustomerID"
       }
     }
 }

@@ -9,8 +9,8 @@ repositories {
   }
 }
 
-dependencies{
-  compile('com.marklogic:data-movement:1.0-SNAPSHOT') {
+dependencies {
+  compile('com.marklogic:java-client-api:4.0-SNAPSHOT') {
     exclude(group: 'com.google.guava')
   }
   compile('ch.qos.logback:logback-classic:1.1.7')
@@ -19,7 +19,11 @@ dependencies{
 
 ext {
     mlAppConfig {
-        modulePaths.add("entity-services-e2e/src/main/ml-modules")
+        
         createTriggersDatabase = false
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
 }

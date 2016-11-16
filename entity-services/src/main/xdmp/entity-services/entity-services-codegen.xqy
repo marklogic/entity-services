@@ -387,7 +387,7 @@ declare private function es-codegen:value-for-conversion(
         then $source-entity-type=>map:get("properties")
         else ()
     let $is-missing-source :=
-        (exists($source-properties) and ($target-property-name = map:keys($source-properties)))
+        (exists($source-properties) and not($target-property-name = map:keys($source-properties)))
     let $source-correlate :=
         if (exists($source-properties))
         then map:get($source-properties, $target-property-name)
@@ -539,7 +539,7 @@ declare function es-codegen:version-translator-generate(
  :)
 { if (not($entity-type-name = map:keys($source-definitions)))
     then "
-(: Type " || $entity-type-name || "is not in the source model.
+(: Type " || $entity-type-name || " is not in the source model.
  : XPath expressions are created as though there were no change between source and target type.
  :)"
     else () }

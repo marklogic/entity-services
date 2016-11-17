@@ -75,7 +75,7 @@ declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Customer(
  : @return A map:map instance that holds the data for this entity type.
  :)
 
-(: Type Productis not in the source model.
+(: Type Product is not in the source model.
  : XPath expressions are created as though there were no change between source and target type.
  :)
 declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Product(

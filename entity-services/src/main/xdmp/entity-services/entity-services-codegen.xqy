@@ -531,11 +531,12 @@ declare function es-codegen:version-translator-generate(
     <convert-instance>
 (:~
  : Creates a map:map instance representation of the target
- : entity type {$entity-type-name} from a document that
+ : entity type {$entity-type-name} from an envelope document that
  : contains the source entity instance.
- : @param $source-node  A document or node that contains data conforming to the
- : source entity type
- : @return A map:map instance that holds the data for this entity type.
+ : @param $source  Either an entity-services envelope document, or
+ :  an XML node holding the canonical form of the source entity type.
+ : @return A map:map instance that holds the data for the target
+ :  entity type.
  :)
 { if (not($entity-type-name = map:keys($source-definitions)))
     then "
@@ -551,6 +552,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
 
     return
     json:object()
+    (: Copies attachments from a source envelope document, if available :)
     =>{$module-prefix}:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', '{ $entity-type-name }')

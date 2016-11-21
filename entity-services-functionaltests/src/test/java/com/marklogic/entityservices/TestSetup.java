@@ -105,6 +105,7 @@ public class TestSetup {
         instance.loadEntityTypes();
         instance.loadInvalidEntityTypes();
         instance.loadExtraFiles();
+        instance.storeCustomConversionModules();
         return instance;
     }
     
@@ -212,6 +213,22 @@ public class TestSetup {
 	    }
 	    docMgr.write(writeSet);
 	}
+	
+    private void storeCustomConversionModules() {
+        
+        JSONDocumentManager docMgr = _modulesClient.newJSONDocumentManager();
+        DocumentWriteSet writeSet = docMgr.newWriteSet();
+        Collection<File> custConvMod = getTestResources("/customized-conversion-module");
+        
+        for (File f : custConvMod) {
+        
+            String moduleName = "/conv/" + f.getName();
+            DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+            logger.info("Loading customer xqy Files " + f.getName());
+            writeSet.add(moduleName, metadata, new FileHandle(f));
+        }
+        docMgr.write(writeSet);
+    }
 	
 	public void teardownClass() {
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();

@@ -79,7 +79,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		conversionModules = generateConversionModules();
 		storeConversionModules(conversionModules);
-		storeCustomConversionModules();
 
 	}
 	
@@ -91,21 +90,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			
 			String moduleName = "/conv/" + entityTypeName.replaceAll("\\.(xml|json)", ".xqy");
 			writeSet.add(moduleName, moduleMap.get(entityTypeName));
-		}
-		docMgr.write(writeSet);
-	}
-	
-	private static void storeCustomConversionModules() {
-		
-		DocumentWriteSet writeSet = docMgr.newWriteSet();
-		Collection<File> custConvMod = TestSetup.getInstance().getTestResources("/customized-conversion-module");
-		
-		for (File f : custConvMod) {
-		
-			String moduleName = "/conv/" + f.getName();
-			DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-	        
-	    	writeSet.add(moduleName, metadata, new FileHandle(f));
 		}
 		docMgr.write(writeSet);
 	}

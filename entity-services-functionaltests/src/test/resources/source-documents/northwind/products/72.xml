@@ -1,4 +1,5 @@
-<Product ProductID="72">
+<Product>
+    <ProductID>=72</ProductID>
 	<ProductName>Mozzarella di Giovanni</ProductName>
 	<SupplierID>14</SupplierID>
 	<CategoryID>4</CategoryID>

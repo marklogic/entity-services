@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +35,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.io.JacksonHandle;
@@ -223,5 +226,32 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		}
 		
 	}
+	
+	@Test
+    public void testConvInst() throws TransformerException, IOException, SAXException {
+
+        String import1 = "import module namespace locArr = 'http://localArrayRefTgt/localArrayRefTgt-0.0.2-from-localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs.xqy';\n" + 
+                         "import module namespace locArrSrc = 'http://localArrayRefSrc/localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs-Src.xqy';\n";
+        
+        String query1 = "locArr:convert-instance-Order(locArrSrc:instance-to-envelope(locArrSrc:extract-instance-Order(doc('10252.xml'))))";
+        
+        JacksonHandle handle;
+        try {
+            handle = evalOneResult(import1, query1, new JacksonHandle());
+            JsonNode actualDoc = handle.get();
+            logger.info("Checking convert-instance-Order()");
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Order.json");
+
+            JsonNode control = mapper.readValue(is, JsonNode.class);
+
+            org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));
+
+        } catch (TestEvalException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
 
 }

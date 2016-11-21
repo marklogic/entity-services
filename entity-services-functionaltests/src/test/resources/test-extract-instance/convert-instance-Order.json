@@ -1,0 +1,30 @@
+{
+"$attachments": "<Order xmlns:es=\"http://marklogic.com/entity-services\">\n    <OrderID>10252</OrderID>\n\t<CustomerID>SUPRD</CustomerID>\n\t<EmployeeID>4</EmployeeID>\n\t<OrderDate>1996-07-09T14:27:32</OrderDate>\n\t<RequiredDate>1996-08-06T11:55:58</RequiredDate>\n\t<ShippedDate>1996-07-11T09:16:43</ShippedDate>\n\t<ShipVia>2</ShipVia>\n\t<Freight>51.3000</Freight>\n\t<ShipName>Suprêmes délices</ShipName>\n\t<ShipAddress>Boulevard Tirou, 255</ShipAddress>\n\t<ShipCity>Charleroi</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>B-6000</ShipPostalCode>\n\t<ShipCountry>Belgium</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>20</ProductID>\n\t\t\t<UnitPrice>64</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>33</ProductID>\n\t\t\t<UnitPrice>2</UnitPrice>\n\t\t\t<Quantity>25</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>60</ProductID>\n\t\t\t<UnitPrice>27</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>", 
+"$type": "Order", 
+"CustomerID": "SUPRD", 
+"OrderDate": "1996-07-09T14:27:32", 
+"ShipAddress": "Boulevard Tirou, 255", 
+"OrderDetails": [
+{
+"$attachments": "<Order xmlns:es=\"http://marklogic.com/entity-services\">\n    <OrderID>10252</OrderID>\n\t<CustomerID>SUPRD</CustomerID>\n\t<EmployeeID>4</EmployeeID>\n\t<OrderDate>1996-07-09T14:27:32</OrderDate>\n\t<RequiredDate>1996-08-06T11:55:58</RequiredDate>\n\t<ShippedDate>1996-07-11T09:16:43</ShippedDate>\n\t<ShipVia>2</ShipVia>\n\t<Freight>51.3000</Freight>\n\t<ShipName>Suprêmes délices</ShipName>\n\t<ShipAddress>Boulevard Tirou, 255</ShipAddress>\n\t<ShipCity>Charleroi</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>B-6000</ShipPostalCode>\n\t<ShipCountry>Belgium</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>20</ProductID>\n\t\t\t<UnitPrice>64</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>33</ProductID>\n\t\t\t<UnitPrice>2</UnitPrice>\n\t\t\t<Quantity>25</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>60</ProductID>\n\t\t\t<UnitPrice>27</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>", 
+"$type": "OrderDetail", 
+"ProductID": 20, 
+"UnitPrice": 64, 
+"Quantity": 40
+}, 
+{
+"$attachments": "<Order xmlns:es=\"http://marklogic.com/entity-services\">\n    <OrderID>10252</OrderID>\n\t<CustomerID>SUPRD</CustomerID>\n\t<EmployeeID>4</EmployeeID>\n\t<OrderDate>1996-07-09T14:27:32</OrderDate>\n\t<RequiredDate>1996-08-06T11:55:58</RequiredDate>\n\t<ShippedDate>1996-07-11T09:16:43</ShippedDate>\n\t<ShipVia>2</ShipVia>\n\t<Freight>51.3000</Freight>\n\t<ShipName>Suprêmes délices</ShipName>\n\t<ShipAddress>Boulevard Tirou, 255</ShipAddress>\n\t<ShipCity>Charleroi</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>B-6000</ShipPostalCode>\n\t<ShipCountry>Belgium</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>20</ProductID>\n\t\t\t<UnitPrice>64</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>33</ProductID>\n\t\t\t<UnitPrice>2</UnitPrice>\n\t\t\t<Quantity>25</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>60</ProductID>\n\t\t\t<UnitPrice>27</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>", 
+"$type": "OrderDetail", 
+"ProductID": 33, 
+"UnitPrice": 2, 
+"Quantity": 25
+}, 
+{
+"$attachments": "<Order xmlns:es=\"http://marklogic.com/entity-services\">\n    <OrderID>10252</OrderID>\n\t<CustomerID>SUPRD</CustomerID>\n\t<EmployeeID>4</EmployeeID>\n\t<OrderDate>1996-07-09T14:27:32</OrderDate>\n\t<RequiredDate>1996-08-06T11:55:58</RequiredDate>\n\t<ShippedDate>1996-07-11T09:16:43</ShippedDate>\n\t<ShipVia>2</ShipVia>\n\t<Freight>51.3000</Freight>\n\t<ShipName>Suprêmes délices</ShipName>\n\t<ShipAddress>Boulevard Tirou, 255</ShipAddress>\n\t<ShipCity>Charleroi</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>B-6000</ShipPostalCode>\n\t<ShipCountry>Belgium</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>20</ProductID>\n\t\t\t<UnitPrice>64</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>33</ProductID>\n\t\t\t<UnitPrice>2</UnitPrice>\n\t\t\t<Quantity>25</Quantity>\n\t\t\t<Discount>0.05</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>60</ProductID>\n\t\t\t<UnitPrice>27</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>", 
+"$type": "OrderDetail", 
+"ProductID": 60, 
+"UnitPrice": 27, 
+"Quantity": 40
+}
+]
+}

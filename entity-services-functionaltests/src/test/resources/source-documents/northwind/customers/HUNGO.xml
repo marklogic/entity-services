@@ -1,4 +1,5 @@
-<Customer CustomerID="HUNGO">
+<Customer>
+    <CustomerID>HUNGO</CustomerID>
 	<CompanyName>Hungry Owl All-Night Grocers</CompanyName>
 	<ContactName>Patricia McKenna</ContactName>
 	<ContactTitle>Sales Associate</ContactTitle>

@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  localArrayRefSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-16T00:32:56.076042-08:00
+ Generated at timestamp: 2016-11-19T00:32:26.892326-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -39,11 +39,12 @@ declare option xdmp:mapping "false";
 
 (:~
  : Creates a map:map instance representation of the target
- : entity type Order from a document that
+ : entity type Order from an envelope document that
  : contains the source entity instance.
- : @param $source-node  A document or node that contains data conforming to the
- : source entity type
- : @return A map:map instance that holds the data for this entity type.
+ : @param $source  Either an entity-services envelope document, or
+ :  an XML node holding the canonical form of the source entity type.
+ : @return A map:map instance that holds the data for the target
+ :  entity type.
  :)
 
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
@@ -54,6 +55,7 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
 
     return
     json:object()
+    (: Copies attachments from a source envelope document, if available :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'Order')
@@ -68,11 +70,12 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
     
 (:~
  : Creates a map:map instance representation of the target
- : entity type OrderDetail from a document that
+ : entity type OrderDetail from an envelope document that
  : contains the source entity instance.
- : @param $source-node  A document or node that contains data conforming to the
- : source entity type
- : @return A map:map instance that holds the data for this entity type.
+ : @param $source  Either an entity-services envelope document, or
+ :  an XML node holding the canonical form of the source entity type.
+ : @return A map:map instance that holds the data for the target
+ :  entity type.
  :)
 
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail(
@@ -83,6 +86,7 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDe
 
     return
     json:object()
+    (: Copies attachments from a source envelope document, if available :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'OrderDetail')

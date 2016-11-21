@@ -1,4 +1,5 @@
-<Order OrderID="10252">
+<Order>
+    <OrderID>10252</OrderID>
 	<CustomerID>SUPRD</CustomerID>
 	<EmployeeID>4</EmployeeID>
 	<OrderDate>1996-07-09T14:27:32</OrderDate>
@@ -15,19 +16,19 @@
 	<OrderDetails>
 		<OrderDetail>
 			<ProductID>20</ProductID>
-			<UnitPrice>64.8000</UnitPrice>
+			<UnitPrice>64</UnitPrice>
 			<Quantity>40</Quantity>
 			<Discount>0.05</Discount>
 		</OrderDetail>
 		<OrderDetail>
 			<ProductID>33</ProductID>
-			<UnitPrice>2.0000</UnitPrice>
+			<UnitPrice>2</UnitPrice>
 			<Quantity>25</Quantity>
 			<Discount>0.05</Discount>
 		</OrderDetail>
 		<OrderDetail>
 			<ProductID>60</ProductID>
-			<UnitPrice>27.2000</UnitPrice>
+			<UnitPrice>27</UnitPrice>
 			<Quantity>40</Quantity>
 			<Discount>0</Discount>
 		</OrderDetail>

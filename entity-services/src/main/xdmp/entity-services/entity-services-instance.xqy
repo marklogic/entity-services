@@ -95,7 +95,9 @@ declare function inst:instance-json-from-document(
 
 declare function inst:instance-get-attachments(
     $document as document-node()
-) as element()*
+) as item()*
 {
-    $document//es:attachments/*
+    if (exists($document//es:attachments/*))
+    then $document//es:attachments/*
+    else $document//es:attachments/text()
 };

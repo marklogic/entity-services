@@ -237,7 +237,7 @@ declare function es:instance-json-from-document(
  :)
 declare function es:instance-get-attachments(
     $document as document-node()
-) as element()*
+) as item()*
 {
     inst:instance-get-attachments($document)
 };

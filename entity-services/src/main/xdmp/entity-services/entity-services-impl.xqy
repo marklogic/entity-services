@@ -91,7 +91,7 @@ declare private variable $esi:model-schematron :=
           <iso:assert test="not(local-name(.) = root(.)/es:model/es:definitions/*/local-name(.))" id="ES-PROPERTY-TYPE-CONFLICT">Type names and property names must be distinct ('<xsl:value-of select="xs:string(node-name(.))"/>')</iso:assert>
         </iso:rule>
         <iso:rule context="es:ref|node('$ref')">
-          <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-x]+:')" id="ES-REF-VALUE">es:ref (property '<xsl:value-of select="xs:string(node-name(.))"/>') must start with "#/definitions/" or be an absolute IRI.</iso:assert>
+          <iso:assert test="starts-with(xs:string(.),'#/definitions/') or matches(xs:string(.), '^[a-z]+:')" id="ES-REF-VALUE">es:ref (property '<xsl:value-of select="xs:string(node-name(.))"/>') must start with "#/definitions/" or be an absolute IRI.</iso:assert>
           <iso:assert test="replace(xs:string(.), '.*/', '') castable as xs:NCName" id="ES-REF-VALUE"><xsl:value-of select="."/>: ref value must end with a simple name (xs:NCName).</iso:assert>
           <iso:assert test="if (starts-with(xs:string(.), '#/definitions/')) then replace(xs:string(.), '#/definitions/', '') = (root(.)/definitions/*/node-name(.) ! xs:string(.), root(.)/es:model/es:definitions/*/local-name(.)) else true()" id="ES-LOCAL-REF">Local reference <xsl:value-of select="."/> must resolve to local entity type.</iso:assert>
           <iso:assert test="if (not(contains(xs:string(.), '#/definitions/'))) then matches(xs:string(.), '^[a-z]+:') else true()" id="ES-ABSOLUTE-REF">Non-local reference <xsl:value-of select="."/> must be a valid URI.</iso:assert>

@@ -27,6 +27,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import com.jayway.restassured.internal.path.json.JSONAssertion;
+import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.*;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -261,6 +263,23 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         }
     }
 
+    @Test
+    public void testJsonAttachments()
+    {
+        InputStream testEnvelope = this.getClass().getResourceAsStream("/model-units/test-envelope-json-attachment.xml");
+        XMLDocumentManager xmlDocMgr = client.newXMLDocumentManager();
+        xmlDocMgr.write("/test-envelope-json-attachment.xml", new InputStreamHandle(testEnvelope).withFormat(Format.XML));
+
+        StringHandle stringHandle = evalOneResult("",
+            "es:instance-get-attachments( doc('/test-envelope-json-attachment.xml') )",
+            new StringHandle());
+
+        String actual = stringHandle.get();
+
+        assertEquals("{\"bah\":\"yes\"}", actual);
+
+        xmlDocMgr.delete("/test-envelope-json-attachment.xml");
+    }
 
     @Test
     public void testEnvelopeFunction() throws TestEvalException {

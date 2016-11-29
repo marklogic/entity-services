@@ -543,12 +543,12 @@ declare function es-codegen:version-translator-generate(
     <convert-instance>
 (:~
  : Creates a map:map instance representation of the target
- : entity type {$entity-type-name} from an envelope document that
- : contains the source entity instance.
- : @param $source  Either an entity-services envelope document, or
- :  an XML node holding the canonical form of the source entity type.
- : @return A map:map instance that holds the data for the target
- :  entity type.
+ : entity type {$entity-type-name} from XML that
+ : contains instance data of {$entity-type-name}, version {$source-version}.
+ : @param $source  An Entity Services envelope document (&lt;es:envelope&gt;)
+ :  or a canonical XML instance of type {$entity-type-name}.
+ : @return A map:map instance that holds the data for {$entity-type-name},
+ :  version {$target-version}.
  :)
 { if (not($entity-type-name = map:keys($source-definitions)))
     then "
@@ -564,7 +564,9 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
 
     return
     json:object()
-    (: Copies attachments from a source envelope document, if available :)
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
     =>{$module-prefix}:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', '{ $entity-type-name }')
@@ -647,6 +649,10 @@ declare function {$module-prefix}:convert-instance-{$removed-entity-type-name}(
 ) as map:map
 {{
     json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>{$module-prefix}:copy-attachments($source-node)
     =>map:with('$type', '{ $removed-entity-type-name }')
 {
 

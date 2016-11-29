@@ -373,6 +373,14 @@ declare private function es-codegen:value-for-conversion(
     $display-property-name as xs:string
 ) as xs:string
 {
+    let $target-info := map:get($target-model, "info")
+    let $target-title := map:get($target-info, "title")
+    let $target-prefix := lower-case(substring($target-title,1,1)) || substring($target-title,2)
+    let $source-info := map:get($source-model, "info")
+    let $source-title := map:get($source-info, "title")
+    let $source-prefix := lower-case(substring($source-title,1,1)) || substring($source-title,2)
+    let $module-prefix := $target-prefix || "-from-" || $source-prefix
+
     let $target-entity-type := $target-model
         =>map:get("definitions")
         =>map:get($target-entity-type-name)
@@ -478,7 +486,11 @@ declare private function es-codegen:value-for-conversion(
         then $wrap-if-array($path-to-property, $casting-function-name, true())
         else if ($is-reference-from-scalar-or-array)
         then $wrap-if-array($path-to-property, $extract-scalar-fn, true())
-        else $wrap-if-array($path-to-property, $extract-reference-fn, false())
+        else if (contains($target-ref, "#/definitions"))
+        then
+            $wrap-if-array($path-to-property || "/*", concat($module-prefix, ":convert-instance-", $target-ref-name), true())
+        else
+            $wrap-if-array($path-to-property, $extract-reference-fn, false())
 
     return
         fn:string-join( ($comment,

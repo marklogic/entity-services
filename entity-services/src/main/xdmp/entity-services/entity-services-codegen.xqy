@@ -543,8 +543,9 @@ declare function es-codegen:version-translator-generate(
     <convert-instance>
 (:~
  : Creates a map:map instance representation of the target
- : entity type {$entity-type-name} from XML that
- : contains instance data of {$entity-type-name}, version {$source-version}.
+ : entity type {$entity-type-name} from an envelope document
+ : containing a source entity instance, that is, instance data
+ : of type {$entity-type-name}, version {$source-version}.
  : @param $source  An Entity Services envelope document (&lt;es:envelope&gt;)
  :  or a canonical XML instance of type {$entity-type-name}.
  : @return A map:map instance that holds the data for {$entity-type-name},

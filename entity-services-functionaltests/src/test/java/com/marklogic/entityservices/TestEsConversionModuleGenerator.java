@@ -656,6 +656,25 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
+    public void testInstanceGetAttachmentsJSON() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        String sourceDocument = "VINET.json";
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                          "xdmp:from-json-string(es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')))))", new JacksonHandle());
+        
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as controlDoc
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-attachments/jsonAttachment.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));   
+	
+	}
+	
+	@Test
 	public void testInstanceFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
 		
 		String entityType = "valid-ref-same-document.xml";

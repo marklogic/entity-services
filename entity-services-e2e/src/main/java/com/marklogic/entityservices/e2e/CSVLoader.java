@@ -21,7 +21,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.marklogic.datamovement.*;
+import com.marklogic.client.datamovement.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,9 +61,9 @@ public class CSVLoader extends ExamplesBase {
 
         File dir = new File(projectDir + "/data/superstore-csv");
 
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(10)
-                .onBatchSuccess((client, batch) -> logger.info(getSummaryReport(batch)))
-                .onBatchFailure((client, batch, throwable) -> {
+        WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(10)
+                .onBatchSuccess(batch -> logger.info(getSummaryReport(batch)))
+                .onBatchFailure((batch, throwable) -> {
                     logger.warn("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     throwable.printStackTrace();
                 });
@@ -100,7 +100,7 @@ public class CSVLoader extends ExamplesBase {
             e.printStackTrace();
         }
 
-        batcher.flush();
+        batcher.flushAndWait();
     }
 
     private String getSummaryReport(Batch<WriteEvent> batch) {
@@ -110,7 +110,7 @@ public class CSVLoader extends ExamplesBase {
             // is this a bug or not implemented TODO
             return "Report is null";
         } else {
-            return "batches: " + report.getSuccessBatchesCount() + ", bytes: " + report.getBytesMoved() + ", failures: "
+            return "batches: " + report.getSuccessBatchesCount() + ", failures: "
                     + report.getFailureBatchesCount();
         }
     }

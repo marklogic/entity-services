@@ -35,9 +35,9 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.DocumentMetadataHandle.Capability;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
-import com.marklogic.datamovement.DataMovementManager;
-import com.marklogic.datamovement.JobTicket;
-import com.marklogic.datamovement.WriteHostBatcher;
+import com.marklogic.client.datamovement.DataMovementManager;
+import com.marklogic.client.datamovement.JobTicket;
+import com.marklogic.client.datamovement.WriteBatcher;
 
 /**
  * Base class for examples. See the importJSON method for generic loading of
@@ -73,12 +73,12 @@ abstract class ExamplesBase {
         // FIXME this is a hack for intellij.
         if (!projectDir.endsWith("e2e")) projectDir += "/entity-services-e2e";
 
-        moveMgr = DataMovementManager.newInstance().withClient(client);
+        moveMgr = client.newDataMovementManager();
         mapper = new ObjectMapper();
 
     }
 
-    private void importOrDescend(Path directory, WriteHostBatcher batcher, String collection, Format format) {
+    private void importOrDescend(Path directory, WriteBatcher batcher, String collection, Format format) {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path entry : stream) {
                 if (entry.toFile().isDirectory()) {
@@ -145,9 +145,9 @@ abstract class ExamplesBase {
 
         logger.info("job started.");
 
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(100).withThreadCount(5)
-                .onBatchSuccess((client, batch) -> logger.info("Loaded batch of JSON documents"))
-                .onBatchFailure((client, batch, throwable) -> {
+        WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(5)
+                .onBatchSuccess(batch -> logger.info("Loaded batch of JSON documents"))
+                .onBatchFailure((batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     System.err.println(throwable.getMessage());
                     System.err.println(
@@ -161,7 +161,7 @@ abstract class ExamplesBase {
 
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
 
-        batcher.flush();
+        batcher.flushAndWait();
     }
 
 }

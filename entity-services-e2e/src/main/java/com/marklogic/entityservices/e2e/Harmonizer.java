@@ -18,9 +18,9 @@ package com.marklogic.entityservices.e2e;
 import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.query.StructuredQueryBuilder;
 import com.marklogic.client.query.StructuredQueryDefinition;
-import com.marklogic.datamovement.ApplyTransformListener;
-import com.marklogic.datamovement.JobTicket;
-import com.marklogic.datamovement.QueryHostBatcher;
+import com.marklogic.client.datamovement.ApplyTransformListener;
+import com.marklogic.client.datamovement.JobTicket;
+import com.marklogic.client.datamovement.QueryBatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +38,9 @@ public class Harmonizer extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("raw");
         ServerTransform ingester = new ServerTransform("northwind");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("Batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     // logger.warn("FAILURE on batch:" + inPlaceBatch.toString()
                     // + "\n", throwable);
                     // throwable.printStackTrace();
@@ -48,13 +48,13 @@ public class Harmonizer extends ExamplesBase {
                     System.err.print(String.join("\n", inPlaceBatch.getItems()) + "\n");
                 });
 
-        QueryHostBatcher queryHostBatcher = moveMgr.newQueryHostBatcher(qdef).withBatchSize(100)
-                .withThreadCount(5).onUrisReady(listener).onQueryFailure((client3, exception) -> {
+        QueryBatcher queryBatcher = moveMgr.newQueryBatcher(qdef).withBatchSize(100)
+                .withThreadCount(5).onUrisReady(listener).onQueryFailure(exception -> {
                     logger.error("Query error");
                 });
 
-        JobTicket ticket = moveMgr.startJob(queryHostBatcher);
-        queryHostBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        JobTicket ticket = moveMgr.startJob(queryBatcher);
+        queryBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
         moveMgr.stopJob(ticket);
     }
 
@@ -63,25 +63,25 @@ public class Harmonizer extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("raw", "csv");
         ServerTransform ingester = new ServerTransform("superstore");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     logger.error("FAILURE on batch:" + inPlaceBatch.toString() + "\n", throwable);
                     //System.err.println(throwable.getMessage());
                     //System.err.print(String.join("\n", inPlaceBatch.getItems()) + "\n");
                 });
 
-        QueryHostBatcher queryHostBatcher = moveMgr //
-                .newQueryHostBatcher(qdef) //
+        QueryBatcher queryBatcher = moveMgr //
+                .newQueryBatcher(qdef) //
                 .withBatchSize(100) //
                 .withThreadCount(5) //
                 .onUrisReady(listener) //
-                .onQueryFailure((client3, exception) -> {
+                .onQueryFailure(exception -> {
                     logger.error("Query error");
                 });
 
-        JobTicket ticket = moveMgr.startJob(queryHostBatcher);
-        queryHostBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        JobTicket ticket = moveMgr.startJob(queryBatcher);
+        queryBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
         moveMgr.stopJob(ticket);
     }
 

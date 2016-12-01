@@ -285,11 +285,9 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		/*
 		 * Might need to edit the gen module to get expected output
 		 */
-		String entityType = "valid-ref-combo-sameDocument-subIri.json";
-		String sourceDocument = "10248.xml";
-		String ns = getNameSpace(entityType);
+	    String sourceDocument = "10249.xml";
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+	    JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; ",
                                   "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
@@ -432,7 +430,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public void testExtractInstanceCustomer2() throws IOException, TestEvalException {
 		
 		String entityType = "valid-db-prop-et.json";
-		String sourceDocument = "42.xml";
+		String sourceDocument = "GODOS.xml";
 		String ns = getNameSpace(entityType);
 		System.out.println("namespace::::"+ns);
 		

@@ -1,4 +1,5 @@
-<Customer CustomerID="GODOS">
+<Customer>
+    <CustomerId>30605</CustomerId>
 	<CompanyName>Godos Cocina Típica</CompanyName>
 	<ContactName>José Pedro Freyre</ContactName>
 	<ContactTitle>Sales Manager</ContactTitle>
@@ -6,7 +7,7 @@
 	<City>Sevilla</City>
 	<Region/>
 	<PostalCode>41101</PostalCode>
-	<Country>Spain</Country>
+	<Country>true</Country>
 	<Phone>(95) 555 82 82</Phone>
 	<Fax/>
 </Customer>

@@ -1,1 +1,8 @@
-{"$type":"Customer","$attachments":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Product ProductID=\"42\">\n\t<ProductName>Singaporean Hokkien Fried Mee</ProductName>\n\t<SupplierID>20</SupplierID>\n\t<CategoryID>5</CategoryID>\n\t<QuantityPerUnit>32 - 1 kg pkgs.</QuantityPerUnit>\n\t<UnitPrice>14</UnitPrice>\n\t<UnitsInStock>26</UnitsInStock>\n\t<UnitsOnOrder>0</UnitsOnOrder>\n\t<ReorderLevel>0</ReorderLevel>\n\t<Discontinued>true</Discontinued>\n</Product>","CustomerId":null}
+{  
+  "$attachments":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Customer>\n    <CustomerId>30605</CustomerId>\n\t<CompanyName>Godos Cocina Típica</CompanyName>\n\t<ContactName>José Pedro Freyre</ContactName>\n\t<ContactTitle>Sales Manager</ContactTitle>\n\t<Address>C/ Romero, 33</Address>\n\t<City>Sevilla</City>\n\t<Region/>\n\t<PostalCode>41101</PostalCode>\n\t<Country>true</Country>\n\t<Phone>(95) 555 82 82</Phone>\n\t<Fax/>\n</Customer>",
+  "$type":"Customer",
+  "CustomerId":30605,
+  "CompanyName":"Godos Cocina Típica",
+  "Country":true,
+  "ContactName":"José Pedro Freyre"
+}

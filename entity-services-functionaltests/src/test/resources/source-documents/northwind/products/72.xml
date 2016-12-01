@@ -1,13 +1,14 @@
 <Product>
-    <ProductID>=72</ProductID>
-	<ProductName>Mozzarella di Giovanni</ProductName>
-	<SupplierID>14</SupplierID>
-	<CategoryID>4</CategoryID>
-	<QuantityPerUnit>24 - 200 g pkgs.</QuantityPerUnit>
-	<UnitPrice>34.8000</UnitPrice>
-	<UnitsInStock>14</UnitsInStock>
-	<UnitsOnOrder>0</UnitsOnOrder>
-	<ReorderLevel>0</ReorderLevel>
-	<Discontinued>false</Discontinued>
+    <CustomerId>12345</CustomerId>
+    <ProductID>72</ProductID>
+    <ProductName>Mozzarella di Giovanni</ProductName>
+    <SupplierID>14</SupplierID>
+    <ContactName>Michel</ContactName>
+    <CompanyName>Uber</CompanyName>
+    <UnitPrice>34</UnitPrice>
+    <UnitsInStock>14</UnitsInStock>
+    <UnitsOnOrder>0</UnitsOnOrder>
+    <Country>USA</Country>
+    <Discontinued>false</Discontinued>
 </Product>
 

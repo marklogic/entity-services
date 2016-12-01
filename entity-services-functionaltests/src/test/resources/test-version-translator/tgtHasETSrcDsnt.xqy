@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  tgtHasETSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-19T00:36:22.970961-08:00
+ Generated at timestamp: 2016-11-30T20:48:40.284681-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -40,12 +40,13 @@ declare option xdmp:mapping "false";
 
 (:~
  : Creates a map:map instance representation of the target
- : entity type Customer from an envelope document that
- : contains the source entity instance.
- : @param $source  Either an entity-services envelope document, or
- :  an XML node holding the canonical form of the source entity type.
- : @return A map:map instance that holds the data for the target
- :  entity type.
+ : entity type Customer from an envelope document
+ : containing a source entity instance, that is, instance data
+ : of type Customer, version 0.0.1.
+ : @param $source  An Entity Services envelope document (<es:envelope>)
+ :  or a canonical XML instance of type Customer.
+ : @return A map:map instance that holds the data for Customer,
+ :  version 0.0.2.
  :)
 
 declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Customer(
@@ -56,7 +57,9 @@ declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Customer(
 
     return
     json:object()
-    (: Copies attachments from a source envelope document, if available :)
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
     =>tgtHasETTgt-from-tgtHasETSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'Customer')
@@ -70,12 +73,13 @@ declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Customer(
     
 (:~
  : Creates a map:map instance representation of the target
- : entity type Product from an envelope document that
- : contains the source entity instance.
- : @param $source  Either an entity-services envelope document, or
- :  an XML node holding the canonical form of the source entity type.
- : @return A map:map instance that holds the data for the target
- :  entity type.
+ : entity type Product from an envelope document
+ : containing a source entity instance, that is, instance data
+ : of type Product, version 0.0.1.
+ : @param $source  An Entity Services envelope document (<es:envelope>)
+ :  or a canonical XML instance of type Product.
+ : @return A map:map instance that holds the data for Product,
+ :  version 0.0.2.
  :)
 
 (: Type Product is not in the source model.
@@ -89,7 +93,9 @@ declare function tgtHasETTgt-from-tgtHasETSrc:convert-instance-Product(
 
     return
     json:object()
-    (: Copies attachments from a source envelope document, if available :)
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
     =>tgtHasETTgt-from-tgtHasETSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'Product')

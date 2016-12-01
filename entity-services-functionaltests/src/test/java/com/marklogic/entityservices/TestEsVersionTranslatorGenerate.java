@@ -230,7 +230,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	@Test
     public void testConvInst() throws TransformerException, IOException, SAXException {
 
-        String import1 = "import module namespace locArr = 'http://localArrayRefTgt/localArrayRefTgt-0.0.2-from-localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs.xqy';\n" + 
+        String import1 = "import module namespace locArr = 'http://localArrayRefTgt/localArrayRefTgt-0.0.2-from-localArrayRefSrc-0.0.1' at '/conv/localArrayRefs.xqy';\n" + 
                          "import module namespace locArrSrc = 'http://localArrayRefSrc/localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs-Src.xqy';\n";
         
         String query1 = "locArr:convert-instance-Order(locArrSrc:instance-to-envelope(locArrSrc:extract-instance-Order(doc('10252.xml'))))";
@@ -242,6 +242,33 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
             logger.info("Checking convert-instance-Order()");
             ObjectMapper mapper = new ObjectMapper();
             InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Order.json");
+
+            JsonNode control = mapper.readValue(is, JsonNode.class);
+
+            org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));
+
+        } catch (TestEvalException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+	
+    @Test
+    public void testConvInst2() throws TransformerException, IOException, SAXException {
+
+        String import1 = "import module namespace locArr = 'http://marklogic.com/srcRefDatatype/srcRefDatatypeTgt-0.0.2-from-srcRefDatatypeSrc-0.0.1' at '/conv/srcRefDiffDatatype.xqy';\n" + 
+                         "import module namespace locArrSrc = 'http://marklogic.com/srcRefDatatype/srcRefDatatypeSrc-0.0.1' at '/conv/srcRefDiffDatatype-Src.xqy';\n";
+        
+        String query1 = "locArr:convert-instance-Product(locArrSrc:instance-to-envelope(locArrSrc:extract-instance-Product(doc('51.xml'))))";
+        
+        JacksonHandle handle;
+        try {
+            handle = evalOneResult(import1, query1, new JacksonHandle());
+            JsonNode actualDoc = handle.get();
+            logger.info("Checking convert-instance-Product()");
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Product.json");
 
             JsonNode control = mapper.readValue(is, JsonNode.class);
 

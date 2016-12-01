@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  localArrayRefSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-19T00:32:26.892326-08:00
+ Generated at timestamp: 2016-11-30T20:43:46.596219-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -39,12 +39,13 @@ declare option xdmp:mapping "false";
 
 (:~
  : Creates a map:map instance representation of the target
- : entity type Order from an envelope document that
- : contains the source entity instance.
- : @param $source  Either an entity-services envelope document, or
- :  an XML node holding the canonical form of the source entity type.
- : @return A map:map instance that holds the data for the target
- :  entity type.
+ : entity type Order from an envelope document
+ : containing a source entity instance, that is, instance data
+ : of type Order, version 0.0.1.
+ : @param $source  An Entity Services envelope document (<es:envelope>)
+ :  or a canonical XML instance of type Order.
+ : @return A map:map instance that holds the data for Order,
+ :  version 0.0.2.
  :)
 
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
@@ -55,7 +56,9 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
 
     return
     json:object()
-    (: Copies attachments from a source envelope document, if available :)
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'Order')
@@ -64,18 +67,19 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
     =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
     =>es:optional('arr2arr',                es:extract-array($source-node/arr2arr, xs:string#1))
-    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails, function($path) { json:object()=>map:with('$type', 'OrderDetail')=>map:with('$ref', $path/OrderDetail/text() ) }))
+    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail#1))
 
 };
     
 (:~
  : Creates a map:map instance representation of the target
- : entity type OrderDetail from an envelope document that
- : contains the source entity instance.
- : @param $source  Either an entity-services envelope document, or
- :  an XML node holding the canonical form of the source entity type.
- : @return A map:map instance that holds the data for the target
- :  entity type.
+ : entity type OrderDetail from an envelope document
+ : containing a source entity instance, that is, instance data
+ : of type OrderDetail, version 0.0.1.
+ : @param $source  An Entity Services envelope document (<es:envelope>)
+ :  or a canonical XML instance of type OrderDetail.
+ : @return A map:map instance that holds the data for OrderDetail,
+ :  version 0.0.2.
  :)
 
 declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail(
@@ -86,7 +90,9 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDe
 
     return
     json:object()
-    (: Copies attachments from a source envelope document, if available :)
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with('$type', 'OrderDetail')

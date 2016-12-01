@@ -39,9 +39,9 @@ public class Harmonizer extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("raw");
         ServerTransform ingester = new ServerTransform("ingester");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("Batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     // logger.warn("FAILURE on batch:" + inPlaceBatch.toString()
                     // + "\n", throwable);
                     // throwable.printStackTrace();
@@ -50,7 +50,7 @@ public class Harmonizer extends ExamplesBase {
                 });
 
         QueryBatcher queryBatcher = moveMgr.newQueryBatcher(qdef).withBatchSize(100)
-                .withThreadCount(5).onUrisReady(listener).onQueryFailure((client3, exception) -> {
+                .withThreadCount(5).onUrisReady(listener).onQueryFailure(exception -> {
                     logger.error("Query error");
                 });
 
@@ -64,9 +64,9 @@ public class Harmonizer extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("raw", "csv");
         ServerTransform ingester = new ServerTransform("ingester-angel-island");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     logger.error("FAILURE on batch:" + inPlaceBatch.toString() + "\n", throwable);
                     //System.err.println(throwable.getMessage());
                     //System.err.print(String.join("\n", inPlaceBatch.getItems()) + "\n");
@@ -77,7 +77,7 @@ public class Harmonizer extends ExamplesBase {
                 .withBatchSize(100) //
                 .withThreadCount(5) //
                 .onUrisReady(listener) //
-                .onQueryFailure((client3, exception) -> {
+                .onQueryFailure(exception -> {
                     logger.error("Query error");
                 });
 

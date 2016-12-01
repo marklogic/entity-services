@@ -21,9 +21,9 @@ public class Translator extends ExamplesBase {
         StructuredQueryDefinition qdef = qb.collection("race-envelopes");
         ServerTransform ingester = new ServerTransform("translator");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
-                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess((dbClient, inPlaceBatch) -> {
+                .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("Batch transform SUCCESS");
-                }).onBatchFailure((dbClient, inPlaceBatch, throwable) -> {
+                }).onBatchFailure((inPlaceBatch, throwable) -> {
                     // logger.warn("FAILURE on batch:" + inPlaceBatch.toString()
                     // + "\n", throwable);
                     // throwable.printStackTrace();
@@ -32,7 +32,7 @@ public class Translator extends ExamplesBase {
                 });
 
         QueryBatcher queryBatcher = moveMgr.newQueryBatcher(qdef).withBatchSize(100)
-                .withThreadCount(5).onUrisReady(listener).onQueryFailure((client3, exception) -> {
+                .withThreadCount(5).onUrisReady(listener).onQueryFailure(exception -> {
                     logger.error("Query error");
                 });
 

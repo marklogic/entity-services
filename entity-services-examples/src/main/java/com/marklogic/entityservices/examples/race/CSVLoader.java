@@ -63,8 +63,8 @@ public class CSVLoader extends ExamplesBase {
         File dir = new File(projectDir + "/data/third-party/csv");
 
         WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(10)
-                .onBatchSuccess((client, batch) -> logger.info(getSummaryReport(batch)))
-                .onBatchFailure((client, batch, throwable) -> {
+                .onBatchSuccess(batch -> logger.info(getSummaryReport(batch)))
+                .onBatchFailure((batch, throwable) -> {
                     logger.warn("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     throwable.printStackTrace();
                 });
@@ -108,7 +108,7 @@ public class CSVLoader extends ExamplesBase {
             // is this a bug or not implemented TODO
             return "Report is null";
         } else {
-            return "batches: " + report.getSuccessBatchesCount() + ", bytes: " + report.getBytesMoved() + ", failures: "
+            return "batches: " + report.getSuccessBatchesCount() + ", failures: "
                     + report.getFailureBatchesCount();
         }
     }

@@ -37,8 +37,6 @@ import com.marklogic.client.io.DocumentMetadataHandle.Capability;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.datamovement.DataMovementManager;
-import com.marklogic.client.datamovement.JobTicket;
-import com.marklogic.client.datamovement.WriteBatcher;
 
 /**
  * Base class for examples. See the importJSON method for generic loading of
@@ -85,8 +83,8 @@ public abstract class ExamplesBase {
 
     private WriteBatcher newBatcher() {
         WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(5)
-                .onBatchSuccess((client, batch) -> logger.info("Loaded batch of documents"))
-                .onBatchFailure((client, batch, throwable) -> {
+                .onBatchSuccess(batch -> logger.info("Loaded batch of documents"))
+                .onBatchFailure((batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     System.err.println(throwable.getMessage());
                     System.err.println(

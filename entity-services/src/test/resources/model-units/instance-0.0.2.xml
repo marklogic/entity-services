@@ -13,7 +13,7 @@
   <es:instance>
     <ETTwo>
       <pk>http://example.org/some-iri/2</pk>
-      <parent><ETOne><pk/><p1/><p2/></ETOne></parent>
+      <parent><ETOne>http://example.org/some-iri</ETOne></parent>
       <p7><ETTwo>3</ETTwo></p7>
       <p8><ETTwo>23</ETTwo></p8>
       <p9 datatype="array"><ETTwo>19</ETTwo></p9>

@@ -639,8 +639,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
                 for $k in map:keys($extraction-functions)
                 where $k ne ""
                 return map:get($extraction-functions, $k), "&#10;"),
-            '
-    return
+'    return
     json:object()
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target

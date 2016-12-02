@@ -108,6 +108,7 @@ declare private function es-codegen:extraction-for(
                 $wrap-if-array($path-to-property, concat($prefix, ":extract-instance-", $ref-name), true())
             else
                 $wrap-if-array($path-to-property, $extract-reference-fn, false())
+
     (: if a property is required, use map:with to force inclusion :)
     let $function-call-string :=
         if ($is-required)
@@ -370,7 +371,8 @@ declare private function es-codegen:value-for-conversion(
     $target-model as map:map,
     $target-entity-type-name as xs:string,
     $target-property-name as xs:string,
-    $display-property-name as xs:string
+    $display-property-name as xs:string,
+    $extraction-functions as map:map
 ) as xs:string
 {
     let $target-info := map:get($target-model, "info")
@@ -456,10 +458,6 @@ declare private function es-codegen:value-for-conversion(
     let $is-reference-from-scalar-or-array :=
         exists($target-ref) and empty($source-ref)
 
-    let $extract-reference-fn :=
-            concat("function($path) { json:object()",
-                      "=>map:with('$type', '", $target-ref-name, "')",
-                      "=>map:with('$ref', $path/", $target-ref-name, "/text() ) }")
     let $extract-scalar-fn :=
             concat("function($path) { json:object()",
                       "=>map:with('$type', '", $target-ref-name, "')",
@@ -473,6 +471,33 @@ declare private function es-codegen:value-for-conversion(
         else if ($truncates-array)
         then es-codegen:comment("Warning: potential data loss, truncated array.")
         else ""
+
+    let $extract-reference-fn :=
+        map:put($extraction-functions, $target-ref-name,
+            fn:string-join(
+                (
+                concat('    let $extract-reference-',$target-ref-name,' := '),
+                if (contains($target-ref, "#/definitions"))
+                then
+                    ("        function($path) { ",
+                     "         if ($path/*)",
+                     concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                     "         else ",
+                     "           json:object()",
+                     concat("           =>map:with('$type', '", $target-ref-name, "')"),
+                     "           =>map:with('$ref', $path/text() ) ",
+                     "        }"
+                    )
+                else
+                    ("        function($path) { ",
+                     concat("         json:object()=>map:with('$type', '", $target-ref-name, "')"),
+                     "         =>map:with('$ref', $path/text() ) ",
+                     "        }")
+                ),
+            "&#10;")
+        )
+
+
     let $function-call-string :=
         if ($is-required)
         then "    =>   map:with("
@@ -486,11 +511,7 @@ declare private function es-codegen:value-for-conversion(
         then $wrap-if-array($path-to-property, $casting-function-name, true())
         else if ($is-reference-from-scalar-or-array)
         then $wrap-if-array($path-to-property, $extract-scalar-fn, true())
-        else if (contains($target-ref, "#/definitions"))
-        then
-            $wrap-if-array($path-to-property || "/*", concat($module-prefix, ":convert-instance-", $target-ref-name), true())
-        else
-            $wrap-if-array($path-to-property, $extract-reference-fn, false())
+        else $wrap-if-array($path-to-property || "/*", "$extract-reference-" || $target-ref-name, false() )
 
     return
         fn:string-join( ($comment,
@@ -563,17 +584,9 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
 {{
     let $source-node := {$module-prefix}:init-source($source, '{$entity-type-name}')
 
-    return
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>{$module-prefix}:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', '{ $entity-type-name }')
-    (: The following lines are generated from the '{$entity-type-name}' entity type. :)
 {
     (: Begin code generation block :)
+    let $extraction-functions := json:object()
     let $entity-type := map:get($target-definitions, $entity-type-name)
     let $source-entity-type :=
             if (map:contains($source-definitions, $entity-type-name))
@@ -606,16 +619,36 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     let $values :=
         for $property-name in map:keys($properties)
         return
-            es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, $property-name)
+            es-codegen:value-for-conversion($source-model,
+                $target-model,
+                $entity-type-name,
+                $property-name,
+                $property-name,
+                $extraction-functions)
     let $missing-properties :=
         if (exists($source-entity-type))
         then
             for $property-name in map:keys(map:get($source-entity-type, "properties"))
             where not($property-name = map:keys(map:get($entity-type, "properties")))
-                return es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET")
+                return
+                    es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET", map:map())
         else ()
     return
         fn:concat(
+            fn:string-join(
+                for $k in map:keys($extraction-functions)
+                where $k ne ""
+                return map:get($extraction-functions, $k), "&#10;"),
+            '
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>',$module-prefix,':copy-attachments($source-node)
+    (: The following line identifies the type of this instance.  Do not change it. :)
+    =>map:with("$type", "', $entity-type-name, '")
+    (: The following lines are generated from the "',$entity-type-name,'" entity type. :)',
             fn:string-join($values),
             if (exists($missing-properties))
             then
@@ -738,6 +771,7 @@ declare private function {$module-prefix}:copy-attachments(
     =>es:optional('$attachments',
         $source ! fn:root(.)/es:envelope/es:attachments/node())
 }};
+
 
 </module>/text()
     }

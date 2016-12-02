@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  sameSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-30T20:35:08.259772-08:00
+ Generated at timestamp: 2016-12-02T14:15:45.023386-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -61,9 +61,8 @@ declare function sameTgt-from-sameSrc:convert-instance-Customer(
      :)
     =>sameTgt-from-sameSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Customer')
-    (: The following lines are generated from the 'Customer' entity type. :)
-    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    =>map:with("$type", "Customer")
+    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -94,9 +93,8 @@ declare function sameTgt-from-sameSrc:convert-instance-Product(
      :)
     =>sameTgt-from-sameSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Product')
-    (: The following lines are generated from the 'Product' entity type. :)
-    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    =>map:with("$type", "Product")
+    (: The following lines are generated from the "Product" entity type. :)    =>es:optional('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))

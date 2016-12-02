@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  localArrayRefSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-30T20:43:46.596219-08:00
+ Generated at timestamp: 2016-12-02T14:23:25.15556-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -54,20 +54,27 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
 {
     let $source-node := localArrayRefTgt-from-localArrayRefSrc:init-source($source, 'Order')
 
-    return
+    let $extract-reference-OrderDetail := 
+        function($path) { 
+         if ($path/*)
+         then localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail($path)
+         else 
+           json:object()
+           =>map:with('$type', 'OrderDetail')
+           =>map:with('$ref', $path/text() ) 
+        }    return
     json:object()
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target
      :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Order')
-    (: The following lines are generated from the 'Order' entity type. :)
-    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    =>map:with("$type", "Order")
+    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
     =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
     =>es:optional('arr2arr',                es:extract-array($source-node/arr2arr, xs:string#1))
-    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail#1))
+    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail))
 
 };
     
@@ -95,9 +102,8 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDe
      :)
     =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'OrderDetail')
-    (: The following lines are generated from the 'OrderDetail' entity type. :)
-    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
+    =>map:with("$type", "OrderDetail")
+    (: The following lines are generated from the "OrderDetail" entity type. :)    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('Quantity',               xs:integer($source-node/Quantity))
 

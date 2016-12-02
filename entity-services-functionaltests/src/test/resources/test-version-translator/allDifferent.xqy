@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  allDifferentSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-30T20:42:28.328016-08:00
+ Generated at timestamp: 2016-12-02T14:25:55.386398-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -62,9 +62,8 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Product(
      :)
     =>allDifferentTgt-from-allDifferentSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Product')
-    (: The following lines are generated from the 'Product' entity type. :)
-    =>   map:with('ProductName',            xs:string($source-node/ProductName))
+    =>map:with("$type", "Product")
+    (: The following lines are generated from the "Product" entity type. :)    =>   map:with('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))

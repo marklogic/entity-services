@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  tgtHasMorePropSrc, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2016-11-30T20:47:53.692778-08:00
+ Generated at timestamp: 2016-12-02T14:24:11.776398-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -61,9 +61,8 @@ declare function tgtHasMorePropTgt-from-tgtHasMorePropSrc:convert-instance-Custo
      :)
     =>tgtHasMorePropTgt-from-tgtHasMorePropSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Customer')
-    (: The following lines are generated from the 'Customer' entity type. :)
-    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    =>map:with("$type", "Customer")
+    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     (: The following property was missing from the source type.
@@ -96,9 +95,8 @@ declare function tgtHasMorePropTgt-from-tgtHasMorePropSrc:convert-instance-Produ
      :)
     =>tgtHasMorePropTgt-from-tgtHasMorePropSrc:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
-    =>map:with('$type', 'Product')
-    (: The following lines are generated from the 'Product' entity type. :)
-    =>   map:with('ProductName',            xs:string($source-node/ProductName))
+    =>map:with("$type", "Product")
+    (: The following lines are generated from the "Product" entity type. :)    =>   map:with('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     (: The following property was missing from the source type.

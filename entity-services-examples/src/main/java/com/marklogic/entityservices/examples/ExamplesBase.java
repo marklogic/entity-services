@@ -94,8 +94,6 @@ public abstract class ExamplesBase {
                     // throwable.printStackTrace();
                 });
 
-        moveMgr.startJob(batcher);
-
         return batcher;
     }
 
@@ -139,6 +137,7 @@ public abstract class ExamplesBase {
 
         importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
 
+        moveMgr.startJob(batcher);
         batcher.flushAsync();
     }
 
@@ -153,6 +152,7 @@ public abstract class ExamplesBase {
         WriteBatcher batcher = newBatcher();
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
 
+        moveMgr.startJob(batcher);
         batcher.flushAsync();
     }
 
@@ -164,6 +164,7 @@ public abstract class ExamplesBase {
 
         importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
 
+        moveMgr.startJob(batcher);
         batcher.flushAsync();
     }
 

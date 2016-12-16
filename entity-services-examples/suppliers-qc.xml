@@ -1,0 +1,27 @@
+<export><workspace name="Suppliers"><query name="Supplier" focus="true" listorder="1" taborder="1" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+FROM SP.Supplier</query><query name="Part" focus="false" listorder="2" taborder="2" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+FROM SP.PART
+ORDER By pName
+LIMIT 100</query><query name="Shipment" focus="false" listorder="3" taborder="3" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+FROM
+SP.Shipment
+LIMIT 100</query><query name="Join" focus="false" listorder="4" taborder="4" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT sName, pName, color, qty
+from 
+SP.Supplier s,
+SP.Part p,
+SP.Shipment sh
+WHERE s.sid = sh.sid 
+AND p.pid = sh.pid
+AND qty &gt; 60
+ORDER BY qty
+LIMIT 10</query><query name="Optic Join" focus="false" listorder="5" taborder="5" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var op = require("/MarkLogic/optic");
+var opxs = op.xs;
+
+op.fromView("SP", "Supplier")
+  .joinInner("SP", "Part", op.on( op.col("sid"), op.col("sid") ))
+  .joinInner("SP", "Shipment", op.on( op.col("pid"), op.col("pid") ) )
+  .select( ["sName", "pName", "color", "qty"] )
+  .where( op.gt(op.col("qty"), 60))
+  .limit(10)
+  .orderBy( op.col("qty"))
+  .result()</query></workspace></export>

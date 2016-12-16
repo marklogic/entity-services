@@ -138,7 +138,7 @@ public abstract class ExamplesBase {
         importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
 
         moveMgr.startJob(batcher);
-        batcher.flushAsync();
+        batcher.flushAndWait();
     }
 
     public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
@@ -153,7 +153,7 @@ public abstract class ExamplesBase {
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
 
         moveMgr.startJob(batcher);
-        batcher.flushAsync();
+        batcher.flushAndWait();
     }
 
     public void importXML(Path xmlDirectory, String toCollection) throws IOException {
@@ -165,7 +165,7 @@ public abstract class ExamplesBase {
         importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
 
         moveMgr.startJob(batcher);
-        batcher.flushAsync();
+        batcher.flushAndWait();
     }
 
 }

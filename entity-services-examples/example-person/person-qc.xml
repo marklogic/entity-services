@@ -1,0 +1,70 @@
+<export><workspace name="Person"><query name="00. README" focus="false" listorder="1" taborder="1" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(:
+ : This Workspace contains reports and examples about an Entity Services scenario.
+ : It's designed with simplicity in mind, not real business data.
+ : Once you have run the Examples Loader ('../gradlew runExamplePerson') you can step
+ : through these tabs to see what happened.
+ : The Person example runs completely from the command line - it demonstrates some SPARQL
+ : and Optic API queries against Person data.  These queries are replicated here.
+ : You can see that Optic API queries are conceptually portable across JavaScript, XQuery
+ : and Java.
+ :)</query><query name="01. Model Metadata" focus="false" listorder="2" taborder="2" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sparql"># Return types and properties currently loaded in the database.
+prefix es: &lt;http://marklogic.com/entity-services#&gt; 
+prefix : &lt;http://example.org/example-person/&gt; 
+select ?title ?propertyName ?scalarType ?arrayType 
+where { 
+ ?s a es:Model ; 
+ es:title ?title ; 
+ es:definitions ?type .
+ ?type es:property ?property .
+ ?property es:title ?propertyName .
+ ?property es:datatype ?scalarType .
+ optional 
+   { 
+     { ?property es:items/es:ref ?arrayType } 
+     UNION 
+     { ?property es:items/es:datatype ?arraytype } 
+   }
+ }</query><query name="02. Instances" focus="false" listorder="3" taborder="3" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sparql"># select all IDS of all the Person instances in the database
+prefix es: &lt;http://marklogic.com/entity-services#&gt; 
+prefix : &lt;http://example.org/example-person/&gt; 
+
+select ?person ?typeName 
+where { 
+  ?person a ?personType .  
+  ?personType es:title ?typeName 
+} </query><query name="03. Optic XQ Rows" focus="true" listorder="4" taborder="4" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
+import module namespace opxs = "http://marklogic.com/optic/expression/xs" at "/MarkLogic/optic/optic-xs.xqy";
+
+
+let $p := op:from-view("Person", "Person")
+        =&gt;op:where(op:eq(op:col("id"), opxs:string("122")))
+        =&gt;op:select( (op:col("firstName"), op:col("lastName")) )
+       
+return $p=&gt;op:result()</query><query name="04. Optic SJS Rows" focus="false" listorder="5" taborder="5" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var op = require("/MarkLogic/optic");
+var opxs = op.xs;
+
+op.fromView("Person", "Person")
+.where(op.eq(op.col("id"), opxs.string("122")))
+.select( [op.col("firstName"), op.col("lastName") ] )  
+.result();</query><query name="05. Optic XQ Triples" focus="false" listorder="6" taborder="6" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
+import module namespace opxs = "http://marklogic.com/optic/expression/xs" at "/MarkLogic/optic/optic-xs.xqy";
+import module namespace opsem = "http://marklogic.com/optic/expression/sem" at "/MarkLogic/optic/optic-sem.xqy";
+
+let $ps := op:prefixer("http://example.org/example-person/Person-0.0.1/")
+let $rdf := op:prefixer("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+
+return
+  op:from-triples( ( op:pattern( op:col("instanceIri"),
+                                 $rdf("type"),
+                                 op:col("type") ) ) )
+          =&gt;op:where( op:eq( op:col("type"), $ps("Person")))                           
+          =&gt;op:result()</query><query name="06. Optic SJS Triples" focus="false" listorder="7" taborder="7" active="true" database="15083686299722326850" server="2782089619070932429" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var op = require("/MarkLogic/optic");
+var opxs = op.xs;
+var ops = op.sem;
+var ps = op.prefixer("http://example.org/example-person/Person-0.0.1/");
+        
+var p = op.fromTriples( [op.pattern( op.col("instanceIri"),
+                                     ops.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                                     op.col("type")) ])
+        .where(op.eq(op.col("type"), ps.iri("Person")))
+        .result();</query></workspace></export>

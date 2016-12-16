@@ -29,52 +29,30 @@ public class AsIsLoader extends ExamplesBase {
 
     private static Logger logger = LoggerFactory.getLogger(Harmonizer.class);
 
-    public Thread modelsLoad() {
-        Runnable task = () -> {
-            try {
-                importJSON(Paths.get(projectDir + "/data/models"),
-                        "http://marklogic.com/entity-services/models");
-            } catch (IOException e) {
-                logger.error("IOException thrown by loader.");
-            }
+    public void modelsLoad() {
+        try {
+            importJSON(Paths.get(projectDir + "/data/models"),
+                    "http://marklogic.com/entity-services/models");
+        } catch (IOException e) {
+            logger.error("IOException thrown by loader.");
         };
-        task.run();
-        return new Thread(task);
     }
 
-    public Thread instanceLoad() {
-        Runnable task = () -> {
-            try {
-                importJSON(Paths.get(projectDir + "/data/race-data"), "raw");
-            } catch (IOException e) {
-                logger.error("IOException thrown by loader.");
-            }
+    public void instanceLoad() {
+        try {
+            importJSON(Paths.get(projectDir + "/data/race-data"), "raw");
+        } catch (IOException e) {
+            logger.error("IOException thrown by loader.");
         };
-        task.run();
-        return new Thread(task);
     }
 
-    public Thread rdfLoad() {
-        Runnable task = () -> {
-            importRDF(Paths.get(projectDir + "/data/third-party/rdf"), "reference");
-        };
-        task.run();
-        return new Thread(task);
+    public void rdfLoad() {
+        importRDF(Paths.get(projectDir + "/data/third-party/rdf"), "reference");
     }
 
     public void loadAsIs() {
-        Thread modelThread = modelsLoad();
-        modelThread.start();
-        Thread instanceThread = instanceLoad();
-        instanceThread.start();
-        Thread rdfThread = rdfLoad();
-        rdfThread.start();
-        try {
-            modelThread.join();
-            instanceThread.join();
-            rdfThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        modelsLoad();
+        instanceLoad();
+        rdfLoad();
     }
 }

@@ -9,6 +9,7 @@ import com.marklogic.client.document.ServerTransform;
 import com.marklogic.client.expression.PlanBuilder;
 import com.marklogic.client.expression.PlanBuilder.Plan;
 import com.marklogic.client.expression.XsExpr;
+import com.marklogic.client.expression.SemExpr;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.query.StructuredQueryBuilder;
 import com.marklogic.client.query.StructuredQueryDefinition;
@@ -45,8 +46,8 @@ public class PersonExplorer extends ExamplesBase {
     private HashMap<String,String> prefixes = new HashMap<String, String>();
 
     private static String PREFIXES =
-             "prefix es: <http://marklogic.com/entity-services#> " +
-             "prefix : <http://example.org/example-person/> ";
+             "prefix es: <http://marklogic.com/entity-services#> \n" +
+             "prefix : <http://example.org/example-person/> \n";
 
     public PersonExplorer() {
         super();
@@ -56,12 +57,13 @@ public class PersonExplorer extends ExamplesBase {
         prefixes.put("http://example.org/example-person/Person-0.0.1/", "ps");
         prefixes.put("http://www.w3.org/2001/XMLSchema#", "xs");
         prefixes.put("http://marklogic.com/json#", "json");
+        prefixes.put("http://marklogic.com/view/Person", "personView");
     }
 
     private String valueFor(JsonNode val) {
         String type = val.get("type").asText();
         String stringValue = val.get("value").asText();
-        if (type.equals("uri")) {
+        if (type.equals("uri") || type.equals("sem:iri")) {
             int index = Math.max(stringValue.lastIndexOf("/"), stringValue.lastIndexOf("#"));
             String uriPrefix = stringValue.substring(0, index + 1);
             if (prefixes.containsKey(uriPrefix)) {
@@ -73,21 +75,30 @@ public class PersonExplorer extends ExamplesBase {
         return stringValue;
     }
 
-    private String table(JsonNode sparqlResults) throws JsonProcessingException {
+    private String table(JsonNode results) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         StringBuffer sb = new StringBuffer();
-        logger.info(mapper.writeValueAsString(sparqlResults));
 
 
-        if (!sparqlResults.has("head")) {
-           return "No results";
-        }
-        else {
-            ArrayNode columns = (ArrayNode) sparqlResults.get("head").get("vars");
+        if (results.has("rows")) {
+            ArrayNode columns = (ArrayNode) results.get("columns");
+            columns.forEach( c -> { sb.append(c.get("name").asText() + "\t"); });
+            sb.append("\n");
+            ArrayNode rows = (ArrayNode) results.get("rows");
+            rows.forEach( row -> {
+                row.forEach( col -> {
+                    sb.append(valueFor(col));
+                    sb.append("\t");
+                });
+                sb.append("\n");
+            });
+            return sb.toString();
+        } else if (results.has("head")) {
+            ArrayNode columns = (ArrayNode) results.get("head").get("vars");
             columns.forEach( c -> { sb.append(c + "\t"); });
             sb.append("\n");
-            ArrayNode bindings = (ArrayNode) sparqlResults.get("results").get("bindings");
+            ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
             bindings.forEach( b -> {
                 b.forEach( col -> {
                     sb.append(valueFor(col));
@@ -96,25 +107,29 @@ public class PersonExplorer extends ExamplesBase {
                 sb.append("\n");
             });
             return sb.toString();
+        } else {
+            logger.info("Row or SPARQL results not returned...");
+            logger.info(mapper.writeValueAsString(results));
+            return "No results";
         }
     }
 
     private void verifyPersonModel() {
         System.out.println("Verifying person model with SPARQL.  This query reports all the property names and types for the Person Model.");
         SPARQLQueryManager qMgr = client.newSPARQLQueryManager();
-        String sparql = "select ?title ?propertyName ?scalarType ?arrayType where { ?s a es:Model ; " +
-                " es:title ?title ; " +
-                " es:definitions ?type ." +
-                " ?type es:property ?property ." +
-                " ?property es:title ?propertyName ." +
-                " ?property es:datatype ?scalarType ." +
-                " optional " +
-                "   { " +
-                "     { ?property es:items/es:ref ?arrayType } " +
-                "     UNION " +
-                "     { ?property es:items/es:datatype ?arraytype } " +
-                "   }" +
-                " }";
+        String sparql = "select ?title ?propertyName ?scalarType ?arrayType where { ?s a es:Model ; \n" +
+                " es:title ?title ; \n" +
+                " es:definitions ?type .\n" +
+                " ?type es:property ?property .\n" +
+                " ?property es:title ?propertyName .\n" +
+                " ?property es:datatype ?scalarType .\n" +
+                " optional \n" +
+                "   { \n" +
+                "     { ?property es:items/es:ref ?arrayType } \n" +
+                "     UNION \n" +
+                "     { ?property es:items/es:datatype ?arraytype } \n" +
+                "   }\n" +
+                " }\n";
         SPARQLQueryDefinition qdef = qMgr.newQueryDefinition(PREFIXES + sparql);
         qdef.withBinding("title", "Person", RDFTypes.STRING);
 
@@ -138,9 +153,6 @@ public class PersonExplorer extends ExamplesBase {
                 .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess( inPlaceBatch -> {
                     logger.debug("Batch transform SUCCESS");
                 }).onBatchFailure((inPlaceBatch, throwable) -> {
-                    // logger.warn("FAILURE on batch:" + inPlaceBatch.toString()
-                    // + "\n", throwable);
-                    // throwable.printStackTrace();
                     System.err.println(throwable.getMessage());
                     System.err.print(String.join("\n", inPlaceBatch.getItems()) + "\n");
                 });
@@ -182,20 +194,25 @@ public class PersonExplorer extends ExamplesBase {
         RowManager rowManager = client.newRowManager();
         PlanBuilder pb = rowManager.newPlanBuilder();
         XsExpr xs = pb.xs;
+        SemExpr sem = pb.sem;
 
-
-        // Plan p = pb.fromView("Person", "Person").where(pb.fn.contains(xs.string(pb.col("id")), xs.string("122")));
-
-
-//        p =
-//            pb.fromView("Person", "Person")
-//                .where(pb.eq(pb.col("id"), xs.string("122")))
-//                .select(pb.col("firstName"));
-
-        Plan p = pb.fromTriples(pb.pattern(pb.subjects(pb.col("s")),
-            pb.predicates(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")),
-            pb.objects(pb.col("o"))));
+        Plan p =
+            pb.fromView("Person", "Person")
+                .where(pb.eq(pb.col("id"), xs.string("122")))
+                .select(pb.col("firstName"), pb.col("lastName"));
         JsonNode results = rowManager.resultDoc(p, new JacksonHandle()).get();
+        try {
+            System.out.println(table(results));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        PlanBuilder.Prefixer ps = pb.prefixer("http://example.org/example-person/Person-0.0.1/");
+        p = pb.fromTriples(pb.pattern(pb.subjects(pb.col("instanceIri")),
+            pb.predicates(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")),
+            pb.objects(pb.col("type"))))
+            .where(pb.eq(pb.col("type"), ps.iri("Person")));
+        results = rowManager.resultDoc(p, new JacksonHandle()).get();
 
         try {
             System.out.println(table(results));

@@ -2,20 +2,21 @@
 xquery version "1.0-ml";
 import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1" at "/ext/Race-0.0.1.xqy";
 
-declare variable $PATH as xs:string := "file:///C:/share/git";
+(: CHANGE THIS VALUE to locate your project location :)
+declare variable $PATH as xs:string := "file:///C:/share/git/entity-services";
 
 (: This script runs extract functions to verify the initial import and how extraction looks :)
 let $runner-e := race:extract-instance-Runner(
-  doc($PATH || "/entity-services/entity-services-examples/example-races/data/race-data/runners/xaw.json")
+  doc($PATH || "/entity-services-examples/example-races/data/race-data/runners/xaw.json")
 )
 let $run-e := race:extract-instance-Run(
-  doc($PATH || "/entity-services/entity-services-examples/example-races/data/race-data/runs/138.json")
+  doc($PATH || "/entity-services-examples/example-races/data/race-data/runs/138.json")
 )
 let $race-e := race:extract-instance-Race(
-  doc($PATH || "/entity-services/entity-services-examples/example-races/data/race-data/races/10k2.json")
+  doc($PATH || "/entity-services-examples/example-races/data/race-data/races/10k2.json")
 )
 let $race-f := race:extract-instance-Race(
-  doc($PATH || "/entity-services/entity-services-examples/example-racels/data/race-data/races/10k1.json")
+  doc($PATH || "/entity-services-examples/example-racels/data/race-data/races/10k1.json")
 )
 
 return (
@@ -42,10 +43,11 @@ ORDER BY Run.duration
 xquery version "1.0-ml";
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 
-declare variable $PATH as xs:string := "file:///MarkLogic/git";
+(: CHANGE THIS VALUE to locate your project location :)
+declare variable $PATH as xs:string := "file:///C:/share/git/entity-services";
 
 (: this is a manual run of tde functionality to verify generated extraction tempaltes :)
-let $tde := xdmp:filesystem-file($PATH || "/entity-services/entity-services-examples/example-races/ml-schemas/Race-0.0.1.tdex")
+let $tde := xdmp:filesystem-file($PATH || "/entity-services-examples/example-races/ml-schemas/Race-0.0.1.tdex")
 
 let $doc := (//es:instance/Run/id/root())[1]
 let $extract := tde:node-data-extract($doc, xdmp:unquote($tde)/node())
@@ -125,9 +127,10 @@ return ($a-race, $new-version, new:instance-to-canonical-xml($new-version))
 
 import module namespace race2 = "http://grechaw.github.io/entity-types#Race-0.0.1-source-2" at "/ext/Race-0.0.1-source-2.xqy";
 
-declare variable $PATH as xs:string := "file:///C:/share/git";
+(: CHANGE THIS VALUE to locate your project location :)
+declare variable $PATH as xs:string := "file:///C:/share/git/entity-services";
 
-let $doc := doc($PATH || "/entity-services/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
+let $doc := doc($PATH || "/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
 return
 (
 $doc,
@@ -137,7 +140,7 @@ race2:extract-instance-Angel-Island( $doc )
 
 (
 "Raw docs (1354 expected): ", count(cts:search(collection("raw"), cts:true-query())),
-"Non raw (1310 expected): ", count(cts:search(collection(), cts:not-query(cts:collection-query("raw")))),
+"Non raw (1314 expected): ", count(cts:search(collection(), cts:not-query(cts:collection-query("raw")))),
 "Race envelopes (4 expected): ", count(/es:envelope[es:instance[es:info/es:version="0.0.1"]/Race]),
 "Run envelopes (1300 expected): ", count(//es:instance/Run),
 "Collection names", cts:collections()

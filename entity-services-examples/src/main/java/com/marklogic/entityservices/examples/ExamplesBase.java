@@ -98,11 +98,17 @@ public abstract class ExamplesBase {
         return batcher;
     }
 
+    protected String genUri(Path entry) {
+        return entry
+                .toUri()
+                .toString()
+                .replaceFirst("^.*\\/entity-services\\/", "/");
+    }
+
     private void importOrDescend(Path entry, WriteBatcher batcher, String collection, Format format) {
         if (entry.toFile().isFile()) {
             logger.debug("Adding " + entry.getFileName().toString());
-            String uri = entry.toUri().toString();
-            uri = uri.replaceFirst("^.*\\/entity-services\\/", "/");
+            String uri = genUri(entry);
             if (collection != null) {
                 DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
                     .withPermission("race-reader", Capability.READ) //

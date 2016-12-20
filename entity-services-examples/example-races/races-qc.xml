@@ -13,7 +13,7 @@ let $race-e := race:extract-instance-Race(
   doc("/entity-services-examples/example-races/data/race-data/races/10k2.json")
 )
 let $race-f := race:extract-instance-Race(
-  doc("/entity-services-examples/example-racels/data/race-data/races/10k1.json")
+  doc("/entity-services-examples/example-races/data/race-data/races/10k1.json")
 )
 
 return (
@@ -62,7 +62,7 @@ where
 }</query><query name="00. README" focus="true" listorder="1" taborder="1" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(:
  : This Workspace contains reports and examples about an Entity Services scenario.
  : It's designed with simplicity in mind, not real business data.
- : Once you have run the Examples Loader ('../gradlew runExampleRaces') you can step
+ : Once you have run the Examples Loader ('./gradlew runExampleRaces') you can step
  : through these tabs to see what happened.
  :)</query><query name="10. Search API" focus="false" listorder="11" taborder="11" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
 declare namespace search = "http://marklogic.com/appservices/search";
@@ -101,7 +101,7 @@ let $final-join :=
    =&gt;op:order-by(op:view-col("Race", "name"))
    
    
-return $final-join=&gt;op:result()</query><query name="12. Translator" focus="false" listorder="13" taborder="13" active="true" database="12450102741220167768" server="309628398882601242" database-name="" server-name="" mode="xquery">xquery version "1.0-ml";
+return $final-join=&gt;op:result()</query><query name="12. Translator" focus="false" listorder="13" taborder="13" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
 
 
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
@@ -121,10 +121,7 @@ return ($a-race, $new-version, new:instance-to-canonical-xml($new-version))
 
 import module namespace race2 = "http://grechaw.github.io/entity-types#Race-0.0.1-source-2" at "/ext/Race-0.0.1-source-2.xqy";
 
-(: CHANGE THIS VALUE to locate your project location :)
-declare variable $PATH as xs:string := "file:///C:/share/git/entity-services";
-
-let $doc := doc($PATH || "/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
+let $doc := doc("/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
 return
 (
 $doc,
@@ -138,7 +135,7 @@ race2:extract-instance-Angel-Island( $doc )
 "Race envelopes (4 expected): ", count(/es:envelope[es:instance[es:info/es:version="0.0.1"]/Race]),
 "Run envelopes (1300 expected): ", count(//es:instance/Run),
 "Collection names", cts:collections()
-)</query><query name="07. instances" focus="false" listorder="8" taborder="8" active="true" database="12450102741220167768" server="309628398882601242" database-name="" server-name="" mode="xquery">sem:sparql('
+)</query><query name="07. instances" focus="false" listorder="8" taborder="8" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">sem:sparql('
            prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
            prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
            prefix fn: &lt;http://www.w3.org/2005/xpath-functions#&gt;
@@ -149,7 +146,7 @@ race2:extract-instance-Angel-Island( $doc )
            ?s a &lt;http://grechaw.github.io/entity-types/Race-0.0.1/Runner&gt; ;
                rdfs:isDefinedBy ?docUri .
            }
-           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="08. inference instance" focus="false" listorder="9" taborder="9" active="true" database="12450102741220167768" server="309628398882601242" database-name="" server-name="" mode="xquery">sem:sparql('
+           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="08. inference instance" focus="false" listorder="9" taborder="9" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">sem:sparql('
            prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
            prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
            prefix fn: &lt;http://www.w3.org/2005/xpath-functions#&gt;

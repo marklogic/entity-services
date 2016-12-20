@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.marklogic.client.datamovement.WriteBatcher;
@@ -101,6 +102,7 @@ public abstract class ExamplesBase {
         if (entry.toFile().isFile()) {
             logger.debug("Adding " + entry.getFileName().toString());
             String uri = entry.toUri().toString();
+            uri = uri.replaceFirst("^.*\\/entity-services\\/", "/");
             if (collection != null) {
                 DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
                     .withPermission("race-reader", Capability.READ) //

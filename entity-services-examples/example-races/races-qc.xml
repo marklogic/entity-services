@@ -114,7 +114,7 @@ import module namespace new = "http://grechaw.github.io/entity-types#Race-0.0.2"
 let $a-race := doc("/races/data/race-data/races/10k1.xml")/es:envelope/es:instance
 let $new-version := t:convert-instance-Race($a-race)
 return ($a-race, $new-version, new:instance-to-canonical-xml($new-version))
-</query><query name="11. Extract 2" focus="false" listorder="12" taborder="12" active="true" database="12450102741220167768" server="309628398882601242" database-name="" server-name="" mode="xquery">xquery version "1.0-ml";
+</query><query name="11. Extract 2" focus="false" listorder="12" taborder="12" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
 
 
 (: source loaded from csv :)

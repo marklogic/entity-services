@@ -1,11 +1,11 @@
-<export><workspace name="Suppliers"><query name="Supplier" focus="true" listorder="1" taborder="1" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
-FROM SP.Supplier</query><query name="Part" focus="false" listorder="2" taborder="2" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+<export><workspace name="Suppliers"><query name="Supplier" focus="false" listorder="1" taborder="2" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+FROM SP.Supplier</query><query name="Part" focus="false" listorder="2" taborder="3" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
 FROM SP.Part
 ORDER By pName
-LIMIT 100</query><query name="Shipment" focus="false" listorder="3" taborder="3" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
+LIMIT 100</query><query name="Shipment" focus="false" listorder="3" taborder="4" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT *
 FROM
 SP.Shipment
-LIMIT 100</query><query name="Join" focus="false" listorder="4" taborder="4" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT sName, pName, color, qty
+LIMIT 100</query><query name="Join" focus="false" listorder="4" taborder="5" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">SELECT sName, pName, color, qty
 from 
 SP.Supplier s,
 SP.Part p,
@@ -14,7 +14,7 @@ WHERE s.sid = sh.sid
 AND p.pid = sh.pid
 AND qty &gt; 60
 ORDER BY qty
-LIMIT 10</query><query name="Optic SJS Join" focus="false" listorder="5" taborder="5" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var op = require("/MarkLogic/optic");
+LIMIT 10</query><query name="Optic SJS Join" focus="false" listorder="5" taborder="6" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="javascript">var op = require("/MarkLogic/optic");
 
 op.fromView("SP", "Shipment")
   .joinInner(op.fromView("SP", "Part"), op.on( op.schemaCol("SP", "Part", "pid") , op.schemaCol("SP", "Shipment", "pid") ))
@@ -23,7 +23,7 @@ op.fromView("SP", "Shipment")
   .where( op.gt(op.col("qty"), 60))
   .limit(10)
   .orderBy( op.col("qty"))
-  .result()</query><query name="Optic XQ Join" focus="false" listorder="6" taborder="6" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
+  .result()</query><query name="Optic XQ Join" focus="false" listorder="6" taborder="7" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
 
 op:from-view("SP", "Shipment")
   =&gt;op:join-inner(op:from-view("SP", "Part"), op:on( op:schema-col("SP", "Part", "pid") , op:schema-col("SP", "Shipment", "pid") ))
@@ -32,4 +32,12 @@ op:from-view("SP", "Shipment")
   =&gt;op:where( op:gt(op:col("qty"), 60))
   =&gt;op:limit(10)
   =&gt;op:order-by( op:col("qty"))
-  =&gt;op:result()</query></workspace></export>
+  =&gt;op:result()</query><query name="README" focus="true" listorder="7" taborder="1" active="true" database="12450102741220167768" server="309628398882601242" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(:
+ : This workspace contains reports and examples about an Entity Services scenario.
+ : It's designed with simplicity in mind, not real business data.
+ : Once you have run the Examples Loader ('./gradlew runExampleSuppliers') you can step
+ : through these tabs to see what happened.
+ : The Suppliers example reproduces a common pedagogical database schema.
+ : The tabs in this workspace demonstrate how to build SQL and Optic API queries 
+ : against relations defined by Entity Services extraction templates.
+ :)</query></workspace></export>

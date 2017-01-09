@@ -15,13 +15,13 @@ dependencies {
 }
 
 // default run the nwind example
-def exampleDir = project.findProperty('exampleDir') ?: 'e2e'
+def exampleDir = project.findProperty('exampleDir') ?: 'e2e-nwind'
 
 ext {
     mlAppConfig {
         modulePaths.add( exampleDir + "/ml-modules")
         schemasPath = exampleDir + "/ml-schemas"
-        configPath = exampleDir + "/ml-config"
+        //configPath = exampleDir + "/ml-config"
         createTriggersDatabase = false
     }
 }

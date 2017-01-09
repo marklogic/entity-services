@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+0 * Copyright 2016 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import com.marklogic.client.datamovement.WriteBatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,23 +37,25 @@ import com.marklogic.client.io.DocumentMetadataHandle.Capability;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.datamovement.DataMovementManager;
-import com.marklogic.client.datamovement.JobTicket;
-import com.marklogic.client.datamovement.WriteBatcher;
 
 /**
  * Base class for examples. See the importJSON method for generic loading of
  * JSON from a directory tree.
  */
-abstract class ExamplesBase {
+public abstract class ExamplesBase {
 
     private static Logger logger = LoggerFactory.getLogger(ExamplesBase.class);
 
     protected DataMovementManager moveMgr;
-    protected JobTicket ticket;
     protected ObjectMapper mapper;
     protected Properties props;
     protected DatabaseClient client;
 	protected String projectDir;
+
+    // this is just the first example, TODO refactor.
+    protected String getE2eName() {
+        return "e2e-nwind";
+    };
 
     public ExamplesBase() {
         props = new Properties();
@@ -68,85 +71,19 @@ abstract class ExamplesBase {
 
         Path currentRelativePath = Paths.get("");
         projectDir = currentRelativePath.toAbsolutePath().toString();
-        logger.debug("Current relative path is: " + projectDir);
-
         // FIXME this is a hack for intellij.
         if (!projectDir.endsWith("e2e")) projectDir += "/entity-services-e2e";
 
+        projectDir += "/" + getE2eName();
+        logger.debug("Project path is: " + projectDir);
         moveMgr = client.newDataMovementManager();
         mapper = new ObjectMapper();
 
     }
 
-    private void importOrDescend(Path directory, WriteBatcher batcher, String collection, Format format) {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
-            for (Path entry : stream) {
-                if (entry.toFile().isDirectory()) {
-                    logger.info("Reading subdirectory " + entry.getFileName().toString());
-                    importOrDescend(entry, batcher, collection, format);
-                } else {
-                    logger.debug("Adding " + entry.getFileName().toString());
-                    String uri = entry.toUri().toString();
-                    if (collection != null) {
-                        DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
-                                .withPermission("nwind-reader", Capability.READ) //
-                                .withPermission("nwind-writer", Capability.INSERT, Capability.UPDATE);
-                        batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
-                    } else {
-                        batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
-                    }
-                    logger.debug("Inserted " + format.toString() + " document " + uri);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * This method uses a document-centric approach to RDF reference data, by
-     * invoking a server-side transform that parses turtle into MarkLogic XML
-     * triples.
-     */
-    /* Uncomment when using rdf datasources
-    public void importRDF(Path referenceDataDir, String collection) {
-
-        logger.info("RDF Load Job started");
-
-        WriteHostBatcher batcher = moveMgr.newWriteHostBatcher().withBatchSize(10).withThreadCount(1)
-                .withTransform(new ServerTransform("turtle-to-xml"))
-                .onBatchSuccess((client, batch) -> logger.info("Loaded rdf data batch"))
-                .onBatchFailure((client, batch, throwable) -> {
-                    logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
-                    System.err.println(throwable.getMessage());
-                    System.err.println(
-                            Arrays.stream(batch.getItems())
-                                    .map(item -> item.getTargetUri())
-                                    .collect(Collectors.joining("\n"))
-                    );
-                    // throwable.printStackTrace();
-                });
-        ;
-        ticket = moveMgr.startJob(batcher);
-
-        importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
-
-        batcher.flush();
-
-    }
-    */
-
-    public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
-        importJSON(jsonDirectory, null);
-    }
-
-    public void importJSON(Path jsonDirectory, String toCollection) throws IOException {
-
-        logger.info("job started.");
-
+    private WriteBatcher newBatcher() {
         WriteBatcher batcher = moveMgr.newWriteBatcher().withBatchSize(100).withThreadCount(5)
-                .onBatchSuccess(batch -> logger.info("Loaded batch of JSON documents"))
+                .onBatchSuccess(batch -> logger.info("Loaded batch of documents"))
                 .onBatchFailure((batch, throwable) -> {
                     logger.error("FAILURE on batch:" + batch.toString() + "\n", throwable);
                     System.err.println(throwable.getMessage());
@@ -157,10 +94,84 @@ abstract class ExamplesBase {
                     // throwable.printStackTrace();
                 });
 
-        ticket = moveMgr.startJob(batcher);
+        return batcher;
+    }
 
+    protected String genUri(Path entry) {
+    	return entry
+    	.toUri()
+    	.toString()
+    	.replaceFirst("^.*\\/entity-services\\/", "/");
+    }
+    
+    private void importOrDescend(Path entry, WriteBatcher batcher, String collection, Format format) {
+        if (entry.toFile().isFile()) {
+            logger.debug("Adding " + entry.getFileName().toString());
+            String uri = genUri(entry);
+            if (collection != null) {
+                DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
+                    .withPermission("nwind-reader", Capability.READ) //
+                    .withPermission("nwind-writer", Capability.INSERT, Capability.UPDATE);
+                batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
+            } else {
+                batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));
+            }
+            logger.debug("Inserted " + format.toString() + " document " + uri);
+        }
+        else {
+            logger.info("Reading subdirectory " + entry.getFileName().toString());
+            // importOrDescend(entry, batcher, collection, format);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(entry)) {
+                for (Path child : stream) {
+                    importOrDescend(child, batcher, collection, format);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*
+     * This method uses a document-centric approach to RDF reference data, by
+     * invoking a server-side transform that parses turtle into MarkLogic XML
+     * triples.
+     */
+    public void importRDF(Path referenceDataDir, String collection) {
+
+        logger.info("RDF Load Job started");
+
+        WriteBatcher batcher = newBatcher().withTransform(new ServerTransform("turtle-to-xml"));
+
+        importOrDescend(referenceDataDir, batcher, collection, Format.TEXT);
+
+        moveMgr.startJob(batcher);
+        batcher.flushAndWait();
+    }
+
+    public void importJSON(Path jsonDirectory) throws InterruptedException, IOException {
+        importJSON(jsonDirectory, null);
+    }
+
+    public void importJSON(Path jsonDirectory, String toCollection) throws IOException {
+
+        logger.info("JSON job started.");
+
+        WriteBatcher batcher = newBatcher();
         importOrDescend(jsonDirectory, batcher, toCollection, Format.JSON);
 
+        moveMgr.startJob(batcher);
+        batcher.flushAndWait();
+    }
+
+    public void importXML(Path xmlDirectory, String toCollection) throws IOException {
+
+        logger.info("JSON job started.");
+
+        WriteBatcher batcher = newBatcher();
+
+        importOrDescend(xmlDirectory, batcher, toCollection, Format.XML);
+
+        moveMgr.startJob(batcher);
         batcher.flushAndWait();
     }
 

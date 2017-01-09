@@ -2,7 +2,7 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
 Extraction Template Generated from Entity Type Document
-graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
+graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
   <context>//es:instance</context>
   <vars>
     <var>
@@ -26,7 +26,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(./ProductID)))</val>
+	  <!-- Edited to add @ since ProductID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Product/", fn:encode-for-uri(./@ProductID)))</val>
 	</var>
       </vars>
       <triples>
@@ -38,7 +39,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	    <val>$RDF_TYPE</val>
 	  </predicate>
 	  <object>
-	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.2/Product")</val>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Product")</val>
 	  </object>
 	</triple>
 	<triple>
@@ -62,6 +63,11 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	  <view-name>Product</view-name>
 	  <columns>
 	    <column>
+	      <name>ProductID</name>
+	      <scalar-type>integer</scalar-type>
+	      <val>ProductID</val>
+	    </column>
+	    <column>
 	      <name>ProductName</name>
 	      <scalar-type>string</scalar-type>
 	      <val>ProductName</val>
@@ -79,17 +85,6 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	      <val>SupplierID</val>
 	      <nullable>true</nullable>
 	    </column>
-	    <column>
-	      <name>QuantityPerUnit</name>
-	      <scalar-type>string</scalar-type>
-	      <val>QuantityPerUnit</val>
-	      <nullable>true</nullable>
-	    </column>
-	    <column>
-	      <name>ProductID</name>
-	      <scalar-type>integer</scalar-type>
-	      <val>ProductID</val>
-	    </column>
 	  </columns>
 	</row>
       </rows>
@@ -99,7 +94,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Customer/", fn:encode-for-uri(./CustomerID)))</val>
+	  <!-- Edited to add @ since CustomerID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./@CustomerID)))</val>
 	</var>
       </vars>
       <triples>
@@ -111,7 +107,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	    <val>$RDF_TYPE</val>
 	  </predicate>
 	  <object>
-	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.2/Customer")</val>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</val>
 	  </object>
 	</triple>
 	<triple>
@@ -158,6 +154,12 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
+	      <name>ContactTitle</name>
+	      <scalar-type>string</scalar-type>
+	      <val>ContactTitle</val>
+	      <nullable>true</nullable>
+	    </column>
+	    <column>
 	      <name>Phone</name>
 	      <scalar-type>string</scalar-type>
 	      <val>Phone</val>
@@ -172,7 +174,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(./OrderID)))</val>
+	  <!-- Edited to add @ since OrderID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Order/", fn:encode-for-uri(./@OrderID)))</val>
 	</var>
       </vars>
       <triples>
@@ -184,7 +187,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	    <val>$RDF_TYPE</val>
 	  </predicate>
 	  <object>
-	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.2/Order")</val>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Order")</val>
 	  </object>
 	</triple>
 	<triple>
@@ -231,12 +234,6 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
-	      <name>ShipName</name>
-	      <scalar-type>string</scalar-type>
-	      <val>ShipName</val>
-	      <nullable>true</nullable>
-	    </column>
-	    <column>
 	      <name>ShipAddress</name>
 	      <scalar-type>string</scalar-type>
 	      <val>ShipAddress</val>
@@ -259,22 +256,23 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 		  <scalar-type>integer</scalar-type>
 		  <val>../OrderID</val>
 		</column>
+		  <!-- Below 3 column values had to be customized to include OrderDetail/ to work with northwind data -->
 		<column>
 		  <name>ProductID</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>ProductID/Product</val>
+		  <val>OrderDetail/ProductID/Product</val>
 		  <nullable>true</nullable>
 		</column>
 		<column>
 		  <name>UnitPrice</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>UnitPrice</val>
+		  <val>OrderDetail/UnitPrice</val>
 		  <nullable>true</nullable>
 		</column>
 		<column>
 		  <name>Quantity</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>Quantity</val>
+		  <val>OrderDetail/Quantity</val>
 		  <nullable>true</nullable>
 		</column>
 	      </columns>

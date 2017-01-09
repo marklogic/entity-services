@@ -3,18 +3,19 @@
   <xs:element name="CompanyName" type="xs:string"/>
   <xs:element name="Country" type="xs:string"/>
   <xs:element name="ContactName" type="xs:string"/>
-  <xs:element name="ContactTitle" type="xs:string"/>
   <xs:element name="Phone" type="xs:string"/>
-  <xs:element name="ProductID" type="xs:integer"/>
   <xs:element name="ProductName" type="xs:string"/>
   <xs:element name="UnitPrice" type="xs:double"/>
   <xs:element name="SupplierID" type="xs:integer"/>
+  <xs:element name="QuantityPerUnit" type="xs:string"/>
+  <xs:element name="ProductID" type="xs:integer"/>
   <xs:element name="OrderID" type="xs:integer"/>
   <!--This item is a duplicate and is commented out so as to create a valid artifact.
  <xs:element name="CustomerID" type="CustomerContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
 -->
   <xs:element name="OrderDate" type="xs:dateTime"/>
   <xs:element name="ShippedDate" type="xs:dateTime"/>
+  <xs:element name="ShipName" type="xs:string"/>
   <xs:element name="ShipAddress" type="xs:string"/>
   <xs:element name="OrderDetails" type="OrderDetailContainerType"/>
   <!--This item is a duplicate and is commented out so as to create a valid artifact.
@@ -48,17 +49,17 @@
       <xs:element minOccurs="0" ref="CompanyName"/>
       <xs:element minOccurs="0" ref="Country"/>
       <xs:element minOccurs="0" ref="ContactName"/>
-      <xs:element minOccurs="0" ref="ContactTitle"/>
       <xs:element minOccurs="0" ref="Phone"/>
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Customer" type="CustomerType"/>
   <xs:complexType name="ProductType" mixed="true">
     <xs:sequence minOccurs="0">
-      <xs:element ref="ProductID"/>
       <xs:element minOccurs="0" ref="ProductName"/>
       <xs:element minOccurs="0" ref="UnitPrice"/>
       <xs:element minOccurs="0" ref="SupplierID"/>
+      <xs:element minOccurs="0" ref="QuantityPerUnit"/>
+      <xs:element ref="ProductID"/>
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Product" type="ProductType"/>
@@ -68,6 +69,7 @@
       <xs:element minOccurs="0" ref="CustomerID"/>
       <xs:element minOccurs="0" ref="OrderDate"/>
       <xs:element minOccurs="0" ref="ShippedDate"/>
+      <xs:element minOccurs="0" ref="ShipName"/>
       <xs:element minOccurs="0" ref="ShipAddress"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails"/>
     </xs:sequence>

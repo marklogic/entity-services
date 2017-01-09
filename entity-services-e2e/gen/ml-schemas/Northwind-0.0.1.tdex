@@ -4,6 +4,16 @@
 Extraction Template Generated from Entity Type Document
 graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
   <context>//es:instance</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
   <path-namespaces>
     <path-namespace>
       <prefix>es</prefix>
@@ -11,6 +21,39 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
     </path-namespace>
   </path-namespaces>
   <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Product</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Product/", fn:encode-for-uri(./@ProductID)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Product")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
+    </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Product</context>
       <rows>
@@ -21,7 +64,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
 	    <column>
 	      <name>ProductID</name>
 	      <scalar-type>integer</scalar-type>
-	      <val>ProductID</val>
+	      <val>@ProductID</val>
 	    </column>
 	    <column>
 	      <name>ProductName</name>
@@ -47,6 +90,39 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
     </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Customer</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./@CustomerID)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
       <rows>
 	<row>
 	  <schema-name>Northwind</schema-name>
@@ -55,7 +131,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
 	    <column>
 	      <name>CustomerID</name>
 	      <scalar-type>string</scalar-type>
-	      <val>CustomerID</val>
+	      <val>@CustomerID</val>
 	    </column>
 	    <column>
 	      <name>CompanyName</name>
@@ -93,6 +169,39 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
     </template>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./Order</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Order/", fn:encode-for-uri(./@OrderID)))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Order")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Order</context>
       <rows>
 	<row>
 	  <schema-name>Northwind</schema-name>
@@ -101,7 +210,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
 	    <column>
 	      <name>OrderID</name>
 	      <scalar-type>integer</scalar-type>
-	      <val>OrderID</val>
+	      <val>@OrderID</val>
 	    </column>
 	    <column>
 	      <name>CustomerID</name>
@@ -116,9 +225,9 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>
-	      <name>ShipDate</name>
+	      <name>ShippedDate</name>
 	      <scalar-type>dateTime</scalar-type>
-	      <val>ShipDate</val>
+	      <val>ShippedDate</val>
 	      <nullable>true</nullable>
 	    </column>
 	    <column>

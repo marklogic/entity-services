@@ -74,7 +74,7 @@ declare function northwind-from-northwind:convert-instance-Customer(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/@CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -127,7 +127,7 @@ declare function northwind-from-northwind:convert-instance-Order(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Order")
-    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
+    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('OrderID',                xs:integer($source-node/@OrderID))
     =>es:optional('CustomerID',             $extract-reference-Customer($source-node/CustomerID/*))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
     =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
@@ -209,7 +209,7 @@ declare function northwind-from-northwind:convert-instance-Product(
     (: The following property was missing from the source type.
        The XPath will not up-convert without intervention.  :)
     =>es:optional('QuantityPerUnit',        xs:string($source-node/QuantityPerUnit))
-    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
+    =>   map:with('ProductID',              xs:integer($source-node/@ProductID))
 
 };
     

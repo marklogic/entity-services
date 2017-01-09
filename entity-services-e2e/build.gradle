@@ -1,7 +1,4 @@
 apply plugin: 'com.marklogic.ml-gradle'
-apply plugin: 'application'
-
-mainClassName = "com.marklogic.entityservices.e2e.ExamplesLoader";
 
 repositories { 
   maven {
@@ -17,11 +14,25 @@ dependencies {
   compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')
 }
 
+// default run the nwind example
+def exampleDir = project.findProperty('exampleDir') ?: 'e2e'
+
 ext {
     mlAppConfig {
-        
+        modulePaths.add( exampleDir + "/ml-modules")
+        schemasPath = exampleDir + "/ml-schemas"
+        configPath = exampleDir + "/ml-config"
         createTriggersDatabase = false
     }
+}
+
+task rune2eNwind(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.e2e.nwind.ExamplesLoader'
+}
+task genCode(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.e2e.CodeGenerator'
 }
 
 task wrapper(type: Wrapper) {

@@ -1,0 +1,9 @@
+{
+  "role-name": "nwind-writer",
+  "description": "Can read and write documents",
+  "role": ["nwind-reader", "rest-writer"],
+  "privilege": [
+    { "privilege-name": "any-uri", "action": "http://marklogic.com/xdmp/privileges/any-uri", "kind": "execute"},
+    { "privilege-name": "unprotected-collections", "action": "http://marklogic.com/xdmp/privileges/unprotected-collections", "kind": "execute"}
+  ]            
+}

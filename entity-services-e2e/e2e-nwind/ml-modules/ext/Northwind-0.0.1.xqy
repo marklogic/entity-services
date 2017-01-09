@@ -213,7 +213,7 @@ declare function northwind:extract-instance-Order(
     =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
     =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
     (: The following property is a local reference.  :)
-    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails, northwind:extract-instance-OrderDetail#1))
+    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, northwind:extract-instance-OrderDetail#1))
 };
 
 (:~

@@ -64,6 +64,9 @@
     <search:range type="xs:decimal" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/ProductID</search:path-index>
     </search:range>
+    <search:range type="xs:decimal" facet="true">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/Dummy</search:path-index>
+    </search:range>
   </search:tuples>
   <!--Uncomment to return no results for a blank search, rather than the default of all results
  <search:term xmlns:search="http://marklogic.com/appservices/search">

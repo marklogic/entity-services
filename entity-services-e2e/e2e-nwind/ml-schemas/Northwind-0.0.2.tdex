@@ -26,7 +26,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(./ProductID)))</val>
+	  <!-- Edited to add @ since ProductID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(./@ProductID)))</val>
 	</var>
       </vars>
       <triples>
@@ -99,7 +100,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Customer/", fn:encode-for-uri(./CustomerID)))</val>
+	  <!-- Edited to add @ since CustomerID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Customer/", fn:encode-for-uri(./@CustomerID)))</val>
 	</var>
       </vars>
       <triples>
@@ -172,7 +174,8 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(./OrderID)))</val>
+	  <!-- Edited to add @ since OrderID is an attribute in the source document -->
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(./@OrderID)))</val>
 	</var>
       </vars>
       <triples>
@@ -259,22 +262,23 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 		  <scalar-type>integer</scalar-type>
 		  <val>../OrderID</val>
 		</column>
+		  <!-- Below 3 column values had to be customized to include OrderDetail/ to work with northwind data -->
 		<column>
 		  <name>ProductID</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>ProductID/Product</val>
+		  <val>OrderDetail/ProductID/Product</val>
 		  <nullable>true</nullable>
 		</column>
 		<column>
 		  <name>UnitPrice</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>UnitPrice</val>
+		  <val>OrderDetail/UnitPrice</val>
 		  <nullable>true</nullable>
 		</column>
 		<column>
 		  <name>Quantity</name>
 		  <scalar-type>integer</scalar-type>
-		  <val>Quantity</val>
+		  <val>OrderDetail/Quantity</val>
 		  <nullable>true</nullable>
 		</column>
 	      </columns>

@@ -22,13 +22,32 @@ declare function translator:transform(
 {
     let $uri := map:get($context, "uri")
     let $_ := xdmp:log(("Procesing Translator URI " || $uri))
-    let $new-version := t:convert-instance-Order(fn:doc($uri)//es:attachments/Order)
-    let $new-envelope := new:instance-to-envelope($new-version)
     let $_ :=
-        xdmp:document-insert(
-                fn:concat("/upconverts", $uri),
-                $new-envelope,
-                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
-                "Order-0.0.2-envelopes")
+    		if (fn:matches($uri, "/orders/.*\.xml"))
+    	        then
+    	        	xdmp:document-insert(
+    	                fn:concat("/upconverts", $uri),
+    	                new:instance-to-envelope(t:convert-instance-Order(fn:doc($uri))),
+    	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
+    	                "Order-0.0.2-envelopes")
+    	        	
+    	    else if (fn:matches($uri, "/customers/.*\.xml"))
+    	        then
+	    	        xdmp:document-insert(
+    	                fn:concat("/upconverts", $uri),
+    	                new:instance-to-envelope(t:convert-instance-Customer(fn:doc($uri))),
+    	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
+    	                "Customer-0.0.2-envelopes")
+   	        
+    	    else if (fn:matches($uri, "/products/.*\.xml"))
+        	    then
+	        	    xdmp:document-insert(
+    	                fn:concat("/upconverts", $uri),
+    	                new:instance-to-envelope(t:convert-instance-Product(fn:doc($uri))),
+    	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
+    	                "Product-0.0.2-envelopes")
+  	
+        	else ()    
+        
     return document { " " }
 };

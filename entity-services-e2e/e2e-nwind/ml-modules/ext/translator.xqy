@@ -74,7 +74,8 @@ declare function northwind-from-northwind:convert-instance-Customer(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/@CustomerID))
+    (: The following lines are generated from the "Customer" entity type. :)    
+    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -127,13 +128,17 @@ declare function northwind-from-northwind:convert-instance-Order(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Order")
-    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('OrderID',                xs:integer($source-node/@OrderID))
+    (: The following lines are generated from the "Order" entity type. :)    
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
     =>es:optional('CustomerID',             $extract-reference-Customer($source-node/CustomerID/*))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
     =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
     (: The following property was missing from the source type.
-       The XPath will not up-convert without intervention.  :)
-    =>es:optional('ShipName',               xs:string($source-node/ShipName))
+       The XPath will not up-convert without intervention. 
+       
+       Modified the xpath to refer attachments in the version 1 envelope.
+    :)
+    =>es:optional('ShipName',               xs:string($source-node/root()//es:attachments/Order/ShipName))
     =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
     =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail))
 
@@ -172,7 +177,8 @@ declare function northwind-from-northwind:convert-instance-OrderDetail(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "OrderDetail")
-    (: The following lines are generated from the "OrderDetail" entity type. :)    =>es:optional('ProductID',              $extract-reference-Product($source-node/ProductID/*))
+    (: The following lines are generated from the "OrderDetail" entity type. :)    
+    =>es:optional('ProductID',              $extract-reference-Product($source-node/ProductID/*))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('Quantity',               xs:integer($source-node/Quantity))
 
@@ -203,13 +209,17 @@ declare function northwind-from-northwind:convert-instance-Product(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    (: The following lines are generated from the "Product" entity type. :)    
+    =>es:optional('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     (: The following property was missing from the source type.
-       The XPath will not up-convert without intervention.  :)
-    =>es:optional('QuantityPerUnit',        xs:string($source-node/QuantityPerUnit))
-    =>   map:with('ProductID',              xs:integer($source-node/@ProductID))
+       The XPath will not up-convert without intervention.  
+       
+       Modified the XPath to refer attachments in the version 1 envelope
+    :)
+    =>es:optional('QuantityPerUnit',        xs:string($source-node/root()//es:attachments/Product/QuantityPerUnit))
+    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
 
 };
     

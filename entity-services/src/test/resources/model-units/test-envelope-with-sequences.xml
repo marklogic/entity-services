@@ -1,0 +1,30 @@
+<es:envelope xmlns:es="http://marklogic.com/entity-services">
+	<es:instance>
+		<es:info>
+			<es:title>Test</es:title>
+			<es:version>0.0.2</es:version>
+		</es:info>
+		<Typorino>
+			<name>Chuck Greer</name>
+		</Typorino>
+	</es:instance>
+	<es:instance>
+		<es:info>
+			<es:title>Test</es:title>
+			<es:version>0.0.4</es:version>
+		</es:info>
+		<Typorino>
+			<name>Alejandro Arribaseo</name>
+		</Typorino>
+	</es:instance>
+	<es:instance>
+		<es:info>
+			<es:title>Test</es:title>
+			<es:version>0.0.1</es:version>
+		</es:info>
+		<Typorino>
+			<name>Alejandro Arribas</name>
+		</Typorino>
+	</es:instance>
+	<es:attachments><a>one source</a><b>another source</b><c>a third source</c></es:attachments>
+</es:envelope>

@@ -86,10 +86,9 @@ declare function inst:instance-xml-from-document(
 
 declare function inst:instance-json-from-document(
     $document as document-node()
-) as object-node()
+) as object-node()*
 {
-    let $instance := inst:instance-from-document($document)
-    return xdmp:to-json($instance)/node()
+    (inst:instance-from-document($document) ! xdmp:to-json(.))/node()
 };
 
 

@@ -223,7 +223,7 @@ declare function es:instance-xml-from-document(
  :)
 declare function es:instance-json-from-document(
     $document as document-node()
-) as object-node()
+) as object-node()*
 {
     inst:instance-json-from-document($document)
 };

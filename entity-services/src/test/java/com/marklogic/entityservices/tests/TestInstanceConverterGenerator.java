@@ -29,6 +29,8 @@ import javax.xml.transform.TransformerException;
 
 import com.jayway.restassured.internal.path.json.JSONAssertion;
 import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.*;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -187,7 +189,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
      * instance-from-document
      * instance-json-from-document
      * instance-xml-from-document
-     * instance-attachments-from-document
+     * instance-get-attachments
      *
      * @throws IOException
      * @throws JsonProcessingException
@@ -262,6 +264,50 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
         }
     }
+
+    private int sizeOf(EvalResultIterator results) {
+        int size = 0;
+        while (results.hasNext()) {
+            size++;
+            EvalResult result = results.next();
+            // logger.debug(result.get(new StringHandle()).get());
+        }
+        return size;
+    }
+
+    @Test
+    public void testInstanceFunctionCardinality() {
+        checkCardinality("/test-envelope-with-sequences.xml", 3);
+        checkCardinality("/test-envelope-no-instances.xml", 0);
+    }
+
+    private void checkCardinality(String docUri, int nResults) {
+        InputStream testEnvelope = this.getClass().getResourceAsStream("/model-units" + docUri);
+        XMLDocumentManager xmlDocMgr = client.newXMLDocumentManager();
+        xmlDocMgr.write(docUri, new InputStreamHandle(testEnvelope).withFormat(Format.XML));
+
+        StringHandle stringHandle;
+        EvalResultIterator results;
+
+        results = eval("",
+            "es:instance-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has three instances.", sizeOf(results), nResults);
+
+        results = eval("",
+            "es:instance-json-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has three instances (json)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-xml-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has three instances (xml)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-get-attachments( doc('" + docUri + "'))");
+        assertEquals("Document has three attachments", sizeOf(results), nResults);
+
+        xmlDocMgr.delete(docUri);
+    }
+
 
     @Test
     public void testJsonAttachments()

@@ -1200,12 +1200,18 @@ declare function esi:search-options-generate(
             return
                 json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name, $constraint-template))
         let $_ :=
-            if (json:array-size($tuples-range-definitions) gt 0)
+            if (json:array-size($tuples-range-definitions) gt 1)
             then
                 json:array-push($all-tuples-definitions,
                     <search:tuples name="{ $entity-type-name }">
                         {json:array-values($tuples-range-definitions)}
                     </search:tuples>)
+            else if (json:array-size($tuples-range-definitions) eq 1)
+            then
+                json:array-push($all-tuples-definitions,
+                    <search:values name="{ $entity-type-name }">
+                        {json:array-values($tuples-range-definitions)}
+                    </search:values>)
             else ()
         let $_word-constraints :=
             for $property-name in json:array-values(map:get($entity-type, "wordLexicon"))

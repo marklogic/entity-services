@@ -83,7 +83,8 @@
         "productName": {
           "datatype": "string"
         }
-      }
+      },
+      "rangeIndex": ["quantity"]
     }
   }
 }

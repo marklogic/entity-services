@@ -1046,7 +1046,13 @@ declare function esi:extraction-template-generate(
             <tde:template>
                 <tde:context>./{ $entity-type-name }</tde:context>
                 <tde:vars>
-                    <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
+                    {
+                        if ($primary-key-type eq "string")
+                        then
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
+                        else
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(xs:string(./{ $primary-key-name }))))</tde:val></tde:var>
+                    }
                 </tde:vars>
                 <tde:triples>
                     <tde:triple>

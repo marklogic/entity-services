@@ -26,7 +26,7 @@ graph uri: http://baloo#et-required-0.0.1</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(./a)))</val>
+	  <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(xs:string(./a))))</val>
 	</var>
       </vars>
       <triples>

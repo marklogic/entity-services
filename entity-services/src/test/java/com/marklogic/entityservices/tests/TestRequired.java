@@ -84,7 +84,7 @@ public class TestRequired  extends EntityServicesTestBase {
 
         DOMHandle handle;
         handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new DOMHandle());
-        // String toWrite = evalOneResult("fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new StringHandle()).get();
+        // String toWrite = evalOneResult("", "fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new StringHandle()).get();
         // save("/model-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/model-units/extraction-template.xml");
 		Document filesystemXML = builder.parse(is);

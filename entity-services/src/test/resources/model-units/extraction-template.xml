@@ -60,6 +60,7 @@ graph uri: http://baloo#et-required-0.0.1</description>
 	<row>
 	  <schema-name>et-required</schema-name>
 	  <view-name>ETOne</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>a</name>

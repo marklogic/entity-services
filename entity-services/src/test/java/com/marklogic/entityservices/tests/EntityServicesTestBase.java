@@ -67,10 +67,9 @@ public abstract class EntityServicesTestBase {
         testSetup.teardownClass();
     }
 
-    protected static EvalResultIterator eval(String imports, String functionCall) throws TestEvalException {
-
+    protected static EvalResultIterator eval(String imports, String functionCall, DatabaseClient client) throws TestEvalException {
         String entityServicesImport =
-                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
+            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
                 "import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n" +
                 "import module namespace i = 'http://marklogic.com/entity-services-instance' at '/MarkLogic/entity-services/entity-services-instance.xqy';\n" +
                 "import module namespace sem = 'http://marklogic.com/semantics' at '/MarkLogic/semantics.xqy';\n";
@@ -78,7 +77,7 @@ public abstract class EntityServicesTestBase {
         String option = "declare option xdmp:mapping \"false\";";
 
         ServerEvaluationCall call =
-                client.newServerEval().xquery(entityServicesImport + imports + option + functionCall);
+            client.newServerEval().xquery(entityServicesImport + imports + option + functionCall);
         EvalResultIterator results = null;
         try {
             results = call.eval();
@@ -88,8 +87,20 @@ public abstract class EntityServicesTestBase {
         return results;
     }
 
+    protected static EvalResultIterator eval(String imports, String functionCall) throws TestEvalException {
+        return eval(imports, functionCall, client);
+    }
+
     protected static <T extends AbstractReadHandle> T evalOneResult(String imports, String functionCall, T handle) throws TestEvalException {
-        EvalResultIterator results =  eval(imports, functionCall);
+        return evalOne(imports, functionCall, handle, client);
+    }
+
+    protected static <T extends AbstractReadHandle> T evalOneResultSchemasDb(String imports, String functionCall, T handle) throws TestEvalException {
+        return evalOne(imports, functionCall, handle, schemasClient);
+    }
+
+    private static <T extends AbstractReadHandle> T evalOne(String imports, String functionCall, T handle, DatabaseClient client) throws TestEvalException {
+        EvalResultIterator results =  eval(imports, functionCall, client);
         EvalResult result = null;
         if (results.hasNext()) {
             result = results.next();

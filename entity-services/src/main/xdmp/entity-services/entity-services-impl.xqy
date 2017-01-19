@@ -904,6 +904,7 @@ declare function esi:extraction-template-generate(
                 <tde:row>
                     <tde:schema-name>{ $schema-name }</tde:schema-name>
                     <tde:view-name>{ $entity-type-name }</tde:view-name>
+                    <tde:view-layout>sparse</tde:view-layout>
                     <tde:columns>
                     {
                     for $property-name in map:keys($properties)
@@ -982,6 +983,7 @@ declare function esi:extraction-template-generate(
                       <tde:row>
                         <tde:schema-name>{ $schema-name }</tde:schema-name>
                         <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
+                        <tde:view-layout>sparse</tde:view-layout>
                         <tde:columns>
                             <tde:column>
                                 { comment { "This column joins to property",
@@ -1008,7 +1010,7 @@ declare function esi:extraction-template-generate(
                                 <tde:column>
                                     { comment { "This column joins to primary key of",
                                                 $ref-type-name } }
-                                    <tde:name>{ $ref-primary-key }</tde:name>
+                                    <tde:name>{ $property-name || "_" || $ref-primary-key }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
                                     <tde:val>{ $ref-name }</tde:val>
                                 </tde:column>

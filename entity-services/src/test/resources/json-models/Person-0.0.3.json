@@ -1,0 +1,36 @@
+{
+  "info": {
+    "title": "Person",
+    "version": "0.0.3",
+    "baseUri" : "http://example.org/mytypeschema/"
+  },
+  "definitions": {
+    "Person": {
+      "properties": {
+        "id": {
+          "datatype": "string"
+        },
+        "firstName": {
+          "datatype": "string"
+        },
+        "lastName": {
+          "datatype": "string"
+        },
+        "fullName": {
+          "datatype": "string"
+        },
+        "address": {
+          "datatype": "string"
+        },
+        "bestFriend": {
+          "$ref": "#/definitions/Person"
+        },
+        "friendOf": {
+          "datatype":"array",
+          "items":{"$ref": "#/definitions/Person"}
+        }
+      },
+      "primaryKey":"id"
+    }
+  }
+}

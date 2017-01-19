@@ -68,6 +68,7 @@ public class TestVersionTranslator extends EntityServicesTestBase {
 
         String instance1 = "instance-0.0.1.xml";
         InputStream is = this.getClass().getResourceAsStream("/model-units/" + instance1);
+        documentManager = client.newXMLDocumentManager();
         documentManager.write(instance1, new InputStreamHandle(is).withFormat(Format.XML));
 
         DOMHandle domHandle = evalOneResult(

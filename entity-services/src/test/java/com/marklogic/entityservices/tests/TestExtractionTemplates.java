@@ -93,6 +93,13 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         for (String entityType : entityTypes) {
             String schemaName = entityType.replaceAll("-.*$", "");
             logger.info("Validating extraction template: " + entityType);
+            JacksonHandle validity = evalOneResultSchemasDb("", "tde:validate( fn:doc('"+schemaName+".tdex'))", new JacksonHandle());
+            JsonNode validityNode = validity.get();
+            if (!validityNode.get("valid").asBoolean()) {
+                // Some of the tests do not generate views
+                if (schemaName.equals("NoProperties")) continue;
+                throw new TestEvalException("Invalid template generated for " + entityType);
+            }
             JacksonHandle template = new JacksonHandle();
             try {
                 template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);

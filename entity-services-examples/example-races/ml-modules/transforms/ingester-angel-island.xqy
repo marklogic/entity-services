@@ -1,9 +1,8 @@
 xquery version "1.0-ml";
 module namespace ingester = "http://marklogic.com/rest-api/transform/ingester-angel-island";
 
-(: import the Entity Services library that supports Angel Island CSV :)
-import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1-source-2"
-    at "/ext/Race-0.0.1-source-2.xqy";
+import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1"
+    at "/ext/Race-0.0.1.xqy";
 
 
 (:

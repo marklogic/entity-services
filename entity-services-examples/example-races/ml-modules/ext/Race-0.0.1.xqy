@@ -39,7 +39,7 @@ declare function race:extract-instance-Race(
          :)
          =>   map:with('name',                   xs:string($source-node/name))
          (: The following property is a local reference.                                     :)
-         =>es:optional('comprisedOfRuns',        race:extract-array($source-node/comprisedOfRuns, function($x) { json:object()=>map:with("$type", "Run")=>map:with("$ref", xs:string($x)) } ))
+         =>es:optional('comprisedOfRuns',        es:extract-array($source-node/comprisedOfRuns, function($x) { json:object()=>map:with("$type", "Run")=>map:with("$ref", xs:string($x)) } ))
          (: The following property is a local reference.                                     :)
          =>es:optional('wonByRunner',            race:extract-instance-Runner($runnerDoc))
          =>es:optional('courseLength',           xs:decimal($source-node/courseLength))
@@ -78,23 +78,61 @@ declare function race:extract-instance-Runner(
         =>map:with('age',                    xs:int($source-node/age))
         =>map:with('gender',                 xs:string($source-node/gender))
 };
-    
 
-(:~
- : This function includes an array if there are items to put in it.
- : If there are no such items, then it returns an empty sequence.
- :)
-declare function race:extract-array(
-    $path-to-property as item()*,
-    $fn as function(*)
-) as json:array?
+
+declare private function race:process-duration(
+    $input-value as xs:string
+) as xs:dayTimeDuration?
 {
-    if (empty($path-to-property))
+    if ($input-value = ('DNS', 'DSQ'))
     then ()
-    else json:to-array($path-to-property ! $fn(.))
+    else
+        let $tokens := tokenize($input-value, ":") ! xs:decimal(.)
+        return functx:dayTimeDuration((), $tokens[1], $tokens[2], $tokens[3])
 };
 
+(:~
+ : Creates a map:map representation of an entity instance from some source
+ : document.
+ : @param $source-node  A document or node that contains data for populating a Run
+ : @return A map:map instance that holds the data for this entity type.
+ :)
+declare function race:extract-instance-Angel-Island(
+$source-node as node()
+) as map:map
+{
+(: if this $source-node is a reference without an embedded object, then short circuit. :)
+json:object()
+(: This line identifies the type of this instance.  Do not change it. :)
+=>map:with('$type', 'Run')
+=>map:with('$attachments', xdmp:quote($source-node))
+=>map:with('id',                     xs:string($source-node/Bib))
+=>map:with('date',                   xs:date("2016-07-23"))
+=>es:optional('distance',            if ($source-node/Time = ("DNS", "DSQ")) then () else xs:decimal("13.1"))
+=>es:optional('distanceLabel',       xs:string("Half Marathon"))
+=>es:optional('duration',            race:process-duration($source-node/Time))
+(: The following property is a local reference.                                :)
+=>map:with('runByRunner',            race:extract-instance-Angel-Island-Runner($source-node))
+};
 
+(:~
+ : Creates a map:map representation of an entity instance from some source
+ : document.
+ : @param $source-node  A document or node that contains data for populating a Runner
+ : @return A map:map instance that holds the data for this entity type.
+ :)
+declare function race:extract-instance-Angel-Island-Runner(
+$source-node as node()
+) as map:map
+{
+json:object()
+(: This line identifies the type of this instance.  Do not change it. :)
+=>map:with('$type', 'Runner')
+=>   map:with('name',                   xs:string($source-node/Name))
+=>   map:with('age',                    xs:decimal($source-node/Age))
+=>es:optional('gender',                 xs:string($source-node/Gender))
+
+};
 (:~
  : Turns an entity instance into an XML structure.
  : This out-of-the box implementation traverses a map structure

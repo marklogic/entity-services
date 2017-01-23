@@ -20,7 +20,8 @@
           "datatype":"string" 
         }
       },
-      "primaryKey" : "CustomerId"
+      "primaryKey" : "CustomerId",
+      "rangeIndex" : [ "CustomerId" ]
     },
     "Product": {
       "properties": {

@@ -72,13 +72,14 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	}
 	
 	@Test
+	//Tests bug #243
 	public void testSearchOptionsWithXML() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-northwind1.xml";
 		
 		DOMHandle handle = evalOneResult("", "es:model-from-xml(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
-        //debugOutput(searchOptions);
+        debugOutput(searchOptions);
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-northwind1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);

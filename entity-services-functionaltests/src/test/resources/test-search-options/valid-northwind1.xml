@@ -12,6 +12,19 @@
 </search:value>
 </search:constraint>
 <!--
+This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
+  <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+    <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerId</search:path-index>
+  </search:range>
+</search:constraint> 
+-->
+<search:values name="Customer">
+<search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+<search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerId</search:path-index>
+</search:range>
+</search:values>
+<!--
 Uncomment to return no results for a blank search, rather than the default of all results
  <search:term xmlns:search="http://marklogic.com/appservices/search">
   <search:empty apply="no-results"/>

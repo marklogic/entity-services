@@ -44,10 +44,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
+import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.Format;
+import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
@@ -216,6 +219,50 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		return writer.toString();
 	}*/
 	
+    private int sizeOf(EvalResultIterator results) {
+        int size = 0;
+        while (results.hasNext()) {
+            size++;
+            EvalResult result = results.next();
+            // logger.debug(result.get(new StringHandle()).get());
+        }
+        return size;
+    }
+
+    private void checkCardinality(String docUri, int nResults) {
+        InputStream testEnvelope = this.getClass().getResourceAsStream("/entity-type-units/" + docUri);
+        XMLDocumentManager xmlDocMgr = client.newXMLDocumentManager();
+        xmlDocMgr.write(docUri, new InputStreamHandle(testEnvelope).withFormat(Format.XML));
+
+        StringHandle stringHandle;
+        EvalResultIterator results;
+
+        results = eval("",
+            "es:instance-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances.", sizeOf(results), nResults);
+
+        results = eval("",
+            "es:instance-json-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances (json)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-xml-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances (xml)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-get-attachments( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" attachments", sizeOf(results), nResults);
+
+        xmlDocMgr.delete(docUri);
+    }
+    
+    @Test
+    //Verifies bug #240
+    public void testInstanceFunctionCardinality() {
+        checkCardinality("test-envelope-with-sequences.xml", 3);
+        checkCardinality("test-envelope-no-instances.xml", 0);
+    }
+
 	@Test
 	//This test verifies that conversion module generates a document as output and not text
 	public void testConvModOutputNodeKind() {

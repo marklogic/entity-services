@@ -84,7 +84,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("sameTgt-")) {continue; }
+			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("person")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("sameTgt-")) {continue; }
 			
 			String part = entityType.replaceAll("\\-(Src|Tgt)", "");
 			String source = part.replaceAll("\\.json", "-Src.json");

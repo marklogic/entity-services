@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
@@ -249,6 +250,32 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType.replace(".json",".xml"));
 			Document filesystemXML = builder.parse(is);
 
+
+            //debugOutput(template);
+
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					template);
+			
+	}
+	
+	@Test
+	//This test verifies github issue #214
+	public void verifyBug214() throws TestEvalException, SAXException, IOException, TransformerException {
+
+			String entityType = "person.json";
+			logger.info("Validating extraction template for:" + entityType);
+			try {
+				evalOneResult("import module namespace tde = 'http://marklogic.com/xdmp/tde' at '/MarkLogic/tde.xqy';", 
+						"tde:template-insert('person.tdex', fn:doc( '"+entityType+"')=>es:extraction-template-generate())", new DOMHandle());
+			} catch (TestEvalException e) {
+				throw new RuntimeException(e);
+			}
+			DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
+			Document template = handle.get();
+			
+			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType.replace(".json",".xml"));
+			Document filesystemXML = builder.parse(is);
 
             //debugOutput(template);
 

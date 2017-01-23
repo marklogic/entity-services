@@ -25,7 +25,7 @@ graph uri: http://baloo/et-required-0.0.1</description>
       <vars>
         <var>
           <name>subject-iri</name>
-          <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(./a)))</val>
+          <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(xs:string(./a))))</val>
         </var>
       </vars>
       <triples>
@@ -59,6 +59,7 @@ graph uri: http://baloo/et-required-0.0.1</description>
         <row>
           <schema-name>et-required</schema-name>
           <view-name>ETOne</view-name>
+          <tde:view-layout>sparse</tde:view-layout>
           <columns>
             <column>
               <name>a</name>

@@ -59,6 +59,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
         <row>
           <schema-name>SchemaCompleteEntityType</schema-name>
           <view-name>SchemaCompleteEntityType</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>orderId</name>
@@ -284,6 +285,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -312,6 +314,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -325,7 +328,7 @@ This column joins to property orderId of SchemaCompleteEntityType
                   <!--
 This column joins to primary key of OrderDetails
 -->
-                  <name>quantity</name>
+                  <name>arrayreferenceInThisFile_quantity</name>
                   <scalar-type>integer</scalar-type>
                   <val>OrderDetails</val>
                 </column>
@@ -339,6 +342,7 @@ This column joins to primary key of OrderDetails
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -367,6 +371,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -396,7 +401,7 @@ This column joins to primary key of an external reference
       <vars>
         <var>
           <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/", fn:encode-for-uri(./quantity)))</val>
+          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/", fn:encode-for-uri(xs:string(./quantity))))</val>
         </var>
       </vars>
       <triples>
@@ -430,6 +435,7 @@ This column joins to primary key of an external reference
         <row>
           <schema-name>SchemaCompleteEntityType</schema-name>
           <view-name>OrderDetails</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>quantity</name>

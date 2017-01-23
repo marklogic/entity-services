@@ -59,6 +59,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
         <row>
           <schema-name>Lets-test-DB-prop-generate</schema-name>
           <view-name>Product</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>ProductName</name>
@@ -92,7 +93,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
       <vars>
         <var>
           <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Customer/", fn:encode-for-uri(./CustomerId)))</val>
+          <val>sem:iri(concat("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Customer/", fn:encode-for-uri(xs:string(./CustomerId))))</val>
         </var>
       </vars>
       <triples>
@@ -126,6 +127,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
         <row>
           <schema-name>Lets-test-DB-prop-generate</schema-name>
           <view-name>Customer</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>CustomerId</name>
@@ -226,6 +228,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
             <row>
               <schema-name>Lets-test-DB-prop-generate</schema-name>
               <view-name>Customer_ProductsPurchased</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -239,7 +242,7 @@ This column joins to property CustomerId of Customer
                   <!--
 This column joins to primary key of Product
 -->
-                  <name>ProductName</name>
+                  <name>ProductsPurchased_ProductName</name>
                   <scalar-type>string</scalar-type>
                   <val>Product</val>
                 </column>

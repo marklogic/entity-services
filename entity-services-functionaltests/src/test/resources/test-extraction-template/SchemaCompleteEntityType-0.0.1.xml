@@ -59,6 +59,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
         <row>
           <schema-name>SchemaCompleteEntityType</schema-name>
           <view-name>SchemaCompleteEntityType</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>orderId</name>
@@ -284,6 +285,7 @@ graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -312,6 +314,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -343,6 +346,7 @@ This column joins to property orderId of SchemaCompleteEntityType
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--
@@ -371,6 +375,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
             <row>
               <schema-name>SchemaCompleteEntityType</schema-name>
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--

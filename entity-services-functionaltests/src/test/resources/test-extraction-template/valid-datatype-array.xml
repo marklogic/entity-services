@@ -62,6 +62,7 @@ The standalone template for Product cannot be generated.  Each template row requ
         <row>
           <schema-name>Northwind</schema-name>
           <view-name>Customer</view-name>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>CustomerId</name>
@@ -96,6 +97,7 @@ The standalone template for Product cannot be generated.  Each template row requ
             <row>
               <schema-name>Northwind</schema-name>
               <view-name>Customer_likes</view-name>
+              <view-layout>sparse</view-layout>
               <columns>
                 <column>
                   <!--

@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title" : "Model",
+    "version" : "original",
+    "description" : "The original Model"
+  },
+  "definitions": {
+    "Person" : {
+      "properties" : {
+        "id" : {
+          "datatype": "long"
+        }
+      },
+      "primary-key" : "id"
+    }
+  }
+}

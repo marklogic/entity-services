@@ -1109,7 +1109,7 @@ declare function esi:extraction-template-generate(
 Extraction Template Generated from Entity Type Document
 graph uri: {esi:model-graph-iri($model)}
         </tde:description>
-        <tde:context>//es:instance</tde:context>
+        <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
         <tde:vars>
             <tde:var><tde:name>RDF</tde:name><tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val></tde:var>
             <tde:var><tde:name>RDF_TYPE</tde:name><tde:val>sem:iri(concat($RDF, "type"))</tde:val></tde:var>

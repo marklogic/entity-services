@@ -22,9 +22,7 @@ public class Translator extends ExamplesBase {
 
     public void translate() throws InterruptedException {
         StructuredQueryBuilder qb = new StructuredQueryBuilder();
-        StructuredQueryDefinition qdef = qb.document("/products/25.xml","/products/64.xml","/products/4.xml","/products/27.xml", 
-        		"/orders/10436.xml","/orders/10615.xml","/orders/10261.xml","/orders/10440.xml",
-        		"/customers/LONEP.xml","/customers/DRACD.xml","/customers/QUEEN.xml","/customers/BLONP.xml");
+        StructuredQueryDefinition qdef = qb.collection("upconverts");
         ServerTransform ingester = new ServerTransform("translator");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
                 .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {

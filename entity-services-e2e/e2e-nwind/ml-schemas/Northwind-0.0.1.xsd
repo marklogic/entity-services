@@ -24,6 +24,41 @@
  <xs:element name="UnitPrice" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
 -->
   <xs:element name="Quantity" type="xs:integer"/>
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="OrderID" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="CustomerID" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="OrderDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="ShippedDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="ProductName" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="UnitPrice" type="xs:double" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="Quantity" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:element name="Discount" type="xs:string"/>
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <xs:element name="ShipAddress" type="ShipDetailsContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:element name="Province" type="xs:string"/>
+  <xs:element name="Region" type="xs:string"/>
+  <xs:element name="ShipMode" type="xs:string"/>
+  <xs:element name="ShippingCost" type="xs:double"/>
+  <xs:complexType name="ShipDetailsContainerType">
+    <xs:sequence>
+      <xs:element ref="ShipDetails"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
   <xs:complexType name="ProductContainerType">
     <xs:sequence>
       <xs:element ref="Product"/>
@@ -81,4 +116,27 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="OrderDetail" type="OrderDetailType"/>
+  <xs:complexType name="SuperstoreType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="OrderID"/>
+      <xs:element minOccurs="0" ref="CustomerID"/>
+      <xs:element minOccurs="0" ref="OrderDate"/>
+      <xs:element minOccurs="0" ref="ShippedDate"/>
+      <xs:element minOccurs="0" ref="ProductName"/>
+      <xs:element minOccurs="0" ref="UnitPrice"/>
+      <xs:element minOccurs="0" ref="Quantity"/>
+      <xs:element minOccurs="0" ref="Discount"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="ShipAddress"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Superstore" type="SuperstoreType"/>
+  <xs:complexType name="ShipDetailsType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="Province"/>
+      <xs:element minOccurs="0" ref="Region"/>
+      <xs:element minOccurs="0" ref="ShipMode"/>
+      <xs:element minOccurs="0" ref="ShippingCost"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ShipDetails" type="ShipDetailsType"/>
 </xs:schema>

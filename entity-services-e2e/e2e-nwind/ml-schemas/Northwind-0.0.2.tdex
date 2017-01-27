@@ -3,7 +3,7 @@
   <description>
 Extraction Template Generated from Entity Type Document
 graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
-  <context>//es:instance</context>
+  <context>//es:instance[es:info/es:version = "0.0.2"]</context>
   <vars>
     <var>
       <name>RDF</name>
@@ -26,8 +26,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <!-- Edited to add @ since ProductID is an attribute in the source document -->
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(./@ProductID)))</val>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(xs:string(./ProductID))))</val>
 	</var>
       </vars>
       <triples>
@@ -59,8 +58,9 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <context>./Product</context>
       <rows>
 	<row>
-	  <schema-name>Northwind</schema-name>
+	  <schema-name>Northwind2</schema-name>
 	  <view-name>Product</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>ProductName</name>
@@ -100,8 +100,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <!-- Edited to add @ since CustomerID is an attribute in the source document -->
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Customer/", fn:encode-for-uri(./@CustomerID)))</val>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Customer/", fn:encode-for-uri(./CustomerID)))</val>
 	</var>
       </vars>
       <triples>
@@ -133,8 +132,9 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <context>./Customer</context>
       <rows>
 	<row>
-	  <schema-name>Northwind</schema-name>
+	  <schema-name>Northwind2</schema-name>
 	  <view-name>Customer</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>CustomerID</name>
@@ -174,8 +174,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <!-- Edited to add @ since OrderID is an attribute in the source document -->
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(./@OrderID)))</val>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(xs:string(./OrderID))))</val>
 	</var>
       </vars>
       <triples>
@@ -207,8 +206,9 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <context>./Order</context>
       <rows>
 	<row>
-	  <schema-name>Northwind</schema-name>
+	  <schema-name>Northwind2</schema-name>
 	  <view-name>Order</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>OrderID</name>
@@ -253,8 +253,9 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	  <context>./OrderDetails</context>
 	  <rows>
 	    <row>
-	      <schema-name>Northwind</schema-name>
+	      <schema-name>Northwind2</schema-name>
 	      <view-name>Order_OrderDetails</view-name>
+	      <view-layout>sparse</view-layout>
 	      <columns>
 		<column>
 		  <!--This column joins to property OrderID of Order-->

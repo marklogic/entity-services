@@ -20,7 +20,7 @@ xquery version "1.0-ml";
  database of your application, and check it into your source control system.
 
  Modification History:
- Generated at timestamp: 2017-01-04T14:34:24.315628-08:00
+ Generated at timestamp: 2017-01-25T21:09:14.951759-08:00
  Persisted by AUTHOR
  Date: DATE
  :)
@@ -96,7 +96,7 @@ declare function northwind:extract-instance-Customer(
     :)
 
     $instance
-    =>   map:with('CustomerID',             xs:string($source-node/@CustomerID))
+    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -155,7 +155,7 @@ declare function northwind:extract-instance-Product(
     =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     =>es:optional('QuantityPerUnit',        xs:string($source-node/QuantityPerUnit))
-    =>   map:with('ProductID',              xs:integer($source-node/@ProductID))
+    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
 };
 
 (:~
@@ -206,7 +206,7 @@ declare function northwind:extract-instance-Order(
     :)
 
     $instance
-    =>   map:with('OrderID',                xs:integer($source-node/@OrderID))
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
     (: The following property is a local reference.  :)
     =>es:optional('CustomerID',             northwind:extract-instance-Customer($source-node/CustomerID))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))

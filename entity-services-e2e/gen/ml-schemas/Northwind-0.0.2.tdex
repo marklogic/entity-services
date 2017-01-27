@@ -3,7 +3,7 @@
   <description>
 Extraction Template Generated from Entity Type Document
 graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
-  <context>//es:instance</context>
+  <context>//es:instance[es:info/es:version = "0.0.2"]</context>
   <vars>
     <var>
       <name>RDF</name>
@@ -26,7 +26,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(./ProductID)))</val>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Product/", fn:encode-for-uri(xs:string(./ProductID))))</val>
 	</var>
       </vars>
       <triples>
@@ -60,6 +60,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	<row>
 	  <schema-name>Northwind</schema-name>
 	  <view-name>Product</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>ProductName</name>
@@ -133,6 +134,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	<row>
 	  <schema-name>Northwind</schema-name>
 	  <view-name>Customer</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>CustomerID</name>
@@ -172,7 +174,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(./OrderID)))</val>
+	  <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.2/Order/", fn:encode-for-uri(xs:string(./OrderID))))</val>
 	</var>
       </vars>
       <triples>
@@ -206,6 +208,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	<row>
 	  <schema-name>Northwind</schema-name>
 	  <view-name>Order</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>OrderID</name>
@@ -252,6 +255,7 @@ graph uri: http://marklogic.com/test#Northwind-0.0.2</description>
 	    <row>
 	      <schema-name>Northwind</schema-name>
 	      <view-name>Order_OrderDetails</view-name>
+	      <view-layout>sparse</view-layout>
 	      <columns>
 		<column>
 		  <!--This column joins to property OrderID of Order-->

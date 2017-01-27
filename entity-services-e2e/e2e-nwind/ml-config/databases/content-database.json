@@ -40,6 +40,34 @@
          "path-expression":"//es:instance/Product/ProductID",
          "range-value-positions":false,
          "scalar-type":"decimal"
+      },
+      {  
+         "collation":"http://marklogic.com/collation/en",
+         "invalid-values":"reject",
+         "path-expression":"//es:instance/Superstore/OrderID",
+         "range-value-positions":false,
+         "scalar-type":"decimal"
+      },
+      {  
+         "collation":"http://marklogic.com/collation/en",
+         "invalid-values":"reject",
+         "path-expression":"//es:instance/Superstore/CustomerID",
+         "range-value-positions":false,
+         "scalar-type":"string"
+      },
+      {  
+         "collation":"http://marklogic.com/collation/en",
+         "invalid-values":"reject",
+         "path-expression":"//es:instance/Superstore/ProductName",
+         "range-value-positions":false,
+         "scalar-type":"string"
+      },
+      {  
+         "collation":"http://marklogic.com/collation/en",
+         "invalid-values":"reject",
+         "path-expression":"//es:instance/Superstore/Quantity",
+         "range-value-positions":false,
+         "scalar-type":"decimal"
       }
    ],
    "triple-index":true,

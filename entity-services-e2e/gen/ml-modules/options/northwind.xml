@@ -52,6 +52,37 @@
       <search:element ns="" name="OrderID"/>
     </search:value>
   </search:constraint>
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="OrderID" xmlns:search="http://marklogic.com/appservices/search">
+  <search:value>
+    <search:element ns="" name="OrderID"/>
+  </search:value>
+</search:constraint> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="OrderID" xmlns:search="http://marklogic.com/appservices/search">
+  <search:range type="xs:decimal" facet="true">
+    <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/OrderID</search:path-index>
+  </search:range>
+</search:constraint> 
+-->
+  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+ <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
+  <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+    <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/CustomerID</search:path-index>
+  </search:range>
+</search:constraint> 
+-->
+  <search:constraint name="ProductName">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/ProductName</search:path-index>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="Quantity">
+    <search:range type="xs:decimal" facet="true">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/Quantity</search:path-index>
+    </search:range>
+  </search:constraint>
   <search:tuples name="Customer">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerID</search:path-index>
@@ -60,9 +91,23 @@
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CompanyName</search:path-index>
     </search:range>
   </search:tuples>
-  <search:tuples name="Product">
+  <search:values name="Product">
     <search:range type="xs:decimal" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/ProductID</search:path-index>
+    </search:range>
+  </search:values>
+  <search:tuples name="Superstore">
+    <search:range type="xs:decimal" facet="true">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/OrderID</search:path-index>
+    </search:range>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/CustomerID</search:path-index>
+    </search:range>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/ProductName</search:path-index>
+    </search:range>
+    <search:range type="xs:decimal" facet="true">
+      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/Quantity</search:path-index>
     </search:range>
   </search:tuples>
   <!--Uncomment to return no results for a blank search, rather than the default of all results
@@ -77,7 +122,7 @@
   <search:search-option>unfiltered</search:search-option>
   <!--Modify document extraction to change results returned-->
   <search:extract-document-data selected="include">
-    <search:extract-path xmlns:es="http://marklogic.com/entity-services">//es:instance/(Customer|Product|Order|OrderDetail)</search:extract-path>
+    <search:extract-path xmlns:es="http://marklogic.com/entity-services">//es:instance/(Customer|Product|Order|OrderDetail|Superstore|ShipDetails)</search:extract-path>
   </search:extract-document-data>
   <!--Change or remove this additional-query to broaden search beyond entity instance documents-->
   <search:additional-query>

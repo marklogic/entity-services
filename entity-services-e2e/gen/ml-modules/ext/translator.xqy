@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  Northwind, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2017-01-04T14:34:24.315628-08:00
+ Generated at timestamp: 2017-01-25T21:09:14.951759-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -45,6 +45,12 @@ declare option xdmp:mapping "false";
     required: None, ( in source: None )
     range indexes: None, ( in source: None )
     word lexicons: None, ( in source: None )
+ 
+ Type Superstore: 
+    Removed Type
+ 
+ Type ShipDetails: 
+    Removed Type
  
 :)
 
@@ -213,6 +219,60 @@ declare function northwind-from-northwind:convert-instance-Product(
 
 };
     
+(:
+ Entity type ShipDetails is in source document
+ but not in target document.
+ The following XPath expressions should get values from the source
+ instances but there is no specified target.
+ This comment can be as a starting point for writing a custom
+ version converter.
+
+declare function northwind-from-northwind:convert-instance-ShipDetails(
+    $source-node as node()
+) as map:map
+{
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>northwind-from-northwind:copy-attachments($source-node)
+    =>map:with('$type', 'ShipDetails')
+    =>es:optional('Province',               xs:string($source-node/Province))
+    =>es:optional('Region',                 xs:string($source-node/Region))
+    =>es:optional('ShipMode',               xs:string($source-node/ShipMode))
+    =>es:optional('ShippingCost',           xs:double($source-node/ShippingCost))
+:)
+
+(:
+ Entity type Superstore is in source document
+ but not in target document.
+ The following XPath expressions should get values from the source
+ instances but there is no specified target.
+ This comment can be as a starting point for writing a custom
+ version converter.
+
+declare function northwind-from-northwind:convert-instance-Superstore(
+    $source-node as node()
+) as map:map
+{
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>northwind-from-northwind:copy-attachments($source-node)
+    =>map:with('$type', 'Superstore')
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
+    =>es:optional('CustomerID',             xs:string($source-node/CustomerID))
+    =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
+    =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
+    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
+    =>es:optional('Quantity',               xs:integer($source-node/Quantity))
+    =>es:optional('Discount',               xs:string($source-node/Discount))
+    (: The following property is a local reference.  :)
+    =>es:optional('ShipAddress',            es:extract-array($source-node/ShipAddress, northwind-from-northwind:extract-instance-ShipDetails#1))
+:)
+
 
 
 declare private function northwind-from-northwind:init-source(

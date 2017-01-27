@@ -16,7 +16,7 @@ declare option xdmp:mapping "false";
  Northwind, version 0.0.1
 
  Modification History:
- Generated at timestamp: 2017-01-04T14:34:24.315628-08:00
+ Generated at timestamp: 2017-01-25T16:47:55.862102-08:00
  Persisted by AUTHOR
  Date: DATE
 
@@ -46,6 +46,12 @@ declare option xdmp:mapping "false";
     range indexes: None, ( in source: None )
     word lexicons: None, ( in source: None )
  
+ Type Superstore: 
+    Removed Type
+ 
+ Type ShipDetails: 
+    Removed Type
+ 
 :)
 
 
@@ -74,8 +80,7 @@ declare function northwind-from-northwind:convert-instance-Customer(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    
-    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
+    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -128,8 +133,7 @@ declare function northwind-from-northwind:convert-instance-Order(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Order")
-    (: The following lines are generated from the "Order" entity type. :)    
-    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
+    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
     =>es:optional('CustomerID',             $extract-reference-Customer($source-node/CustomerID/*))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
     =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
@@ -177,8 +181,7 @@ declare function northwind-from-northwind:convert-instance-OrderDetail(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "OrderDetail")
-    (: The following lines are generated from the "OrderDetail" entity type. :)    
-    =>es:optional('ProductID',              $extract-reference-Product($source-node/ProductID/*))
+    (: The following lines are generated from the "OrderDetail" entity type. :)    =>es:optional('ProductID',              $extract-reference-Product($source-node/ProductID/*))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('Quantity',               xs:integer($source-node/Quantity))
 
@@ -209,20 +212,70 @@ declare function northwind-from-northwind:convert-instance-Product(
     =>northwind-from-northwind:copy-attachments($source-node)
     (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    
-    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    (: The following lines are generated from the "Product" entity type. :)    =>es:optional('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
     (: The following property was missing from the source type.
-       The XPath will not up-convert without intervention.  
-       
-       Modified the XPath to refer attachments in the version 1 envelope
-    :)
+       The XPath will not up-convert without intervention.  :)
     =>es:optional('QuantityPerUnit',        xs:string($source-node/root()//es:attachments/Product/QuantityPerUnit))
     =>   map:with('ProductID',              xs:integer($source-node/ProductID))
 
 };
     
+(:
+ Entity type ShipDetails is in source document
+ but not in target document.
+ The following XPath expressions should get values from the source
+ instances but there is no specified target.
+ This comment can be as a starting point for writing a custom
+ version converter.
+
+declare function northwind-from-northwind:convert-instance-ShipDetails(
+    $source-node as node()
+) as map:map
+{
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>northwind-from-northwind:copy-attachments($source-node)
+    =>map:with('$type', 'ShipDetails')
+    =>es:optional('Province',               xs:string($source-node/Province))
+    =>es:optional('Region',                 xs:string($source-node/Region))
+    =>es:optional('ShipMode',               xs:string($source-node/ShipMode))
+    =>es:optional('ShippingCost',           xs:double($source-node/ShippingCost))
+:)
+
+(:
+ Entity type Superstore is in source document
+ but not in target document.
+ The following XPath expressions should get values from the source
+ instances but there is no specified target.
+ This comment can be as a starting point for writing a custom
+ version converter.
+
+declare function northwind-from-northwind:convert-instance-Superstore(
+    $source-node as node()
+) as map:map
+{
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target
+     :)
+    =>northwind-from-northwind:copy-attachments($source-node)
+    =>map:with('$type', 'Superstore')
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
+    =>es:optional('CustomerID',             xs:string($source-node/CustomerID))
+    =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
+    =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
+    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
+    =>es:optional('Quantity',               xs:integer($source-node/Quantity))
+    =>es:optional('Discount',               xs:string($source-node/Discount))
+    (: The following property is a local reference.  :)
+    =>es:optional('ShipAddress',            es:extract-array($source-node/ShipAddress, northwind-from-northwind:extract-instance-ShipDetails#1))
+:)
+
 
 
 declare private function northwind-from-northwind:init-source(

@@ -2,8 +2,8 @@ xquery version "1.0-ml";
 module namespace ingest = "http://marklogic.com/rest-api/transform/superstore";
 
 (: import the Entity Services library that supports Superstore CSV :)
-import module namespace northwind = "http://marklogic.com/test#Northwind-0.0.1-source-2"
-    at "/ext/Northwind-0.0.1-source-2.xqy";
+import module namespace northwind = "http://marklogic.com/test#Northwind-0.0.1"
+    at "/ext/Northwind-0.0.1.xqy";
 
 
 (:
@@ -17,15 +17,17 @@ declare function ingest:transform(
 ) as document-node()?
 {
     let $uri := map:get($context, "uri")
-    let $_ := xdmp:log(("Procesing Superstore URI " || $uri))
     let $_ :=
         if (contains($uri, "superstore"))
-        then xdmp:document-insert(
-                concat("/superstore/", $uri=>fn:substring-before(".xml"), ".xml"),
+        then (
+        	xdmp:log(("Procesing Superstore URI " || $uri)),
+        	xdmp:document-insert(
+        		concat("/superstore",$uri=>fn:substring-after("superstore.csv")=>fn:substring-before(".json"),".xml"),
                 northwind:instance-to-envelope(
-                northwind:extract-instance-OrderDetail(doc($uri))),
+                northwind:extract-instance-Superstore(doc($uri))),
                 (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")), 
-                ("superstore-envelopes", "superstore-sales"))
+                ("superstore-envelopes"))
+        )
         else ()
     return document { " " }
 };

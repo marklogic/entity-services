@@ -33,15 +33,15 @@ public class ExamplesLoader {
         AsIsLoader loader = new AsIsLoader();
         loader.loadAsIs();
 
-        /*
+        
         CSVLoader integrator = new CSVLoader();
         integrator.go();
-        */
+        
 
         logger.info("Starting harmonize");
         Harmonizer harmonizer = new Harmonizer();
         harmonizer.harmonize();
-        //harmonizer.secondSourceHarmonize();
+        harmonizer.secondSourceHarmonize();
 
         logger.info("Starting translate of nWind");
         Translator translator = new Translator();

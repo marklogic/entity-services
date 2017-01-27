@@ -20,7 +20,7 @@ xquery version "1.0-ml";
  database of your application, and check it into your source control system.
 
  Modification History:
- Generated at timestamp: 2017-01-04T14:34:24.315628-08:00
+ Generated at timestamp: 2017-01-25T21:09:14.951759-08:00
  Persisted by AUTHOR
  Date: DATE
  :)
@@ -96,7 +96,7 @@ declare function northwind:extract-instance-Customer(
     :)
 
     $instance
-    =>   map:with('CustomerID',             xs:string($source-node/@CustomerID))
+    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
     =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
     =>es:optional('Country',                xs:string($source-node/Country))
     =>es:optional('ContactName',            xs:string($source-node/ContactName))
@@ -152,7 +152,7 @@ declare function northwind:extract-instance-Product(
     :)
 
     $instance
-    =>   map:with('ProductID',              xs:integer($source-node/@ProductID))
+    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
     =>es:optional('ProductName',            xs:string($source-node/ProductName))
     =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
     =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
@@ -206,7 +206,7 @@ declare function northwind:extract-instance-Order(
     :)
 
     $instance
-    =>   map:with('OrderID',                xs:integer($source-node/@OrderID))
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
     (: The following property is a local reference.  :)
     =>es:optional('CustomerID',             northwind:extract-instance-Customer($source-node/CustomerID))
     =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
@@ -268,6 +268,120 @@ declare function northwind:extract-instance-OrderDetail(
     =>es:optional('ProductID',              northwind:extract-instance-Product($source-node/ProductID))
     =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
     =>es:optional('Quantity',               xs:integer($source-node/Quantity))
+};
+
+(:~
+ : Creates a map:map instance from some source document.
+ : @param $source-node  A document or node that contains
+ :   data for populating a Superstore
+ : @return A map:map instance with extracted data and
+ :   metadata about the instance.
+ :)
+declare function northwind:extract-instance-Superstore(
+    $source as node()?
+) as map:map
+{
+    let $source-node := northwind:init-source($source, 'Superstore')
+
+    let $instance := json:object()
+    (: If desired, add the original source document as an attachment. :)
+        =>northwind:add-attachments($source-node, $source)
+    (: Add type information to the entity instance (required, do not change) :)
+        =>map:with('$type', 'Superstore')
+
+    return
+
+    (: The following logic may not be required for every extraction       :)
+    (: if this $source-node has no child elements, it has a reference key :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+    (: Otherwise, this source node contains instance data. Populate it. :)
+    else
+
+    (:
+    The following code populates the properties of the 'Superstore'
+    entity type. Ensure that all of the property paths are correct for your
+    source data.  The general pattern is
+    =>map:with('keyName', casting-function($source-node/path/to/data))
+    but you may also wish to convert values
+    =>map:with('dateKeyName',
+          xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]",
+          $source-node/path/to/data/in/the/source))
+    You can also implement lookup functions,
+    =>map:with('lookupKey',
+          cts:search( collection('customers'),
+              string($source-node/path/to/lookup/key))/id
+    or populate the instance with constants.
+    =>map:with('constantValue', 10)
+    The output of this function should structurally match the output of
+    es:model-get-test-instances($model)
+    :)
+
+    $instance
+    =>   map:with('OrderID',                xs:integer($source-node/OrderID))
+    =>es:optional('CustomerID',             xs:string($source-node/CustomerID))
+    =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
+    =>es:optional('ShippedDate',            xs:dateTime($source-node/ShippedDate))
+    =>es:optional('ProductName',            xs:string($source-node/ProductName))
+    =>es:optional('UnitPrice',              xs:double($source-node/UnitPrice))
+    =>es:optional('Quantity',               xs:integer($source-node/Quantity))
+    =>es:optional('Discount',               xs:string($source-node/Discount))
+    (: The following property is a local reference.  :)
+    =>es:optional('ShipAddress',            es:extract-array($source-node/ShipAddress, northwind:extract-instance-ShipDetails#1))
+};
+
+(:~
+ : Creates a map:map instance from some source document.
+ : @param $source-node  A document or node that contains
+ :   data for populating a ShipDetails
+ : @return A map:map instance with extracted data and
+ :   metadata about the instance.
+ :)
+declare function northwind:extract-instance-ShipDetails(
+    $source as node()?
+) as map:map
+{
+    let $source-node := northwind:init-source($source, 'ShipDetails')
+
+    let $instance := json:object()
+    (: If desired, add the original source document as an attachment. :)
+        =>northwind:add-attachments($source-node, $source)
+    (: Add type information to the entity instance (required, do not change) :)
+        =>map:with('$type', 'ShipDetails')
+
+    return
+
+    (: The following logic may not be required for every extraction       :)
+    (: if this $source-node has no child elements, it has a reference key :)
+    if (empty($source-node/*))
+    then $instance=>map:with('$ref', $source-node/text())
+    (: Otherwise, this source node contains instance data. Populate it. :)
+    else
+
+    (:
+    The following code populates the properties of the 'ShipDetails'
+    entity type. Ensure that all of the property paths are correct for your
+    source data.  The general pattern is
+    =>map:with('keyName', casting-function($source-node/path/to/data))
+    but you may also wish to convert values
+    =>map:with('dateKeyName',
+          xdmp:parse-dateTime("[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]",
+          $source-node/path/to/data/in/the/source))
+    You can also implement lookup functions,
+    =>map:with('lookupKey',
+          cts:search( collection('customers'),
+              string($source-node/path/to/lookup/key))/id
+    or populate the instance with constants.
+    =>map:with('constantValue', 10)
+    The output of this function should structurally match the output of
+    es:model-get-test-instances($model)
+    :)
+
+    $instance
+    =>es:optional('Province',               xs:string($source-node/Province))
+    =>es:optional('Region',                 xs:string($source-node/Region))
+    =>es:optional('ShipMode',               xs:string($source-node/ShipMode))
+    =>es:optional('ShippingCost',           xs:double($source-node/ShippingCost))
 };
 
 

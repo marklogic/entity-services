@@ -87,6 +87,58 @@
            "datatype":"integer"
         }
       }
+    },
+    "Superstore": {
+      "properties":{
+    	"OrderID":{
+    		"datatype":"integer"
+    	},
+    	"CustomerID":{
+    		"datatype":"string"
+    	},
+    	"OrderDate":{
+    		"datatype":"dateTime"
+    	},
+    	"ShippedDate":{
+    		"datatype":"dateTime"
+    	},
+    	"ProductName":{
+    		"datatype":"string"
+    	},
+    	"UnitPrice":{
+    		"datatype":"double"
+    	},
+    	"Quantity":{
+    		"datatype":"integer"
+    	},
+    	"Discount":{
+    		"datatype":"string"
+    	},
+    	"ShipAddress":{
+    		"datatype":"array",
+    		"items": {
+    			"$ref": "#/definitions/ShipDetails"
+    	    }
+    	}
+      },
+      "primaryKey": "OrderID",
+      "rangeIndex": [ "OrderID", "CustomerID", "ProductName", "Quantity" ]
+    },
+    "ShipDetails":{
+    	"properties":{
+			"Province":{
+				"datatype":"string"
+			},
+			"Region":{
+				"datatype":"string"
+			},
+			"ShipMode":{
+				"datatype":"string"
+			},
+			"ShippingCost":{
+				"datatype":"double"
+			}    	
+    	}
     }
   }
 }

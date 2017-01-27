@@ -2,7 +2,7 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
 graph uri: http://refCombo#Northwind-Ref-Combo-SameDocument-SubjectIri-0.0.1</description>
-  <context>//es:instance</context>
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
   <vars>
     <var>
       <name>RDF</name>

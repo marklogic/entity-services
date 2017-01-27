@@ -2,7 +2,7 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>Extraction Template Generated from Entity Type Document
 graph uri: http://baloo/et-required-0.0.1</description>
-  <context>//es:instance</context>
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
   <vars>
     <var>
       <name>RDF</name>
@@ -59,7 +59,7 @@ graph uri: http://baloo/et-required-0.0.1</description>
         <row>
           <schema-name>et-required</schema-name>
           <view-name>ETOne</view-name>
-          <tde:view-layout>sparse</tde:view-layout>
+          <view-layout>sparse</view-layout>
           <columns>
             <column>
               <name>a</name>

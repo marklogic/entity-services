@@ -37,7 +37,7 @@ public class Translator extends ExamplesBase {
                 });
 
         JobTicket ticket = moveMgr.startJob(queryBatcher);
-        queryBatcher.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        queryBatcher.awaitCompletion();
         moveMgr.stopJob(ticket);
     }
 }

@@ -15,6 +15,7 @@ declare function m:extract-instance-Person(
 
     $instance
     =>   map:with('id', xs:long($source/id))
+    =>   map:with('firstName', xs:string($source/firstName))
 };
 
 

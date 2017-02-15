@@ -4,7 +4,7 @@
     "element-word-lexicon": [
         {
             "collation": "http://marklogic.com/collation/en",
-            "localname": "name",
+            "localname": "fullName",
             "namespace-uri": ""
         }
     ],
@@ -12,36 +12,6 @@
         {
             "namespace-uri": "http://marklogic.com/entity-services",
             "prefix": "es"
-        }
-    ],
-    "range-path-index": [
-        {
-            "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
-            "path-expression": "//es:instance/Run/date",
-            "range-value-positions": false,
-            "scalar-type": "date"
-        },
-        {
-            "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
-            "path-expression": "//es:instance/Run/distance",
-            "range-value-positions": false,
-            "scalar-type": "decimal"
-        },
-        {
-            "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
-            "path-expression": "//es:instance/Run/duration",
-            "range-value-positions": false,
-            "scalar-type": "dayTimeDuration"
-        },
-        {
-            "collation": "http://marklogic.com/collation/en",
-            "invalid-values": "reject",
-            "path-expression": "//es:instance/Run/runByRunner",
-            "range-value-positions": false,
-            "scalar-type": "string"
         }
     ],
     "schema-database": "%%SCHEMAS_DATABASE%%",

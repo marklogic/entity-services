@@ -74,10 +74,11 @@ public class HubRunner extends ResourceManager {
             RequestParameters params = new RequestParameters();
             StringBuilder sb = new StringBuilder();
             StringHandle handle = new StringHandle().withFormat(Format.JSON);
-            sb.append( "{\"id\":"+i );
-            if (nFields > 1) {
-                Person person = fairy.person();
-                sb.append(", \"name\":\""+person.getFirstName()+"\"}");
+            Person person = fairy.person();
+            sb.append("{\"id\":"+i + ",");
+            sb.append(" \"firstName\":\""+person.getFirstName()+"\"");
+            if (nFields > 2) {
+                sb.append(", \"fullName\":\""+person.getFullName()+"\"}");
             } else {
                 sb.append("}");
             }
@@ -145,14 +146,14 @@ public class HubRunner extends ResourceManager {
             search("id:1", version);
         }
 
-        p("Search for name:A*");
-        search("name:A*");
+        p("Search for fullName:A*");
+        search("fullName:A*");
 
         p("Select *");
         sql("select * from Model.Person order by id");
 
         p("Select *");
-        sql("select * from ModelNext.Person order by name");
+        sql("select * from ModelNext.Person order by fullName");
     }
 
     public static void main(String[] args) throws IOException {
@@ -160,11 +161,11 @@ public class HubRunner extends ResourceManager {
 
         p("Original Hub");
         hub.clear();
-        hub.loadData(N_RECORDS, 1);
+        hub.loadData(N_RECORDS, 2);
         hub.queries();
 
         hub.clear();
-        hub.loadData(N_RECORDS, 2);
+        hub.loadData(N_RECORDS, 3);
         hub.queries();
 
         // optional interim hub A, up-converting.
@@ -179,7 +180,7 @@ public class HubRunner extends ResourceManager {
         p("Making transitional hub B");
         HubRunner hubB = new HubRunner("transition-B");
         hubB.clear();
-        hubB.loadData(N_RECORDS, 2);
+        hubB.loadData(N_RECORDS, 3);
         hubB.queries();
         hubB.queries("next");
 
@@ -188,7 +189,7 @@ public class HubRunner extends ResourceManager {
         HubRunner hubC = new HubRunner("transition-C");
         // refresh original hub data
         hub.clear();
-        hub.loadData(N_RECORDS, 2);
+        hub.loadData(N_RECORDS, 3);
         hubC.upgradeData();
         hubC.queries("original");
         hubC.queries();
@@ -197,7 +198,7 @@ public class HubRunner extends ResourceManager {
         HubRunner hubD = new HubRunner("transition-D");
         // refresh original hub data
         hub.clear();
-        hub.loadData(N_RECORDS, 2);
+        hub.loadData(N_RECORDS, 3);
         hubD.upgradeData();
         hubD.queries("original");
         hubD.queries();
@@ -205,7 +206,7 @@ public class HubRunner extends ResourceManager {
         p("Making hub-next");
         HubRunner hubNext = new HubRunner("hub-next");
         hubNext.clear();
-        hubNext.loadData(N_RECORDS, 2);
+        hubNext.loadData(N_RECORDS, 3);
         hubNext.queries();
     }
 }

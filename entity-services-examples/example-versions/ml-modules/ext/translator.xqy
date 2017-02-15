@@ -21,7 +21,8 @@ declare function translator:up-convert(
             =>translator:copy-attachments($source-node)
             =>map:with("$type", "Person")
             =>   map:with('id',  xs:long($source-node/id))
-            =>es:optional('name', "A default value")
+            =>   map:with('firstName',  xs:string($source-node/firstName))
+            =>es:optional('fullName', "A default value")
 };
 
 (: This function converts instances up to the next model, knowing where to source
@@ -34,14 +35,15 @@ $source as node()
 let $source-node := translator:init-source($source, 'Person')
 (: the attachments are JSON in an XML envelope, so unquote them :)
 let $original-doc := xdmp:unquote($source/es:envelope/es:attachments/text())
-let $name := xs:string($original-doc/name)
+let $name := xs:string($original-doc/fullNname)
 
 return
 json:object()
     =>translator:copy-attachments($source-node)
     =>map:with("$type", "Person")
     =>   map:with('id',  xs:long($source-node/id))
-    =>es:optional('name',  $name)
+    =>   map:with('firstName',  xs:string($source-node/firstName))
+    =>es:optional('fullName',  $name)
 };
 
 (: This is for a query-time conversion of next envelopes to original instances :)
@@ -56,6 +58,7 @@ declare function translator:down-convert(
         =>translator:copy-attachments($source-node)
         =>map:with("$type", "Person")
         =>map:with('id', xs:long($source-node/id))
+        =>map:with('firstName', xs:string($source-node/firstName))
 };
 
 declare private function translator:init-source(

@@ -67,6 +67,11 @@
                             <scalar-type>long</scalar-type>
                             <val>id</val>
                         </column>
+                        <column>
+                            <name>firstName</name>
+                            <scalar-type>string</scalar-type>
+                            <val>firstName</val>
+                        </column>
                     </columns>
                 </row>
             </rows>

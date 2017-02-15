@@ -62,7 +62,7 @@ Attachments change because they store the original docs, but the canonical model
 We can load the new data if we wish to see it. It will not affect the operation of downstream applications 
 ( ... more info about search ...)
 1. Extract using new model.  If a data hub is able, it can re-import data with a new extraction method.
-1. Convert data using version translator.  If re-extraction is not feasable or not desired, the version
+1. Convert data using version translator.  If re-extraction is not feasible or not desired, the version
 translator helps to migrate data from one model version to another.  Keeping both envelopes 
 (or both instances in one envelope) is an option to support client upgrade.
 1. Create up-convert transform.  This transform, supported by es:version-translator-generate, 
@@ -75,28 +75,63 @@ Example Code
 ------------
 
 This example works by providing several REST resource extensions, each of which act as a complete 
-example of a trivial data hub.  The data hubs accept:
+example of a trivial data hub.  Each extension represents a possible step along the evolutionary
+  progression of a hub as it supports the transition of one model to the next.  The data hubs accept:
 
 PUT  put source documents into the hub.
-GET  Run searches of SQL queries over entities
+GET  Run searches or SQL queries over entities
 DELETE Clear the content database.
 
 * The original data model, called "Model", version "original".  
-It has one type called "Person".  The type has one property, 
-an integer called 'id' which is also its primary Key.
-* Sources look like this, in JSON: `{"id":123}`
-* Source 2 looks like this, in JSON: `{"id":123, "name":"Nonsense Name"}`
+It has one type called "Person".  The type has two properties, 
+an integer called 'id' which is also its primary Key, and a firstName property.
+* Sources look like this, in JSON: `{"id":123, "firstName":"Charles"}`
+* Source 2 looks like this, in JSON: `{"id":123, "firstName":"Charles","fullName":"Nonsense Name"}`
 * The subsequent model is also called "Model", version "next".  It simply adds a single 
-property to "Person" called "name", which is optional.
-* The function to up-convert from Model-original to Model-next. (adds "name" with a default value)
-* The function to down-convert from Model-next to Model-orignal (drops "name")
+property to "Person" called "fullName", which is optional.
+* The function to up-convert from Model-original to Model-next. (adds "fullName" with a default value)
+* The function to down-convert from Model-next to Model-orignal (drops "fullName")
 * There is a function to migrate Model-original envelopes to Model-next.
 
+```$xslt
+hub.xqy:  The original hub.
+GET with parameter rs:q is a Search API query.
+GET with parameter rs:sql is a SQL query.
 
-A' sources updated.
-A up-converting up
-B hybrid hub -- dual extraction
-C hybrid hub that migrates data from hub A
-D down-converting hub
-hub-next.
+transition-A.xqy, an up-converting hub
+GET with parameter rs:q is a Search API query.
+GET with parameter rs:sql is a SQL query.
+Adding rs:version=next invokes a transform that returns model-next's payload
+
+transition-B.xqy, a hybrid hub with two extraction pipelines
+It extracts data into both the original model and the next one.
+
+transition-C.xqy is a hybrid hub that upgrades data from version-original 
+to version-next in-place, and retains the next one, and retains both 
+copies to serve to clients.
+
+transition-D.xqy extracts into model-next.  If rs:version=original, then
+it down-converts the data to serve to older clients.
+
+hub-next.xqy is the version-next hub after all clients and sources have been upgraded.
+
+
+Running Transitional Hubs
+-------------------------
+
+The process of migrating data forward is complicated somewhat by the fact that a database only has one
+state at a time.  Deployment of index configurations, schemas, and extraction templates cannot be versioned,
+they must be managed as part of the evolution of a hub.
+
+This hub scenario handles extraction templates and indexes in different ways.
+
+You may have noticed that example changes data simply by adding a field to the Person type.  It also makes a change
+by adding an index on that field.  An index change is a change in database state, and so it is either done or not
+done.  Once the index is configured and deployed, applications can use it.  If a model were to change such
+that indexes are no longer needed, the system must maintain both indexes until the data migration is complete.
+In this scenario, we've chosen simply to include the "Model-next" index configuration in the deployment.  Its
+presence does not affect the original hub, and so during the course of this exercise it is latent, only used
+by the 'next' version of search options.
+
+
 

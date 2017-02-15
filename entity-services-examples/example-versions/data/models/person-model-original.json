@@ -9,6 +9,9 @@
       "properties" : {
         "id" : {
           "datatype": "long"
+        },
+        "firstName" : {
+          "datatype" : "string"
         }
       },
       "primary-key" : "id"

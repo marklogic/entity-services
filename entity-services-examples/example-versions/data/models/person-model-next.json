@@ -10,11 +10,15 @@
         "id" : {
           "datatype": "long"
         },
-        "name" : {
+        "firstName" : {
+          "datatype" : "string"
+        },
+        "fullName" : {
           "datatype": "string"
         }
       },
-      "primary-key" : "p"
+      "primary-key" : "id",
+      "word-lexicon" : "fullName"
     }
   }
 }

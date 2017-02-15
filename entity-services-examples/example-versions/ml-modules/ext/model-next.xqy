@@ -14,7 +14,8 @@ declare function m-next:extract-instance-Person(
     return
         $instance
         =>   map:with('id', xs:long($source/id))
-        =>   es:optional('name', xs:string($source/name))
+        =>   map:with('firstName', xs:string($source/firstName))
+        =>   es:optional('fullName', xs:string($source/fullName))
 };
 
 

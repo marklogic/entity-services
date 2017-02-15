@@ -68,9 +68,14 @@
                             <val>id</val>
                         </column>
                         <column>
-                            <name>name</name>
+                            <name>firstName</name>
                             <scalar-type>string</scalar-type>
-                            <val>name</val>
+                            <val>firstName</val>
+                        </column>
+                        <column>
+                            <name>fullName</name>
+                            <scalar-type>string</scalar-type>
+                            <val>fullName</val>
                             <nullable>true</nullable>
                         </column>
                     </columns>

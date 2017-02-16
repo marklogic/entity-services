@@ -93,27 +93,45 @@ property to "Person" called "fullName", which is optional.
 * The function to down-convert from Model-next to Model-orignal (drops "fullName")
 * There is a function to migrate Model-original envelopes to Model-next.
 
-```$xslt
+```
 hub.xqy:  The original hub.
 GET with parameter rs:q is a Search API query.
 GET with parameter rs:sql is a SQL query.
+```
+![Original Hub](OriginalState.png)
 
+```
 transition-A.xqy, an up-converting hub
 GET with parameter rs:q is a Search API query.
 GET with parameter rs:sql is a SQL query.
 Adding rs:version=next invokes a transform that returns model-next's payload
+```
+![Up Conversion](UpConversion.png)
 
+```
 transition-B.xqy, a hybrid hub with two extraction pipelines
 It extracts data into both the original model and the next one.
+```
+![Hybrid Dual Extraction](HybridDualExtraction.png)
 
+```
 transition-C.xqy is a hybrid hub that upgrades data from version-original 
 to version-next in-place, and retains the next one, and retains both 
 copies to serve to clients.
+```
+![Hybrid Upgrading](HybridUpgrade.png)
 
+
+```
 transition-D.xqy extracts into model-next.  If rs:version=original, then
 it down-converts the data to serve to older clients.
+```
+![Down Conversion](DownConversion.png)
 
+```
 hub-next.xqy is the version-next hub after all clients and sources have been upgraded.
+```
+![End State](EndState.png)
 
 
 Running Transitional Hubs

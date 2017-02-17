@@ -27,11 +27,11 @@ declare function hub:get(
     let $result :=
             if ($q)
             then
-                let $search-results := search:resolve-nodes(search:parse($q), $options:hub-next)
-                return
-                    if ($version = "original")
-                    then $search-results ! (es:instance-json-from-document(.)[1] || "&#10;")
-                    else $search-results ! (es:instance-json-from-document(.)[2] || "&#10;")
+                if ($version = "original")
+                then options:results($q, $options:hub-next,
+                    function($x) { es:instance-json-from-document($x)[1] })
+                else options:results($q, $options:hub-next,
+                    function($x) { es:instance-json-from-document($x)[2] })
             else
                 xdmp:sql($sql) ! (xdmp:to-json(.) || "&#10;")
 

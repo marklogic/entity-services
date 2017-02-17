@@ -22,8 +22,7 @@ declare function hub:get(
     let $result :=
         if ($q)
         then
-            (search:resolve-nodes(search:parse($q), $options:hub)) !
-            (es:instance-json-from-document(.) || "&#10;")
+            options:results($q, $options:hub, es:instance-json-from-document#1)
         else
             xdmp:sql($sql) ! (xdmp:to-json(.) || "&#10;")
     return

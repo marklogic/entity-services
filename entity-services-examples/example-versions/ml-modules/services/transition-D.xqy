@@ -25,12 +25,14 @@ declare function hub:get(
     let $result :=
         if ($q)
         then
-            let $search-results := search:resolve-nodes(search:parse($q), $options:hub-next)
-            let $search-results :=
-                if ($version = "original")
-                then $search-results ! (translator:down-convert(.)=>m-next:instance-to-envelope())
-                else $search-results
-            return $search-results ! (es:instance-json-from-document(.) || "&#10;")
+            if ($version = "original")
+            then options:results($q, $options:hub-next,
+                function($x) {
+                    $x => translator:down-convert()
+                    =>m-next:instance-to-envelope()
+                    =>es:instance-json-from-document()
+                })
+            else options:results($q, $options:hub-next, es:instance-json-from-document#1)
         else
             xdmp:sql($sql) ! (xdmp:to-json(.) || "&#10;")
 

@@ -143,13 +143,18 @@ they must be managed as part of the evolution of a hub.
 
 This hub scenario handles extraction templates and indexes in different ways.
 
-You may have noticed that example changes data simply by adding a field to the Person type.  It also makes a change
-by adding an index on that field.  An index change is a change in database state, and so it is either done or not
+You may have noticed that example changes data simply by adding a property to the Person type.  It also makes a change
+by adding a word lexicon on that property.  An index change is a change in database state, and so it is either done or not
 done.  Once the index is configured and deployed, applications can use it.  If a model were to change such
 that indexes are no longer needed, the system must maintain both indexes until the data migration is complete.
 In this scenario, we've chosen simply to include the "Model-next" index configuration in the deployment.  Its
 presence does not affect the original hub, and so during the course of this exercise it is latent, only used
 by the 'next' version of search options.
+
+Something similar stands for extraction templates.  Since we wanted views of both kinds of instances to be active at
+once, the extraction templates for each model have unique Schema Names.  This means that 'Model.Peron' and 'ModelNex.Person'
+are both available in the transitional hubs.  After migration is complete, there may be a final update
+to TDE configuration to mark the current best version of a view.
 
 
 

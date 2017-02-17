@@ -13,18 +13,13 @@ declare function hub:get(
     $params as map:map
 ) as document-node()
 {
-    let $q := if ($params=>map:contains("q"))
-    then $params=>map:get("q")
-        else ()
-    let $sql := if ($params=>map:contains("sql"))
-    then $params=>map:get("sql")
-        else ()
+    let $q := $params=>map:get("q")
+    let $sql := $params=>map:get("sql")
     return
         document {
             if ($q)
             then
-                (search:resolve-nodes(search:parse($q), $options:hub-next)) !
-                (es:instance-json-from-document(.) || "&#10;")
+                options:results($q, $options:hub-next, es:instance-json-from-document#1)
             else
                 xdmp:sql($sql) ! (xdmp:to-json(.) || "&#10;")
         }

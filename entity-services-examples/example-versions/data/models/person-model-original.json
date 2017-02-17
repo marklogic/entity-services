@@ -14,7 +14,7 @@
           "datatype" : "string"
         }
       },
-      "primary-key" : "id"
+      "primaryKey" : "id"
     }
   }
 }

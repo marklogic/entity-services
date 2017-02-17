@@ -17,8 +17,8 @@
           "datatype": "string"
         }
       },
-      "primary-key" : "id",
-      "word-lexicon" : "fullName"
+      "primaryKey" : "id",
+      "wordLexicon" : ["fullName"]
     }
   }
 }

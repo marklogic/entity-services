@@ -24,11 +24,9 @@ declare function hub:get(
     let $result :=
             if ($q)
             then
-                let $search-results :=
-                    if ($version = "next")
-                    then search:resolve-nodes(search:parse($q), $options:hub-next)
-                    else search:resolve-nodes(search:parse($q), $options:hub)
-                return $search-results ! (es:instance-json-from-document(.) || "&#10;")
+                if ($version = "next")
+                then options:results($q, $options:hub-next, es:instance-json-from-document#1)
+                else options:results($q, $options:hub, es:instance-json-from-document#1)
             else
                 xdmp:sql($sql) ! (xdmp:to-json(.) || "&#10;")
 

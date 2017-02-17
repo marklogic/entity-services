@@ -35,7 +35,7 @@ $source as node()
 let $source-node := translator:init-source($source, 'Person')
 (: the attachments are JSON in an XML envelope, so unquote them :)
 let $original-doc := xdmp:unquote($source/es:envelope/es:attachments/text())
-let $name := xs:string($original-doc/fullNname)
+let $name := xs:string($original-doc/fullName)
 
 return
 json:object()

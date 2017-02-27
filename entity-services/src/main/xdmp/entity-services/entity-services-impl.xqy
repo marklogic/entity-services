@@ -721,8 +721,8 @@ declare function esi:schema-generate(
                                         $property-name,
                                         map:get($items-map, "datatype"))
                             else esi:element-for-datatype($property-name, $datatype)
-                    else ()
-                ))
+                    else (),
+                    "schema"))
     return
     <xs:schema
         xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -1136,12 +1136,20 @@ graph uri: {esi:model-graph-iri($model)}
 declare private function esi:wrap-duplicates(
     $duplicate-map as map:map,
     $property-name as xs:string,
-    $item as element()
+    $item as element(),
+    $section as xs:string
 ) as item()
 {
+    let $comment :=
+        if ($section eq "options")
+        then "The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.&#10;"
+        else if ($section eq "schema")
+        then "XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.&#10;"
+        else "This item is a duplicate and is commented out so as to create a valid artifact.&#10;"
+    return
     if (map:contains($duplicate-map, $property-name))
     then
-        comment { "This item is a duplicate and is commented out so as to create a valid artifact.&#10;",
+        comment { $comment,
             xdmp:quote($item),
             "&#10;"
         }
@@ -1180,7 +1188,8 @@ declare function esi:search-options-generate(
                     <search:value>
                         <search:element ns="" name="{ $primary-key-name }"/>
                     </search:value>
-                </search:constraint>))
+                </search:constraint>,
+                "options"))
             else ()
         let $_range-constraints :=
             for $property-name in json:array-values(map:get($entity-type, "rangeIndex"))
@@ -1206,7 +1215,7 @@ declare function esi:search-options-generate(
             (: the collecting array will be added once after accumulation :)
             let $_ := json:array-push($tuples-range-definitions, $range-definition)
             return
-                json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name, $constraint-template))
+                json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name, $constraint-template, "options"))
         let $_ :=
             if (json:array-size($tuples-range-definitions) gt 1)
             then
@@ -1229,7 +1238,7 @@ declare function esi:search-options-generate(
                     <search:word>
                         <search:element ns="" name="{ $property-name }"/>
                     </search:word>
-                </search:constraint>))
+                </search:constraint>, "options"))
         return ()
     let $types-expr := string-join( $entity-type-names, "|" )
     let $type-constraint :=

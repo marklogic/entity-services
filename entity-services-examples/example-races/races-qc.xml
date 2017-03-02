@@ -13,7 +13,7 @@ let $race-e := race:extract-instance-Race(
   doc("/entity-services-examples/example-races/data/race-data/races/10k2.json")
 )
 let $race-f := race:extract-instance-Race(
-  doc("/entity-services-examples/example-racels/data/race-data/races/10k1.json")
+  doc("/entity-services-examples/example-races/data/race-data/races/10k1.json")
 )
 
 return (

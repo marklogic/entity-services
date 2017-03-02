@@ -20,6 +20,7 @@ import com.marklogic.client.semantics.SPARQLQueryManager;
 import com.marklogic.client.datamovement.ApplyTransformListener;
 import com.marklogic.client.datamovement.JobTicket;
 import com.marklogic.client.datamovement.QueryBatcher;
+import com.marklogic.client.type.PlanPrefixer;
 import com.marklogic.entityservices.examples.ExamplesBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,10 +208,10 @@ public class PersonExplorer extends ExamplesBase {
             e.printStackTrace();
         }
 
-        PlanBuilder.Prefixer ps = pb.prefixer("http://example.org/example-person/Person-0.0.1/");
-        p = pb.fromTriples(pb.pattern(pb.subjects(pb.col("instanceIri")),
-            pb.predicates(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")),
-            pb.objects(pb.col("type"))))
+        PlanPrefixer ps = pb.prefixer("http://example.org/example-person/Person-0.0.1/");
+        p = pb.fromTriples(pb.pattern(pb.subjectSeq(pb.col("instanceIri")),
+            pb.predicateSeq(pb.sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")),
+            pb.objectSeq(pb.col("type"))))
             .where(pb.eq(pb.col("type"), ps.iri("Person")));
         results = rowManager.resultDoc(p, new JacksonHandle()).get();
 

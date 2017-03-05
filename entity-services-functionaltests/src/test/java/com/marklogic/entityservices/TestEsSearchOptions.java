@@ -48,7 +48,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/SchemaCompleteEntityType-0.0.1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -66,7 +66,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-db-prop-et.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -83,7 +83,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-northwind1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -99,7 +99,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/primary-key-as-a-ref.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -115,7 +115,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
         InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-no-baseUri.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}

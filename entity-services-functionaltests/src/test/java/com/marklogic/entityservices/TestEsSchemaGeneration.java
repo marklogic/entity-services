@@ -140,6 +140,24 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct ('OrderDetails')"));
 		}
 	}
+	
+	@Test
+	/* Test for github issue #212 */
+	public void bug43212SchemaGen() throws SAXException, IOException {
+		logger.info("Checking schema-generate() when prop names across ET are not distinct");
+		DOMHandle validateXML = evalOneResult("","es:schema-generate( es:model-from-xml(doc('invalid-bug43212.xml')))", new DOMHandle());
+		//DOMHandle validateJSON = evalOneResult("","es:schema-generate( doc('invalid-bug43212.json'))", new DOMHandle());
+
+		InputStream is = this.getClass().getResourceAsStream("/test-instances/bug43212.xml");
+		Document filesystemXML = builder.parse(is);
+		XMLUnit.setIgnoreWhitespace(true);
+		try {
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateXML.get());
+			//XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
+		} catch (TestEvalException e) {
+			throw new RuntimeException("Error validating test bug43212SchemaGen",e);
+		}
+	}
 
 	@AfterClass
 	public static void cleanupSchemas() {

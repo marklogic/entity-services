@@ -22,7 +22,7 @@
 </search:range>
 </search:constraint>
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:decimal" facet="true">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerId</search:path-index>
@@ -85,7 +85,7 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 </search:range>
 </search:constraint>
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="CustomerId"/>
@@ -93,7 +93,7 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 </search:constraint> 
 -->
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="Age" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="Age"/>
@@ -101,7 +101,7 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 </search:constraint> 
 -->
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="Weight" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="Weight"/>
@@ -109,7 +109,7 @@ This item is a duplicate and is commented out so as to create a valid artifact.
 </search:constraint> 
 -->
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="DaysofSurfing" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="DaysofSurfing"/>

@@ -240,17 +240,6 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             actualInstance = handle.get();
             XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
 
-            // extract instance, returned as JSON, matches instance-json-from-document
-            JacksonHandle instanceJSONHandle = evalOneResult(moduleImport(entityType),
-                "es:instance-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
-                new JacksonHandle());
-            JacksonHandle instanceAsJSONHandle = evalOneResult(moduleImport(entityType),
-                "es:instance-json-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )",
-                new JacksonHandle());
-            JsonNode instance = instanceJSONHandle.get();
-            JsonNode jsonInstance = instanceAsJSONHandle.get();
-            org.hamcrest.MatcherAssert.assertThat(instance, org.hamcrest.Matchers.equalTo(jsonInstance));
-
             // moreover, extracting the attachments also will result in identity.
             DOMHandle domHandle = evalOneResult(moduleImport(entityType),
                 "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )",
@@ -361,9 +350,9 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         String initialTest = "Order-0.0.4.json";
         String instanceDocument = "Order-Source-2.xml";
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document instanceWithArryayOfOne =
+        Document instanceWithArrayOfOne =
             builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-2.xml"));
-        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArryayOfOne));
+        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArrayOfOne));
 
         JsonNode control = new ObjectMapper()
             .readValue(
@@ -380,6 +369,29 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             evalOneResult("", "es:instance-json-from-document( doc('Order-Source-2.xml-envelope.xml') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+
+        // another test for new failing instance.
+        instanceDocument = "Order-Source-4.xml";
+        Document instanceWithReference =
+            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-4.xml"));
+        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithReference));
+
+        control = new ObjectMapper()
+            .readValue(
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-4.json"),
+                JsonNode.class);
+
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-4.xml') ) )"
+                +"return xdmp:document-insert('Order-Source-4.xml-envelope.xml', $envelope) ",
+            new StringHandle());
+
+        instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-4.xml-envelope.xml') )", new JacksonHandle());
+
+        jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
     }
 

@@ -2,5 +2,5 @@
   "user-name": "whitney",
   "description": "A data-maintainer for an entity services example application",
   "password": "********",
-  "role": ["versions-writer"]
+  "role": ["examples-writer"]
 }

@@ -111,8 +111,8 @@ public abstract class ExamplesBase {
             String uri = genUri(entry);
             if (collection != null) {
                 DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(collection) //
-                    .withPermission("race-reader", Capability.READ) //
-                    .withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
+                    .withPermission("examples-reader", Capability.READ) //
+                    .withPermission("examples-writer", Capability.INSERT, Capability.UPDATE);
                 batcher.add(uri, metadata, new FileHandle(entry.toFile()).withFormat(format));
             } else {
                 batcher.add(uri, new FileHandle(entry.toFile()).withFormat(format));

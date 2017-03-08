@@ -33,7 +33,7 @@ declare function ph:transform(
             xdmp:document-insert(
                     fn:concat("/person-0.0.1/", $filename, "-", $index, "-e.xml"),
                     person:instance-to-envelope($instance),
-                    (xdmp:permission("race-reader", "read"), xdmp:permission("race-writer", "insert"), xdmp:permission("race-writer", "update")),
+                    (xdmp:permission("examples-reader", "read"), xdmp:permission("examples-writer", "insert"), xdmp:permission("examples-writer", "update")),
                     "person-envelopes")
     return document { " " }
 };

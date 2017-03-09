@@ -99,8 +99,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-absolute-item-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-missing-reference.json", "must resolve to local entity type.");
         invalidMessages.put("invalid-missing-reference.xml", "must resolve to local entity type.");
-        invalidMessages.put("invalid-array-no-items.json", "must contain an \"items\" declaration");
-        invalidMessages.put("invalid-array-no-items.xml", "must contain an \"items\" declaration");
+        invalidMessages.put("invalid-array-no-items.json", "must contain a valid \"items\" declaration");
+        invalidMessages.put("invalid-array-no-items.xml", "must contain a valid \"items\" declaration");
+        invalidMessages.put("invalid-array-bad-items.json", "must contain a valid \"items\" declaration.");
+        invalidMessages.put("invalid-array-bad-items.xml", "must contain a valid \"items\" declaration");
         invalidMessages.put("invalid-nested-array.json", "cannot both be an \"array\" and have items of type \"array\".");
         invalidMessages.put("invalid-nested-array.xml", "cannot both be an \"array\" and have items of type \"array\".");
         invalidMessages.put("invalid-bad-baseUri.json", "If present, baseUri (es:base-uri) must be an absolute URI.");

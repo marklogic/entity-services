@@ -21,9 +21,6 @@ declare namespace tde = "http://marklogic.com/xdmp/tde";
 declare namespace xq = "http://www.w3.org/2012/xquery";
 
 
-import module namespace json="http://marklogic.com/xdmp/json"
-     at "/MarkLogic/json/json.xqy";
-
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";

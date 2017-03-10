@@ -28,7 +28,7 @@ declare function translator:transform(
         xdmp:document-insert(
                 fn:concat("/upconverts/", $uri),
                 $new-envelope,
-                (xdmp:permission("race-reader", "read"), xdmp:permission("race-writer", "insert"), xdmp:permission("race-writer", "update")),
+                (xdmp:permission("examples-reader", "read"), xdmp:permission("examples-writer", "insert"), xdmp:permission("examples-writer", "update")),
                 "race-0.0.2-envelopes")
     return document { " " }
 };

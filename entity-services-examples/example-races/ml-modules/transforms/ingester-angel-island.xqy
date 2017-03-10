@@ -23,7 +23,7 @@ declare function ingester:transform(
                 concat("/runs/", $uri=>fn:substring-before(".json"), ".xml"),
                 race:instance-to-envelope(
                 race:extract-instance-Angel-Island(doc($uri))),
-                (xdmp:permission("race-reader", "read"), xdmp:permission("race-writer", "insert"), xdmp:permission("race-writer", "update")), 
+                (xdmp:permission("examples-reader", "read"), xdmp:permission("examples-writer", "insert"), xdmp:permission("examples-writer", "update")),
                 ("run-envelopes", "angel-island"))
         else ()
     return document { " " }

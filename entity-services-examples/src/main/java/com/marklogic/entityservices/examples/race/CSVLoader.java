@@ -83,10 +83,10 @@ public class CSVLoader extends ExamplesBase {
                     String jsonString = mapper.writeValueAsString(jsonNode);
 
                     String uri = genUri(entry) + "-" + Long.toString(i++) + ".json";
-                    DocumentMetadataHandle metadata = new DocumentMetadataHandle() //
-                            .withCollections("raw", "csv") //
-                            .withPermission("race-reader", Capability.READ) //
-                            .withPermission("race-writer", Capability.INSERT, Capability.UPDATE);
+                    DocumentMetadataHandle metadata = new DocumentMetadataHandle()
+                            .withCollections("raw", "csv")
+                            .withPermission("examples-reader", Capability.READ)
+                            .withPermission("examples-writer", Capability.INSERT, Capability.UPDATE);
                     batcher.add(uri, metadata, new StringHandle(jsonString));
                     if (i % 1000 == 0)
                         logger.debug("Inserting JSON document " + uri);

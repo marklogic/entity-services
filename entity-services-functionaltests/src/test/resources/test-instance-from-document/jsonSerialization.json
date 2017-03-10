@@ -1,16 +1,19 @@
-{
-"OrderID": "10254", 
-"CustomerID": "10254", 
-"OrderDate": "1996-07-11T08:19:58", 
-"ShipAddress": "Hauptstr. 31", 
-"OrderDetails": [
-{
-"productID": {
-"$type": "Product", 
-"$ref": "24"
-}, 
-"unitPrice": "3", 
-"Quantity": "15"
-}
-]
+{  
+  "Order":{  
+    "OrderID":"10254",
+    "CustomerID":"10254",
+    "OrderDate":"1996-07-11T08:19:58",
+    "ShipAddress":"Hauptstr. 31",
+    "OrderDetails":[  
+      {  
+        "OrderDetail":{  
+          "productID":{  
+            "Product":"24"
+          },
+          "unitPrice":"3",
+          "Quantity":"15"
+        }
+      }
+    ]
+  }
 }

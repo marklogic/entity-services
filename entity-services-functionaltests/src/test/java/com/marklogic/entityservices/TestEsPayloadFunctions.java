@@ -605,7 +605,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     
     @Test
-    //  BUG 38392 - testing model-validate for an xml entity type where info is not an object 
+    //  BUG 38392 - testing model-validate for an xml entity type where item is missing 
     public void testModelValidateMissingItemsXml() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
     			logger.info("Checking invalid-missing-items-when-datatype-array.xml");
     			JacksonHandle handle = null;
@@ -614,7 +614,21 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-items-when-datatype-array.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain an \"items\" declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
+    	}
+    }
+    
+    @Test
+    //  BUG 44991 - testing model-validate for an xml entity type where item is missing <datatype> enclosing
+    public void testModelValidateMissingItemDatatype() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking invalid-missing-items-datatype.xml");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-missing-items-datatype.xml'))", new JacksonHandle());	
+    				fail("eval should throw an exception for invalid cases: invalid-missing-items-datatype.xml");
+    			} catch (TestEvalException e) {
+    				logger.info(e.getMessage());
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
     	}
     }
 

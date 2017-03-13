@@ -21,23 +21,19 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
+import com.marklogic.client.eval.ServerEvaluationCall;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.exceptions.XpathException;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
@@ -55,21 +51,28 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         docMgr = schemasClient.newXMLDocumentManager();
 
         entityTypes = TestSetup.getInstance().loadEntityTypes("/json-models", ".*.json$");
+        // some edge-case templates are not valid
+        entityTypes.remove("NoProperties-0.0.1.json");
+        entityTypes.remove("OrderDetails-0.0.3.json");
+        entityTypes.remove("Refs-0.0.1.json");
         extractionTemplates = generateExtractionTemplates();
-        storeExtractionTempates(extractionTemplates);
     }
 
 
-    private static void storeExtractionTempates(Map<String, StringHandle> templateMap) {
-        DocumentWriteSet writeSet = docMgr.newWriteSet();
+    private static void storeExtractionTempate(String templateName) {
+        ServerEvaluationCall call = client.newServerEval();
 
-        for (String entityTypeName : templateMap.keySet()) {
+        call.xquery(
+            "import module namespace tde = \"http://marklogic.com/xdmp/tde\" at \"/MarkLogic/tde.xqy\";"+
+            "declare variable $modName external; "+
+            "declare variable $module external; "+
+            "tde:template-insert($modName, xdmp:unquote($module));");
 
-            String moduleName = entityTypeName.replaceAll("\\.(xml|json)", ".tdex");
-            DocumentMetadataHandle metadata = new DocumentMetadataHandle().withCollections(TDE_COLLECTION);
-            writeSet.add(moduleName, metadata, templateMap.get(entityTypeName));
-        }
-        docMgr.write(writeSet);
+
+        String moduleName = templateName.replaceAll("\\.(xml|json)", ".tdex");
+        call.addVariable("modName", moduleName);
+        call.addVariable("module", extractionTemplates.get(templateName).get());
+        call.eval();
     }
 
     private static Map<String, StringHandle> generateExtractionTemplates() {
@@ -92,22 +95,12 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     public void testExtractionTemplates() {
         for (String entityType : entityTypes) {
             String schemaName = entityType.replaceAll("-.*$", "");
-            logger.info("Validating extraction template: " + entityType);
-            JacksonHandle validity = evalOneResultSchemasDb("", "tde:validate( fn:doc('"+schemaName+".tdex'))", new JacksonHandle());
-            JsonNode validityNode = validity.get();
-            if (!validityNode.get("valid").asBoolean()) {
-                // Some of the tests do not generate views
-                if (schemaName.equals("NoProperties")) continue;
-                throw new TestEvalException("Invalid template generated for " + entityType);
-            }
             JacksonHandle template = new JacksonHandle();
+            logger.info("Testing extraction template for " + entityType);
+            storeExtractionTempate(entityType);
             try {
                 template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
             } catch (TestEvalException e) {
-                // Some of the tests do not generate views
-                if (schemaName.equals("NoProperties")) continue;
-                if (schemaName.equals("OrderDetails")) continue;
-                if (schemaName.equals("Refs")) continue;
                 fail("Extraction template generation failed.  View " + schemaName + " didn't exist");
             }
             JsonNode schemaJson = template.get();
@@ -118,6 +111,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 
             logger.debug( body.asText() );
             // assertTrue("Extraction has two triples", body.get("triples").isArray());
+            removeTemplate(entityType);
         }
     }
 
@@ -191,10 +185,8 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     }
 
 
-    @AfterClass
-    public static void removeTemplates() {
-        Set<String> toDelete = new HashSet<String>();
-        extractionTemplates.keySet().forEach(x -> toDelete.add(x.replaceAll("json", "tdex")));
-        docMgr.delete(toDelete.toArray(new String[] {}));
+    private void removeTemplate(String entityType) {
+        String moduleName = entityType.replaceAll("\\.(xml|json)", ".tdex");
+        docMgr.delete(moduleName);
     }
 }

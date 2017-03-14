@@ -137,24 +137,386 @@ hub-next.xqy is the version-next hub after all clients and sources have been upg
 Running Transitional Hubs
 -------------------------
 
-The process of migrating data forward is complicated somewhat by the fact that a database only has one
-state at a time.  Deployment of index configurations, schemas, and extraction templates cannot be versioned,
-they must be managed as part of the evolution of a hub.
+The process of migrating data forward is complicated somewhat by the fact that
+a database only has one state at a time.  Deployment of index configurations,
+schemas, and extraction templates cannot be versioned, they must be managed as
+part of the evolution of a hub.
 
 This hub scenario handles extraction templates and indexes in different ways.
 
-You may have noticed that example changes data simply by adding a property to the Person type.  It also makes a change
-by adding a word lexicon on that property.  An index change is a change in database state, and so it is either done or not
-done.  Once the index is configured and deployed, applications can use it.  If a model were to change such
-that indexes are no longer needed, the system must maintain both indexes until the data migration is complete.
-In this scenario, we've chosen simply to include the "Model-next" index configuration in the deployment.  Its
-presence does not affect the original hub, and so during the course of this exercise it is latent, only used
-by the 'next' version of search options.
+You may have noticed that example changes data simply by adding a property to
+the Person type.  It also makes a change by adding a word lexicon on that
+property.  An index change is a change in database state, and so it is either
+done or not done.  Once the index is configured and deployed, applications can
+use it.  If a model were to change such that indexes are no longer needed, the
+system must maintain both indexes until the data migration is complete.  In
+this scenario, we've chosen simply to include the "Model-next" index
+configuration in the deployment.  Its presence does not affect the original
+hub, and so during the course of this exercise it is latent, only used by the
+'next' version of search options.
 
-Something similar stands for extraction templates.  Since we wanted views of both kinds of instances to be active at
-once, the extraction templates for each model have unique Schema Names.  This means that 'Model.Peron' and 'ModelNex.Person'
-are both available in the transitional hubs.  After migration is complete, there may be a final update
-to TDE configuration to mark the current best version of a view.
+Something similar stands for extraction templates.  Since we wanted views of
+both kinds of instances to be active at once, the extraction templates for each
+model have unique Schema Names.  This means that 'Model.Peron' and
+'ModelNext.Person' are both available in the transitional hubs.  After migration
+is complete, there may be a final update to TDE configuration to mark the
+current best version of a view.
 
+when you run `./gradlew runExampleVersions` you'll see something like the
+following output.  Below are the requests underlying the output, and
+explanations.  Note that the example uses the Java Client, so these requests
+are not obvious from the code.
+
+
+### Original Hub
+
+The first four requests/response are against the original hub.  This first
+response from the original hub for the search `id:1` has a single result.
+This method simply outputs both the result (The entity with id = 1) as well as
+a serialization of the query that ran to produce the results.  Entity services
+generated the search grammar behind the query string `id:1`.
+
+
+```
+Search for id:1
+
+GET /v1/resources/hub?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Thomas"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+```
+
+
+On the original hub, there is no configuration for "fullName".  So this property does not 
+exist in the search grammar.  There are no results, because this version of the hub
+treats this query as a word search for the string "fullName:A" which occurs in no document.
+
+
+```
+Search for fullName:A*
+
+GET /v1/resources/hub?rs:q=fullName:A*
+
+<cts:word-query xmlns:cts="http://marklogic.com/cts">
+  <cts:text xml:lang="en">fullName:A*</cts:text>
+</cts:word-query>
+```
+
+
+Third, a sql query.
+Use SQL to fetch all values from the generated view.  There are three
+records and two columns in the Model.View view.
+
+
+
+```
+Select * from Model.Person
+
+GET /v1/resources/hub?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+[0, "Brody"]
+[1, "Thomas"]
+[2, "Makayla"]
+```
+
+
+Last, we attempt to query the view backing the next-gen model.
+Since no 'version next' data exists in the original hub, there are no results.
+
+
+```
+Select * from ModelNext.Person
+
+GET /v1/resources/hub?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+
+```
+
+
+### Transition-A
+
+The running example loads data for each scenario, then runs these same queries
+again.  All requests are the same as the original hub, until we introduce
+the version parameter:
+
+
+```
+Search for id:1
+
+GET /v1/resources/transition-A?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Arianna"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+<cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+Search for fullName:A*
+
+GET /v1/resources/transition-A?rs:q=fullName:A*
+
+<cts:word-query xmlns:cts="http://marklogic.com/cts">
+  <cts:text xml:lang="en">fullName:A*</cts:text>
+</cts:word-query>
+
+
+Select * from Model.Person
+
+GET /v1/resources/transition-A?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+[0, "Christian"]
+[1, "Arianna"]
+[2, "Lucas"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-A?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+```
+
+At this stage in the data migration, using a version parameter puts a default
+value in for the new structures:
+
+```
+GET /v1/resources/transition-A?rs:q=id:1&rs:version=next
+
+id:1 plus version next
+{"Person":{"id":"1", "firstName":"Arianna", "fullName":"A default value"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+```
+
+
+### Transition-B
+
+Here are the requests for this stage.  The difference now is that, since we have
+version-next data in the database, we can query for and get entities of version 2, 
+and also access the `ModelNext` schema.
+
+
+```
+Search for id:1
+
+GET /v1/resources/transition-B?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Aubree"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+Select * from Model.Person
+
+GET /v1/resources/transition-B?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+[0, "Wyatt"]
+[1, "Aubree"]
+[2, "Zoey"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-B?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+[1, "Aubree", "Aubree Ruiz"]
+[0, "Wyatt", "Wyatt Simon"]
+[2, "Zoey", "Zoey Lowe"]
+
+
+id:1 plus version next
+
+GET /v1/resources/transition-B?rs:q=id:1&rs:version=next
+
+{"Person":{"id":"1", "firstName":"Aubree", "fullName":"Aubree Ruiz"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+Select * from Model.Person
+
+GET /v1/resources/transition-B?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+[0, "Wyatt"]
+[1, "Aubree"]
+[2, "Zoey"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-B?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+[1, "Aubree", "Aubree Ruiz"]
+[0, "Wyatt", "Wyatt Simon"]
+[2, "Zoey", "Zoey Lowe"]
+```
+
+
+
+### Transition-C
+
+
+In responses to these requests, the next version is now default.
+A search or `id:1` returns the entities with three properties.
+Both versions are available for query and search though.
+Also, with the new version being default, the fullName:A\* search
+works, as there is now a lexicon to back the fullName property.
+
+
+```
+Search for id:1
+
+GET /v1/resources/transition-C?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Noah", "fullName":"Noah Hernandez"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+id:1 plus version original
+
+GET /v1/resources/transition-C?rs:q=id:1&rs:version=original
+
+{"Person":{"id":"1", "firstName":"Noah"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+Search for fullName:A*
+
+GET /v1/resources/transition-C?rs:q=fullname:A*
+
+<cts:element-word-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>fullName</cts:element>
+  <cts:text xml:lang="en">A*</cts:text>
+  <cts:option>case-insensitive</cts:option>
+  <cts:option>wildcarded</cts:option>
+</cts:element-word-query>
+
+
+Select * from Model.Person
+
+GET /v1/resources/transition-C?rs:sql=select * from Model.Person
+
+
+["Model.Person.id", "Model.Person.firstName"]
+[0, "Jace"]
+[1, "Noah"]
+[2, "Mackenzie"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-C?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+[0, "Jace", "Jace Jackson"]
+[2, "Mackenzie", "Mackenzie Gillespie"]
+[1, "Noah", "Noah Hernandez"]
+```
+
+
+### Transition-D
+
+This version of the hub just has the new documents, but can construct
+the old versions with a down-transform and the version=original parameter.
+
+
+```
+Search for id:1
+
+GET /v1/resources/transition-D?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Sophia", "fullName":"Sophia Whitley"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+id:1 plus version original
+
+GET /v1/resources/transition-D?rs:q=id:1&rs:version=original
+
+{"Person":{"id":"1", "firstName":"Sophia"}}
+<cts:element-value-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>id</cts:element>
+  <cts:text xml:lang="en">1</cts:text>
+</cts:element-value-query>
+
+
+Search for fullName:A*
+
+GET /v1/resources/transition-D?rs:q=fullname:A*
+
+<cts:element-word-query xmlns:cts="http://marklogic.com/cts">
+  <cts:element>fullName</cts:element>
+  <cts:text xml:lang="en">A*</cts:text>
+  <cts:option>case-insensitive</cts:option>
+  <cts:option>wildcarded</cts:option>
+</cts:element-word-query>
+
+Select * from Model.Person
+
+GET /v1/resources/transition-D?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-D?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+[0, "Nolan", "Nolan Best"]
+[1, "Sophia", "Sophia Whitley"]
+[2, "Thomas", "Thomas Holloway"]
+```
+
+
+### Hub after transition
+
+Lastly, the replacement hub no longer serves the old documents.
+The Model.Person view is now empty.
+
+
+```
+Search for id:1
+
+GET /v1/resources/hub-next?rs:q=id:1
+
+{"Person":{"id":"1", "firstName":"Charles", "fullName":"Charles Hendricks"}}
+
+Select * from Model.Person
+
+GET /v1/resources/transition-D?rs:sql=select * from Model.Person
+
+["Model.Person.id", "Model.Person.firstName"]
+
+Select * from ModelNext.Person
+
+GET /v1/resources/transition-D?rs:sql=select * from ModelNext.Person
+
+["ModelNext.Person.id", "ModelNext.Person.firstName", "ModelNext.Person.fullName"]
+[1, "Charles", "Charles Hendricks"]
+[2, "Damian", "Damian Mcintosh"]
+[0, "Lily", "Lily Snyder"]
+```
 
 

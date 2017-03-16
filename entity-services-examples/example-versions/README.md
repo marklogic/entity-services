@@ -5,7 +5,7 @@ This entity services example strips the concept of entity versions
 to its simplest.  The simplest use of Entity Services version code is to
 facilitate the migration of data models, instance data, and service contracts.
 
-In the starting point, we posit a steady-state, just deployed
+In the starting point, we posit a steady-state, just-deployed
 greenfield data flow, with sources, a mechanism for persisting entity
 instances, and a layer for exposing entity data to downstream applications.
 
@@ -19,25 +19,25 @@ into envelopes.  The second is some kind of API call that satisfies
 a contract.  Data flows from source systems into MarkLogic.  Some 
 process extracts entity instance data from these sources and persists
 them in envelopes.  The TDE templates, range index definitions and 
-Search API configuration is used to deliver those envelopes to downstream applications.
-The model determines extraction code, the persistence structure, and how
-queries can be written.
+Search API configuration is used to deliver those envelopes to downstream
+applications.  The model determines extraction code, the persistence structure,
+and how queries can be written.
 
-Change
-------
+What is Change?
+---------------
 
-This example demonstrates what change looks like in a Data Hub.
-There are a few ways that the hub can change, but the end state we are
-interested in is one in which a model has changed, and the data and
-downstream systems are migrated to take advantage of new models without
-interrupting service.  So we are interested in how models can change, and
-how to implement change management in the hub.
+This example demonstrates what change looks like in a Data Hub.  There are a
+few ways that the hub can change, but the end state we are interested in is one
+in which a model has been replaced by an olde one, and the data and downstream
+systems are migrated to take advantage of new models without interrupting
+service.  So we are interested in how models can change, and how to implement
+change management in the hub.
 
 What can change?
 
 * Sources.  If a source changes, there is no immediate requirement to change the data hub.  
 In a "minimal model" changes to the sources need not require a change to the model.
-Source changes could cause breaking changes in extraction code, but unless the
+Source changes might cause breaking changes in extraction code, but unless the
 hub requires new strategies for persistence or services, then the model probably
 does not need to change just because sources do.
 * Client requirements.  Clients can change and develop independently of a model. However
@@ -47,50 +47,61 @@ changes, that's when a data model change may also be required.
 for downstream applications change, then a new model version can be developed to meet 
 those requirements. With a new model comes new extraction functions, a new envelope 
 structure, and new capabilities.
-* Code artifacts.
+* Code artifacts.  Models determine code artifacts.  If the models change, then one must
+generate new artifacts and decide how to modify or replace existing ones.
 
-After a model change, all clients will migrate to take advantage of the new model and its
-capabilities.  However, clients need to upgrade independently of data or models, so
-Entity Services helps to create interim scenarios that handle more than one model at a time.
+After a model change, all clients will migrate to take advantage of the new
+model and its capabilities.  However, clients need to upgrade independently of
+data or models, so Entity Services helps to create interim scenarios that
+handle more than one model at a time.
 
 Here are the steps:
 
 1. Steady state.  Source version 1.  Model.  Client.
-1. Source changes.  No change to models or clients, but new data flows into the hub.  
-Attachments change because they store the original docs, but the canonical model remains the same.
-1. Model update.  The model adds a property.  We install new extraction functions that can create new envelopes.
-We can load the new data if we wish to see it. It will not affect the operation of downstream applications 
-( ... more info about search ...)
-1. Extract using new model.  If a data hub is able, it can re-import data with a new extraction method.
-1. Convert data using version translator.  If re-extraction is not feasible or not desired, the version
-translator helps to migrate data from one model version to another.  Keeping both envelopes 
-(or both instances in one envelope) is an option to support client upgrade.
-1. Create up-convert transform.  This transform, supported by es:version-translator-generate, 
-will serve up the old envelopes to new clients using a transform.  This up-convert method is 
-suitable for getting new clients online and tested before upgrading envelopes *maybe not common?*
-1. Create down-convert transforms.  When moving clients from the original instance data to a new one, 
-down-convert transforms enable clients to stay on the original contract.
+1. Source changes.  No change to models or clients, but new data flows into the
+hub.  Attachments change because they store the original docs, but the
+canonical model remains the same.
+1. Model update.  The model adds a property.  We install new extraction
+functions that can create new envelopes.  We can load the new data if we wish
+to see it. It will not affect the operation of downstream applications, as long
+as the instance data from the old one is still available. 
+1. Extract using new model.  If a data hub is able, it can re-import data with
+a new extraction method.
+1. Convert data using version translator.  If re-extraction is not feasible or
+not desired, the version translator helps to migrate data from one model
+version to another.  Keeping both envelopes (or both instances in one envelope)
+is an option to support client upgrade.
+1. Create up-convert transform.  This transform, supported by
+es:version-translator-generate, will serve up the old envelopes to new clients
+using a transform.  This up-convert method is suitable for getting new clients
+online and tested before upgrading envelopes.
+1. Create down-convert transforms.  When moving clients from the original
+instance data to a new one, down-convert transforms enable clients to stay on
+the original contract.
 
 Example Code
 ------------
 
-This example works by providing several REST resource extensions, each of which act as a complete 
-example of a trivial data hub.  Each extension represents a possible step along the evolutionary
-  progression of a hub as it supports the transition of one model to the next.  The data hubs accept:
+This example works by providing several REST resource extensions, each of which
+act as a complete example of a trivial data hub.  Each extension represents a
+possible step along the evolutionary progression of a hub as it supports the
+transition of one model to the next.  The data hubs accept:
 
 PUT  put source documents into the hub.
-GET  Run searches or SQL queries over entities
+
+GET  Run searches or SQL queries over entities.
+
 DELETE Clear the content database.
 
 * The original data model, called "Model", version "original".  
 It has one type called "Person".  The type has two properties, 
-an integer called 'id' which is also its primary Key, and a firstName property.
-* Sources look like this, in JSON: `{"id":123, "firstName":"Charles"}`
-* Source 2 looks like this, in JSON: `{"id":123, "firstName":"Charles","fullName":"Nonsense Name"}`
+an integer called 'id' which is also its primary key, and a firstName property.
+* The original sources look like this, in JSON: `{"id":123, "firstName":"Charles"}`
+* The secound set of sources look like this: `{"id":123, "firstName":"Charles","fullName":"Nonsense Name"}`
 * The subsequent model is also called "Model", version "next".  It simply adds a single 
 property to "Person" called "fullName", which is optional.
 * The function to up-convert from Model-original to Model-next. (adds "fullName" with a default value)
-* The function to down-convert from Model-next to Model-orignal (drops "fullName")
+* The function to down-convert from Model-next to Model-original (drops "fullName")
 * There is a function to migrate Model-original envelopes to Model-next.
 
 ```
@@ -104,7 +115,7 @@ GET with parameter rs:sql is a SQL query.
 transition-A.xqy, an up-converting hub
 GET with parameter rs:q is a Search API query.
 GET with parameter rs:sql is a SQL query.
-Adding rs:version=next invokes a transform that returns model-next's payload
+Adding rs:version=next invokes a transform that returns Model-next's payload
 ```
 ![Up Conversion](UpConversion.png)
 
@@ -143,29 +154,37 @@ schemas, and extraction templates cannot be versioned, they must be managed as
 part of the evolution of a hub.
 
 This hub scenario handles extraction templates and indexes in different ways.
+To run: 
 
-You may have noticed that example changes data simply by adding a property to
-the Person type.  It also makes a change by adding a word lexicon on that
-property.  An index change is a change in database state, and so it is either
-done or not done.  Once the index is configured and deployed, applications can
-use it.  If a model were to change such that indexes are no longer needed, the
-system must maintain both indexes until the data migration is complete.  In
-this scenario, we've chosen simply to include the "Model-next" index
-configuration in the deployment.  Its presence does not affect the original
-hub, and so during the course of this exercise it is latent, only used by the
-'next' version of search options.
+
+```
+./gradlew runExampleVersions
+```
+
+
+You may have noticed that the "change" in this example is simply the
+addition of a property to the Person type.  It also adds a word lexicon on that
+property.  An indexing change such as this one is global--
+it applies to the entire database, and once the index is configured
+and deployed, applications can use it.  If a model were to change such that
+indexes are no longer needed, the system must maintain both indexes until the
+data migration is complete.  In this scenario, we've chosen simply to include
+the "Model-next" index configuration in the deployment.  Its presence does not
+affect the original hub, and so during the course of this exercise it is
+latent, only used by the 'next' version of search options.
 
 Something similar stands for extraction templates.  Since we wanted views of
 both kinds of instances to be active at once, the extraction templates for each
-model have unique Schema Names.  This means that 'Model.Peron' and
-'ModelNext.Person' are both available in the transitional hubs.  After migration
-is complete, there may be a final update to TDE configuration to mark the
-current best version of a view.
+model have unique Schema Names.  This means that 'Model.Person' and
+'ModelNext.Person' are both available in the transitional hubs.  After
+migration is complete, there may be a final update to TDE configuration to mark
+the current best version of a view.
 
 when you run `./gradlew runExampleVersions` you'll see something like the
-following output.  Below are the requests underlying the output, and
-explanations.  Note that the example uses the Java Client, so these requests
-are not obvious from the code.
+output in the following section.   For selected calls in the example, 
+we've included the URI and method called, and the results from that particular
+transitional hub.  Note that code example uses the Java Client API.  It thus
+obscures the HTTP calls and invokes the hubs as Java Objects.
 
 
 ### Original Hub
@@ -175,6 +194,8 @@ response from the original hub for the search `id:1` has a single result.
 This method simply outputs both the result (The entity with id = 1) as well as
 a serialization of the query that ran to produce the results.  Entity services
 generated the search grammar behind the query string `id:1`.
+Note that the example loads random names into the database, so the results
+change every time you run the code.
 
 
 ```
@@ -190,9 +211,10 @@ GET /v1/resources/hub?rs:q=id:1
 ```
 
 
-On the original hub, there is no configuration for "fullName".  So this property does not 
-exist in the search grammar.  There are no results, because this version of the hub
-treats this query as a word search for the string "fullName:A" which occurs in no document.
+On the original hub, there is no configuration for "fullName".  So this
+property does not exist in the search grammar.  There are no results, because
+this version of the hub treats this query as a word search for the string
+"fullName:A\*" which occurs in no document.
 
 
 ```
@@ -300,7 +322,7 @@ id:1 plus version next
 ### Transition-B
 
 Here are the requests for this stage.  The difference now is that, since we have
-version-next data in the database, we can query for and get entities of version 2, 
+version-next data in the database, we can query for and get entities of model-next.
 and also access the `ModelNext` schema.
 
 
@@ -371,7 +393,7 @@ GET /v1/resources/transition-B?rs:sql=select * from ModelNext.Person
 
 
 In responses to these requests, the next version is now default.
-A search or `id:1` returns the entities with three properties.
+A search for `id:1` returns the Model-next properties.
 Both versions are available for query and search though.
 Also, with the new version being default, the fullName:A\* search
 works, as there is now a lexicon to back the fullName property.

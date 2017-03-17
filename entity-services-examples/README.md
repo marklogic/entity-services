@@ -6,8 +6,10 @@ with other MarkLogic features, the examples also demonstrate
 
 * Data Movement.  A new part of the [Java Client API] which facilitates event-based
 data flows.
-* Template-Driven Extraction.  A declarative way to define locations within documents that are indexed as either tuples or RDF triples.
-* Semantics model integration.  How to use RDF-based modeling technologies to work Entity services models.
+* Template-Driven Extraction.  A declarative way to define locations within
+documents that are indexed as either tuples or RDF triples.
+* Semantics model integration.  How to use RDF-based modeling technologies to
+work with Entity services models.
 * SQL.
 * Optic API.  A query API for SQL-like access to tuples and triples, with Java,
  XQuery and JavaScript implementations.
@@ -92,5 +94,5 @@ Generating Code
 If you have models loaded in the database, you can invoke the Entity Services code-generation API with `./gradlew genCode`.
 
 This task iterates through models in the database and creates the code
-generation artifcats for use in applications (which were the sources for
-example code).  These artifacts are placed inthe `gen` directory.
+generation artifacts for use in applications (which were the sources for
+example code).  These artifacts are placed in the `gen` directory.

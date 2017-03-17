@@ -82,9 +82,9 @@ QConsole Workspaces
 -------------------
 
 Many examples have exported QConsole workspaces.  These workspaces have example
-queries to help interpret what the data integration scenario looks like
+queries to help interpret what the data integration scenario looks like.
 
-Import the workspace `{example-name}-qc.xml` from QConsole, and step through the tabs,
+Import the workspace `{example-name}-qc.xml` into QConsole, and step through the tabs,
 each of which show something about what your simulated data hub accomplished.
 
 

@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-  compile('com.marklogic:marklogic-client-api:4.0-SNAPSHOT') {
+  compile('com.marklogic:marklogic-client-api:4.0.1') {
     exclude(group: 'com.google.guava')
   }
   compile('io.codearte.jfairy:jfairy:0.5.6')

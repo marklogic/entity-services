@@ -1,179 +1,256 @@
-<?xml  version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
-<description>
-Extraction Template Generated from Entity Type Document
+  <description>Extraction Template Generated from Entity Type Document
 graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</description>
-<context>//es:instance</context>
-<path-namespaces>
-<path-namespace>
-<prefix>es</prefix>
-<namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-</path-namespace>
-</path-namespaces>
-<templates>
-<template xmlns:tde="http://marklogic.com/xdmp/tde">
-<context>./Product</context>
-<rows>
-<row>
-<schema-name>Lets-test-DB-prop-generate</schema-name>
-<view-name>Product</view-name>
-<columns>
-<column>
-<name>ProductName</name>
-<scalar-type>string</scalar-type>
-<val>ProductName</val>
-</column>
-<column>
-<name>UnitPrice</name>
-<scalar-type>integer</scalar-type>
-<val>UnitPrice</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>SupplierID</name>
-<scalar-type>integer</scalar-type>
-<val>SupplierID</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Discontinued</name>
-<scalar-type>boolean</scalar-type>
-<val>Discontinued</val>
-<nullable>true</nullable>
-</column>
-</columns>
-</row>
-</rows>
-</template>
-<template xmlns:tde="http://marklogic.com/xdmp/tde">
-<context>./Customer</context>
-<rows>
-<row>
-<schema-name>Lets-test-DB-prop-generate</schema-name>
-<view-name>Customer</view-name>
-<columns>
-<column>
-<name>CustomerId</name>
-<scalar-type>integer</scalar-type>
-<val>CustomerId</val>
-</column>
-<column>
-<name>CompanyName</name>
-<scalar-type>string</scalar-type>
-<val>CompanyName</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Country</name>
-<scalar-type>boolean</scalar-type>
-<val>Country</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>ContactName</name>
-<scalar-type>IRI</scalar-type>
-<val>ContactName</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Liking</name>
-<scalar-type>anyURI</scalar-type>
-<val>Liking</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Age</name>
-<scalar-type>double</scalar-type>
-<val>Age</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Height</name>
-<scalar-type>int</scalar-type>
-<val>Height</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Weight</name>
-<scalar-type>short</scalar-type>
-<val>Weight</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>YearsofService</name>
-<scalar-type>gYearMonth</scalar-type>
-<val>YearsofService</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Numberyrs</name>
-<scalar-type>byte</scalar-type>
-<val>Numberyrs</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Awards</name>
-<scalar-type>float</scalar-type>
-<val>Awards</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>dateofShipment</name>
-<scalar-type>date</scalar-type>
-<val>dateofShipment</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>dateofOrder</name>
-<scalar-type>dateTime</scalar-type>
-<val>dateofOrder</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>CustSince</name>
-<scalar-type>dayTimeDuration</scalar-type>
-<val>CustSince</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>DaysofSurfing</name>
-<scalar-type>nonNegativeInteger</scalar-type>
-<val>DaysofSurfing</val>
-<nullable>true</nullable>
-</column>
-</columns>
-</row>
-</rows>
-<templates>
-<template>
-<context>./ProductsPurchased</context>
-<rows>
-<row>
-<schema-name>Lets-test-DB-prop-generate</schema-name>
-<view-name>Customer_ProductsPurchased</view-name>
-<columns>
-<column>
-<!--
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Product</context>
+      <vars>
+        <var>
+          <name>subject-iri</name>
+          <val>sem:iri(concat("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Product/", fn:encode-for-uri(./ProductName)))</val>
+        </var>
+      </vars>
+      <triples>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>$RDF_TYPE</val>
+          </predicate>
+          <object>
+            <val>sem:iri("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Product")</val>
+          </object>
+        </triple>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+          </predicate>
+          <object>
+            <val>fn:base-uri(.)</val>
+          </object>
+        </triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Product</context>
+      <rows>
+        <row>
+          <schema-name>Lets-test-DB-prop-generate</schema-name>
+          <view-name>Product</view-name>
+          <view-layout>sparse</view-layout>
+          <columns>
+            <column>
+              <name>ProductName</name>
+              <scalar-type>string</scalar-type>
+              <val>ProductName</val>
+            </column>
+            <column>
+              <name>UnitPrice</name>
+              <scalar-type>integer</scalar-type>
+              <val>UnitPrice</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>SupplierID</name>
+              <scalar-type>integer</scalar-type>
+              <val>SupplierID</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Discontinued</name>
+              <scalar-type>boolean</scalar-type>
+              <val>Discontinued</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
+      </rows>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
+      <vars>
+        <var>
+          <name>subject-iri</name>
+          <val>sem:iri(concat("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Customer/", fn:encode-for-uri(xs:string(./CustomerId))))</val>
+        </var>
+      </vars>
+      <triples>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>$RDF_TYPE</val>
+          </predicate>
+          <object>
+            <val>sem:iri("http://marklogic.com/test/Lets-test-DB-prop-generate-0.0.1/Customer")</val>
+          </object>
+        </triple>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+          </predicate>
+          <object>
+            <val>fn:base-uri(.)</val>
+          </object>
+        </triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
+      <rows>
+        <row>
+          <schema-name>Lets-test-DB-prop-generate</schema-name>
+          <view-name>Customer</view-name>
+          <view-layout>sparse</view-layout>
+          <columns>
+            <column>
+              <name>CustomerId</name>
+              <scalar-type>integer</scalar-type>
+              <val>CustomerId</val>
+            </column>
+            <column>
+              <name>CompanyName</name>
+              <scalar-type>string</scalar-type>
+              <val>CompanyName</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Country</name>
+              <scalar-type>boolean</scalar-type>
+              <val>Country</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>ContactName</name>
+              <scalar-type>IRI</scalar-type>
+              <val>ContactName</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Liking</name>
+              <scalar-type>anyURI</scalar-type>
+              <val>Liking</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Age</name>
+              <scalar-type>double</scalar-type>
+              <val>Age</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Height</name>
+              <scalar-type>int</scalar-type>
+              <val>Height</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Weight</name>
+              <scalar-type>short</scalar-type>
+              <val>Weight</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>YearsofService</name>
+              <scalar-type>gYearMonth</scalar-type>
+              <val>YearsofService</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Numberyrs</name>
+              <scalar-type>byte</scalar-type>
+              <val>Numberyrs</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Awards</name>
+              <scalar-type>float</scalar-type>
+              <val>Awards</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>dateofShipment</name>
+              <scalar-type>date</scalar-type>
+              <val>dateofShipment</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>dateofOrder</name>
+              <scalar-type>dateTime</scalar-type>
+              <val>dateofOrder</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>CustSince</name>
+              <scalar-type>dayTimeDuration</scalar-type>
+              <val>CustSince</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>DaysofSurfing</name>
+              <scalar-type>nonNegativeInteger</scalar-type>
+              <val>DaysofSurfing</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
+      </rows>
+      <templates>
+        <template>
+          <context>./ProductsPurchased</context>
+          <rows>
+            <row>
+              <schema-name>Lets-test-DB-prop-generate</schema-name>
+              <view-name>Customer_ProductsPurchased</view-name>
+              <view-layout>sparse</view-layout>
+              <columns>
+                <column>
+                  <!--
 This column joins to property CustomerId of Customer
 -->
-<name>CustomerId</name>
-<scalar-type>integer</scalar-type>
-<val>../CustomerId</val>
-</column>
-<column>
-<!--
+                  <name>CustomerId</name>
+                  <scalar-type>integer</scalar-type>
+                  <val>../CustomerId</val>
+                </column>
+                <column>
+                  <!--
 This column joins to primary key of Product
 -->
-<name>ProductsPurchased</name>
-<scalar-type>string</scalar-type>
-<val>Product</val>
-<nullable>true</nullable>
-</column>
-</columns>
-</row>
-</rows>
-</template>
-</templates>
-</template>
-</templates>
+                  <name>ProductsPurchased_ProductName</name>
+                  <scalar-type>string</scalar-type>
+                  <val>Product</val>
+                </column>
+              </columns>
+            </row>
+          </rows>
+        </template>
+      </templates>
+    </template>
+  </templates>
 </template>

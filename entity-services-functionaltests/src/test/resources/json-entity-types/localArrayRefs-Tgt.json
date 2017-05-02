@@ -1,0 +1,55 @@
+{  
+   "info":{  
+      "title":"localArrayRefTgt",
+      "version":"0.0.2",
+      "description":"Target model. Array to Array conversion test. Local Array Refs Test",
+      "baseUri":"http://localArrayRefTgt/"
+   },
+   "definitions":{  
+      "Order":{  
+         "properties":{  
+            "CustomerID":{  
+               "datatype":"string"
+            },
+            "OrderDate":{  
+               "datatype":"dateTime"
+            },
+            "ShipAddress":{
+               "datatype":"string"
+            },
+            "arr2arr":{  
+               "datatype":"array",
+               "items": {
+                  "datatype": "string"
+               }
+            },
+            "OrderDetails":{  
+               "datatype":"array",
+               "items": {
+                  "$ref": "#/definitions/OrderDetail"
+               }
+            }
+         },
+         "primaryKey":"CustomerID",
+         "required": [ "CustomerID" ],
+         "wordLexicon": [ "CustomerID" ]
+      },
+      "OrderDetail": {
+         "properties":{
+            "ProductID":{
+               "datatype":"integer"
+            },
+            "UnitPrice":{
+               "datatype":"integer"
+            },
+            "Quantity":{
+               "datatype":"integer"
+            }
+         },
+         "primaryKey": "ProductID",
+         "required": [ "ProductID" ],
+         "rangeIndex": [ "ProductID", "Quantity" ],
+         "wordLexicon": [ "ProductID", "Quantity" ]
+      }
+   }
+}

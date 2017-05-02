@@ -1,8 +1,22 @@
+/*
+ * Copyright 2016-2017 MarkLogic Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.marklogic.entityservices;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
@@ -16,7 +30,6 @@ import java.io.*;
 import java.util.*;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
 
 /**
  * This class tests the various artifacts for required vs. non-required handling.
@@ -74,7 +87,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
 
         JacksonHandle handle;
 
-        handle = evalOneResult("fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
+        handle = evalOneResult("", "fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
         // save("/entity-type-units/database-properties.json", handle.get());
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -90,7 +103,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
     public void testExtractionTemplatesRequired() throws TestEvalException, IOException, SAXException {
 
         DOMHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new DOMHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:extraction-template-generate()", new DOMHandle());
         // String toWrite = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:extraction-template-generate()", new StringHandle()).get();
         // save("/entity-type-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/extraction-template.xml");
@@ -104,7 +117,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
     public void testSchemasRequired() throws IOException, TestEvalException, SAXException {
 
         DOMHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:schema-generate()", new DOMHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:schema-generate()", new DOMHandle());
         // String toWrite = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:schema-generate()", new StringHandle()).get();
         // save("/entity-type-units/schema.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/schema.xml");
@@ -120,7 +133,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
     public void testConversionModuleRequired() throws IOException, TestEvalException {
 
         StringHandle handle;
-        handle = evalOneResult("fn:doc( '" + entityType + "')=>es:instance-converter-generate()", new StringHandle());
+        handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:instance-converter-generate()", new StringHandle());
         // save("/entity-type-units/conversion-module.xqy", handle.get());
         compareLines("/entity-type-units/conversion-module.xqy", handle.get());
         // handle = evalOneResult("es:model-from-node( fn:doc( '" + entityType + "'))=>es:version-conversion-generate()", handle);

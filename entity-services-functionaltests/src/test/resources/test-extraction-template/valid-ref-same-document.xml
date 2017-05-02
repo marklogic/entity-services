@@ -1,58 +1,101 @@
-<?xml  version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <template xmlns="http://marklogic.com/xdmp/tde">
-<description>
-Extraction Template Generated from Entity Type Document
+  <description>Extraction Template Generated from Entity Type Document
 graph uri: http://refSameDocument#Northwind-Ref-Same-Document-0.0.1</description>
-<context>//es:instance</context>
-<path-namespaces>
-<path-namespace>
-<prefix>es</prefix>
-<namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-</path-namespace>
-</path-namespaces>
-<templates>
-<!--
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <!--
 The standalone template for Product cannot be generated.  Each template row requires a primary key or at least one required property.
 -->
-<template xmlns:tde="http://marklogic.com/xdmp/tde">
-<context>./Customer</context>
-<rows>
-<row>
-<schema-name>Northwind-Ref-Same-Document</schema-name>
-<view-name>Customer</view-name>
-<columns>
-<column>
-<name>CustomerId</name>
-<scalar-type>string</scalar-type>
-<val>CustomerId</val>
-</column>
-<column>
-<name>CompanyName</name>
-<scalar-type>string</scalar-type>
-<val>CompanyName</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Country</name>
-<scalar-type>string</scalar-type>
-<val>Country</val>
-<nullable>true</nullable>
-</column>
-<column>
-<name>Address</name>
-<scalar-type>string</scalar-type>
-<val>Address</val>
-<nullable>true</nullable>
-</column>
-</columns>
-</row>
-</rows>
-</template>
-<!--
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
+      <vars>
+        <var>
+          <name>subject-iri</name>
+          <val>sem:iri(concat("http://refSameDocument/Northwind-Ref-Same-Document-0.0.1/Customer/", fn:encode-for-uri(./CustomerId)))</val>
+        </var>
+      </vars>
+      <triples>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>$RDF_TYPE</val>
+          </predicate>
+          <object>
+            <val>sem:iri("http://refSameDocument/Northwind-Ref-Same-Document-0.0.1/Customer")</val>
+          </object>
+        </triple>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+          </predicate>
+          <object>
+            <val>fn:base-uri(.)</val>
+          </object>
+        </triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Customer</context>
+      <rows>
+        <row>
+          <schema-name>Northwind-Ref-Same-Document</schema-name>
+          <view-name>Customer</view-name>
+          <view-layout>sparse</view-layout>
+          <columns>
+            <column>
+              <name>CustomerId</name>
+              <scalar-type>string</scalar-type>
+              <val>CustomerId</val>
+            </column>
+            <column>
+              <name>CompanyName</name>
+              <scalar-type>string</scalar-type>
+              <val>CompanyName</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Country</name>
+              <scalar-type>string</scalar-type>
+              <val>Country</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>Address</name>
+              <scalar-type>string</scalar-type>
+              <val>Address</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
+      </rows>
+    </template>
+    <!--
 The standalone template for Order cannot be generated.  Each template row requires a primary key or at least one required property.
 -->
-<!--
+    <!--
 The standalone template for OrderDetail cannot be generated.  Each template row requires a primary key or at least one required property.
 -->
-</templates>
+  </templates>
 </template>

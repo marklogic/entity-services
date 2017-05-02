@@ -1,29 +1,16 @@
-<Order OrderID="10249">
-	<CustomerID>TOMSP</CustomerID>
-	<EmployeeID>6</EmployeeID>
-	<OrderDate>1996-07-05T06:39:18</OrderDate>
-	<RequiredDate>1996-08-16T03:39:38</RequiredDate>
-	<ShippedDate>1996-07-10T14:39:39</ShippedDate>
-	<ShipVia>1</ShipVia>
-	<Freight>11.6100</Freight>
-	<ShipName>Toms Spezialitäten</ShipName>
-	<ShipAddress>Luisenstr. 48</ShipAddress>
-	<ShipCity>Münster</ShipCity>
-	<ShipRegion/>
-	<ShipPostalCode>44087</ShipPostalCode>
-	<ShipCountry>Germany</ShipCountry>
-	<OrderDetails>
-		<OrderDetail>
-			<ProductID>14</ProductID>
-			<UnitPrice>18.6000</UnitPrice>
-			<Quantity>9</Quantity>
-			<Discount>0</Discount>
-		</OrderDetail>
-		<OrderDetail>
-			<ProductID>51</ProductID>
-			<UnitPrice>42.4000</UnitPrice>
-			<Quantity>40</Quantity>
-			<Discount>0</Discount>
-		</OrderDetail>
-	</OrderDetails>
+<Order>
+    <orderId>10249</orderId>
+    <orderDate>1996-07-05</orderDate>
+    <hasOrderDetails datatype="array">
+        <OrderDetails>
+            <quantity>9</quantity>
+            <productName>Chucks</productName>
+        </OrderDetails>
+    </hasOrderDetails>
+    <hasOrderDetails datatype="array">
+        <OrderDetails>
+            <quantity>40</quantity>
+            <productName>Capris</productName>
+        </OrderDetails>
+    </hasOrderDetails>
 </Order>

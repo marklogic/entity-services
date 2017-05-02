@@ -1,0 +1,38 @@
+{
+  "info": {
+    "title": "Person",
+    "version": "0.0.1",
+    "baseUri": "http://example.org/example-person/",
+    "description": "A model of a person, to demonstrate several extractions"
+  },
+  "definitions": {
+    "Person": {
+      "properties": {
+        "id": {
+          "datatype": "string"
+        },
+        "firstName": {
+          "datatype": "string"
+        },
+        "lastName": {
+          "datatype": "string"
+        },
+        "fullName": {
+          "datatype": "string"
+        },
+        "friends": {
+          "datatype": "array",
+          "items": {
+            "$ref": "#/definitions/Person"
+          }
+        }
+      },
+      "primaryKey": "id",
+      "required": [
+        "firstName",
+        "lastName",
+        "fullName"
+      ]
+    }
+  }
+}

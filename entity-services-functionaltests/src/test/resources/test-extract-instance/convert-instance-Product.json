@@ -1,0 +1,11 @@
+{  
+  "$attachments":"<Product xmlns:es=\"http://marklogic.com/entity-services\">\n    <CustomerID>234</CustomerID>\n\t<ProductName>Manjimup Dried Apples</ProductName>\n    <ProductID>51</ProductID>\n\t<SupplierID>24</SupplierID>\n\t<CompanyName>Marklogic</CompanyName>\n\t<QuantityPerUnit>50 - 300 g pkgs.</QuantityPerUnit>\n\t<UnitPrice>53</UnitPrice>\n\t<UnitsInStock>20</UnitsInStock>\n\t<ContactName>Srikanth</ContactName>\n\t<Country>India</Country>\n\t<Discontinued>false</Discontinued>\n</Product>",
+  "$type":"Product",
+  "CustomerID":{  
+    "$type":"Customer",
+    "$ref":"234"
+  },
+  "UnitPrice":53,
+  "SupplierID":24,
+  "Discontinued":false
+}

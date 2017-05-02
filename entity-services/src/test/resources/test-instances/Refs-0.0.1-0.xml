@@ -6,14 +6,10 @@
       <pk>123</pk>
       <correctRef><Refs>123</Refs></correctRef>
       <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
+      <arrayRef datatype="array"><Refs>123</Refs></arrayRef>
       <refWithDescription><Refs>123</Refs></refWithDescription>
       <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
+      <externalArrayRef datatype="array"><Refs>externally-referenced-instance</Refs></externalArrayRef>
     </Refs>
   </correctRef>
   <secondCorrectRef>
@@ -21,59 +17,21 @@
       <pk>123</pk>
       <correctRef><Refs>123</Refs></correctRef>
       <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
+      <arrayRef datatype="array"><Refs>123</Refs></arrayRef>
       <refWithDescription><Refs>123</Refs></refWithDescription>
       <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
+      <externalArrayRef datatype="array"><Refs>externally-referenced-instance</Refs></externalArrayRef>
     </Refs>
   </secondCorrectRef>
-  <arrayRef>
+  <arrayRef datatype="array">
     <Refs>
       <pk>123</pk>
       <correctRef><Refs>123</Refs></correctRef>
       <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
+      <arrayRef datatype="array"><Refs>123</Refs></arrayRef>
       <refWithDescription><Refs>123</Refs></refWithDescription>
       <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-    </Refs>
-  </arrayRef>
-  <arrayRef>
-    <Refs>
-      <pk>123</pk>
-      <correctRef><Refs>123</Refs></correctRef>
-      <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <refWithDescription><Refs>123</Refs></refWithDescription>
-      <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-    </Refs>
-  </arrayRef>
-  <arrayRef>
-    <Refs>
-      <pk>123</pk>
-      <correctRef><Refs>123</Refs></correctRef>
-      <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <refWithDescription><Refs>123</Refs></refWithDescription>
-      <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
+      <externalArrayRef datatype="array"><Refs>externally-referenced-instance</Refs></externalArrayRef>
     </Refs>
   </arrayRef>
   <refWithDescription>
@@ -81,26 +39,16 @@
       <pk>123</pk>
       <correctRef><Refs>123</Refs></correctRef>
       <secondCorrectRef><Refs>123</Refs></secondCorrectRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
-      <arrayRef><Refs>123</Refs></arrayRef>
+      <arrayRef datatype="array"><Refs>123</Refs></arrayRef>
       <refWithDescription><Refs>123</Refs></refWithDescription>
       <externalRef><Refs>externally-referenced-instance</Refs></externalRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
-      <externalArrayRef><Refs>externally-referenced-instance</Refs></externalArrayRef>
+      <externalArrayRef datatype="array"><Refs>externally-referenced-instance</Refs></externalArrayRef>
     </Refs>
   </refWithDescription>
   <externalRef>
     <Refs>externally-referenced-instance</Refs>
   </externalRef>
-  <externalArrayRef>
-    <Refs>externally-referenced-instance</Refs>
-  </externalArrayRef>
-  <externalArrayRef>
-    <Refs>externally-referenced-instance</Refs>
-  </externalArrayRef>
-  <externalArrayRef>
+  <externalArrayRef datatype="array">
     <Refs>externally-referenced-instance</Refs>
   </externalArrayRef>
 </Refs>

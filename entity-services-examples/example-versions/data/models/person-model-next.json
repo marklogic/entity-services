@@ -1,0 +1,24 @@
+{
+  "info": {
+    "title" : "Model",
+    "version" : "next",
+    "description" : "The next Model"
+  },
+  "definitions": {
+    "Person" : {
+      "properties" : {
+        "id" : {
+          "datatype": "long"
+        },
+        "firstName" : {
+          "datatype" : "string"
+        },
+        "fullName" : {
+          "datatype": "string"
+        }
+      },
+      "primaryKey" : "id",
+      "wordLexicon" : ["fullName"]
+    }
+  }
+}

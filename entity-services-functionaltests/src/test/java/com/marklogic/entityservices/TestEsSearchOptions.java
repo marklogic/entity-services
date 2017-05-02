@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,7 @@
  */
 package com.marklogic.entityservices;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.JacksonHandle;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
@@ -27,9 +24,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +39,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsGenerate() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		
-		DOMHandle handle = evalOneResult("es:model-validate(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("", "es:model-validate(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -54,7 +48,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/SchemaCompleteEntityType-0.0.1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -63,7 +57,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsGenerate2() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-db-prop-et.json";
 		
-		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("", "fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
@@ -72,23 +66,24 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-db-prop-et.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
 	
 	@Test
+	//Tests bug #243
 	public void testSearchOptionsWithXML() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-northwind1.xml";
 		
-		DOMHandle handle = evalOneResult("es:model-from-xml(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("", "es:model-from-xml(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
-        //debugOutput(searchOptions);
+        debugOutput(searchOptions);
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-northwind1.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -97,14 +92,14 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptions3() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "invalid-primary-key-as-ref.json";
 		
-		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("", "fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/primary-key-as-a-ref.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}
@@ -113,14 +108,14 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 	public void testSearchOptionsGenerate3() throws IOException, TestEvalException, SAXException, TransformerException {
 		String entityType = "valid-no-baseUri.json";
 		
-		DOMHandle handle = evalOneResult("fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
+		DOMHandle handle = evalOneResult("", "fn:doc('"+entityType+"')=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
         //debugOutput(searchOptions);
         InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-no-baseUri.xml");
 		Document filesystemXML = builder.parse(is);
 		XMLUnit.setIgnoreWhitespace(true);
-		XMLUnit.setIgnoreComments(true);
+		//XMLUnit.setIgnoreComments(true);
 		XMLAssert.assertXMLEqual("Search options validation failed.  " + entityType + ".", filesystemXML,
 				searchOptions);
 	}

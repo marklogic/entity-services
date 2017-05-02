@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 package com.marklogic.entityservices;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +38,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
 		String entityType = "SchemaCompleteEntityType-0.0.1.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("", "es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -56,7 +54,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRangeIndexandwordLexicon() throws IOException, TestEvalException {
 		String entityType = "valid-db-prop-et.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("", "es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());
@@ -73,7 +71,7 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	public void testDBpropRefSame() throws IOException, TestEvalException {
 		String entityType = "valid-simple-ref.json";
 		
-		JacksonHandle handle = evalOneResult("es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("", "es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
 		JsonNode databaseConfiguration = handle.get();
 		
 		//logger.debug(databaseConfiguration.toString());

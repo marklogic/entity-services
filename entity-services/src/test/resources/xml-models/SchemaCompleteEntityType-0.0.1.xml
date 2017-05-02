@@ -183,6 +183,7 @@
           <es:datatype>string</es:datatype>
         </productName>
       </es:properties>
+      <es:range-index>quantity</es:range-index>
     </OrderDetails>
   </es:definitions>
 </es:model>

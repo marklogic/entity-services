@@ -66,9 +66,9 @@
     </Order>
     <OrderDetail>
         <es:properties>
-	 <ProductID>
+	 <productID>
              <es:ref>#/definitions/Product</es:ref>
-	 </ProductID>
+	 </productID>
 	 <UnitPrice>
              <es:datatype>integer</es:datatype>
 	 </UnitPrice>

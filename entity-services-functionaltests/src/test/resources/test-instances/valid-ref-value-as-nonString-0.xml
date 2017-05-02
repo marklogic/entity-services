@@ -2,5 +2,7 @@
 <CustomerId>some string</CustomerId>
 <CompanyName>some string</CompanyName>
 <Country>some string</Country>
-<fof>externally-referenced-instance</fof>
+<fof>
+<test>externally-referenced-instance</test>
+</fof>
 </Customer>

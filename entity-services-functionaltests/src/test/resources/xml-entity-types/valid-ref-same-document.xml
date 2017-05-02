@@ -48,7 +48,7 @@
              <es:datatype>integer</es:datatype>
 	 </OrderID>
 	 <CustomerID>
-             <es:datatype>integer</es:datatype>
+             <es:datatype>string</es:datatype>
 	 </CustomerID>
 	 <OrderDate>
              <es:datatype>dateTime</es:datatype>
@@ -66,12 +66,12 @@
     </Order>
     <OrderDetail>
         <es:properties>
-	 <ProductID>
+	 <productID>
              <es:ref>#/definitions/Product</es:ref>
-	 </ProductID>
-	 <UnitPrice>
+	 </productID>
+	 <unitPrice>
              <es:datatype>integer</es:datatype>
-	 </UnitPrice>
+	 </unitPrice>
 	 <Quantity>
              <es:datatype>integer</es:datatype>
 	 </Quantity>

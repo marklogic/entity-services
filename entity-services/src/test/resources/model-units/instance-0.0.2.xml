@@ -1,25 +1,30 @@
-<?xml version="1.0"?>
-<x>
-  <ETOne>
-    <pk>http://example.org/some-iri/1</pk>
-    <p1>1</p1>
-    <p2>3</p2>
-    <p3>32</p3>
-    <p4>333</p4>
-    <p5>12</p5>
-    <p6>4</p6>
-  </ETOne>
-  <ETTwo>
-    <pk>http://example.org/some-iri/2</pk>
-    <parent><ETOne>http://example.org/some-iri</ETOne></parent>
-    <p7><ETTwo>3</ETTwo></p7>
-    <p8><ETTwo>23</ETTwo></p8>
-    <p9><ETTwo>19</ETTwo></p9>
-    <p9><ETTwo>14</ETTwo></p9>
-    <p9><ETTwo>16</ETTwo></p9>
-    <p10/>
-    <p12>100293</p12>
-    <p13>100293</p13>
-  </ETTwo>
-  <ETThree/>
+<x xmlns:es="http://marklogic.com/entity-services">
+  <es:instance>
+    <ETOne>
+      <pk>http://example.org/some-iri/1</pk>
+      <p1>1</p1>
+      <p2>3</p2>
+      <p3 datatype="array">32</p3>
+      <p4 datatype="array">333</p4>
+      <p5>12</p5>
+      <p6>4</p6>
+    </ETOne>
+  </es:instance>
+  <es:instance>
+    <ETTwo>
+      <pk>http://example.org/some-iri/2</pk>
+      <parent><ETOne>http://example.org/some-iri</ETOne></parent>
+      <p7><ETTwo>3</ETTwo></p7>
+      <p8><ETTwo>23</ETTwo></p8>
+      <p9 datatype="array"><ETTwo>19</ETTwo></p9>
+      <p9 datatype="array"><ETTwo>14</ETTwo></p9>
+      <p9 datatype="array"><ETTwo>16</ETTwo></p9>
+      <p10/>
+      <p12>100293</p12>
+      <p13 datatype="array">100293</p13>
+    </ETTwo>
+  </es:instance>
+  <es:instance>
+    <ETThree/>
+  </es:instance>
 </x>

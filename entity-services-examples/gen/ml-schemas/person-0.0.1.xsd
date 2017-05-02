@@ -1,0 +1,23 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="firstName" type="xs:string"/>
+  <xs:element name="lastName" type="xs:string"/>
+  <xs:element name="fullName" type="xs:string"/>
+  <xs:element name="friends" type="PersonContainerType"/>
+  <xs:complexType name="PersonContainerType">
+    <xs:sequence>
+      <xs:element ref="Person"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
+  <xs:complexType name="PersonType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="id"/>
+      <xs:element ref="firstName"/>
+      <xs:element ref="lastName"/>
+      <xs:element ref="fullName"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="friends"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Person" type="PersonType"/>
+</xs:schema>

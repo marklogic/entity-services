@@ -1,0 +1,25 @@
+<Person>
+    <id>122</id>
+    <firstName>Rashi</firstName>
+    <lastName>Gupta</lastName>
+    <fullName>Rashi Gupta</fullName>
+    <address>132 Main St.</address>
+    <friendOf>
+        <Person>
+            <id>123</id>
+            <firstName>Srikanth</firstName>
+            <lastName>Balasubramanian</lastName>
+            <fullName>Srikanth Balasubranian</fullName>
+            <address>132 Main St.</address>
+        </Person>
+    </friendOf>
+    <friendOf>
+        <Person>
+            <id>124</id>
+            <firstName>Charles</firstName>
+            <lastName>Greer</lastName>
+            <fullName>Charles Greer</fullName>
+            <address>100 Greer Land Drive.</address>
+        </Person>
+    </friendOf>
+</Person>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,18 +51,15 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 	@Test
 	public void createTestInstances() throws TestEvalException, TransformerException, IOException, SAXException {
 		for (String entityType : entityTypes) {
-			String entityTypeLocation = null;
+			//String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
-			// primary-key-as-a-ref.xml is commented for bug 40666
-			// valid-ref-value-as-nonString.json is commented for bug 40904
-			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||
-					entityType.startsWith("primary-key-")||entityType.startsWith("valid-ref-value")) { continue; }
+			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }
 			
 			String generateTestInstances = "es:model-get-test-instances( es:model-from-xml( fn:doc('"+entityType+"') ) )";
 			
 			logger.info("Creating test instances from " + entityType);
-			EvalResultIterator results = eval(generateTestInstances);
+			EvalResultIterator results = eval("", generateTestInstances);
 			int resultNumber = 0;
 			while (results.hasNext()) {
 				EvalResult result =  results.next();
@@ -96,7 +93,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 	public void bug40904GetTestInstances() {
 		logger.info("Checking model-get-test-instances() with a non string value as ref");
 		try {
-			evalOneResult("es:model-validate(fn:doc('invalid-bug40904.json'))", new JacksonHandle());	
+			evalOneResult("", "es:model-validate(fn:doc('invalid-bug40904.json'))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -104,7 +101,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 		}
 		
 		try {
-			evalOneResult("es:model-get-test-instances(es:model-validate(fn:doc('invalid-bug40904.xml')))", new JacksonHandle());	
+			evalOneResult("", "es:model-get-test-instances(es:model-validate(fn:doc('invalid-bug40904.xml')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,26 +26,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.io.JacksonHandle;
 
 public class TestDatabaseProperties extends EntityServicesTestBase {
-	
-	@BeforeClass
-	public static void setup() {
-   		setupClients();
-		TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
-	}
-	
-	@Test
-	public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
-		JacksonHandle handle =
-				evalOneResult("fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:database-properties-generate()", new JacksonHandle());
-		JsonNode databaseConfiguration = handle.get();
-		
-		//logger.debug(databaseConfiguration.toString());
 
-		ObjectMapper mapper = new ObjectMapper();
-		InputStream is = this.getClass().getResourceAsStream("/expected-database-properties/content-database.json");
-		JsonNode control = mapper.readValue(is, JsonNode.class);
+    @BeforeClass
+    public static void setup() {
+           setupClients();
+        TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
+    }
 
-		org.hamcrest.MatcherAssert.assertThat(databaseConfiguration, org.hamcrest.Matchers.equalTo(control));
-	}
-	
+    @Test
+    public void testDatabasePropertiesGenerate() throws IOException, TestEvalException {
+        JacksonHandle handle =
+                evalOneResult("","fn:doc('SchemaCompleteEntityType-0.0.1.json')=>es:database-properties-generate()", new JacksonHandle());
+        JsonNode databaseConfiguration = handle.get();
+
+        //logger.debug(databaseConfiguration.toString());
+
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/expected-database-properties/content-database.json");
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(databaseConfiguration, org.hamcrest.Matchers.equalTo(control));
+    }
+
 }

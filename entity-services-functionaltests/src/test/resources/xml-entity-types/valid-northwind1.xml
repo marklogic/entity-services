@@ -21,6 +21,7 @@
         </ContactName>
        </es:properties>
        <es:primary-key>CustomerId</es:primary-key>
+       <es:range-index>CustomerId</es:range-index>
      </Customer>
      <Product>
         <es:properties>

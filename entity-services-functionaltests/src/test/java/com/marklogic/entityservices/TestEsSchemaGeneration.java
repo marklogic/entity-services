@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,26 +63,19 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		docMgr.write(moduleName, schemaHandle);
 	}
 
-	private static void removeSchema(String entityTypeName) {
-		logger.debug("Removing schema " + entityTypeName);
-		String moduleName = entityTypeName.replaceAll("\\.(xml|json)", ".xsd");
-		docMgr.delete(moduleName);
-	}
-
 	private static Map<String, StringHandle> generateSchemas() {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
-					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {
 				continue;
 			}
 
 			logger.info("Generating schema: " + entityType);
 			StringHandle schema = new StringHandle();
 			try {
-				schema = evalOneResult("es:schema-generate( es:model-from-xml( fn:doc( '" + entityType + "')))",
-						schema);
+				schema = evalOneResult("",
+						"es:schema-generate( es:model-from-xml( fn:doc( '" + entityType + "')))", schema);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e+"for "+entityType);
 			}
@@ -95,15 +88,11 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			// primary-key-as-a-ref.xml is commented for bug 40666
-			// valid-ref-value-as-nonString.json is commented for bug 40904
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("valid-ref-same-document")
-					||entityType.contains("valid-ref-combo")||entityType.contains("valid-simple-ref")||
-					entityType.contains("primary-key-as")||entityType.contains("valid-ref-value")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")) {
 				continue;
 			}
 			
-			StringHandle instances = evalOneResult("count(map:keys(map:get(es:model-validate( doc('"+entityType+"') ), \"definitions\")))",new StringHandle());
+			StringHandle instances = evalOneResult("","count(map:keys(map:get(es:model-validate( doc('"+entityType+"') ), \"definitions\")))", new StringHandle());
 			//logger.info("Count of definitions is: "+Integer.valueOf(instances.get()));
 			
 			storeSchema(entityType, schemas.get(entityType));
@@ -113,8 +102,8 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-"+i+".xml");
 				logger.info("Validating for instance: "+testInstanceName);
 				try{
-				DOMHandle validateResult = evalOneResult("validate strict { doc('" + testInstanceName + "') }",
-					new DOMHandle());
+				DOMHandle validateResult = evalOneResult("import schema \"\" at \""+entityType.replaceAll("\\.(xml|json)", ".xsd")+"\";\n",
+					"validate strict { doc('" + testInstanceName + "') }", new DOMHandle());
 				
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
 				Document filesystemXML = builder.parse(is);
@@ -126,8 +115,6 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 					throw new RuntimeException("Error validating "+entityType,e);
 				}	
 			}
-			
-			removeSchema(entityType);
 
 		}
 
@@ -138,19 +125,37 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void bug40766SchemaGen() {
 		logger.info("Checking schema-generate() when ET and prop names are not distinct");
 		try {
-			evalOneResult("es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.json')))", new JacksonHandle());	
+			evalOneResult("", "es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.json')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct ('OrderDetails')"));
 		}
 		
 		try {
-			evalOneResult("es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.xml')))", new JacksonHandle());	
+			evalOneResult("", "es:schema-generate( es:model-validate(fn:doc('invalid-bug40766.xml')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for schema-generate() when ET and prop names are not distinct");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Type names and property names must be distinct ('OrderDetails')"));
+		}
+	}
+	
+	@Test
+	/* Test for github issue #212 */
+	public void bug43212SchemaGen() throws SAXException, IOException {
+		logger.info("Checking schema-generate() when prop names across ET are not distinct");
+		DOMHandle validateXML = evalOneResult("","es:schema-generate( es:model-from-xml(doc('invalid-bug43212.xml')))", new DOMHandle());
+		//DOMHandle validateJSON = evalOneResult("","es:schema-generate( doc('invalid-bug43212.json'))", new DOMHandle());
+
+		InputStream is = this.getClass().getResourceAsStream("/test-instances/bug43212.xml");
+		Document filesystemXML = builder.parse(is);
+		XMLUnit.setIgnoreWhitespace(true);
+		try {
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateXML.get());
+			//XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
+		} catch (TestEvalException e) {
+			throw new RuntimeException("Error validating test bug43212SchemaGen",e);
 		}
 	}
 

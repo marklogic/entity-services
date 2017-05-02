@@ -1,6 +1,6 @@
 {  
    "info":{  
-      "title":"Test-2",
+      "title":"array2ScalarSrc",
       "version":"0.0.1",
       "description":"Source model. Array to Scalar conversion test.",
       "baseUri":"http://arr-to-scal"
@@ -8,7 +8,7 @@
    "definitions":{  
       "Customer":{  
          "properties":{  
-            "CustomerId":{  
+            "CustomerID":{  
                "datatype":"string"
             },
             "CompanyName":{  
@@ -24,7 +24,7 @@
             }
          },
          "description":"Customer entity Type",
-         "primaryKey":"CustomerId"
+         "primaryKey":"CustomerID"
         }
     }
 }

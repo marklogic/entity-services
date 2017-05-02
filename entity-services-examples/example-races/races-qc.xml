@@ -1,0 +1,175 @@
+<export><workspace name="Races"><query name="02. check extract-instance" focus="false" listorder="3" taborder="3" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(: Using database entity-services-examples-content :)
+xquery version "1.0-ml";
+import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1" at "/ext/Race-0.0.1.xqy";
+
+(: This script runs extract functions to verify the initial import and how extraction looks :)
+let $runner-e := race:extract-instance-Runner(
+  doc("/entity-services-examples/example-races/data/race-data/runners/xaw.json")
+)
+let $run-e := race:extract-instance-Run(
+  doc("/entity-services-examples/example-races/data/race-data/runs/138.json")
+)
+let $race-e := race:extract-instance-Race(
+  doc("/entity-services-examples/example-races/data/race-data/races/10k2.json")
+)
+let $race-f := race:extract-instance-Race(
+  doc("/entity-services-examples/example-races/data/race-data/races/10k1.json")
+)
+
+return (
+  $run-e, race:instance-to-envelope($run-e),
+  $race-e, race:instance-to-envelope($race-e)
+)</query><query name="04. race" focus="false" listorder="5" taborder="5" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">-- USE entity-services-examples-content;
+
+SELECT 
+  Race.name, 
+  Race.wonByRunner, 
+  Race.courseLength, 
+  Run.id, 
+  Run.distance, 
+  Run.duration, 
+  Run.runnerName,
+  Run.runnerAge,
+  Run.runnerGender
+FROM 
+  Race
+JOIN Race_comprisedOfRuns AS r ON Race.name = r.name
+JOIN RUN ON r.comprisedOfRuns = Run.id
+ORDER BY Run.duration
+</query><query name="03. tde-manual" focus="false" listorder="4" taborder="4" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(: Using database entity-services-examples-content :)
+xquery version "1.0-ml";
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+(: this is a manual run of tde functionality to verify generated extraction tempaltes :)
+let $tde := xdmp:eval('fn:doc("/Race-0.0.1.tdex")', (), map:entry("database", xdmp:database("entity-services-examples-schemas")))
+
+let $doc := (//es:instance/Run/id/root())[1]
+let $extract := tde:node-data-extract($doc, xdmp:unquote($tde)/node())
+
+return $extract
+</query><query name="05. run" focus="false" listorder="6" taborder="6" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sql">-- USE entity-services-examples-content;
+SELECT distance, count(*)
+FROM Race.Run
+GROUP by distance
+ORDER by distance DESC</query><query name="06. ontology" focus="false" listorder="7" taborder="7" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="sparql"># Using database entity-services-examples-content
+prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+select distinct ?s ?superClass ?p ?o
+where 
+{
+  ?s rdfs:subClassOf ?superClass.
+  ?superClass ?p ?o . 
+  filter (?s =  &lt;http://grechaw.github.io/entity-types/Race-0.0.1/Runner&gt; )
+}</query><query name="00. README" focus="false" listorder="1" taborder="1" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(:
+ : This Workspace contains reports and examples about an Entity Services scenario.
+ : It's designed with simplicity in mind, not real business data.
+ : Once you have run the Examples Loader ('../gradlew runExampleRaces') you can step
+ : through these tabs to see what happened.
+ :)</query><query name="10. Search API" focus="false" listorder="11" taborder="11" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
+declare namespace search = "http://marklogic.com/appservices/search";
+
+let $searches := 
+(
+"entity-type:Race",
+'name:"Charles Greer"'
+)
+
+let $get-call := function($search) {
+ xdmp:http-get("http://localhost:8203/v1/search?options=race&amp;amp;q=" || fn:encode-for-uri($search),
+   &lt;options xmlns="xdmp:http"&gt;
+    &lt;authentication method="digest"&gt;
+         &lt;username&gt;admin&lt;/username&gt;
+         &lt;password&gt;admin&lt;/password&gt;
+       &lt;/authentication&gt;
+    &lt;headers&gt;
+      &lt;accept&gt;application/xml&lt;/accept&gt;
+    &lt;/headers&gt;
+   &lt;/options&gt;)[2]//search:extracted/*
+   }
+
+
+return $searches ! $get-call(.)</query><query name="09. Optic" focus="false" listorder="10" taborder="10" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
+
+let $rv := op:from-view("Race", "Race")
+let $join-table :=  op:from-view("Race", "Race_comprisedOfRuns")
+
+let $joined := op:join-inner($rv, 
+              $join-table, 
+              op:on(op:view-col("Race","name"), op:view-col("Race_comprisedOfRuns", "name")))
+let $final-join := 
+   op:join-inner($joined, op:from-view("Race", "Run"), 
+   op:on("comprisedOfRuns", "id"))
+   =&gt;op:order-by(op:view-col("Race", "name"))
+   
+   
+return $final-join=&gt;op:result()</query><query name="12. Translator" focus="false" listorder="13" taborder="13" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
+
+
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+import module namespace t = "http://grechaw.github.io/entity-types#Race-0.0.2-from-Race-0.0.1"
+ at "/ext/translator.xqy";
+import module namespace new = "http://grechaw.github.io/entity-types#Race-0.0.2"
+ at "/ext/Race-0.0.2.xqy";
+
+let $a-race := doc("/races/data/race-data/races/10k1.xml")/es:envelope/es:instance
+let $new-version := t:convert-instance-Race($a-race)
+return ($a-race, $new-version, new:instance-to-canonical-xml($new-version))
+</query><query name="11. Extract 2" focus="false" listorder="12" taborder="12" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">xquery version "1.0-ml";
+
+
+(: source loaded from csv :)
+
+import module namespace race2 = "http://grechaw.github.io/entity-types#Race-0.0.1" at "/ext/Race-0.0.1.xqy";
+
+let $doc := doc("/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
+return
+(
+$doc,
+race2:extract-instance-Angel-Island( $doc )
+)
+</query><query name="01. load-report" focus="false" listorder="2" taborder="2" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+(
+"Raw docs (1354 expected): ", count(cts:search(collection("raw"), cts:true-query())),
+"Non raw (1314 expected): ", count(cts:search(collection(), cts:not-query(cts:collection-query("raw")))),
+"Race envelopes (4 expected): ", count(/es:envelope[es:instance[es:info/es:version="0.0.1"]/Race]),
+"Run envelopes (1300 expected): ", count(//es:instance/Run),
+"Collection names", cts:collections()
+)</query><query name="07. instances" focus="false" listorder="8" taborder="8" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">sem:sparql('
+           prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+           prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+           prefix fn: &lt;http://www.w3.org/2005/xpath-functions#&gt;
+           
+           select ?s ?docUri
+           where 
+           {
+           ?s a &lt;http://grechaw.github.io/entity-types/Race-0.0.1/Runner&gt; ;
+               rdfs:isDefinedBy ?docUri .
+           }
+           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="08. inference instance" focus="false" listorder="9" taborder="9" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">sem:sparql('
+           prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+           prefix foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+           prefix fn: &lt;http://www.w3.org/2005/xpath-functions#&gt;
+           
+           select ?s ?docUri ?xml
+           where 
+           {
+           ?s a foaf:Person ;
+               rdfs:isDefinedBy ?docUri .
+           BIND (fn:doc($docUri) as $xml)
+           }
+           LIMIT 2
+           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="13. SKOS Integration" focus="true" listorder="15" taborder="14" active="true" database="11805993725475736885" server="6534483199281945851" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+let $rc := //es:instance//raceCategory ! sem:iri(.)
+let $q := 'prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; 
+select ?s ?o ?sibs  
+{ ?s skos:broader+ ?o . 
+  ?sibs skos:broader+ ?o . 
+  filter (?s = $rc) 
+}'
+
+let $answer := sem:sparql($q, map:entry("rc", $rc))
+
+return ($rc, $answer)
+</query></workspace></export>

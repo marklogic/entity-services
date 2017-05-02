@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>Extraction Template Generated from Entity Type Document
+graph uri: http://example.org/example-person/Person-0.0.1</description>
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Person</context>
+      <vars>
+        <var>
+          <name>subject-iri</name>
+          <val>sem:iri(concat("http://example.org/example-person/Person-0.0.1/Person/", fn:encode-for-uri(./id)))</val>
+        </var>
+      </vars>
+      <triples>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>$RDF_TYPE</val>
+          </predicate>
+          <object>
+            <val>sem:iri("http://example.org/example-person/Person-0.0.1/Person")</val>
+          </object>
+        </triple>
+        <triple>
+          <subject>
+            <val>$subject-iri</val>
+          </subject>
+          <predicate>
+            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+          </predicate>
+          <object>
+            <val>fn:base-uri(.)</val>
+          </object>
+        </triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Person</context>
+      <rows>
+        <row>
+          <schema-name>Person</schema-name>
+          <view-name>Person</view-name>
+          <view-layout>sparse</view-layout>
+          <columns>
+            <column>
+              <name>id</name>
+              <scalar-type>string</scalar-type>
+              <val>id</val>
+            </column>
+            <column>
+              <name>firstName</name>
+              <scalar-type>string</scalar-type>
+              <val>firstName</val>
+            </column>
+            <column>
+              <name>lastName</name>
+              <scalar-type>string</scalar-type>
+              <val>lastName</val>
+            </column>
+            <column>
+              <name>fullName</name>
+              <scalar-type>string</scalar-type>
+              <val>fullName</val>
+            </column>
+          </columns>
+        </row>
+      </rows>
+      <templates>
+        <template>
+          <context>./friends</context>
+          <rows>
+            <row>
+              <schema-name>Person</schema-name>
+              <view-name>Person_friends</view-name>
+              <view-layout>sparse</view-layout>
+              <columns>
+                <column>
+                  <!--This column joins to property id of Person-->
+                  <name>id</name>
+                  <scalar-type>string</scalar-type>
+                  <val>../id</val>
+                </column>
+                <column>
+                  <!--This column joins to primary key of Person-->
+                  <name>friends_id</name>
+                  <scalar-type>string</scalar-type>
+                  <val>Person</val>
+                </column>
+              </columns>
+            </row>
+          </rows>
+        </template>
+      </templates>
+    </template>
+  </templates>
+</template>

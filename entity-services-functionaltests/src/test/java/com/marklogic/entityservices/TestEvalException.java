@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package com.marklogic.entityservices;
 
-import com.marklogic.client.FailedRequestException;
 
 @SuppressWarnings("serial")
-public class TestEvalException extends Exception {
+public class TestEvalException extends RuntimeException {
 	
-	public TestEvalException(FailedRequestException e) {
+	public TestEvalException(Exception e) {
 		super(e);
 	}
 

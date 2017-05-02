@@ -1,0 +1,17 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+    <es:info>
+        <es:title>Order-10248</es:title>
+        <es:version>0.0.1</es:version>
+        <es:description>Entity type to validate that items is required when datatype is array</es:description>
+    </es:info>
+    <es:definitions>
+        <OrderDetails>
+            <es:properties>
+                <OrderDetail>
+                    <es:datatype>array</es:datatype>
+                    <es:items>int</es:items>
+                </OrderDetail>
+            </es:properties>
+        </OrderDetails>
+    </es:definitions>
+</es:model>

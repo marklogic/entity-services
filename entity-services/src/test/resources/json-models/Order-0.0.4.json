@@ -22,7 +22,7 @@
         }
       },
       "primaryKey" : "orderId",
-      "required" : ["orderId", "orderDate"]
+      "required" : ["orderId", "orderDate","hasOrderDetails"]
     },
     "OrderDetails": {
       "properties": {

@@ -3,13 +3,7 @@
 <CustomerID>123</CustomerID>
 <OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
 <ShipAddress>some string</ShipAddress>
-<OrderDetails>
-<OrderDetail>externally-referenced-instance</OrderDetail>
-</OrderDetails>
-<OrderDetails>
-<OrderDetail>externally-referenced-instance</OrderDetail>
-</OrderDetails>
-<OrderDetails>
+<OrderDetails datatype="array">
 <OrderDetail>externally-referenced-instance</OrderDetail>
 </OrderDetails>
 </Order>

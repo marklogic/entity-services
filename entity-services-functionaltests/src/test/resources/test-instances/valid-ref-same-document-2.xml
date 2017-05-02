@@ -1,32 +1,14 @@
 <Order>
 <OrderID>123</OrderID>
-<CustomerID>123</CustomerID>
+<CustomerID>some string</CustomerID>
 <OrderDate>2000-01-23T17:00:26.789186-08:00</OrderDate>
 <ShipAddress>some string</ShipAddress>
-<OrderDetails>
+<OrderDetails datatype="array">
 <OrderDetail>
-<ProductID>
+<productID>
 <Product>some string</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
-<Quantity>123</Quantity>
-</OrderDetail>
-</OrderDetails>
-<OrderDetails>
-<OrderDetail>
-<ProductID>
-<Product>some string</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
-<Quantity>123</Quantity>
-</OrderDetail>
-</OrderDetails>
-<OrderDetails>
-<OrderDetail>
-<ProductID>
-<Product>some string</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
+</productID>
+<unitPrice>123</unitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>
 </OrderDetails>

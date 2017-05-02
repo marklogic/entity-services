@@ -1,0 +1,12 @@
+<es:envelope xmlns:es="http://marklogic.com/entity-services">
+	<es:instance>
+		<es:info>
+			<es:title>Test</es:title>
+			<es:version>0.0.1</es:version>
+		</es:info>
+		<Typorino>
+			<name>Alejandro Arribas</name>
+		</Typorino>
+	</es:instance>
+	<es:attachments>{"bah":"yes"}</es:attachments>
+</es:envelope>

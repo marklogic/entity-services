@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
+import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.Format;
+import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
@@ -79,7 +82,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		conversionModules = generateConversionModules();
 		storeConversionModules(conversionModules);
-		storeCustomConversionModules();
 
 	}
 	
@@ -95,21 +97,6 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		docMgr.write(writeSet);
 	}
 	
-	private static void storeCustomConversionModules() {
-		
-		DocumentWriteSet writeSet = docMgr.newWriteSet();
-		Collection<File> custConvMod = TestSetup.getInstance().getTestResources("/customized-conversion-module");
-		
-		for (File f : custConvMod) {
-		
-			String moduleName = "/conv/" + f.getName();
-			DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-	        
-	    	writeSet.add(moduleName, metadata, new FileHandle(f));
-		}
-		docMgr.write(writeSet);
-	}
-	
 	private static Map<String, StringHandle> generateConversionModules() {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
@@ -119,7 +106,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			logger.info("Generating conversion module: " + entityType);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", xqueryModule);
+				xqueryModule = evalOneResult("","es:instance-converter-generate( fn:doc( '"+entityType+"'))", xqueryModule);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -134,7 +121,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String arr[] = new String[2];
 		int lineNumber = 0;
 		String line;
-		xqueryModule = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityTypeName+"'))", xqueryModule);
+		xqueryModule = evalOneResult("", "es:instance-converter-generate( fn:doc( '"+entityTypeName+"'))", xqueryModule);
 				
 		//Below code is to get docTitle and namespace in the generated xqy  module
 		BufferedReader bf = new BufferedReader(new StringReader(xqueryModule.get()));
@@ -232,6 +219,50 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		return writer.toString();
 	}*/
 	
+    private int sizeOf(EvalResultIterator results) {
+        int size = 0;
+        while (results.hasNext()) {
+            size++;
+            EvalResult result = results.next();
+            // logger.debug(result.get(new StringHandle()).get());
+        }
+        return size;
+    }
+
+    private void checkCardinality(String docUri, int nResults) {
+        InputStream testEnvelope = this.getClass().getResourceAsStream("/entity-type-units/" + docUri);
+        XMLDocumentManager xmlDocMgr = client.newXMLDocumentManager();
+        xmlDocMgr.write(docUri, new InputStreamHandle(testEnvelope).withFormat(Format.XML));
+
+        StringHandle stringHandle;
+        EvalResultIterator results;
+
+        results = eval("",
+            "es:instance-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances.", sizeOf(results), nResults);
+
+        results = eval("",
+            "es:instance-json-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances (json)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-xml-from-document( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" instances (xml)", sizeOf(results), nResults);
+
+        results = eval( "",
+            "es:instance-get-attachments( doc('" + docUri + "'))");
+        assertEquals("Document has "+nResults+" attachments", sizeOf(results), nResults);
+
+        xmlDocMgr.delete(docUri);
+    }
+    
+    @Test
+    //Verifies bug #240
+    public void testInstanceFunctionCardinality() {
+        checkCardinality("test-envelope-with-sequences.xml", 3);
+        checkCardinality("test-envelope-no-instances.xml", 0);
+    }
+
 	@Test
 	//This test verifies that conversion module generates a document as output and not text
 	public void testConvModOutputNodeKind() {
@@ -240,7 +271,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			if (entityType.contains(".xml")||entityType.contains(".jpg")||entityType.contains("invalid-")) {continue; }
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("xdmp:node-kind(es:instance-converter-generate( fn:doc( '"+entityType+"')))", xqueryModule);
+				xqueryModule = evalOneResult("", "xdmp:node-kind(es:instance-converter-generate( fn:doc( '"+entityType+"')))", xqueryModule);
 				assertEquals("Expected 'document' but got: '"+xqueryModule.get().toString()+"' for ET doc: "+entityType,xqueryModule.get().toString(),"document");
 			} catch (TestEvalException e) {
 				logger.info("Got exception: " + e);
@@ -257,7 +288,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 			String docTitle = getDocTitle(entityType);		
 			
 			//Validating generated extract instances of entity type names.
-			EvalResultIterator results =  eval("map:keys(map:get(es:model-validate(doc('"+entityType+"')), \"definitions\"))");
+			EvalResultIterator results =  eval("", "map:keys(map:get(es:model-validate(doc('"+entityType+"')), \"definitions\"))");
 			EvalResult result = null;
 			while (results.hasNext()) {
 				result = results.next();
@@ -287,9 +318,11 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		String entityType = "invalid-missing-info.json";
 		try {
-			evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle()); 
+			evalOneResult("","es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle()); 
+			fail("eval should throw an XDMP:ARGTYPE exception when non-validated invalid ET is input to instsance-converter-generate()");
 		} catch (Exception e) {
-			fail("Testing for conversion module with "+entityType+"\nGot exception: "+e.getMessage());
+		    logger.info(e.getMessage());
+            assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("arg1 is not of type map:map"));           
 		}
 	
 	}
@@ -299,12 +332,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		/*
 		 * Might need to edit the gen module to get expected output
 		 */
-		String entityType = "valid-ref-combo-sameDocument-subIri.json";
-		String sourceDocument = "10248.xml";
-		String ns = getNameSpace(entityType);
+	    String sourceDocument = "10249.xml";
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new JacksonHandle());
+	    JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; ",
+                                  "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -325,8 +356,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "VINET.xml";
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -348,8 +379,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "11.xml";
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -369,8 +400,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "11.xml";
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -388,7 +419,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		String entityType = "valid-ref-combo-sameDocument-subIri.json";
 		
-		StringHandle handle = evalOneResult("es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle());
+		StringHandle handle = evalOneResult("", "es:instance-converter-generate( fn:doc( '"+entityType+"'))", new StringHandle());
 		String xqueryHandle = handle.get();
 		//InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/xqueryBug38816.xqy");
 
@@ -406,8 +437,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-SchemaCompleteEntityType( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-SchemaCompleteEntityType( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -428,8 +459,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		System.out.println("namespace::::"+ns);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -446,12 +477,12 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	public void testExtractInstanceCustomer2() throws IOException, TestEvalException {
 		
 		String entityType = "valid-db-prop-et.json";
-		String sourceDocument = "42.xml";
+		String sourceDocument = "GODOS.xml";
 		String ns = getNameSpace(entityType);
 		System.out.println("namespace::::"+ns);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
 		logger.info("This is the extracted instance: \n" + extractInstanceResult);
@@ -470,11 +501,11 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String entityType = "valid-ref-combo-sameDocument-subIri.xml";
 		String ns = getNameSpace(entityType);
 		try{
-		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Order()", new StringHandle());
+		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\";", 
+		        "ext:extract-instance-Order()", new StringHandle());
 		
 		} catch (Exception e) {
-			assertTrue(e.getMessage().contains("Too few args, expected 1 but got 0"));
+			assertTrue(e.getMessage(),e.getMessage().contains("Too few args, expected 1 but got 0"));
 		}
 		
 	}
@@ -488,8 +519,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 
 		try {
-		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-		              "ext:extract-instance-Order( doc('"+source1+"'),doc('"+source2+"'))", new StringHandle());
+		evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                                  "ext:extract-instance-Order( doc('"+source1+"'),doc('"+source2+"'))", new StringHandle());
 		} catch (Exception e) {
 			assertTrue(e.getMessage().contains("Too many args, expected 1 but got 2"));
 		}
@@ -502,8 +533,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "10248.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "ext:instance-to-canonical-xml(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                          "ext:instance-to-canonical-xml(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
 		
@@ -537,8 +568,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "ALFKI.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "ext:instance-to-canonical-xml(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ", 
+		        "ext:instance-to-canonical-xml(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
 		
@@ -573,8 +604,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "ALFKI.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/valid-ref-same-doc-gen.xqy\"; ",
+                          "ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
 		
@@ -607,8 +638,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "10249.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "ext:instance-to-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/valid-ref-same-doc-gen.xqy\"; ",
+                          "ext:instance-to-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
 		
 		String actualDoc = handle.get();              
 		
@@ -642,10 +673,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		//String envelopeDoc = "valid-ref-combo-sameDocument-subIri-envelope.xml";
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              //"xdmp:document-insert('valid-ref-combo-sameDocument-subIri-envelope.xml', ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') )))", new StringHandle());
-		//StringHandle handle2 = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                          //"xdmp:document-insert('valid-ref-combo-sameDocument-subIri-envelope.xml', ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') )))", new StringHandle());
+                //StringHandle handle2 = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
+                          "es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
 		String actualDoc = handle.get();
 		//Get the keys file as controlDoc
 		InputStream is = this.getClass().getResourceAsStream("/test-attachments/" + entityType);
@@ -670,6 +701,25 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
+    public void testInstanceGetAttachmentsJSON() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        String sourceDocument = "VINET.json";
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                          "xdmp:from-json-string(es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')))))", new JacksonHandle());
+        
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as controlDoc
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-attachments/jsonAttachment.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));   
+	
+	}
+	
+	@Test
 	public void testInstanceFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
 		
 		String entityType = "valid-ref-same-document.xml";
@@ -677,8 +727,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		//String docTitle = getDocTitle(entityType);
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "es:instance-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                          "es:instance-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
 		JsonNode actualDoc = handle.get();
 		//Get the keys file as input stream
 		ObjectMapper mapper = new ObjectMapper();
@@ -696,8 +746,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "VINET.xml";
 		String ns = getNameSpace(entityType);
 		
-		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "es:instance-xml-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+		        "es:instance-xml-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new StringHandle());
 		String actualDoc = handle.get();
 		//Get the keys file as controlDoc
 		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/noRef-xml-from-document.xml");
@@ -725,10 +775,10 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	@Test
 	public void testInstanceXmlFromDocumentRefSame() throws IOException, TestEvalException, SAXException, TransformerException {
 		
-		String sourceDocument = "10248.xml";
+		String sourceDocument = "10249.xml";
 		
-		StringHandle handle = evalOneResult("import module namespace gen = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; "+
-	              "es:instance-xml-from-document(gen:instance-to-envelope(gen:extract-instance-Order( doc('"+sourceDocument+"'))))", new StringHandle());
+		StringHandle handle = evalOneResult("import module namespace gen = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy'; ",
+                          "es:instance-xml-from-document(gen:instance-to-envelope(gen:extract-instance-Order( doc('"+sourceDocument+"'))))", new StringHandle());
 		String actualDoc = handle.get();
 		//Get the keys file as controlDoc
 		InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/refSame-xml-from-document.xml");
@@ -759,8 +809,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String sourceDocument = "VINET.xml";
 		String ns = getNameSpace(entityType);
 		
-		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; "+
-	              "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
+		JacksonHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
+                          "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"'))))", new JacksonHandle());
 		JsonNode actualDoc = handle.get();
 		//Get the keys file as input stream
 		ObjectMapper mapper = new ObjectMapper();
@@ -770,4 +820,34 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 
 		org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
 	}
+	
+	@Test
+    public void testJSONSerialization() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';",
+                          "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Order(doc('10254.xml'))))", new JacksonHandle());
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as input stream
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/jsonSerialization.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
+    }
+	
+	@Test
+    public void testJSONEmptyArray() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';",
+                "es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Order(doc('10253.xml'))))", new JacksonHandle());
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as input stream
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-instance-from-document/jsonEmptyArray.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(actualDoc, org.hamcrest.Matchers.equalTo(control));
+    }
 }

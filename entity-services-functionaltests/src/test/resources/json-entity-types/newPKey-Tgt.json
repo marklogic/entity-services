@@ -1,13 +1,13 @@
 {
   "info": {
-    "title": "Test-3",
-    "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/"
+    "title": "newPKeyTgt",
+    "version": "0.0.2",
+    "baseUri":"http://marklogic.com/newPKey/"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"string"
         },
         "CompanyName": {
@@ -20,7 +20,7 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     },
     "Product": {
       "properties": {

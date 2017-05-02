@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,13 @@
  */
 package com.marklogic.entityservices;
 
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -72,34 +69,38 @@ public abstract class EntityServicesTestBase {
 		testSetup.teardownClass();
 	}
 	
-	public static EvalResultIterator eval(String functionCall) throws TestEvalException {
-	    
-	    String entityServicesImport = 
-	            "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
-	    		"import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n";
-	
-	    ServerEvaluationCall call = 
-	            client.newServerEval().xquery(entityServicesImport + functionCall);
-	    EvalResultIterator results = null;
-	    try {
-	    	results = call.eval();
-	    } catch (FailedRequestException e) {
-	    	throw new TestEvalException(e);
-	    }
-	    return results;
-	}
+    protected static EvalResultIterator eval(String imports, String functionCall) throws TestEvalException {
 
-	protected static <T extends AbstractReadHandle> T evalOneResult(String functionCall, T handle) throws TestEvalException {
-		EvalResultIterator results =  eval(functionCall);
-		EvalResult result = null;
-		if (results.hasNext()) {
-			result = results.next();
-			return result.get(handle);
-		} else {
-			return null;
-		}
-	}
-   
+        String entityServicesImport =
+                "import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';\n" +
+                "import module namespace esi = 'http://marklogic.com/entity-services-impl' at '/MarkLogic/entity-services/entity-services-impl.xqy';\n" +
+                "import module namespace i = 'http://marklogic.com/entity-services-instance' at '/MarkLogic/entity-services/entity-services-instance.xqy';\n" +
+                "import module namespace sem = 'http://marklogic.com/semantics' at '/MarkLogic/semantics.xqy';\n";
+
+        String option = "declare option xdmp:mapping \"false\";";
+
+        ServerEvaluationCall call =
+                client.newServerEval().xquery(entityServicesImport + imports + option + functionCall);
+        EvalResultIterator results = null;
+        try {
+            results = call.eval();
+        } catch (FailedRequestException e) {
+            throw new TestEvalException(e);
+        }
+        return results;
+    }
+
+    protected static <T extends AbstractReadHandle> T evalOneResult(String imports, String functionCall, T handle) throws TestEvalException {
+        EvalResultIterator results =  eval(imports, functionCall);
+        EvalResult result = null;
+        if (results.hasNext()) {
+            result = results.next();
+            return result.get(handle);
+        } else {
+            return null;
+        }
+    }
+
 	protected void debugOutput(Document xmldoc) throws TransformerException {
 		debugOutput(xmldoc, System.out);
 	}

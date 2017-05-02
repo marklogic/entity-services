@@ -190,7 +190,7 @@ order:unsignedByteKey
         es:title "unsignedByteKey" .
 
 orderdetails:quantity
-        a es:Property ;
+        a es:Property, es:RangeIndexedProperty ;
         es:datatype xs:integer ;
         es:title "quantity" .
 

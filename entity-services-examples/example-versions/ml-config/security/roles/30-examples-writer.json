@@ -1,0 +1,10 @@
+{
+  "role-name": "examples-writer",
+  "description": "Can read and write documents",
+  "role": ["examples-reader", "rest-writer"],
+  "privilege": [
+    { "privilege-name": "any-uri", "action": "http://marklogic.com/xdmp/privileges/any-uri", "kind": "execute"},
+    { "privilege-name": "unprotected-collections", "action": "http://marklogic.com/xdmp/privileges/unprotected-collections", "kind": "execute"},
+    { "privilege-name": "sparql", "action": "http://marklogic.com/xdmp/privileges/sem-sparql", "kind": "execute"}
+  ]
+}

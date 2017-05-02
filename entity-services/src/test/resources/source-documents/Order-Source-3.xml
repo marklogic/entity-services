@@ -1,0 +1,7 @@
+<Order>
+    <orderId>10248</orderId>
+    <orderDate>1995-07-05</orderDate>
+    <hasOrderDetails datatype="array">
+        <OrderDetails/>
+    </hasOrderDetails>
+</Order>

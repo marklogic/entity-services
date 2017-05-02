@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.sparql.graph.GraphFactory;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.DOMHandle;
@@ -77,21 +77,21 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
     static {
-        invalidMessages.put("invalid-bad-datatype.json", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.json", "If a property is not a reference, then it must have a datatype.");
-        invalidMessages.put("invalid-missing-info.json", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-bad-datatype.json", "unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.json", "is not a reference, so it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.json", "Model descriptor must contain exactly one info section.");
         invalidMessages.put("invalid-missing-title.json",   "section must be an object and contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.json", "section must be an object and contain exactly one version declaration.");
-        invalidMessages.put("invalid-property-ref-with-others.json", "If a property has $ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-property-ref-with-others.json", "has $ref as a child, so it cannot have a datatype.");
         invalidMessages.put("invalid-multiple-pk.json", "only one primary key allowed.");
         invalidMessages.put("invalid-range-index-key.json", "unsupported for a range index.");
-        invalidMessages.put("invalid-bad-datatype.xml", "Unsupported datatype");
-        invalidMessages.put("invalid-missing-datatype.xml", "If a property is not a reference, then it must have a datatype.");
-        invalidMessages.put("invalid-missing-info.xml", "Entity Type Document must contain exactly one info section.");
+        invalidMessages.put("invalid-bad-datatype.xml", "unsupported datatype");
+        invalidMessages.put("invalid-missing-datatype.xml", "is not a reference, so it must have a datatype.");
+        invalidMessages.put("invalid-missing-info.xml", "Model descriptor must contain exactly one info section.");
         invalidMessages.put("invalid-missing-title.xml", "section must be an object and contain exactly one title declaration.");
         invalidMessages.put("invalid-missing-version.xml", "section must be an object and contain exactly one version declaration.");
         invalidMessages.put("invalid-multiple-pk.xml", "only one primary key allowed");
-        invalidMessages.put("invalid-property-ref-with-others.xml", "If a property has es:ref as a child, then it cannot have a datatype.");
+        invalidMessages.put("invalid-property-ref-with-others.xml", "has es:ref as a child, so it cannot have a datatype.");
         invalidMessages.put("invalid-range-index-key.xml", "unsupported for a range index.");
         invalidMessages.put("invalid-bad-absolute-reference.json", "must be a valid URI.");
         invalidMessages.put("invalid-bad-absolute-reference.xml", "must be a valid URI.");
@@ -99,8 +99,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-absolute-item-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-missing-reference.json", "must resolve to local entity type.");
         invalidMessages.put("invalid-missing-reference.xml", "must resolve to local entity type.");
-        invalidMessages.put("invalid-array-no-items.json", "must contain an \"items\" declaration");
-        invalidMessages.put("invalid-array-no-items.xml", "must contain an \"items\" declaration");
+        invalidMessages.put("invalid-array-no-items.json", "must contain a valid \"items\" declaration");
+        invalidMessages.put("invalid-array-no-items.xml", "must contain a valid \"items\" declaration");
+        invalidMessages.put("invalid-array-bad-items.json", "must contain a valid \"items\" declaration.");
+        invalidMessages.put("invalid-array-bad-items.xml", "must contain a valid \"items\" declaration");
         invalidMessages.put("invalid-nested-array.json", "cannot both be an \"array\" and have items of type \"array\".");
         invalidMessages.put("invalid-nested-array.xml", "cannot both be an \"array\" and have items of type \"array\".");
         invalidMessages.put("invalid-bad-baseUri.json", "If present, baseUri (es:base-uri) must be an absolute URI.");
@@ -113,34 +115,35 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-bad-local-item-reference.xml", "must be a valid URI.");
         invalidMessages.put("invalid-required.json", "doesn't exist.");
         invalidMessages.put("invalid-required.xml", "doesn't exist.");
+        invalidMessages.put("invalid-required2.json", "must be an array.");
         invalidMessages.put("invalid-bad-title.json", "Title must have no whitespace and must start with a letter.");
         invalidMessages.put("invalid-bad-title.xml", "Title must have no whitespace and must start with a letter.");
         invalidMessages.put("invalid-missing-range-index.json", "doesn't exist.");
         invalidMessages.put("invalid-missing-range-index.xml", "doesn't exist");
         invalidMessages.put("invalid-missing-lexicon.json", "doesn't exist.");
         invalidMessages.put("invalid-missing-lexicon.xml", "doesn't exist.");
-        invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model document");
-        invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in a model document");
-        invalidMessages.put("invalid-bad-property.json", "Each property must be an object, with either \"datatype\" or \"$ref\" as a key.");
+        invalidMessages.put("invalid-no-types.xml", "There must be at least one entity type in a model descriptor");
+        invalidMessages.put("invalid-no-types.json", "There must be at least one entity type in a model descriptor");
+        invalidMessages.put("invalid-bad-property.json", "must be an object with either \"datatype\" or \"$ref\" as a key.");
         invalidMessages.put("invalid-bad-external.json", "ref value must end with a simple name (xs:NCName).");
         invalidMessages.put("invalid-bad-external.xml", "ref value must end with a simple name (xs:NCName)");
-        invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct.");
-        invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct.");
+        invalidMessages.put("invalid-property-type-conflict.xml", "Type names and property names must be distinct");
+        invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct");
         invalidMessages.put("invalid-ref-pk.json", "A reference cannot be primary key.");
         invalidMessages.put("invalid-ref-pk.xml", "A reference cannot be primary key.");
     }
 
 
     @Test
-    public void testInvalidEntityTypes() throws URISyntaxException {
+    public void testInvalidEntityTypes() throws URISyntaxException, IOException {
 
         URL sourcesFilesUrl = client.getClass().getResource("/invalid-models");
 
         @SuppressWarnings("unchecked")
-        Collection<File> invalidEntityTypeFiles = FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
-                FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
+        Collection<File> invalidEntityTypeFiles =
+		    FileUtils.listFiles(new File(sourcesFilesUrl.getPath()),
+	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
         Set<String> invalidEntityTypes = new HashSet<String>();
-
 
         JSONDocumentManager docMgr = client.newJSONDocumentManager();
         DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -159,7 +162,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
             @SuppressWarnings("unused")
             JacksonHandle handle = null;
             try {
-                handle = evalOneResult("es:model-validate(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
+                handle = evalOneResult("", "es:model-validate(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
                 fail("eval should throw an exception for invalid cases." + entityType);
 
             } catch (TestEvalException e) {
@@ -171,7 +174,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 // check once more for validating map representation
                 if (entityType.endsWith(".json")) {
                     try {
-                        handle = evalOneResult("es:model-validate(xdmp:fron-json(fn:doc('"+ entityType.toString()  + "')))", new JacksonHandle());
+                        handle = evalOneResult("", "es:model-validate(xdmp:from-json(fn:doc('"+ entityType.toString()  + "')))", new JacksonHandle());
                         fail("eval should throw an exception for invalid cases." + entityType);
                     } catch (TestEvalException e1) {
                         // pass
@@ -195,7 +198,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
             logger.info("Checking validation " + entityType);
             StringHandle handle = new StringHandle();
             try {
-                handle = evalOneResult("es:model-validate(fn:doc('" + entityType + "'))", handle);
+                handle = evalOneResult("", "es:model-validate(fn:doc('" + entityType + "'))", handle);
             } catch (TestEvalException e) {
                 fail("A valid entity type " + entityType + " did not pass validation: " + handle.get());
             }
@@ -212,7 +215,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
      * If the entity type file name contains "invalid-" then it must
      * throw a validation exception.
      */
-    public void testModelXmlConverstion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
+    public void testModelXmlConversion() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
             ObjectMapper mapper = new ObjectMapper();
             logger.info("Checking "+entityType);
@@ -223,7 +226,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 InputStream is = this.getClass().getResourceAsStream("/json-models/"+entityType);
                 JsonNode original = mapper.readValue(is, JsonNode.class);
                 is.close();
-                JacksonHandle handle  = evalOneResult("fn:doc('"+ entityType  + "')", new JacksonHandle());
+                JacksonHandle handle  = evalOneResult("", "fn:doc('"+ entityType  + "')", new JacksonHandle());
                 JsonNode actual = handle.get();
                 
                 checkModelXML("Retrieved as XML, should match equivalent XML payload.", entityType.toString());
@@ -235,13 +238,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 JsonNode jsonEquivalent = mapper.readValue(jsonInputStreamControl, JsonNode.class);
                 jsonInputStreamControl.close();
                 logger.debug("Parsing " + entityType);
-                JacksonHandle handle  = evalOneResult("es:model-from-xml(fn:doc('"+ entityType  + "'))", new JacksonHandle());
+                JacksonHandle handle  = evalOneResult("", "es:model-from-xml(fn:doc('"+ entityType  + "'))", new JacksonHandle());
                 JsonNode jsonActual = handle.get();
                 checkModelJSON("Converted to a map:map, the XML entity type should match the json equivalent", jsonEquivalent, jsonActual);
 
                 InputStream xmlControl = this.getClass().getResourceAsStream("/xml-models/"+entityType);
                 Document xmloriginal = builder.parse(xmlControl);
-                DOMHandle xmlhandle  = evalOneResult("es:model-to-xml(es:model-from-xml(fn:doc('"+ entityType  + "')))", new DOMHandle());
+                DOMHandle xmlhandle  = evalOneResult("", "es:model-to-xml(es:model-from-xml(fn:doc('"+ entityType  + "')))", new DOMHandle());
                 Document xmlactual = xmlhandle.get();
 
                 //debugOutput(xmloriginal);
@@ -266,7 +269,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
         Document expectedXML = builder.parse(xmlFile);
         String evalXML =  "es:model-to-xml(fn:doc('" + entityTypeFile + "'))";
 
-        DOMHandle handle = evalOneResult(evalXML, new DOMHandle());
+        DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
         Document actualXML = handle.get();
         XMLUnit.setIgnoreWhitespace(true);
         //debugOutput(expectedXML);
@@ -291,13 +294,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
                    + "xdmp:to-json(es:model-from-xml(fn:doc('" + entityTypeUri + "')))/node()"
                    + ")";
 
-        StringHandle handle = evalOneResult(evalJSONEqual, new StringHandle());
+        StringHandle handle = evalOneResult("", evalJSONEqual, new StringHandle());
         assertEquals(message, "true", handle.get());
     }
     
 
     private void checkTriples(String entityTypeUri) throws TestEvalException, IOException {
-        StringHandle rdfHandle = evalOneResult("xdmp:set-response-output-method('n-triples'), '"+entityTypeUri + "'=>sem:iri()=>sem:graph()=>xdmp:quote()", new StringHandle() );
+        StringHandle rdfHandle = evalOneResult("", "xdmp:set-response-output-method('n-triples'), '"+entityTypeUri + "'=>sem:iri()=>sem:graph()=>xdmp:quote()", new StringHandle() );
 
         Graph actualTriples = GraphFactory.createGraphMem();
         ByteArrayInputStream bis = new ByteArrayInputStream(rdfHandle.get().getBytes());

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<x>
+<x xmlns:es="http://marklogic.com/entity-services">
+<es:instance>
   <ETOne>
     <pk>http://example.org/some-iri/1</pk>
     <p1>1</p1>
@@ -13,6 +14,8 @@
     <p6>4</p6>
     <p6>4</p6>
   </ETOne>
+  </es:instance>
+  <es:instance>
   <ETTwo>
     <pk>http://example.org/some-iri/2</pk>
     <parent>
@@ -36,4 +39,5 @@
   <ETFour>
     <p1>100293</p1>
   </ETFour>
+</es:instance>
 </x>

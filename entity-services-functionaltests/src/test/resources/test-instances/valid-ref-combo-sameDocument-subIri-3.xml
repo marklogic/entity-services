@@ -1,5 +1,5 @@
 <OrderDetail>
-<ProductID>
+<productID>
 <Product>
 <ProductName>some string</ProductName>
 <ProductID>123</ProductID>
@@ -7,7 +7,7 @@
 <SupplierID>123</SupplierID>
 <Discontinued>true</Discontinued>
 </Product>
-</ProductID>
+</productID>
 <UnitPrice>123</UnitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>

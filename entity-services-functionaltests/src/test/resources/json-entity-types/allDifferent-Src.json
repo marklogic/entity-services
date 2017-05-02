@@ -1,14 +1,14 @@
 {
   "info": {
-    "title": "Test-6",
+    "title": "allDifferentSrc",
     "version": "0.0.1",
-    "baseUri":"http://marklogic.com/test/",
+    "baseUri":"http://marklogic.com/versionTrans/",
     "description":"Target and Source have different ETs and Properties"
   },
   "definitions": {
     "Customer": {
       "properties": {
-        "CustomerId": {
+        "CustomerID": {
           "datatype":"string"
         },
         "CompanyName": {
@@ -21,7 +21,7 @@
           "datatype":"string" 
         }
       },
-      "primaryKey":"CustomerId"
+      "primaryKey":"CustomerID"
     }
   }
 }

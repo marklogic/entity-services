@@ -33,31 +33,15 @@
 <unsignedShortKey>324</unsignedShortKey>
 <yearMonthDurationKey>P1Y</yearMonthDurationKey>
 <iriKey>http://example.org/some-iri</iriKey>
-<arrayKey>1355</arrayKey>
-<arrayKey>1355</arrayKey>
-<arrayKey>1355</arrayKey>
-<arrayStringKey>some string</arrayStringKey>
-<arrayStringKey>some string</arrayStringKey>
-<arrayStringKey>some string</arrayStringKey>
+<arrayKey datatype="array">1355</arrayKey>
+<arrayStringKey datatype="array">some string</arrayStringKey>
 <referenceInThisFile>
 <OrderDetails>
 <quantity>123</quantity>
 <productName>some string</productName>
 </OrderDetails>
 </referenceInThisFile>
-<arrayreferenceInThisFile>
-<OrderDetails>
-<quantity>123</quantity>
-<productName>some string</productName>
-</OrderDetails>
-</arrayreferenceInThisFile>
-<arrayreferenceInThisFile>
-<OrderDetails>
-<quantity>123</quantity>
-<productName>some string</productName>
-</OrderDetails>
-</arrayreferenceInThisFile>
-<arrayreferenceInThisFile>
+<arrayreferenceInThisFile datatype="array">
 <OrderDetails>
 <quantity>123</quantity>
 <productName>some string</productName>
@@ -66,13 +50,7 @@
 <externalReference>
 <OrderDetails>externally-referenced-instance</OrderDetails>
 </externalReference>
-<externalArrayReference>
-<OrderDetails>externally-referenced-instance</OrderDetails>
-</externalArrayReference>
-<externalArrayReference>
-<OrderDetails>externally-referenced-instance</OrderDetails>
-</externalArrayReference>
-<externalArrayReference>
+<externalArrayReference datatype="array">
 <OrderDetails>externally-referenced-instance</OrderDetails>
 </externalArrayReference>
 </SchemaCompleteEntityType>

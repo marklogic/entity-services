@@ -77,7 +77,7 @@
 </search:range>
 </search:constraint>
 <!--
-This item is a duplicate and is commented out so as to create a valid artifact.
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="stringKey" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="stringKey"/>

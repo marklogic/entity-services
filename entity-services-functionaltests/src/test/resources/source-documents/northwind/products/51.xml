@@ -1,12 +1,14 @@
-<Product ProductID="51">
+<Product>
+    <CustomerID>234</CustomerID>
 	<ProductName>Manjimup Dried Apples</ProductName>
+    <ProductID>51</ProductID>
 	<SupplierID>24</SupplierID>
-	<CategoryID>7</CategoryID>
+	<CompanyName>Marklogic</CompanyName>
 	<QuantityPerUnit>50 - 300 g pkgs.</QuantityPerUnit>
-	<UnitPrice>53.0000</UnitPrice>
+	<UnitPrice>53</UnitPrice>
 	<UnitsInStock>20</UnitsInStock>
-	<UnitsOnOrder>0</UnitsOnOrder>
-	<ReorderLevel>10</ReorderLevel>
+	<ContactName>Srikanth</ContactName>
+	<Country>India</Country>
 	<Discontinued>false</Discontinued>
 </Product>
 

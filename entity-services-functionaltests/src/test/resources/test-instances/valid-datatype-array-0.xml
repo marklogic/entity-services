@@ -3,7 +3,5 @@
 <CompanyName>some string</CompanyName>
 <Country>some string</Country>
 <ContactName>some string</ContactName>
-<likes>123</likes>
-<likes>123</likes>
-<likes>123</likes>
+<likes datatype="array">123</likes>
 </Customer>

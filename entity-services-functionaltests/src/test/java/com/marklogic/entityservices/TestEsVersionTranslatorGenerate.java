@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,58 +19,28 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hp.hpl.jena.sparql.algebra.Transformer;
-import com.hp.hpl.jena.sparql.function.library.e;
-import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentWriteSet;
-import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.document.TextDocumentManager;
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.DocumentMetadataHandle;
-import com.marklogic.client.io.FileHandle;
-import com.marklogic.client.io.Format;
-import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
-import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 /**
  * Tests server function es:version-translator-generate
@@ -114,7 +84,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 		
 		for (String entityType : entityTypes) {
-			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("sameTgt-")) {continue; }
+			if (entityType.startsWith("valid-")||entityType.startsWith("primary-")||entityType.startsWith("person")||entityType.startsWith("SchemaCompleteEntity")||entityType.contains(".xml")||entityType.contains("-Src.json")||entityType.contains(".jpg")||entityType.contains("invalid-")||entityType.contains("sameTgt-")) {continue; }
 			
 			String part = entityType.replaceAll("\\-(Src|Tgt)", "");
 			String source = part.replaceAll("\\.json", "-Src.json");
@@ -122,7 +92,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			logger.info("Generating version translator module for : " + source + " & " + target);
 			StringHandle xqueryModule = new StringHandle();
 			try {
-				xqueryModule = evalOneResult("es:version-translator-generate(fn:doc('"+source+"'),fn:doc('"+target+"'))", xqueryModule);
+				xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc('"+source+"'),fn:doc('"+target+"'))", xqueryModule);
 				//logger.info("Ver Trans Gen for "+part+" : \n"+xqueryModule.get());
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
@@ -150,6 +120,8 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
                         softly.assertThat(expectedLine)
                                 .as("Mismatch in conversion module line " + Long.toString(i++))
                                 .isEqualToIgnoringWhitespace(line);
+                } else {
+                    fail("Expected result has more lines than actual results");
                 }
             }
             softly.assertAll();
@@ -162,8 +134,8 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		for (String entityTypeName : conversionModules.keySet()) {
 			
 			String actualDoc = conversionModules.get(entityTypeName).get();
-			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
+			//logger.info(actualDoc+"\n************************************************************\n");
 			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		}
@@ -176,7 +148,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
@@ -197,7 +169,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
@@ -214,7 +186,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	public void testMissingSrc() {
 		logger.info("Checking version-translator-generate() with a missing document node");
 		try {
-			evalOneResult("es:version-translator-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
+			evalOneResult("", "es:version-translator-generate(fn:doc('valid-datatype-array.xml'))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with a missing document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
@@ -226,11 +198,11 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 	public void testInvalidETDocAsSrcTgt() {
 		logger.info("Checking version-translator-generate() with invalid document node");
 		try {
-			evalOneResult("es:version-translator-generate(es:model-validate(fn:doc('invalid-missing-info.json')),es:model-validate(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
+			evalOneResult("", "es:version-translator-generate(es:model-validate(fn:doc('invalid-missing-info.json')),es:model-validate(fn:doc('invalid-missing-title.json')))", new JacksonHandle());	
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with invalid document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Entity Type Document must contain exactly one info section. Primary Key orderId doesn't exist."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
 		}
 	}
 	
@@ -242,7 +214,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
-			xqueryModule = evalOneResult("es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
+			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
 			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
@@ -254,5 +226,59 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 		}
 		
 	}
+	
+	@Test
+    public void testConvInst() throws TransformerException, IOException, SAXException {
+
+        String import1 = "import module namespace locArr = 'http://localArrayRefTgt/localArrayRefTgt-0.0.2-from-localArrayRefSrc-0.0.1' at '/conv/localArrayRefs.xqy';\n" + 
+                         "import module namespace locArrSrc = 'http://localArrayRefSrc/localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs-Src.xqy';\n";
+        
+        String query1 = "locArr:convert-instance-Order(locArrSrc:instance-to-envelope(locArrSrc:extract-instance-Order(doc('10252.xml'))))";
+        
+        JacksonHandle handle;
+        try {
+            handle = evalOneResult(import1, query1, new JacksonHandle());
+            JsonNode actualDoc = handle.get();
+            logger.info("Checking convert-instance-Order()");
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Order.json");
+
+            JsonNode control = mapper.readValue(is, JsonNode.class);
+
+            org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));
+
+        } catch (TestEvalException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+	
+    @Test
+    public void testConvInst2() throws TransformerException, IOException, SAXException {
+
+        String import1 = "import module namespace locArr = 'http://marklogic.com/srcRefDatatype/srcRefDatatypeTgt-0.0.2-from-srcRefDatatypeSrc-0.0.1' at '/conv/srcRefDiffDatatype.xqy';\n" + 
+                         "import module namespace locArrSrc = 'http://marklogic.com/srcRefDatatype/srcRefDatatypeSrc-0.0.1' at '/conv/srcRefDiffDatatype-Src.xqy';\n";
+        
+        String query1 = "locArr:convert-instance-Product(locArrSrc:instance-to-envelope(locArrSrc:extract-instance-Product(doc('51.xml'))))";
+        
+        JacksonHandle handle;
+        try {
+            handle = evalOneResult(import1, query1, new JacksonHandle());
+            JsonNode actualDoc = handle.get();
+            logger.info("Checking convert-instance-Product()");
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Product.json");
+
+            JsonNode control = mapper.readValue(is, JsonNode.class);
+
+            org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));
+
+        } catch (TestEvalException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
 
 }

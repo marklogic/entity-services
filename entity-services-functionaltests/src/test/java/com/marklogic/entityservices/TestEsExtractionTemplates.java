@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Generating extraction template: " + entityType);
 			StringHandle template = new StringHandle();
 			try {
-				template = evalOneResult("es:model-from-xml( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
+				template = evalOneResult("", "es:model-from-xml( fn:doc( '"+entityType+"'))=>es:extraction-template-generate()", template);
 			} catch (TestEvalException e) {
 				System.out.println("Generating extrtaction template"+entityType);
 				throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template = new JacksonHandle();
 			try {
-				template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+				template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName + " didn't exist");
 			}
@@ -120,7 +120,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			//logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template2 = new JacksonHandle();
 			try {
-				template2 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName2+"')", template2);
+				template2 = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName2+"')", template2);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName2 + " didn't exist");
 			}
@@ -138,7 +138,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			//logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template3 = new JacksonHandle();
 			try {
-				template3 = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName3+"')", template3);
+				template3 = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName3+"')", template3);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName3 + " didn't exist");
 			}
@@ -163,7 +163,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			logger.info("Validating extraction template: " + entityType);
 			JacksonHandle template = new JacksonHandle();
 			try {
-				template = evalOneResult("tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+				template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
 			} catch (TestEvalException e) {
 				fail("View " + schemaName + " didn't exist");
 			}
@@ -212,7 +212,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 			DOMHandle res = new DOMHandle();
 			logger.info("Validating extraction template for:" + entityType);
 			try {
-				res = evalOneResult("fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
+				res = evalOneResult("", "fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
 			} catch (TestEvalException e) {
 				throw new RuntimeException(e);
 			}
@@ -231,6 +231,59 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 					template);
 			
 		}
+	
+	@Test
+	public void verifyExtractionTempGenNoPKey() throws TestEvalException, SAXException, IOException, TransformerException {
+
+			String entityType = "no-primary-yes-required.json";
+			DOMHandle res = new DOMHandle();
+			logger.info("Validating extraction template for:" + entityType);
+			try {
+				res = evalOneResult("", "fn:doc( '"+entityType+"')=>es:extraction-template-generate()", res);
+			} catch (TestEvalException e) {
+				throw new RuntimeException(e);
+			}
+			//logger.info(docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new StringHandle()).get());
+			//DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
+			Document template = res.get();
+			
+			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType.replace(".json",".xml"));
+			Document filesystemXML = builder.parse(is);
+
+
+            //debugOutput(template);
+
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					template);
+			
+	}
+	
+	@Test
+	//This test verifies github issue #214
+	public void verifyBug214() throws TestEvalException, SAXException, IOException, TransformerException {
+
+			String entityType = "person.json";
+			logger.info("Validating extraction template for:" + entityType);
+			try {
+				evalOneResult("import module namespace tde = 'http://marklogic.com/xdmp/tde' at '/MarkLogic/tde.xqy';", 
+						"tde:template-insert('person.tdex', fn:doc( '"+entityType+"')=>es:extraction-template-generate())", new DOMHandle());
+			} catch (TestEvalException e) {
+				throw new RuntimeException(e);
+			}
+			DOMHandle handle = docMgr.read(entityType.replaceAll("\\.(xml|json)", ".tdex"), new DOMHandle());
+			Document template = handle.get();
+			
+			InputStream is = this.getClass().getResourceAsStream("/test-extraction-template/" + entityType.replace(".json",".xml"));
+			Document filesystemXML = builder.parse(is);
+
+            //debugOutput(template);
+
+			XMLUnit.setIgnoreWhitespace(true);
+			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+					template);
+			
+	}
 
 	@AfterClass
 	public static void removeTemplates() {

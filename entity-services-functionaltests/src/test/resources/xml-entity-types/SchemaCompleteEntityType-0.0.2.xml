@@ -2,7 +2,7 @@
 <es:model xmlns:es="http://marklogic.com/entity-services">
   <es:info>
     <es:title>SchemaCompleteEntityType</es:title>
-    <es:version>0.0.1</es:version>
+    <es:version>0.0.2</es:version>
     <es:base-uri>http://marklogic.com/testing-entity-type</es:base-uri>
     <es:description>All Schema Elements represented in this type.  Collations and datatypes are all happy-path and valid.</es:description>
   </es:info>

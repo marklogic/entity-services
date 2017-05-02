@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +105,7 @@ public class TestSetup {
         instance.loadEntityTypes();
         instance.loadInvalidEntityTypes();
         instance.loadExtraFiles();
+        instance.storeCustomConversionModules();
         return instance;
     }
     
@@ -122,11 +123,10 @@ public class TestSetup {
     
     
 
-	@SuppressWarnings("unchecked")
 	Collection<File> getTestResources(String dirName) {
 		URL filesUrl = _client.getClass().getResource(dirName);
 
-		return FileUtils.listFiles(new File(filesUrl.getPath()), 
+		return FileUtils.listFiles(new File(filesUrl.getPath()),
 	            FileFilterUtils.trueFileFilter(), FileFilterUtils.trueFileFilter());
 	}
 	
@@ -213,6 +213,22 @@ public class TestSetup {
 	    }
 	    docMgr.write(writeSet);
 	}
+	
+    private void storeCustomConversionModules() {
+        
+        JSONDocumentManager docMgr = _modulesClient.newJSONDocumentManager();
+        DocumentWriteSet writeSet = docMgr.newWriteSet();
+        Collection<File> custConvMod = getTestResources("/customized-conversion-module");
+        
+        for (File f : custConvMod) {
+        
+            String moduleName = "/conv/" + f.getName();
+            DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+            logger.info("Loading customer xqy Files " + f.getName());
+            writeSet.add(moduleName, metadata, new FileHandle(f));
+        }
+        docMgr.write(writeSet);
+    }
 	
 	public void teardownClass() {
 		JSONDocumentManager docMgr = _client.newJSONDocumentManager();

@@ -1,6 +1,8 @@
-{
-"CustomerId":"",
-"CompanyName": "Vins et alcools Chevalier", 
-"Country": "France", 
-"Address": "59 rue de l'Abbaye"
+{  
+  "Customer":{  
+    "CustomerId":"",
+    "CompanyName":"Vins et alcools Chevalier",
+    "Country":"France",
+    "Address":"59 rue de l'Abbaye"
+  }
 }

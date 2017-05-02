@@ -48,7 +48,7 @@
                "datatype":"integer"
             },
             "CustomerID":{  
-               "datatype":"integer"
+               "datatype":"string"
             },
             "OrderDate":{  
                "datatype":"dateTime"
@@ -66,10 +66,10 @@
       },
       "OrderDetail":{  
          "properties":{  
-            "ProductID":{  
+            "productID":{  
                "$ref":"#/definitions/Product"
             },
-            "UnitPrice":{  
+            "unitPrice":{  
                "datatype":"integer"
             },
             "Quantity":{  

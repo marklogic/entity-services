@@ -1,5 +1,5 @@
 (:
- Copyright 2002-2016 MarkLogic Corporation.  All Rights Reserved. 
+ Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -25,8 +25,10 @@ import module namespace inst = "http://marklogic.com/entity-services-instance" a
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 declare namespace search = "http://marklogic.com/appservices/search";
+declare namespace xq = "http://www.w3.org/2012/xquery";
 
 declare option xdmp:mapping "false";
+declare option xq:require-feature "xdmp:three-one";
 
 
 (:~
@@ -50,7 +52,7 @@ declare function es:model-validate(
  : Creates a model from an XML document or element
  : For JSON documents, this is equivalent to xdmp:json with validation.
  : For XML documents, we transform the input as well.
- : 
+ :
  : @param $node A JSON or XML document containing an entity model.
  :)
 declare function es:model-from-xml(
@@ -58,7 +60,7 @@ declare function es:model-from-xml(
 ) as map:map
 {
     if ($node instance of document-node())
-    then 
+    then
         esi:model-from-xml($node/node())
     else esi:model-from-xml($node)
 };
@@ -74,6 +76,14 @@ declare function es:model-to-xml(
     esi:model-to-xml($model)
 };
 
+(: experiment :)
+declare function es:model-to-triples(
+    $model as map:map
+)
+{
+    esi:model-to-triples($model)
+};
+    
 
 (:~
  : Generates an XQuery module that can be customized and used
@@ -89,7 +99,7 @@ declare function es:instance-converter-generate(
 };
 
 (:~
- : Generate one test instance in XML for each entity type in the 
+ : Generate one test instance in XML for each entity type in the
  : model.
  : @param A model.
  :)
@@ -105,8 +115,8 @@ declare function es:model-get-test-instances(
 (:~
  : Generate a JSON node that can be used with the Management Client API
  : to configure a database for this model
- : Portions of this complete database properties file can be used 
- : as building-blocks for the completed database properties 
+ : Portions of this complete database properties file can be used
+ : as building-blocks for the completed database properties
  : index configuration.
  : @param A model.
  :)
@@ -156,7 +166,7 @@ declare function es:extraction-template-generate(
  :)
 declare function es:search-options-generate(
     $model as map:map
-) 
+)
 {
     esi:search-options-generate($model)
 };
@@ -179,7 +189,7 @@ declare function es:version-translator-generate(
 
 
 (:~
- : Given a document, gets the instance data 
+ : Given a document, gets the instance data
  : from it and returns instances as maps.
  : @param a document, usually es:envelope.
  : @return zero or more entity instances extracted from the document.
@@ -193,7 +203,7 @@ declare function es:instance-from-document(
 
 (:~
  : Return the canonical XML representation of an instance from
- : a document.  This function does not transform; it's just a 
+ : a document.  This function does not transform; it's just a
  : projection of elements from a document.
  : @param a document, usually es:envelope.
  : @return zero or more elements that represent instances.
@@ -213,7 +223,7 @@ declare function es:instance-xml-from-document(
  :)
 declare function es:instance-json-from-document(
     $document as document-node()
-) as object-node()
+) as object-node()*
 {
     inst:instance-json-from-document($document)
 };
@@ -227,7 +237,7 @@ declare function es:instance-json-from-document(
  :)
 declare function es:instance-get-attachments(
     $document as document-node()
-) as element()*
+) as item()*
 {
     inst:instance-get-attachments($document)
 };
@@ -236,8 +246,8 @@ declare function es:instance-get-attachments(
 (:~
  : Fluent method to add key/value pairs to an entity instance, if the value exists.
  : @param $instance An instance of map:map to add a key to.
- : @param $property-key - The key to add to $instance.
- : @param $value - the value to add to $instance for the given key.
+ : @param $property-key  The key to add to $instance.
+ : @param $value The value to add to $instance for the given key.
 :)
 declare function es:optional(
     $instance as map:map,
@@ -245,9 +255,34 @@ declare function es:optional(
     $value as item()*
 ) as map:map
 {
-    if (exists($value))
-    then 
-    map:put($instance, $property-key, $value) 
-    else (),
+    typeswitch($value)
+    case empty-sequence() return ()
+    (: this case handles empty extractions :)
+    case map:map return
+        if (map:contains($value, "$ref") and empty(map:get($value, "$ref")))
+        then ()
+        else map:put($instance, $property-key, $value)
+    default return map:put($instance, $property-key, $value)
+    ,
     $instance
 };
+
+
+(:~
+ : Extract values from a sequence of nodes into an property of type array.
+ : If there are no nodes on input, then this function returns the empty sequence.
+ : @param $source-nodes The node(s) from which to extract values into an array.
+ : @param $fn The function to be applied to each sequence item
+ : @param $value - the value to add to $instance for the given key.
+ :)
+declare function es:extract-array(
+    $source-nodes as item()*,
+    $fn as function(*)
+) as json:array?
+{
+    if (empty($source-nodes))
+    then ()
+    else json:to-array($source-nodes ! $fn(.))
+};
+
+

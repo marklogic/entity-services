@@ -1,0 +1,19 @@
+<Order OrderID="10253">
+	<CustomerID>10253</CustomerID>
+	<EmployeeID>3</EmployeeID>
+	<OrderDate>1996-07-10T12:27:52</OrderDate>
+	<RequiredDate>1996-07-24T09:56:32</RequiredDate>
+	<ShippedDate>1996-07-16T22:15:30</ShippedDate>
+	<ShipVia>2</ShipVia>
+	<Freight>58.1700</Freight>
+	<ShipName>Hanari Carnes</ShipName>
+	<ShipAddress>Rua do Paço, 67</ShipAddress>
+	<ShipCity>Rio de Janeiro</ShipCity>
+	<ShipRegion>RJ</ShipRegion>
+	<ShipPostalCode>05454-876</ShipPostalCode>
+	<ShipCountry>Brazil</ShipCountry>
+	<OrderDetails>
+        <OrderDetail/>
+	</OrderDetails>
+</Order>
+

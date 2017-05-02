@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 MarkLogic Corporation
+ * Copyright 2016-2017 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class CodeGenerator extends ResourceManager {
         String projectDir = currentRelativePath.toAbsolutePath().toString();
         if (!projectDir.endsWith("e2e")) projectDir += "/entity-services-e2e";
         codeGenDir = projectDir + "/gen";
-        modelsDir = projectDir + "/data/models";
+        modelsDir = projectDir + "/e2e-nwind/data/models";
 
         client = DatabaseClientFactory.newClient(props.getProperty("mlHost"),
                 Integer.parseInt(props.getProperty("mlRestPort")), new DatabaseClientFactory.DigestAuthContext(
@@ -62,7 +62,7 @@ public class CodeGenerator extends ResourceManager {
     }
 
     public void generate() {
-        logger.info("Generating fresh artifacts for examples");
+        logger.info("Generating fresh artifacts for e2e");
         RequestParameters parameters = new RequestParameters();
         parameters.add("codegen-dir", codeGenDir);
         parameters.add("models-dir", modelsDir);

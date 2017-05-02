@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://marklogic.com/xdmp/tde">
+  <description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://grechaw.github.io/entity-types#Race-0.0.1</description>
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <path-namespaces>
+    <path-namespace>
+      <prefix>es</prefix>
+      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
+    </path-namespace>
+  </path-namespaces>
+  <templates>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Race</context>
+      <rows>
+        <row>
+          <schema-name>Race</schema-name>
+          <view-name>Race</view-name>
+          <columns>
+            <column>
+              <name>name</name>
+              <scalar-type>string</scalar-type>
+              <val>name</val>
+            </column>
+            <column>
+              <name>wonByRunner</name>
+              <scalar-type>string</scalar-type>
+              <val>wonByRunner/Runner/name</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>courseLength</name>
+              <scalar-type>decimal</scalar-type>
+              <val>courseLength</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
+      </rows>
+      <templates>
+        <template>
+          <context>./comprisedOfRuns</context>
+          <rows>
+            <row>
+              <schema-name>Race</schema-name>
+              <!-- should this name change? -->
+              <view-name>Race_comprisedOfRuns</view-name>
+              <columns>
+                <column>
+                  <!--This column joins to property name of Race-->
+                  <name>name</name>
+                  <scalar-type>string</scalar-type>
+                  <val>../name</val>
+                </column>
+                <column>
+                  <!--This column joins to primary key of Run-->
+                  <name>comprisedOfRuns</name>
+                  <scalar-type>string</scalar-type>
+                  <val>Run</val>
+                  <nullable>true</nullable>
+                </column>
+              </columns>
+            </row>
+          </rows>
+        </template>
+      </templates>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./Run</context>
+      <rows>
+        <row>
+          <schema-name>Race</schema-name>
+          <view-name>Run</view-name>
+          <columns>
+            <column>
+              <name>id</name>
+              <scalar-type>string</scalar-type>
+              <val>id</val>
+            </column>
+            <column>
+              <name>date</name>
+              <scalar-type>date</scalar-type>
+              <val>date</val>
+            </column>
+            <column>
+              <name>distance</name>
+              <scalar-type>decimal</scalar-type>
+              <val>distance</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>distanceLabel</name>
+              <scalar-type>string</scalar-type>
+              <val>distanceLabel</val>
+              <nullable>true</nullable>
+            </column>
+            <column>
+              <name>duration</name>
+              <scalar-type>dayTimeDuration</scalar-type>
+              <val>duration</val>
+              <nullable>true</nullable>
+            </column>
+            <!-- this customization shows how to embed an object in a row -->
+            <!-- in typical spreadsheet style                             -->
+            <column>
+              <name>runnerName</name>
+              <scalar-type>string</scalar-type>
+              <val>runByRunner/Runner/name</val>
+            </column>
+            <column>
+              <name>runnerAge</name>
+              <scalar-type>int</scalar-type>
+              <val>runByRunner/Runner/age</val>
+            </column>
+            <column>
+              <name>runnerGender</name>
+              <scalar-type>string</scalar-type>
+              <val>runByRunner/Runner/gender</val>
+              <nullable>true</nullable>
+            </column>
+          </columns>
+        </row>
+      </rows>
+    </template>
+  </templates>
+</template>

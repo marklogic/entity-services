@@ -1,0 +1,18 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>invalid-array-no-items</es:title>
+      <es:version>0.0.1</es:version>
+      <es:base-uri>http://blah</es:base-uri>
+      <es:description>This invalid file has datatype array items is bad.</es:description>
+  </es:info>
+  <es:definitions>
+    <Customer>
+        <es:properties>
+            <fof>
+                <es:datatype>array</es:datatype>
+                <es:items>whut</es:items>
+            </fof>
+        </es:properties>
+    </Customer>
+  </es:definitions>
+</es:model>

@@ -2,8 +2,18 @@
 <template xmlns="http://marklogic.com/xdmp/tde">
   <description>
 Extraction Template Generated from Entity Type Document
-graph uri: http://baloo/et-required-0.0.1</description>
-  <context>//es:instance</context>
+graph uri: http://baloo#et-required-0.0.1</description>
+  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <vars>
+    <var>
+      <name>RDF</name>
+      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
+    </var>
+    <var>
+      <name>RDF_TYPE</name>
+      <val>sem:iri(concat($RDF, "type"))</val>
+    </var>
+  </vars>
   <path-namespaces>
     <path-namespace>
       <prefix>es</prefix>
@@ -13,10 +23,44 @@ graph uri: http://baloo/et-required-0.0.1</description>
   <templates>
     <template xmlns:tde="http://marklogic.com/xdmp/tde">
       <context>./ETOne</context>
+      <vars>
+	<var>
+	  <name>subject-iri</name>
+	  <val>sem:iri(concat("http://baloo/et-required-0.0.1/ETOne/", fn:encode-for-uri(xs:string(./a))))</val>
+	</var>
+      </vars>
+      <triples>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>$RDF_TYPE</val>
+	  </predicate>
+	  <object>
+	    <val>sem:iri("http://baloo/et-required-0.0.1/ETOne")</val>
+	  </object>
+	</triple>
+	<triple>
+	  <subject>
+	    <val>$subject-iri</val>
+	  </subject>
+	  <predicate>
+	    <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
+	  </predicate>
+	  <object>
+	    <val>fn:base-uri(.)</val>
+	  </object>
+	</triple>
+      </triples>
+    </template>
+    <template xmlns:tde="http://marklogic.com/xdmp/tde">
+      <context>./ETOne</context>
       <rows>
 	<row>
 	  <schema-name>et-required</schema-name>
 	  <view-name>ETOne</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>a</name>
@@ -32,7 +76,7 @@ graph uri: http://baloo/et-required-0.0.1</description>
 	      <name>c</name>
 	      <scalar-type>date</scalar-type>
 	      <val>c</val>
-		  <nullable>true</nullable>
+	      <nullable>true</nullable>
 	    </column>
 	  </columns>
 	</row>

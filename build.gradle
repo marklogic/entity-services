@@ -1,5 +1,5 @@
 plugins {
-    id "com.marklogic.ml-gradle" version "2.5.0"
+    id "com.marklogic.ml-gradle" version "2.7.3"
 }
 
 subprojects {
@@ -28,10 +28,10 @@ subprojects {
             exclude(group: 'ch.qos.logback')
             exclude(group: 'log4j')
         }
-        testCompile 'io.rest-assured:rest-assured:3.0.2'
+        testCompile 'io.rest-assured:rest-assured:3.0.3'
         testCompile 'xmlunit:xmlunit:1.6'
         testCompile 'junit:junit:4.12'
-        testCompile 'org.assertj:assertj-core:3.6.2'
+        testCompile 'org.assertj:assertj-core:3.8.0'
         testCompile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
     }
 
@@ -44,5 +44,5 @@ subprojects {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+    gradleVersion = '3.5'
 }

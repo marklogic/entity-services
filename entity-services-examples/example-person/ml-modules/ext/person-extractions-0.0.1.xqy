@@ -9,14 +9,18 @@ declare function person:extract-instance-Person-source-1(
 ) as map:map
 {
     let $id := xs:string( fn:concat( $source-node/fname, "_", $source-node/lname))
+    let $firstName := xs:string($source-node/fname)
+    let $lastName := xs:string($source-node/lname)
+    let $fullName := concat( $firstName, " ", $lastName)
+
     return
         json:object()
     (: The following line identifies the type of this instance.  Do not change it.      :)
     =>map:with('$type', 'Person')
     =>   map:with('id',                     $id)
-    =>   map:with('firstName',              xs:string($source-node/fname))
-    =>   map:with('lastName',               xs:string($source-node/lname))
-    =>   map:with('fullName',               xs:string( concat( $source-node/fname, " ", $source-node/lname)) )
+    =>   map:with('firstName',              $firstName)
+    =>   map:with('lastName',               $lastName)
+    =>   map:with('fullName',               $fullName)
 };
 
 declare function person:extract-instance-Person-source-2(
@@ -24,14 +28,17 @@ $source-node as node()
 ) as map:map
 {
 let $id := xs:string( fn:concat( $source-node/first_name, "_", $source-node/last_name))
+let $firstName := xs:string($source-node/first_name)
+let $lastName := xs:string($source-node/last_name)
+let $fullName := xs:string( concat( $firstName, " ", $lastName) )
 return
 json:object()
 (: The following line identifies the type of this instance.  Do not change it.      :)
 =>map:with('$type', 'Person')
 =>   map:with('id',                     $id)
-=>   map:with('firstName',              xs:string($source-node/first_name))
-=>   map:with('lastName',               xs:string($source-node/last_name))
-=>   map:with('fullName',               xs:string( concat( $source-node/first_name, " ", $source-node/last_name)) )
+=>   map:with('firstName',              $firstName)
+=>   map:with('lastName',               $lastName)
+=>   map:with('fullName',               $fullName)
 };
 
 
@@ -49,15 +56,19 @@ declare function person:extract-instance-Person-source-3(
 $source-node as node()
 ) as map:map+
 {
+let $id :=   xs:string($source-node/Person/id)
+let $firstName :=  xs:string($source-node/Person/firstName)
+let $lastName :=   xs:string($source-node/Person/lastName)
+let $fullName :=   xs:string($source-node/Person/fullName)
 let $friends := $source-node/Person/friendOf[Person/id] ! person:extract-instance-Person-source-3(.)
 return ($friends ,
 json:object()
 (: The following line identifies the type of this instance.  Do not change it.      :)
 =>map:with('$type', 'Person')
-=>   map:with('id',                     xs:string($source-node/Person/id))
-=>   map:with('firstName',              xs:string($source-node/Person/firstName))
-=>   map:with('lastName',               xs:string($source-node/Person/lastName))
-=>   map:with('fullName',               xs:string($source-node/Person/fullName))
+=>   map:with('id',                     $id)
+=>   map:with('firstName',              $firstName)
+=>   map:with('lastName',               $lastName)
+=>   map:with('fullName',               $fullName)
 =>es:optional('friends',                $source-node/Person/friendOf ! person:friend-ref(.)))
 };
 

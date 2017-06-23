@@ -137,3 +137,4 @@ declare function inst:instance-get-attachments(
     then $document//es:attachments/*
     else $document//es:attachments/text()
 };
+

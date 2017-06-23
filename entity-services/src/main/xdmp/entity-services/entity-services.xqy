@@ -286,3 +286,97 @@ declare function es:extract-array(
 };
 
 
+(:~
+ : Examine an incoming data source to normalize the extraction context.
+ : @param $source An incoming source node, which may be an element, JSON node or document.
+ : @param $entity-type-name The expected entity type name.
+ : @return Either the incoming node intact, or its contents if it's already canonicalized.
+ :)
+declare function es:init-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{
+    if ( ($source instance of document-node())
+        or (exists
+            ($source/element()[fn:node-name(.) eq xs:QName($entity-type-name)] )))
+    then $source/node()
+    else $source
+};
+
+(:~
+ : Initializes an instance data structure, by adding a type key and, if appropriate,
+ : a ref key.
+ : @param $entity-type-name  The name of this instance's type.
+ : @return A json object with $type key, and, if appropriate, a $ref key.
+ :)
+declare function es:init-instance(
+    $source-node as node()*,
+    $entity-type-name as xs:string
+) as json:object
+{
+    let $instance := json:object()
+            =>map:with('$type', $entity-type-name)
+    return
+        if (empty($source-node/*))
+        then $instance=>map:with('$ref', $source-node/text())
+        (: Otherwise, this source node contains instance data. Populate it. :)
+        else $instance
+        
+};
+
+
+(:~
+ : Adds the original source document to the entity instance.
+ : @param $instance The instance data, to which the source will be attached.
+ : @param $source-node The extraction context for the incoming data
+ : @param $source The unmodified source document.
+ :)
+declare function es:add-attachments(
+    $instance as json:object,
+    $source-node as node()*,
+    $source as node()*
+) as json:object
+{
+    $instance
+    =>map:with('$attachments',
+        typeswitch($source-node)
+        case object-node() return xdmp:quote($source)
+        case array-node() return xdmp:quote($source)
+        default return $source)
+};
+
+(:~
+ : Initializes the context to convert instances from one version to another
+ : @param $source Zero or more envelopes or canonical instances.
+ : @param $entity-type-name The name of the expected Entity Type
+ : @return Zero or more sources expected to contain the canonical data of the given type.
+ :)
+declare function es:init-translation-source(
+    $source as node()*,
+    $entity-type-name as xs:string
+) as node()*
+{
+    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
+    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
+    else $source
+};
+
+
+(:~
+ : Copies attachments from an envelope document to a new intance.
+ : @param $instance  The target to which to attach source data.
+ : @param $source The envelope or canonical instance from which to copy attachments.
+ :)
+declare function es:copy-attachments(
+    $instance as json:object,
+    $source as node()*
+) as json:object
+{
+    let $attachments := $source ! fn:root(.)/es:envelope/es:attachments/node()
+    return
+    if (exists($attachments))
+    then $instance=>map:with('$attachments', $attachments)
+    else $instance
+};
+

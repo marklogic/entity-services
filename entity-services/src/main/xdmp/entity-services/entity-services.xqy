@@ -293,9 +293,9 @@ declare function es:extract-array(
  : @return Either the incoming node intact, or its contents if it's already canonicalized.
  :)
 declare function es:init-source(
-    $source as node()*,
+    $source as item()*,
     $entity-type-name as xs:string
-) as node()*
+) as item()*
 {
     if ( ($source instance of document-node())
         or (exists
@@ -311,7 +311,7 @@ declare function es:init-source(
  : @return A json object with $type key, and, if appropriate, a $ref key.
  :)
 declare function es:init-instance(
-    $source-node as node()*,
+    $source-node as item()*,
     $entity-type-name as xs:string
 ) as json:object
 {
@@ -334,8 +334,8 @@ declare function es:init-instance(
  :)
 declare function es:add-attachments(
     $instance as json:object,
-    $source-node as node()*,
-    $source as node()*
+    $source-node as item()*,
+    $source as item()*
 ) as json:object
 {
     $instance
@@ -353,9 +353,9 @@ declare function es:add-attachments(
  : @return Zero or more sources expected to contain the canonical data of the given type.
  :)
 declare function es:init-translation-source(
-    $source as node()*,
+    $source as item()*,
     $entity-type-name as xs:string
-) as node()*
+) as item()*
 {
     if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
     then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
@@ -370,7 +370,7 @@ declare function es:init-translation-source(
  :)
 declare function es:copy-attachments(
     $instance as json:object,
-    $source as node()*
+    $source as item()*
 ) as json:object
 {
     let $attachments := $source ! fn:root(.)/es:envelope/es:attachments/node()

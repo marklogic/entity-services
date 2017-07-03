@@ -1133,7 +1133,9 @@ graph uri: {esi:model-graph-iri($model)}
 };
 
 
-declare private function esi:wrap-duplicates(
+(: Function made public for us by MarkLogic DataHub framework,
+ : to expose internal workings of envelopes  :)
+declare function esi:wrap-duplicates(
     $duplicate-map as map:map,
     $property-name as xs:string,
     $item as element(),

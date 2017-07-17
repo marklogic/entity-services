@@ -15,6 +15,7 @@
  */
 package com.marklogic.entityservices.tests;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -33,11 +34,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -55,6 +51,12 @@ import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
+import org.xmlunit.diff.ElementSelectors;
+import org.xmlunit.matchers.CompareMatcher;
 
 public class TestEntityTypes extends EntityServicesTestBase {
 
@@ -71,8 +73,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
     private void checkXMLRoundTrip(String message, Document original, Document actual) {
 
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual(message, original, actual);
+        assertThat( actual, CompareMatcher.isIdenticalTo(original).ignoreWhitespace());
+
     }
     
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
@@ -248,11 +250,15 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 Document xmlactual = xmlhandle.get();
 
                 //debugOutput(xmloriginal);
-                //debugOutput(xmlactual);
+                debugOutput(xmlactual);
 
-                checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
+                checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType,
+                    xmloriginal,
+                    xmlactual);
 
-                checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
+                checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload",
+                    entityType.toString(),
+                    jsonFileName);
 
             }
         }
@@ -271,18 +277,18 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
         DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
         Document actualXML = handle.get();
-        XMLUnit.setIgnoreWhitespace(true);
         //debugOutput(expectedXML);
         //debugOutput(actualXML);
 
-        DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
+        Diff diff = DiffBuilder.compare(expectedXML).withTest(actualXML)
+            .ignoreWhitespace()
+            .checkForIdentical()
+            .build();
 
-        @SuppressWarnings("unchecked")
-        List<Difference> l = diff.getAllDifferences();
-        for (Difference d : l) {
+        for (Difference d : diff.getDifferences()) {
             System.out.println(d.toString());
         }
-        XMLAssert.assertXMLEqual(message, expectedXML, actualXML);
+        assertThat(expectedXML, CompareMatcher.isIdenticalTo(actualXML).ignoreWhitespace());
     }
     
     /*

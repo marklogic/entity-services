@@ -31,8 +31,6 @@ import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.*;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -49,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.TextDocumentManager;
+import org.xmlunit.matchers.CompareMatcher;
 
 import static org.junit.Assert.*;
 
@@ -145,8 +144,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         Document extractInstanceResult = handle.get();
 
         debugOutput(extractInstanceResult);
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual("extraction returns source document", expectedDoc, extractInstanceResult);
+        assertThat( extractInstanceResult, CompareMatcher.isIdenticalTo(expectedDoc).ignoreWhitespace());
 
         assertNotNull("Extract Instance Result must not be null (and should not throw error) ", extractInstanceResult);
 
@@ -231,21 +229,24 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             // logger.debug("Actual doc wrapped");
             // debugOutput(actualInstance);
 
-            XMLUnit.setIgnoreWhitespace(true);
-            XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
+            assertThat("Extract instance by default returns identity",
+                actualInstance,
+                CompareMatcher.isIdenticalTo(controlDom).ignoreWhitespace());
 
             // test that XML from envelope returns the instance.
             String testToInstance = "es:instance-xml-from-document( doc('"+entityTypeTestFileName+"-envelope.xml') )";
             handle = evalOneResult(moduleImport(entityType), testToInstance, new DOMHandle());
             actualInstance = handle.get();
-            XMLAssert.assertXMLEqual("Extract instance by default returns identity", controlDom, actualInstance);
+            assertThat("Extract instance by default returns identity", actualInstance,
+                CompareMatcher.isIdenticalTo(controlDom).ignoreWhitespace());
 
             // moreover, extracting the attachments also will result in identity.
             DOMHandle domHandle = evalOneResult(moduleImport(entityType),
                 "es:instance-get-attachments( doc('"+entityTypeTestFileName+"-envelope.xml') )",
                 new DOMHandle());
             Document originalDocument = domHandle.get();
-            XMLAssert.assertXMLEqual("Original document also matches source", controlDom, originalDocument);
+            assertThat("Original document also matches source", originalDocument,
+                CompareMatcher.isIdenticalTo(controlDom).ignoreWhitespace());
 
             logger.debug("Removing test data");
             docMgr.delete(entityTypeTestFileName +"-envelope.xml", entityTypeTestFileName + "-empty.xml");

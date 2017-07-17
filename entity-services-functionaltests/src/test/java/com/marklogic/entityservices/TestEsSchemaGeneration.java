@@ -16,6 +16,7 @@
 package com.marklogic.entityservices;
 
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -24,8 +25,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,6 +35,7 @@ import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+import org.xmlunit.matchers.CompareMatcher;
 
 /**
  * Tests the server-side function es:echema-generate($model) as
@@ -107,9 +107,9 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 				
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
 				Document filesystemXML = builder.parse(is);
-				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-						validateResult.get());
+				assertThat("Must be no validation errors for schema " + entityType + ".",
+                    validateResult.get(),
+                    CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
 				
 				}catch (TestEvalException e) {
 					throw new RuntimeException("Error validating "+entityType,e);
@@ -150,10 +150,11 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 
 		InputStream is = this.getClass().getResourceAsStream("/test-instances/bug43212.xml");
 		Document filesystemXML = builder.parse(is);
-		XMLUnit.setIgnoreWhitespace(true);
 		try {
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateXML.get());
-			//XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
+			assertThat("Must be no validation errors for schema.",
+                validateXML.get(),
+                CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
+			//assertThat("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
 		} catch (TestEvalException e) {
 			throw new RuntimeException("Error validating test bug43212SchemaGen",e);
 		}

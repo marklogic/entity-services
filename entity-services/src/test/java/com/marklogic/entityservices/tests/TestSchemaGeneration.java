@@ -26,8 +26,6 @@ import java.util.Set;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.io.InputStreamHandle;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,9 +35,11 @@ import org.xml.sax.SAXException;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.StringHandle;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -111,9 +111,8 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 
             InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
             Document filesystemXML = builder.parse(is);
-            XMLUnit.setIgnoreWhitespace(true);
-            XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-                    validateResult.get());
+            assertThat("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+                CompareMatcher.isIdenticalTo(validateResult.get()).ignoreWhitespace());
             removeSchema(entityType);
         }
 

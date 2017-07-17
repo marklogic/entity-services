@@ -33,8 +33,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -53,6 +51,8 @@ import com.marklogic.client.io.Format;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+import org.xmlunit.matchers.CompareMatcher;
+import sun.plugin.com.event.COMEventHandler;
 
 /**
  * Tests server function es:instance-converter-generate
@@ -557,8 +557,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				
 		//logger.info("XML IN String format is: \n" + writer.toString());
 		//logger.info("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()).ignoreWhitespace());
 	}
 	
 	@Test
@@ -593,8 +592,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		//logger.error("Entity type " + entityType);
 		//logger.error("XML IN String format is: \n" + writer.toString());
 		//logger.error("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test
@@ -627,8 +625,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				
 		//logger.info("XML IN String format is: \n" + writer.toString()); 
 		//logger.info("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test
@@ -661,8 +658,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				
 		//logger.info("XML IN String format is: \n" + writer.toString()); 
 		//logger.info("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test
@@ -696,8 +692,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				
 		//logger.info("XML IN String format is: \n" + writer.toString()); 
 		//logger.info("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);	
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test
@@ -768,8 +763,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		logger.error("Checking entity type " + entityType);
 		logger.error("XML IN String format is: \n" + writer.toString());
 		logger.error("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual(writer.toString(), actualDoc);
+		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test
@@ -798,8 +792,8 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				
 		//logger.info("XML IN String format is: \n" + writer.toString()); 
 		//logger.info("actualDoc now ::::" + actualDoc);
-		XMLUnit.setIgnoreWhitespace(true);
-		XMLAssert.assertXMLEqual("Expected: \n" +writer.toString()+ "\n but got: \n"+actualDoc,writer.toString(), actualDoc);
+		assertThat("Expected: \n" +writer.toString()+ "\n but got: \n"+actualDoc, actualDoc,
+            CompareMatcher.isIdenticalTo(writer.toString()));
 	}
 	
 	@Test

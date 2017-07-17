@@ -38,11 +38,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotNotFoundException;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -65,6 +60,7 @@ import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 
 import static org.junit.Assert.*;
+import static org.xmlunit.builder.DiffBuilder.compare;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,8 +77,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -105,6 +99,10 @@ import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
+import org.xmlunit.matchers.CompareMatcher;
 
 
 @SuppressWarnings("unused")
@@ -121,8 +119,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     private void checkXMLRoundTrip(String message, Document original, Document actual) {
     	
-    	XMLUnit.setIgnoreWhitespace(true);
-    	XMLAssert.assertXMLEqual(message, original, actual);
+    	assertThat(message, actual, CompareMatcher.isIdenticalTo(original).ignoreWhitespace());
     }
     
     
@@ -860,18 +857,15 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		
 		DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
 		Document actualXML = handle.get();
-		XMLUnit.setIgnoreWhitespace(true);
 		//debugOutput(expectedXML);
 		//debugOutput(actualXML);
 		
-		DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
+		Diff diff = compare(expectedXML).withTest(actualXML).build();
 
-		@SuppressWarnings("unchecked")
-		List<Difference> l = diff.getAllDifferences();
-		for (Difference d : l) {
+		for (Difference d : diff.getDifferences()) {
 			System.out.println(d.toString());
 		}
-		XMLAssert.assertXMLEqual(message, expectedXML, actualXML);
+		assertThat(message, actualXML, CompareMatcher.isIdenticalTo(expectedXML).ignoreWhitespace());
 	}
     
     /*

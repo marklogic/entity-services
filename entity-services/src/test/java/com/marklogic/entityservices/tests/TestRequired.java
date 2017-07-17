@@ -128,7 +128,7 @@ public class TestRequired  extends EntityServicesTestBase {
 
         StringHandle handle;
         handle = evalOneResult("", "fn:doc( '" + entityType + "')=>es:instance-converter-generate()", new StringHandle());
-        // save("/model-units/instance-converter.xqy", handle.get());
+        //save("/model-units/instance-converter.xqy", handle.get());
         compareLines("/model-units/instance-converter.xqy", handle.get());
     }
 

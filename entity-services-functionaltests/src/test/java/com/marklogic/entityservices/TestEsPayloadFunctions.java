@@ -100,8 +100,7 @@ import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
 import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.Difference;
+import org.xmlunit.diff.*;
 import org.xmlunit.matchers.CompareMatcher;
 
 
@@ -119,7 +118,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     private void checkXMLRoundTrip(String message, Document original, Document actual) {
     	
-    	assertThat(message, actual, CompareMatcher.isIdenticalTo(original).ignoreWhitespace());
+    	assertThat(message, actual, CompareMatcher
+            .isSimilarTo(original)
+            .ignoreWhitespace()
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)));
     }
     
     
@@ -860,12 +862,15 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		//debugOutput(expectedXML);
 		//debugOutput(actualXML);
 		
-		Diff diff = compare(expectedXML).withTest(actualXML).build();
+		Diff diff = compare(expectedXML).withTest(actualXML).ignoreWhitespace().build();
 
 		for (Difference d : diff.getDifferences()) {
 			System.out.println(d.toString());
 		}
-		assertThat(message, actualXML, CompareMatcher.isIdenticalTo(expectedXML).ignoreWhitespace());
+		assertThat(message, actualXML,
+            CompareMatcher.isSimilarTo(expectedXML)
+                .ignoreWhitespace()
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)));
 	}
     
     /*

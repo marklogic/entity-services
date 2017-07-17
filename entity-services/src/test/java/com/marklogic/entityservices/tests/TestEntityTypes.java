@@ -250,7 +250,7 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 Document xmlactual = xmlhandle.get();
 
                 //debugOutput(xmloriginal);
-                debugOutput(xmlactual);
+                //debugOutput(xmlactual);
 
                 checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType,
                     xmloriginal,

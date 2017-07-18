@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  array2ScalarSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:26:57.781634-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:07:36.011991-07:00
 
  Target Model array2ScalarTgt-0.0.2 Info:
 
@@ -46,43 +48,23 @@ declare function array2ScalarTgt-from-array2ScalarSrc:convert-instance-Customer(
     $source as node()
 ) as map:map
 {
-    let $source-node := array2ScalarTgt-from-array2ScalarSrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
+    (: Warning: potential data loss, truncated array.  :)
+    let $Address := xs:string( fn:head($source-node/Address) )
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>array2ScalarTgt-from-array2ScalarSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    (: Warning: potential data loss, truncated array.  :)
-    =>es:optional('Address',                xs:string( fn:head($source-node/Address) ))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('Address',  $Address)
 
-};
-    
-
-
-declare private function array2ScalarTgt-from-array2ScalarSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function array2ScalarTgt-from-array2ScalarSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

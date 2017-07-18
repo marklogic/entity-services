@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  allDifferentSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:25:55.386398-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:11:24.568807-07:00
 
  Target Model allDifferentTgt-0.0.2 Info:
 
@@ -53,20 +55,23 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Product(
     $source as node()
 ) as map:map
 {
-    let $source-node := allDifferentTgt-from-allDifferentSrc:init-source($source, 'Product')
+    let $source-node := es:init-translation-source($source, 'Product')
+
+    let $ProductName := $source-node/ProductName ! xs:string(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID := $source-node/SupplierID ! xs:integer(.)
+    let $Discontinued := $source-node/Discontinued ! xs:boolean(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>allDifferentTgt-from-allDifferentSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>   map:with('ProductName',            xs:string($source-node/ProductName))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
-    =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Product" entity type. :)
+    =>   map:with('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('SupplierID',  $SupplierID)
+    =>es:optional('Discontinued',  $Discontinued)
 
 };
     
@@ -86,33 +91,10 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Customer(
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target
      :)
-    =>allDifferentTgt-from-allDifferentSrc:copy-attachments($source-node)
+    =>es:copy-attachments($source-node)
     =>map:with('$type', 'Customer')
-    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    =>es:optional('ContactName',            xs:string($source-node/ContactName))
+    let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
+    let $CompanyName  :=             $source-node/CompanyName ! xs:string(.)
+    let $Country  :=             $source-node/Country ! xs:string(.)
+    let $ContactName  :=             $source-node/ContactName ! xs:string(.)
 :)
-
-
-
-declare private function allDifferentTgt-from-allDifferentSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function allDifferentTgt-from-allDifferentSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
-};

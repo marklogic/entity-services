@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  tgtHasMorePropSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:24:11.776398-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:07:07.30681-07:00
 
  Target Model tgtHasMorePropTgt-0.0.2 Info:
 
@@ -52,22 +54,25 @@ declare function tgtHasMorePropTgt-from-tgtHasMorePropSrc:convert-instance-Custo
     $source as node()
 ) as map:map
 {
-    let $source-node := tgtHasMorePropTgt-from-tgtHasMorePropSrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
+    (: The following property was missing from the source type.
+       The XPath will not up-convert without intervention.  :)
+    let $ContactName := $source-node/ContactName ! xs:string(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>tgtHasMorePropTgt-from-tgtHasMorePropSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    (: The following property was missing from the source type.
-       The XPath will not up-convert without intervention.  :)
-    =>es:optional('ContactName',            xs:string($source-node/ContactName))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('ContactName',  $ContactName)
 
 };
     
@@ -86,44 +91,24 @@ declare function tgtHasMorePropTgt-from-tgtHasMorePropSrc:convert-instance-Produ
     $source as node()
 ) as map:map
 {
-    let $source-node := tgtHasMorePropTgt-from-tgtHasMorePropSrc:init-source($source, 'Product')
+    let $source-node := es:init-translation-source($source, 'Product')
+
+    let $ProductName := $source-node/ProductName ! xs:string(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID := $source-node/SupplierID ! xs:integer(.)
+    (: The following property was missing from the source type.
+       The XPath will not up-convert without intervention.  :)
+    let $Discontinued := $source-node/Discontinued ! xs:boolean(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>tgtHasMorePropTgt-from-tgtHasMorePropSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>   map:with('ProductName',            xs:string($source-node/ProductName))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
-    (: The following property was missing from the source type.
-       The XPath will not up-convert without intervention.  :)
-    =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Product" entity type. :)
+    =>   map:with('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('SupplierID',  $SupplierID)
+    =>es:optional('Discontinued',  $Discontinued)
 
-};
-    
-
-
-declare private function tgtHasMorePropTgt-from-tgtHasMorePropSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function tgtHasMorePropTgt-from-tgtHasMorePropSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

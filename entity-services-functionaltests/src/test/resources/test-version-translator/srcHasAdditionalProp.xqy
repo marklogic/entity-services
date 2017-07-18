@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  srcHasMorePropSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:25:23.240619-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:05:46.384628-07:00
 
  Target Model srcHasMorePropTgt-0.0.2 Info:
 
@@ -52,21 +54,23 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Custo
     $source as node()
 ) as map:map
 {
-    let $source-node := srcHasMorePropTgt-from-srcHasMorePropSrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcHasMorePropTgt-from-srcHasMorePropSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('NO TARGET',              xs:string($source-node/ContactName))
+    =>es:optional('NO TARGET',    $ContactName)
   :)
 
 };
@@ -86,44 +90,23 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Produ
     $source as node()
 ) as map:map
 {
-    let $source-node := srcHasMorePropTgt-from-srcHasMorePropSrc:init-source($source, 'Product')
+    let $source-node := es:init-translation-source($source, 'Product')
+
+    let $ProductName := $source-node/ProductName ! xs:string(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID := $source-node/SupplierID ! xs:integer(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcHasMorePropTgt-from-srcHasMorePropSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>   map:with('ProductName',            xs:string($source-node/ProductName))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Product" entity type. :)
+    =>   map:with('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('SupplierID',  $SupplierID)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('NO TARGET',              xs:string($source-node/Discontinued))
+    =>es:optional('NO TARGET',     $Discontinued)
   :)
 
-};
-    
-
-
-declare private function srcHasMorePropTgt-from-srcHasMorePropSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function srcHasMorePropTgt-from-srcHasMorePropSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

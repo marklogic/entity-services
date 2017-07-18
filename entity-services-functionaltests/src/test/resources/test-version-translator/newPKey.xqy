@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  newPKeySrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:19:52.678887-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:00:42.622166-07:00
 
  Target Model newPKeyTgt-0.0.2 Info:
 
@@ -52,20 +54,23 @@ declare function newPKeyTgt-from-newPKeySrc:convert-instance-Customer(
     $source as node()
 ) as map:map
 {
-    let $source-node := newPKeyTgt-from-newPKeySrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
+    let $ContactName := $source-node/ContactName ! xs:string(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>newPKeyTgt-from-newPKeySrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    =>es:optional('ContactName',            xs:string($source-node/ContactName))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('ContactName',  $ContactName)
 
 };
     
@@ -84,42 +89,22 @@ declare function newPKeyTgt-from-newPKeySrc:convert-instance-Product(
     $source as node()
 ) as map:map
 {
-    let $source-node := newPKeyTgt-from-newPKeySrc:init-source($source, 'Product')
+    let $source-node := es:init-translation-source($source, 'Product')
+
+    let $ProductName := $source-node/ProductName ! xs:string(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID := $source-node/SupplierID ! xs:integer(.)
+    let $Discontinued := $source-node/Discontinued ! xs:boolean(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>newPKeyTgt-from-newPKeySrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>es:optional('ProductName',            xs:string($source-node/ProductName))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>   map:with('SupplierID',             xs:integer($source-node/SupplierID))
-    =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Product" entity type. :)
+    =>es:optional('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>   map:with('SupplierID',  $SupplierID)
+    =>es:optional('Discontinued',  $Discontinued)
 
-};
-    
-
-
-declare private function newPKeyTgt-from-newPKeySrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function newPKeyTgt-from-newPKeySrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

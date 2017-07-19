@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
-<Person>
-  <id>some string</id>
-  <firstName>some string</firstName>
-  <lastName>some string</lastName>
-  <fullName>some string</fullName>
-  <address>some string</address>
-  <friendOf>
-    <Person>
-      <id>some string</id>
-      <firstName>some string</firstName>
-      <lastName>some string</lastName>
-      <fullName>some string</fullName>
-      <address>some string</address>
-      <friendOf>
-        <Person>some string</Person>
-      </friendOf>
-    </Person>
-  </friendOf>
-</Person>
+<p:Person xmlns:p="http://ex.org/Person">
+  <p:id>some string</p:id>
+  <p:firstName>some string</p:firstName>
+  <p:lastName>some string</p:lastName>
+  <p:fullName>some string</p:fullName>
+  <p:address>some string</p:address>
+  <p:friendOf>
+    <p:Person>
+      <p:id>some string</p:id>
+      <p:firstName>some string</p:firstName>
+      <p:lastName>some string</p:lastName>
+      <p:fullName>some string</p:fullName>
+      <p:address>some string</p:address>
+      <p:friendOf>
+        <p:Person>some string</p:Person>
+      </p:friendOf>
+    </p:Person>
+  </p:friendOf>
+</p:Person>
 

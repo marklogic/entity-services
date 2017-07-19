@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<OrderDetails>
-  <quantity>123</quantity>
-  <productName>some string</productName>
-</OrderDetails>
+<ex:OrderDetails xmlns:ex="http://example.org/order-details-namespace">
+  <ex:quantity>123</ex:quantity>
+  <ex:productName>some string</ex:productName>
+</ex:OrderDetails>
 

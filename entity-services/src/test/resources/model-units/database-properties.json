@@ -2,6 +2,7 @@
     "collection-lexicon": true,
     "database-name": "%%DATABASE%%",
     "element-word-lexicon": [],
+    "range-element-index": [],
     "path-namespace": [
         {
             "namespace-uri": "http://marklogic.com/entity-services",

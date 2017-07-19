@@ -7,7 +7,6 @@
   },
   "definitions": {
     "SchemaCompleteEntityType": {
-      "description": "The type itself, with lots of properties.",
       "properties": {
         "orderId": {
           "datatype": "string",
@@ -73,7 +72,8 @@
                      "externalArrayReference", "byteKey", "shortKey", "unsignedByteKey", "unsignedShortKey", "stringKey",
                      "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
                      "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey"],
-      "wordLexicon": ["stringKey"]
+      "wordLexicon": ["stringKey"],
+      "description": "The type itself, with lots of properties."
     },
     "OrderDetails": {
       "properties": {
@@ -81,10 +81,14 @@
           "datatype": "integer"
         },
         "productName": {
-          "datatype": "string"
+          "datatype": "string",
+          "collation":"http://marklogic.com/collation/codepoint"
         }
       },
-      "rangeIndex": ["quantity"]
+      "namespace":"http://example.org/order-details-namespace",
+      "namespacePrefix":"ex",
+      "pathRangeIndex": ["quantity"],
+      "elementRangeIndex" : ["productName"]
     }
   }
 }

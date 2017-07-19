@@ -31,6 +31,7 @@ declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 declare namespace xq = "http://www.w3.org/2012/xquery";
 
+
 declare option xdmp:mapping "false";
 declare option xq:require-feature "xdmp:three-one";
 
@@ -60,6 +61,12 @@ declare private function es-codegen:variable-line-for(
 ) as xs:string
 {
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+    let $property-qname := 
+        if ($namespace)
+        then $namespace-prefix || ":" || $property-name
+        else $property-name
     let $properties := map:get($entity-type, "properties")
     let $required-properties := if (empty(map:get($entity-type, "required")))
         then ()
@@ -83,7 +90,7 @@ declare private function es-codegen:variable-line-for(
         if ($is-array)
         then $properties=>map:get($property-name)=>map:get("items")=>map:get("$ref")
         else $properties=>map:get($property-name)=>map:get("$ref")
-    let $path-to-property := concat("$source-node/", $property-name)
+    let $path-to-property := concat("$source-node/", $property-qname)
     let $property-comment :=
         if (empty($ref))
         then ""
@@ -104,7 +111,7 @@ declare private function es-codegen:variable-line-for(
             then
                 $wrap-if-array($path-to-property, concat($prefix, ":extract-instance-", $ref-name), true())
             else
-                $wrap-if-array($path-to-property || "/" || $ref-name, $extract-reference-fn, false())
+                $wrap-if-array($path-to-property, $extract-reference-fn, false())
 
     return
         fn:concat( $property-comment,
@@ -173,6 +180,23 @@ module namespace {$prefix}
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+{ 
+  (: namespace declarations :)
+    for $entity-type-name in map:keys(map:get($model, "definitions"))
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+    return
+        if ($namespace)
+        then concat("declare namespace ",
+             $namespace-prefix,
+             " = '",
+             $namespace,
+             "';&#10;")
+        else ()
+}
+        
+
 declare option xdmp:mapping 'false';
 
 {
@@ -206,7 +230,7 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
 
     let $instance := es:init-instance($source-node, '{ $entity-type-name }')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source-node, $source)
+        =>es:add-attachments($source)
 
     return
     if (empty($source-node/*)) 
@@ -216,16 +240,90 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     (: Begin code generation block :)
 
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
-    let $properties := map:get($entity-type, "properties")
+    let $properties := $entity-type=>map:get("properties")
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
     let $value-lines :=
+        (
         for $property-name in map:keys($properties)
-        return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name)
+        return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name),
+        if ($namespace) 
+        then (
+            "        =>map:with('$namespace', '"|| $namespace ||"')", 
+            "        =>map:with('$namespacePrefix', '"|| $namespace-prefix || "')"
+            )
+        else ()
+        )
     return fn:string-join($value-lines, "&#10;")
         (: end code generation block :)
     }
 }};
 </extract-instance>/text()
 }
+
+
+
+
+(:~
+ : Turns an entity instance into a JSON structure.
+ : This out-of-the box implementation traverses a map structure
+ : and turns it deterministically into a JSON tree.
+ : Using this function as-is should be sufficient for most use
+ : cases, and will play well with other generated artifacts.
+ : @param $entity-instance A map:map instance returned from one of the extract-instance
+ :    functions.
+ : @return An XML element that encodes the instance.
+ :)
+declare function {$prefix}:instance-to-canonical-json(
+
+    $entity-instance as map:map
+) as object-node()
+{{
+    xdmp:to-json( {$prefix}:canonicalize($entity-instance) )/node()
+}};
+
+
+declare function {$prefix}:canonicalize(
+    $entity-instance as map:map
+) as map:map
+{{
+    json:object()
+    =>map:with( map:get($entity-instance,'$type'),
+        if ( map:contains($entity-instance, '$ref') )
+        then map:get($entity-instance, '$ref')
+        else
+        let $m := json:object()
+        let $_ := 
+            for $key in map:keys($entity-instance)
+            let $instance-property := map:get($entity-instance, $key)
+            where ($key castable as xs:NCName)
+            return
+                typeswitch ($instance-property)
+                (: This branch handles embedded objects.  You can choose to prune
+                   an entity's representation of extend it with lookups here. :)
+                case json:object+
+                    return
+                        for $prop in $instance-property
+                        return map:put($m, $key, {$prefix}:canonicalize($prop))
+                (: An array can also treated as multiple elements :)
+                case json:array
+                    return
+                        for $val in json:array-values($instance-property)
+                        return
+                            if ($val instance of json:object)
+                            then map:put($m, $key, {$prefix}:canonicalize($val))
+                            else map:put($m, $key, $val)
+                (: A sequence of values should be simply treated as multiple elements :)
+                (: TODO is this lossy? :)
+                case item()+
+                    return
+                        for $val in $instance-property
+                        return map:put($m, $key, $val)
+                default return map:put($m, $key, $instance-property)
+        return $m)
+
+}};
+
 
 
 
@@ -245,40 +343,58 @@ declare function {$prefix}:instance-to-canonical-xml(
 ) as element()
 {{
     (: Construct an element that is named the same as the Entity Type :)
-    element {{ map:get($entity-instance, '$type') }}  {{
-        if ( map:contains($entity-instance, '$ref') )
-        then map:get($entity-instance, '$ref')
-        else
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName)
-            return
-                typeswitch ($instance-property)
-                (: This branch handles embedded objects.  You can choose to prune
-                   an entity's representation of extend it with lookups here. :)
-                case json:object+
-                    return
-                        for $prop in $instance-property
-                        return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
-                (: An array can also treated as multiple elements :)
-                case json:array
-                    return
-                        for $val in json:array-values($instance-property)
+    let $namespace := map:get($entity-instance, "$namespace")
+    let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
+    let $nsdecl := 
+        if ($namespace) then
+        namespace {{ $namespace-prefix }} {{ $namespace }}
+        else ()
+    let $type-name := map:get($entity-instance, '$type') 
+    let $type-qname :=
+        if ($namespace)
+        then fn:QName( $namespace, $namespace-prefix || ":" || $type-name)
+        else $type-name
+    return
+        element {{ $type-qname }}  {{
+            $nsdecl,
+            if ( map:contains($entity-instance, '$ref') )
+            then map:get($entity-instance, '$ref')
+            else
+                for $key in map:keys($entity-instance)
+                let $instance-property := map:get($entity-instance, $key)
+                let $ns-key :=
+                    if ($namespace and $key castable as xs:NCName)
+                    then fn:QName( $namespace, $namespace-prefix || ":" || $key)
+                    else $key
+                where ($key castable as xs:NCName)
+                return
+                    typeswitch ($instance-property)
+                    (: This branch handles embedded objects.  You can choose to prune
+                       an entity's representation of extend it with lookups here. :)
+                    case json:object+
                         return
-                            if ($val instance of json:object)
-                            then element {{ $key }} {{
-                                attribute datatype {{ 'array' }},
-                                {$prefix}:instance-to-canonical-xml($val) }}
-                            else element {{ $key }} {{
-                                attribute datatype {{ 'array' }},
-                                $val }}
-                (: A sequence of values should be simply treated as multiple elements :)
-                case item()+
-                    return
-                        for $val in $instance-property
-                        return element {{ $key }} {{ $val }}
-                default return element {{ $key }} {{ $instance-property }}
-    }}
+                            for $prop in $instance-property
+                            return element {{ $ns-key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
+                    (: An array can also treated as multiple elements :)
+                    case json:array
+                        return
+                            for $val in json:array-values($instance-property)
+                            return
+                                if ($val instance of json:object)
+                                then element {{ $ns-key }} {{
+                                    attribute datatype {{ 'array' }},
+                                    {$prefix}:instance-to-canonical-xml($val)
+                                }}
+                                else element {{ $ns-key }} {{
+                                    attribute datatype {{ 'array' }},
+                                    $val }}
+                    (: A sequence of values should be simply treated as multiple elements :)
+                    case item()+
+                        return
+                            for $val in $instance-property
+                            return element {{ $ns-key }} {{ $val }}
+                    default return element {{ $ns-key }} {{ $instance-property }}
+        }}
 }};
 
 
@@ -290,7 +406,7 @@ declare function {$prefix}:instance-to-canonical-xml(
  : function
  : @return A document which wraps both the canonical instance and source docs.
  :)
-declare function {$prefix}:instance-to-envelope(
+declare function {$prefix}:instance-to-xml-envelope(
     $entity-instance as map:map
 ) as document-node()
 {{
@@ -304,13 +420,68 @@ declare function {$prefix}:instance-to-envelope(
                 {$prefix}:instance-to-canonical-xml($entity-instance)
             }},
             element es:attachments {{
-                map:get($entity-instance, '$attachments')
+                for $attachment in $entity-instance=>map:get('$attachments')
+                return
+                    typeswitch ($attachment)
+                    case object-node() return xdmp:quote($attachment)
+                    case array-node() return xdmp:quote($attachment)
+                    default return $attachment
             }}
         }}
     }}
 }};
 
 
+(:
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @return A document which wraps both the canonical instance and source docs.
+ :)
+declare function {$prefix}:instance-to-envelope(
+    $entity-instance as map:map
+) as document-node()
+{{
+    {$prefix}:instance-to-xml-envelope($entity-instance)
+}};
+
+
+
+(:
+ : Wraps a canonical instance (returned by instance-to-canonical-json())
+ : within an envelope patterned document, along with the source
+ : document, which is stored in an attachments section.
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @return A document which wraps both the canonical instance and source docs.
+ :)
+declare function {$prefix}:instance-to-json-envelope(
+    $entity-instance as map:map
+) as document-node()
+{{
+    document {{
+        object-node {{ 'envelope' : 
+            object-node {{ 'instance' :
+                object-node {{ 'info' :
+                    object-node {{
+                        'title' : map:get($entity-instance,'$type'),
+                        'version' : '{$version}'
+                    }}
+                }}
+                +
+                {$prefix}:instance-to-canonical-json($entity-instance)
+            }}
+            +
+            object-node {{ 'attachments' :
+                for $attachment in $entity-instance=>map:get('$attachments')
+                return
+                    typeswitch ($attachment)
+                    case object-node() return $attachment
+                    case array-node() return $attachment
+                    default return xdmp:quote($attachment)
+            }}
+        }}
+    }}
+}};
 </module>/text()
 }
 

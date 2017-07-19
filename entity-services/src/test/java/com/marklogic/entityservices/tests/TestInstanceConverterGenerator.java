@@ -221,10 +221,10 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             String controlFilePath = "/test-instances/" + entityTypeTestFileName;
             Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
 
-            // logger.debug("Control doc");
-            // debugOutput(controlDom);
-            // logger.debug("Actual doc wrapped");
-            // debugOutput(actualInstance);
+             logger.debug("Control doc");
+             debugOutput(controlDom);
+             logger.debug("Actual doc wrapped");
+             debugOutput(actualInstance);
 
             assertThat("Extract instance by default returns identity",
                 actualInstance,
@@ -314,7 +314,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
     }
 
     @Test
-    public void testEnvelopeFunction() throws TestEvalException {
+    public void testXMLEnvelopeFunction() throws TestEvalException {
 
         for (String entityType : converters.keySet()) {
             String functionCall =
@@ -322,7 +322,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
                 +"let $_ := map:put($p, '$type', 'Order')"
                 +"let $_ := map:put($p, 'prop', 'val')"
                 +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
-                +"return conv:instance-to-envelope( $p )";
+                +"return conv:instance-to-xml-envelope( $p )";
 
             DOMHandle handle = evalOneResult(moduleImport(entityType), functionCall, new DOMHandle());
             Document document = handle.get();
@@ -339,6 +339,57 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
                 }
             }
         }
+
+    }
+
+    @Test
+    public void testEnvelopeFunction() throws TestEvalException {
+
+        for (String entityType : converters.keySet()) {
+            String functionCall =
+                "let $p := map:map()"
+                    +"let $_ := map:put($p, '$type', 'Order')"
+                    +"let $_ := map:put($p, 'prop', 'val')"
+                    +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
+                    +"return conv:instance-to-envelope( $p )";
+
+            DOMHandle handle = evalOneResult(moduleImport(entityType), functionCall, new DOMHandle());
+            Document document = handle.get();
+            Element docElement = document.getDocumentElement();
+            assertEquals("envelope function verification", "envelope", docElement.getLocalName());
+            NodeList nl = docElement.getChildNodes();
+            assertEquals("Envelope must have two children.", 2, nl.getLength());
+            for (int i=0; i<nl.getLength(); i++) {
+                Node n = nl.item(i);
+                if (n.getNodeType() == Node.ELEMENT_NODE) {
+                    logger.debug("Checking node name " + n.getLocalName());
+                    Element e = (Element) n;
+                    assertTrue(e.getLocalName().equals("instance") || e.getLocalName().equals("attachments"));
+                }
+            }
+        }
+
+    }
+
+    @Test
+    public void testJSONEnvelopeFunction() throws TestEvalException, IOException, SAXException {
+
+        for (String entityType : converters.keySet()) {
+            String functionCall =
+                "let $p := map:map()"
+                    +"let $_ := map:put($p, '$type', 'Order')"
+                    +"let $_ := map:put($p, 'prop', 'val')"
+                    +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
+                    +"return conv:instance-to-json-envelope( $p )";
+
+            JacksonHandle handle = evalOneResult(moduleImport(entityType), functionCall, new JacksonHandle());
+
+            JsonNode envelope = handle.get();
+            assertNotNull(envelope.get("envelope").get("instance").get("info"));
+            assertNotNull(envelope.get("envelope").get("instance").get("Order"));
+
+        }
+
 
     }
 

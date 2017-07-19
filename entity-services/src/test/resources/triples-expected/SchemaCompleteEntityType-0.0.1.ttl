@@ -26,6 +26,8 @@ type:OrderDetails
         a       es:EntityType ;
         es:title "OrderDetails" ;
         es:version "0.0.1" ;
+        es:namespace "http://example.org/order-details-namespace"^^xs:anyURI ;
+        es:namespacePrefix "ex" ;
         es:property
                 orderdetails:productName , 
                 orderdetails:quantity .
@@ -190,7 +192,7 @@ order:unsignedByteKey
         es:title "unsignedByteKey" .
 
 orderdetails:quantity
-        a es:Property, es:RangeIndexedProperty ;
+        a es:Property, es:RangeIndexedProperty, es:PathRangeIndexedProperty ;
         es:datatype xs:integer ;
         es:title "quantity" .
 
@@ -275,6 +277,9 @@ order:dateKey
 orderdetails:productName
         a es:Property ;
         es:datatype xs:string ;
+        a es:RangeIndexedProperty ;
+        a es:ElementRangeIndexedProperty ;
+        es:collation "http://marklogic.com/collation/codepoint" ;
         es:title "productName" .
 
 order:referenceInThisFile

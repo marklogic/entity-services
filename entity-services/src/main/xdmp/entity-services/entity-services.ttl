@@ -42,7 +42,22 @@ es:RangeIndexedProperty a owl:Class ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "RangeIndexedProperty" ;
     rdfs:subClassOf es:Property ;
-    rdfs:comment "A es:RangeIndexedProperty is a es:Property that is backed by a range index in MarkLogic.  Its implementation is a path range index, with the same type (or supertype) of the property's declared es:datatype." ;
+    rdfs:comment "A es:RangeIndexedProperty is a es:Property that is backed by a range index in MarkLogic.  PathRangedIndexedProperty and ElementRangeIndexedProperty are more specific.  The index should have the same type (or supertype) of the property's declared es:datatype." ;
+
+es:PathRangeIndexedProperty a owl:Class ;
+    rdfs:isDefinedBy es:EntityServices ;
+    rdfs:label "PathRangeIndexedProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:subClassOf es:RangeIndexedProperty ;
+    rdfs:comment "A es:PathRangeIndexedProperty is a es:Property that is backed by a path range index in MarkLogic." ;
+
+es:ElementRangeIndexedProperty a owl:Class ;
+    rdfs:isDefinedBy es:EntityServices ;
+    rdfs:label "ElementRangeIndexedProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:subClassOf es:RangeIndexedProperty ;
+    rdfs:comment "A es:ElementRangeIndexedProperty is a es:Property that is backed by an element or JSON property range index in MarkLogic." ;
+.
 .
 
 es:WordLexiconProperty a owl:Class ;
@@ -107,6 +122,20 @@ es:ref a owl:ObjectProperty ;
     rdfs:comment "A rdf:Property that links an es:Property to an instance of its own or another EntityType." ;
     rdfs:domain es:Property ;
     rdfs:range es:EntityType ;
+.
+
+es:namespace a owl:DatatypeProperty ;
+    rdfs:isDefinedBy es:EntityServices ;
+    rdfs:label "namespace" ;
+    rdfs:comment "A rdf:Property that links an es:Property to the namespace in Entity Services stores its XML representation is persisted.  If absent, Entity Services stores XML in no namespace." ;
+    rdfs:domain es:Property ;
+.
+
+es:namespacePrefix a owl:DatatypeProperty ;
+    rdfs:isDefinedBy es:EntityServices ;
+    rdfs:label "namespace" ;
+    rdfs:comment "A rdf:Property that the prefix to be used when serializing XML for an entity type's instance data." ;
+    rdfs:domain es:Property ;
 .
  
 es:items a owl:ObjectProperty ;

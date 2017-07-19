@@ -51,8 +51,8 @@ public class TestSearchOptions extends EntityServicesTestBase {
 
         InputStream is = this.getClass().getResourceAsStream("/expected-search-options/SchemaCompleteEntityType-0.0.1.xml");
         Document filesystemXML = builder.parse(is);
-        assertThat("Search options validation failed.", filesystemXML,
-            CompareMatcher.isIdenticalTo(searchOptions).ignoreWhitespace().ignoreComments());
+        assertThat("Search options validation failed.", searchOptions,
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace().ignoreComments());
 
 
         // if this call has results, the search options are not valid.

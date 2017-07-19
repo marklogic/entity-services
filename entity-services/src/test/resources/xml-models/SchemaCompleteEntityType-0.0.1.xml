@@ -181,9 +181,13 @@
         </quantity>
         <productName>
           <es:datatype>string</es:datatype>
+          <es:collation>http://marklogic.com/collation/codepoint</es:collation>
         </productName>
       </es:properties>
-      <es:range-index>quantity</es:range-index>
+      <es:namespace>http://example.org/order-details-namespace</es:namespace>
+      <es:namespace-prefix>ex</es:namespace-prefix>
+      <es:path-range-index>quantity</es:path-range-index>
+      <es:element-range-index>productName</es:element-range-index>
     </OrderDetails>
   </es:definitions>
 </es:model>

@@ -43,7 +43,10 @@ declare private variable $esi:keys-to-element-names as map:map :=
     let $m := map:map()
     let $_ := map:put($m, "primaryKey", xs:QName("es:primary-key"))
     let $_ := map:put($m, "rangeIndex", xs:QName("es:range-index"))
+    let $_ := map:put($m, "pathRangeIndex", xs:QName("es:path-range-index"))
+    let $_ := map:put($m, "elementRangeIndex", xs:QName("es:element-range-index"))
     let $_ := map:put($m, "wordLexicon", xs:QName("es:word-lexicon"))
+    let $_ := map:put($m, "namespacePrefix", xs:QName("es:namespace-prefix"))
     let $_ := map:put($m, "baseUri", xs:QName("es:base-uri"))
     let $_ := map:put($m, "$ref", xs:QName("es:ref"))
     return $m;
@@ -100,13 +103,13 @@ declare private variable $esi:model-schematron :=
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(..))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../es:items/(es:datatype|es:ref)) else true()">Property <xsl:value-of select="local-name(..)" /> is of type "array" and must contain a valid "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../es:items/es:datatype = 'array') else true()">Property <xsl:value-of select="local-name(..)" /> cannot both be an "array" and have items of type "array".</iso:assert>
-         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and local-name(..) = ../../../es:range-index/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and local-name(..) = ../../../(es:range-index|es:path-range-index|es:element-range-index)/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="datatype">
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(.))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../items/*[string(node-name(.)) = ('$ref', 'datatype')]) else true()">Property <xsl:value-of select="node-name(.)" /> is of type "array" and must contain a valid "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../items/datatype = 'array') else true()">Property <xsl:value-of select="node-name(.)" /> cannot both be an "array" and have items of type "array".</iso:assert>
-         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and node-name(..) = ../../../rangeIndex)"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and node-name(..) = ../../../(pathRangeIndex|elementRangeIndex|rangeIndex))"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="es:collation|collation">
          <!-- this function throws an error for invalid collations, so must be caught in alidate function -->
@@ -125,10 +128,10 @@ declare private variable $esi:model-schematron :=
         <iso:rule context="es:required">
          <iso:assert test="string(.) = (../es:properties/*/local-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
-        <iso:rule context="rangeIndex">
+        <iso:rule context="(pathRangeIndex|elementRangeIndex|rangeIndex)">
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
-        <iso:rule context="es:range-index">
+        <iso:rule context="(es:range-index|es:path-range-index|es:element-range-index)">
          <iso:assert test="string(.) = (../es:properties/*/local-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="wordLexicon">
@@ -314,7 +317,11 @@ declare function esi:model-to-xml(
                 esi:key-convert-to-xml($entity-type, "description"),
                 esi:key-convert-to-xml($entity-type, "primaryKey"),
                 esi:key-convert-to-xml($entity-type, "required"),
+                esi:key-convert-to-xml($entity-type, "namespace"),
+                esi:key-convert-to-xml($entity-type, "namespacePrefix"),
                 esi:key-convert-to-xml($entity-type, "rangeIndex"),
+                esi:key-convert-to-xml($entity-type, "pathRangeIndex"),
+                esi:key-convert-to-xml($entity-type, "elementRangeIndex"),
                 esi:key-convert-to-xml($entity-type, "wordLexicon")
             }
         }
@@ -356,7 +363,11 @@ declare function esi:model-from-xml(
             let $_ := map:put($entity-type, "properties", $properties)
             let $_ := esi:with-if-exists($entity-type, "primaryKey", data($entity-type-node/es:primary-key))
             let $_ := esi:with-if-exists($entity-type, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "namespace", $entity-type-node/es:namespace/xs:string(.))
+            let $_ := esi:with-if-exists($entity-type, "namespacePrefix", $entity-type-node/es:namespace-prefix/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "pathRangeIndex", json:to-array($entity-type-node/es:path-range-index/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "elementRangeIndex", json:to-array($entity-type-node/es:element-range-index/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "wordLexicon", json:to-array($entity-type-node/es:word-lexicon/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "description", data($entity-type-node/es:description))
             return map:put($d, fn:local-name($entity-type-node), $entity-type)
@@ -442,13 +453,26 @@ declare private function esi:resolve-test-reference(
         head( ($property-definition=>map:get("$ref"),
                               $property-definition=>map:get("items")=>map:get("$ref") ) )
     let $ref-name := functx:substring-after-last($reference-value, "/")
+    let $namespace-prefix := 
+        $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+    let $prefix-value := 
+        if ($namespace-prefix)
+        then $namespace-prefix || ":"
+        else ""
+    let $namespace-uri :=
+        $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+    let $nsdecl := 
+        if ($namespace-prefix) 
+        then element { "X" } { namespace { $namespace-prefix } { $namespace-uri } }
+        else <x/>
+    let $qname := fn:resolve-QName($prefix-value || $ref-name, $nsdecl) 
     (: is the reference value in this model :)
     let $referenced-type :=
         if (contains($reference-value, "#/definitions"))
         then
             if ($depth eq $esi:MAX_TEST_INSTANCE_DEPTH - 1)
             then
-                element {$ref-name} {
+                element {$qname} {
                     esi:ref-datatype($model, $entity-type-name, $property-name)
                       =>esi:create-test-value-from-datatype()
                 }
@@ -466,20 +490,28 @@ declare function esi:create-test-value(
     $property-name as xs:string,
     $property as map:map,
     $depth as xs:int,
-    $parent-type as xs:string
+    $parent-type as xs:string,
+    $nsdecl as element()
 ) as element()+
 {
     let $datatype := map:get($property,"datatype")
     let $items := map:get($property, "items")
     let $ref := map:get($property,"$ref")
+    let $namespace-prefix := 
+        $model=>map:get("definitions")=>map:get($entity-name)=>map:get("namespacePrefix")
+    let $prefix-value := 
+        if ($namespace-prefix)
+        then $namespace-prefix || ":"
+        else ""
+    let $qname := fn:resolve-QName($prefix-value || $property-name, $nsdecl) 
     return
         if (exists($datatype))
         then
             if ($datatype eq "array")
             then
-                esi:create-test-value($model, $entity-name, $property-name, $items, $depth, "array")
+                esi:create-test-value($model, $entity-name, $property-name, $items, $depth, "array", $nsdecl)
             else
-                element { $property-name } {
+                element { $qname } {
                     if ($parent-type eq "array")
                     then attribute datatype { "array" }
                     else (),
@@ -487,12 +519,12 @@ declare function esi:create-test-value(
                 }
         else if (exists($ref))
         then
-            element { $property-name } {
+            element { $qname } {
                 if ($parent-type eq "array")
                 then attribute datatype { "array" }
                 else (),
                 esi:resolve-test-reference($model, $entity-name, $property-name, $depth)
-        }
+            }
         else
             element { $property-name } { "This should not be here" }
 };
@@ -505,15 +537,26 @@ declare function esi:create-test-instance(
 {
     if ($depth lt $esi:MAX_TEST_INSTANCE_DEPTH)
     then
-        element { $entity-type-name } {
-            let $properties := $model
+        let $entity-type := $model
                     =>map:get("definitions")
                     =>map:get($entity-type-name)
-                    =>map:get("properties")
-            for $property in map:keys($properties)
-            return
-                esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth, "none")
-        }
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $prefix-value := 
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+        let $nsdecl := 
+            if ($namespace-prefix)
+            then element { "X" } { namespace { $namespace-prefix } { $entity-type=>map:get("namespace") } }
+            else element { "X" } { }
+        let $qname := fn:resolve-QName($prefix-value || $entity-type-name, $nsdecl)
+        return
+            element { $qname } {
+                let $properties := $entity-type=>map:get("properties")
+                for $property in map:keys($properties)
+                return
+                    esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth, "none", $nsdecl)
+            }
     else ()
 };
 
@@ -553,14 +596,16 @@ declare function esi:database-properties-generate(
 ) as document-node()
 {
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
-    let $range-path-indexes := json:array()
+    let $path-range-indexes := json:array()
+    let $element-range-indexes := json:array()
     let $word-lexicons := json:array()
+    let $path-namespaces := json:array()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         return
         (
-        let $range-index-properties := map:get($entity-type, "rangeIndex")
+        let $range-index-properties := (map:get($entity-type, "rangeIndex"), map:get($entity-type, "pathRangeIndex"))
         for $range-index-property in json:array-values($range-index-properties)
         let $ri-map := json:object()
         let $property := $entity-type=>map:get("properties")=>map:get($range-index-property)
@@ -571,11 +616,42 @@ declare function esi:database-properties-generate(
         let $_ := map:put($ri-map, "collation", $collation)
         let $invalid-values := "reject"
         let $_ := map:put($ri-map, "invalid-values", $invalid-values)
-        let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $namespace-prefix-value :=
+            if ($namespace-uri)
+            then 
+                (
+                json:array-push($path-namespaces,
+                        json:object()
+                        =>map:with("prefix",$namespace-prefix)
+                        =>map:with("namespace-uri", $namespace-uri)),
+                $namespace-prefix || ":"
+                )
+            else ""
+        let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $namespace-prefix-value || $entity-type-name || "/" || $namespace-prefix-value || $range-index-property)
         let $_ := map:put($ri-map, "range-value-positions", false())
         let $_ := map:put($ri-map, "scalar-type", $datatype)
-        return json:array-push($range-path-indexes, $ri-map)
+        return json:array-push($path-range-indexes, $ri-map)
         ,
+        let $element-range-index-properties := (map:get($entity-type, "elementRangeIndex"))
+        for $element-range-index-property in json:array-values($element-range-index-properties)
+        let $ri-map := json:object()
+        let $property := $entity-type=>map:get("properties")=>map:get($element-range-index-property)
+        let $specified-datatype := esi:resolve-datatype($model, $entity-type-name, $element-range-index-property)
+
+        let $datatype := esi:indexable-datatype($specified-datatype)
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
+        let $_ := map:put($ri-map, "collation", $collation)
+        let $invalid-values := "reject"
+        let $_ := map:put($ri-map, "invalid-values", $invalid-values)
+        let $_ := map:put($ri-map, "localname",  $element-range-index-property)
+        let $_ := map:put($ri-map, "namespace-uri",  $entity-type=>map:get("namespace"))
+        let $_ := map:put($ri-map, "range-value-positions", false())
+        let $_ := map:put($ri-map, "scalar-type", $datatype)
+        return json:array-push($element-range-indexes, $ri-map)
+        ,
+
         let $word-lexicon-properties := $entity-type=>map:get("wordLexicon")
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
         let $wl-map := json:object()
@@ -586,7 +662,6 @@ declare function esi:database-properties-generate(
         let $_ := map:put($wl-map, "namespace-uri", "")
         return json:array-push($word-lexicons, $wl-map)
         )
-    let $path-namespaces := json:array()
     let $pn := json:object()
     let $_ := map:put($pn, "prefix", "es")
     let $_ := map:put($pn, "namespace-uri", "http://marklogic.com/entity-services")
@@ -596,7 +671,8 @@ declare function esi:database-properties-generate(
     let $_ := map:put($database-properties, "schema-database", "%%SCHEMAS_DATABASE%%")
     let $_ := map:put($database-properties, "path-namespace", $path-namespaces)
     let $_ := map:put($database-properties, "element-word-lexicon", $word-lexicons)
-    let $_ := map:put($database-properties, "range-path-index", $range-path-indexes)
+    let $_ := map:put($database-properties, "range-path-index", $path-range-indexes)
+    let $_ := map:put($database-properties, "range-element-index", $element-range-indexes)
     let $_ := map:put($database-properties, "triple-index", true())
     let $_ := map:put($database-properties, "collection-lexicon", true())
     return xdmp:to-json($database-properties)
@@ -1176,9 +1252,27 @@ declare function esi:search-options-generate(
     let $seen-keys := map:map()
     let $all-constraints := json:array()
     let $all-tuples-definitions := json:array()
+    let $prefixed-type-names := json:array()
+    let $nsdecls := json:array()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            if ($namespace-uri)
+            then 
+                $namespace-prefix || ":"
+            else ""
+        let $nsdecl := 
+            if ($namespace-uri)
+            then
+                (
+                json:array-push($nsdecls, namespace { $namespace-prefix } { $namespace-uri }),
+                namespace { $namespace-prefix } { $namespace-uri }
+                )
+            else ()
+        let $_ := json:array-push($prefixed-type-names, ($prefix-value || $entity-type-name))
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $properties := map:get($entity-type, "properties")
         let $tuples-range-definitions := json:array()
@@ -1193,8 +1287,8 @@ declare function esi:search-options-generate(
                 </search:constraint>,
                 "options"))
             else ()
-        let $_range-constraints :=
-            for $property-name in json:array-values(map:get($entity-type, "rangeIndex"))
+        let $_path-range-constraints :=
+            for $property-name in json:array-values( (map:get($entity-type, "rangeIndex"), map:get($entity-type, "pathRangeIndex") ) )
             let $specified-datatype := esi:resolve-datatype($model,$entity-type-name,$property-name)
             let $property := map:get($properties, $property-name)
             let $datatype := esi:indexable-datatype($specified-datatype)
@@ -1208,7 +1302,42 @@ declare function esi:search-options-generate(
                 <search:range type="xs:{ $datatype }" facet="true">
                     { $collation }
                     <search:path-index
-                        xmlns:es="http://marklogic.com/entity-services">//es:instance/{$entity-type-name}/{$property-name}</search:path-index>
+                        xmlns:es="http://marklogic.com/entity-services">{
+                        $nsdecl
+                    }//es:instance/{$prefix-value}{$entity-type-name}/{$prefix-value}{$property-name}</search:path-index>
+                </search:range>
+            let $constraint-template :=
+                <search:constraint name="{ $property-name } ">
+                    {$range-definition}
+                </search:constraint>
+            (: the collecting array will be added once after accumulation :)
+            let $_ := json:array-push($tuples-range-definitions, $range-definition)
+            return
+                json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name, $constraint-template, "options"))
+        let $_element-range-constraints :=
+            for $property-name in json:array-values( map:get($entity-type, "elementRangeIndex"))
+            let $specified-datatype := esi:resolve-datatype($model,$entity-type-name,$property-name)
+            let $property := map:get($properties, $property-name)
+            let $datatype := esi:indexable-datatype($specified-datatype)
+            let $collation := if ($datatype eq "string")
+                then attribute
+                    collation {
+                        head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
+                    }
+                else ()
+            let $element-range-attributes :=
+                if ($namespace-uri)
+                then (
+                    attribute { "ns" }  { $namespace-uri },
+                    attribute { "name" } { $property-name }
+                    )
+                else ()
+            let $range-definition :=
+                <search:range type="xs:{ $datatype }" facet="true">
+                    { $collation }
+                    <search:element xmlns:es="http://marklogic.com/entity-services">{
+                        $element-range-attributes
+                    }</search:element>
                 </search:range>
             let $constraint-template :=
                 <search:constraint name="{ $property-name } ">
@@ -1242,7 +1371,7 @@ declare function esi:search-options-generate(
                     </search:word>
                 </search:constraint>, "options"))
         return ()
-    let $types-expr := string-join( $entity-type-names, "|" )
+    let $types-expr := string-join( json:array-values($prefixed-type-names), "|" )
     let $type-constraint :=
         <search:constraint name="entity-type">
             <search:value>
@@ -1269,7 +1398,9 @@ declare function esi:search-options-generate(
         <search:search-option>unfiltered</search:search-option>,
         comment { "Modify document extraction to change results returned" },
         <search:extract-document-data selected="include">
-            <search:extract-path xmlns:es="http://marklogic.com/entity-services">//es:instance/({ $types-expr })</search:extract-path>
+            <search:extract-path xmlns:es="http://marklogic.com/entity-services">{
+                for $nsdecl in json:array-values($nsdecls) return $nsdecl
+            }//es:instance/({ $types-expr })</search:extract-path>
         </search:extract-document-data>,
 
         comment { "Change or remove this additional-query to broaden search beyond entity instance documents" },

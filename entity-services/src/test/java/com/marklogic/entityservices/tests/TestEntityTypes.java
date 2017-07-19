@@ -334,11 +334,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
                 // A great class for debugging, Defference.
 //                logger.debug("Difference, expected - actual");
-//                Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+//                Graph diff = new org.apache.jena.graph.compose.Difference(expectedTriples, actualTriples);
 //                RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-
+//
 //                logger.debug("Difference, actual - expected");
-//                Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//                Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
 //                RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
 
 

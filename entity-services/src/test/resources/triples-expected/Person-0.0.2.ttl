@@ -11,7 +11,9 @@ doc:Person-0.0.2 a es:Model ;
 type:Person a es:EntityType ;
     es:title "Person" ;
     es:version "0.0.2" ;
-    es:property 
+    es:namespace "http://ex.org/Person"^^xs:anyURI ;
+    es:namespacePrefix "p" ;
+    es:property
         prop:id,
         prop:firstName,
         prop:lastName,

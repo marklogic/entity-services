@@ -299,8 +299,8 @@ declare function es:init-source(
 {
     if ( ($source instance of document-node())
         or (exists
-            ($source/element()[fn:node-name(.) eq xs:QName($entity-type-name)] )))
-    then $source/node()
+            ($source/element()[fn:local-name(.) eq $entity-type-name] )))
+    then $source/*
     else $source
 };
 
@@ -315,14 +315,24 @@ declare function es:init-instance(
     $entity-type-name as xs:string
 ) as json:object
 {
+    let $source-node := es:init-source($source-node, $entity-type-name)
     let $instance := json:object()
             =>map:with('$type', $entity-type-name)
+    let $source-qname := fn:node-name($source-node)
+    let $_ := xdmp:log(("OH QNAME", $source-qname))
+    let $_ :=
+        if (fn:prefix-from-QName($source-qname))
+        then (
+            map:put($instance, "$namespace", fn:namespace-uri-from-QName($source-qname)),
+            map:put($instance, "$namespacePrefix", fn:prefix-from-QName($source-qname))
+        )
+        else ()
+
     return
         if (empty($source-node/*))
         then $instance=>map:with('$ref', $source-node/text())
         (: Otherwise, this source node contains instance data. Populate it. :)
         else $instance
-        
 };
 
 
@@ -334,16 +344,10 @@ declare function es:init-instance(
  :)
 declare function es:add-attachments(
     $instance as json:object,
-    $source-node as item()*,
     $source as item()*
 ) as json:object
 {
-    $instance
-    =>map:with('$attachments',
-        typeswitch($source-node)
-        case object-node() return xdmp:quote($source)
-        case array-node() return xdmp:quote($source)
-        default return $source)
+    $instance=>map:with('$attachments', $source)
 };
 
 (:~

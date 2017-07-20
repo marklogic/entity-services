@@ -21,10 +21,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xmlunit.matchers.CompareMatcher;
-import sun.plugin.com.event.COMEventHandler;
 
 import javax.xml.transform.TransformerException;
-
 import java.io.IOException;
 import java.io.InputStream;
 

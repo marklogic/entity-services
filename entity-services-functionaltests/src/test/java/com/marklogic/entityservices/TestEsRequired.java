@@ -27,7 +27,9 @@ import org.xml.sax.SAXException;
 import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

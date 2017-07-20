@@ -16,26 +16,25 @@
 package com.marklogic.entityservices;
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
-import org.xmlunit.matchers.CompareMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the server-side function es:echema-generate($model) as

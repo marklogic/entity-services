@@ -15,27 +15,23 @@
 */
 package com.marklogic.entityservices.tests;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
-import static org.hamcrest.Matchers.not;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.eval.ServerEvaluationCall;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.marklogic.client.eval.ServerEvaluationCall;
-import javafx.beans.property.SimpleMapProperty;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
+import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 public class TestExtractionTemplates extends EntityServicesTestBase {
 

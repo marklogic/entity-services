@@ -15,15 +15,14 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.io.JacksonHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class TestDatabaseProperties extends EntityServicesTestBase {
 

@@ -15,21 +15,18 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.transform.TransformerException;
-
-import org.apache.jena.atlas.logging.Log;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.io.DOMHandle;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.io.DOMHandle;
 import org.xmlunit.matchers.CompareMatcher;
+
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

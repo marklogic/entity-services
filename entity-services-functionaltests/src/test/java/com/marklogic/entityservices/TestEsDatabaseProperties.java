@@ -15,17 +15,16 @@
  */
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertEquals;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marklogic.client.io.JacksonHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marklogic.client.io.JacksonHandle;
+import static org.junit.Assert.assertEquals;
 
 public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	

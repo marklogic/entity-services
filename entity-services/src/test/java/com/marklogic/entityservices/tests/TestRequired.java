@@ -28,7 +28,9 @@ import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

@@ -221,10 +221,10 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             String controlFilePath = "/test-instances/" + entityTypeTestFileName;
             Document controlDom = builder.parse(this.getClass().getResourceAsStream(controlFilePath));
 
-             logger.debug("Control doc");
-             debugOutput(controlDom);
-             logger.debug("Actual doc wrapped");
-             debugOutput(actualInstance);
+            // logger.debug("Control doc");
+            // debugOutput(controlDom);
+            // logger.debug("Actual doc wrapped");
+            // debugOutput(actualInstance);
 
             assertThat("Extract instance by default returns identity",
                 actualInstance,

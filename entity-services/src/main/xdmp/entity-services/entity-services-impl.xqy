@@ -726,6 +726,8 @@ declare private function esi:array-element-for-datatype(
 
 declare private function esi:element-for-reference(
     $reference-declarations as map:map,
+    $imports-accumulator as map:map,
+    $model as map:map,
     $property-name as xs:string,
     $ref-value as xs:string
 ) as element(xs:element)
@@ -734,14 +736,33 @@ declare private function esi:element-for-reference(
     return
     if (contains($ref-value, "#/definitions/"))
     then
+        let $namespace := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+        let $version := $model=>map:get("info")=>map:get("version")
+        let $namespace-prefix := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+        let $prefix-value := 
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+        let $nsdecl := 
+            if ($namespace-prefix) 
+            then namespace { $namespace-prefix } { $namespace } 
+            else ()
+        return
         (map:put($reference-declarations, $ref-name || "CONTAINER",
             <xs:complexType name="{ $ref-name }ContainerType">
                 <xs:sequence>
-                    <xs:element ref="{ $ref-name }" />
+                    <xs:element ref="{ $prefix-value }{ $ref-name }" >
+                    {$nsdecl}
+                    </xs:element>
                 </xs:sequence>
                 <xs:attribute name="datatype" />
             </xs:complexType>),
-        <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>)
+         map:put($imports-accumulator, 
+            fn:head( ($namespace, "") ),
+            if ($namespace) then
+            <xs:import namespace="{$namespace}" schemaLocation="{$ref-name}-{$version}.xsd"/>
+            else ()),
+         <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>)
     else
         (map:put($reference-declarations, $ref-name || "REFERENCE",
              <xs:complexType name="{ $ref-name }ReferenceType">
@@ -762,87 +783,141 @@ declare function esi:schema-generate(
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $seen-keys := map:map()
     let $reference-declarations := map:map()
-    let $element-declarations := json:array()
+    let $element-declarations := map:map()
+    let $entity-type-declarations := map:map()
+    let $schemas := json:array()
+    let $imports := map:map()
     (: construct all the element declarations :)
     let $_ :=
         for $entity-type-name in $entity-type-names
+        let $properties-accumulator := json:array()
+        let $reference-accumulator := map:map()
+        let $types-accumulator := json:array()
+        let $imports-accumulator := map:map()
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
         let $properties := map:get($entity-type, "properties")
-        for $property-name in map:keys($properties)
-        let $property := map:get($properties, $property-name)
-        return
-            json:array-push($element-declarations,
-                esi:wrap-duplicates($seen-keys, $property-name,
-                    if (map:contains($property, "$ref"))
-                    then
-                        esi:element-for-reference(
-                            $reference-declarations,
-                            $property-name,
-                            map:get($property, "$ref"))
-                    else if (map:contains($property, "datatype"))
-                    then
-                        let $datatype := map:get($property, "datatype")
-                        let $items-map := map:get($property, "items")
-                        return
-                            if ($datatype eq "array")
-                            then
-                                if (map:contains($items-map, "$ref"))
-                                then esi:element-for-reference(
-                                    $reference-declarations,
-                                    $property-name,
-                                    map:get($items-map, "$ref"))
-                                else
-                                    esi:array-element-for-datatype(
-                                        $reference-declarations,
-                                        $property-name,
-                                        map:get($items-map, "datatype"))
-                            else esi:element-for-datatype($property-name, $datatype)
-                    else (),
-                    "schema"))
-    return
-    <xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns:sem="http://marklogic.com/semantics"
-        elementFormDefault="qualified"
-        xmlns:es="http://marklogic.com/entity-services">
-    {
-        json:array-values($element-declarations),
-        ($reference-declarations=>map:keys()) ! map:get($reference-declarations, .),
-        for $entity-type-name in $entity-type-names
-        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
-        let $properties := map:get($entity-type, "properties")
-        return
-        (
-        <xs:complexType name="{ $entity-type-name }Type" mixed="true">
-            <xs:sequence minOccurs="0">
-            {
-                (: construct xs:element element for each property :)
+        let $_accumulate := 
+                (
                 for $property-name in map:keys($properties)
                 let $property := map:get($properties, $property-name)
-                let $datatype := map:get($property, "datatype")
                 return
-                    element xs:element {
-                    (
-                    if ($datatype eq "array")
-                    then
-                       ( attribute minOccurs { "0" },
-                         attribute maxOccurs { "unbounded" }
-                        )
-                    else if ($property-name = $required-properties )
-                    then ()
-                    else attribute minOccurs { "0" },
-                    attribute ref { $property-name }
+                json:array-push($properties-accumulator,
+                    esi:wrap-duplicates($seen-keys, $property-name,
+                        if (map:contains($property, "$ref"))
+                        then
+                            esi:element-for-reference(
+                                $reference-accumulator,
+                                $imports-accumulator,
+                                $model,
+                                $property-name,
+                                map:get($property, "$ref"))
+                        else if (map:contains($property, "datatype"))
+                        then
+                            let $datatype := map:get($property, "datatype")
+                            let $items-map := map:get($property, "items")
+                            return
+                                if ($datatype eq "array")
+                                then
+                                    if (map:contains($items-map, "$ref"))
+                                    then esi:element-for-reference(
+                                        $reference-accumulator,
+                                        $imports-accumulator,
+                                        $model,
+                                        $property-name,
+                                        map:get($items-map, "$ref"))
+                                    else
+                                        esi:array-element-for-datatype(
+                                            $reference-accumulator,
+                                            $property-name,
+                                            map:get($items-map, "datatype"))
+                                else esi:element-for-datatype($property-name, $datatype)
+                        else (),
+                        "schema")),
+                json:array-push($types-accumulator,
+                    <xs:complexType name="{ $entity-type-name }Type" mixed="true">
+                        <xs:sequence minOccurs="0">
+                        {
+                            (: construct xs:element element for each property :)
+                            for $property-name in map:keys($properties)
+                            let $property := map:get($properties, $property-name)
+                            let $datatype := map:get($property, "datatype")
+                            return
+                                    element xs:element {
+                                    (
+                                    if ($datatype eq "array")
+                                    then
+                                       ( attribute minOccurs { "0" },
+                                         attribute maxOccurs { "unbounded" }
+                                        )
+                                    else if ($property-name = $required-properties )
+                                    then ()
+                                    else attribute minOccurs { "0" },
+                                    attribute ref { $property-name }
+                                    )
+                                }
+                        }
+                        </xs:sequence>
+                    </xs:complexType>),
+                json:array-push($types-accumulator,
+                    <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>
                     )
-                }
-            }
-            </xs:sequence>
-        </xs:complexType>,
-        <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>
+                )
+        return (
+            map:put($element-declarations, $entity-type-name, $properties-accumulator),
+            map:put($reference-declarations, $entity-type-name, $reference-accumulator),
+            map:put($entity-type-declarations, $entity-type-name, $types-accumulator),
+            map:put($imports, head( ($namespace, "") ), (map:keys($imports-accumulator) ! map:get($imports-accumulator, .)))
         )
-    }
-    </xs:schema>
+    let $names-by-namespace := map:map()
+    let $_ := 
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $extend := function($m, $ns, $et) {
+            if (map:contains($m, $ns))
+            then $m=>map:get($ns)=>json:array-push($et)
+            else map:put($m, $ns, json:to-array( $et ))
+        }
+        return
+            if (empty($namespace))
+            then $extend($names-by-namespace, "", $entity-type-name)
+            else $extend($names-by-namespace, $namespace, $entity-type-name)
+    let $_ :=
+        for $namespace in map:keys($names-by-namespace)
+        let $target-attribute := 
+            if ($namespace ne "")
+            then attribute { "targetNamespace" } { $namespace }
+            else ()
+        return
+            json:array-push($schemas,
+            <xs:schema
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:sem="http://marklogic.com/semantics"
+                elementFormDefault="qualified"
+                xmlns:es="http://marklogic.com/entity-services">
+            {$target-attribute}
+            {$imports=>map:get($namespace)}
+            {
+                for $entity-type-name in json:array-values($names-by-namespace=>map:get($namespace))
+                let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+                let $namespace := $entity-type=>map:get("namespace")
+                let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+                return
+                (
+                    json:array-values($element-declarations=>map:get($entity-type-name)),
+                    let $m := $reference-declarations=>map:get($entity-type-name)
+                    let $keys := $m=>map:keys()
+                    for $k in $keys 
+                    return map:get($m, $k),
+                    json:array-values($entity-type-declarations=>map:get($entity-type-name))
+                )
+            }
+            </xs:schema>)
+    return json:array-values($schemas)
 };
 
 

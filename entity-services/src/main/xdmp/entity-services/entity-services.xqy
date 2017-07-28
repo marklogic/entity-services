@@ -343,9 +343,9 @@ declare function es:init-instance(
  : @param $source The unmodified source document.
  :)
 declare function es:add-attachments(
-    $instance as json:object,
+    $instance as map:map,
     $source as item()*
-) as json:object
+) as map:map
 {
     $instance=>map:with('$attachments', $source)
 };
@@ -373,9 +373,9 @@ declare function es:init-translation-source(
  : @param $source The envelope or canonical instance from which to copy attachments.
  :)
 declare function es:copy-attachments(
-    $instance as json:object,
+    $instance as map:map,
     $source as item()*
-) as json:object
+) as map:map
 {
     let $attachments := $source ! fn:root(.)/es:envelope/es:attachments/node()
     return
@@ -384,3 +384,45 @@ declare function es:copy-attachments(
     else $instance
 };
 
+
+(:~
+ : Serializes attachments for storage in an envelope document.  
+ : @param $instance  The isntance holding attachment data.
+ : @param $format The format of the envlosing envlelope.
+ : @return If the format does not match that supplied in $format, then the attachment
+ :     is returned as a quoted string.  Otherwise, the attachment is returned for inline 
+       inclusion as a node.
+ :)
+declare function es:serialize-attachments(
+    $instance as map:map,
+    $envelope-format as xs:string
+) as item()*
+{
+    switch ($envelope-format)
+    case "json" return
+        object-node { 'attachments' :
+            for $attachment in $instance=>map:get('$attachments')
+            let $attachment :=
+                if ($attachment instance of document-node())
+                then $attachment/node()
+                else $attachment
+            return
+                typeswitch ($attachment)
+                case object-node() return $attachment
+                case array-node() return $attachment
+                default return xdmp:quote($attachment)
+        }
+    case "xml" return
+        element es:attachments {
+            for $attachment in $instance=>map:get('$attachments')
+            let $attachment :=
+                if ($attachment instance of document-node())
+                then $attachment/node()
+                else $attachment
+            return
+                typeswitch ($attachment)
+                case element() return $attachment
+                default return xdmp:quote($attachment)
+        }
+    default return fn:error( (), 'Only available envelope formats are "xml" and "json"')
+};

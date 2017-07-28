@@ -419,14 +419,7 @@ declare function {$prefix}:instance-to-xml-envelope(
                 }},
                 {$prefix}:instance-to-canonical-xml($entity-instance)
             }},
-            element es:attachments {{
-                for $attachment in $entity-instance=>map:get('$attachments')
-                return
-                    typeswitch ($attachment)
-                    case object-node() return xdmp:quote($attachment)
-                    case array-node() return xdmp:quote($attachment)
-                    default return $attachment
-            }}
+            es:serialize-attachments($entity-instance, "xml")
         }}
     }}
 }};
@@ -471,14 +464,7 @@ declare function {$prefix}:instance-to-json-envelope(
                 {$prefix}:instance-to-canonical-json($entity-instance)
             }}
             +
-            object-node {{ 'attachments' :
-                for $attachment in $entity-instance=>map:get('$attachments')
-                return
-                    typeswitch ($attachment)
-                    case object-node() return $attachment
-                    case array-node() return $attachment
-                    default return xdmp:quote($attachment)
-            }}
+            es:serialize-attachments($entity-instance, "json")
         }}
     }}
 }};

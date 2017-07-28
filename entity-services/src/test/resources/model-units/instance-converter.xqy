@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-07-23T03:34:54.519321Z
+ Generated at timestamp: 2017-07-28T20:38:56.71879Z
  :)
 
 module namespace et-required
@@ -105,11 +105,15 @@ declare function et-required:canonicalize(
                 (: An array can also treated as multiple elements :)
                 case json:array
                     return
-                        for $val in json:array-values($instance-property)
+                        (
+                        for $val at $i in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then map:put($m, $key, et-required:canonicalize($val))
-                            else map:put($m, $key, $val)
+                            then json:set-item-at($instance-property, $i, et-required:canonicalize($val))
+                            else (),
+                        map:put($m, $key, $instance-property)
+                        )
+                        
                 (: A sequence of values should be simply treated as multiple elements :)
                 (: TODO is this lossy? :)
                 case item()+
@@ -216,14 +220,7 @@ declare function et-required:instance-to-xml-envelope(
                 },
                 et-required:instance-to-canonical-xml($entity-instance)
             },
-            element es:attachments {
-                for $attachment in $entity-instance=>map:get('$attachments')
-                return
-                    typeswitch ($attachment)
-                    case object-node() return xdmp:quote($attachment)
-                    case array-node() return xdmp:quote($attachment)
-                    default return $attachment
-            }
+            es:serialize-attachments($entity-instance, "xml")
         }
     }
 };
@@ -268,14 +265,7 @@ declare function et-required:instance-to-json-envelope(
                 et-required:instance-to-canonical-json($entity-instance)
             }
             +
-            object-node { 'attachments' :
-                for $attachment in $entity-instance=>map:get('$attachments')
-                return
-                    typeswitch ($attachment)
-                    case object-node() return $attachment
-                    case array-node() return $attachment
-                    default return xdmp:quote($attachment)
-            }
+            es:serialize-attachments($entity-instance, "json")
         }
     }
 };

@@ -308,11 +308,15 @@ declare function {$prefix}:canonicalize(
                 (: An array can also treated as multiple elements :)
                 case json:array
                     return
-                        for $val in json:array-values($instance-property)
+                        (
+                        for $val at $i in json:array-values($instance-property)
                         return
                             if ($val instance of json:object)
-                            then map:put($m, $key, {$prefix}:canonicalize($val))
-                            else map:put($m, $key, $val)
+                            then json:set-item-at($instance-property, $i, {$prefix}:canonicalize($val))
+                            else (),
+                        map:put($m, $key, $instance-property)
+                        )
+                        
                 (: A sequence of values should be simply treated as multiple elements :)
                 (: TODO is this lossy? :)
                 case item()+

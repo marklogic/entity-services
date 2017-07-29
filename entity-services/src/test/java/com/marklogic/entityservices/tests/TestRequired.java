@@ -17,6 +17,7 @@ package com.marklogic.entityservices.tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
@@ -84,9 +85,13 @@ public class TestRequired  extends EntityServicesTestBase {
         JacksonHandle handle;
 
         handle = evalOneResult("", "fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
-        // save("/model-units/database-properties.json", handle.get());
+        ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = handle.get();
+        ObjectWriter writer = mapper.writer();
+
+        // save("/model-units/database-properties.json", writer.writeValueAsString(node));
+
 		InputStream is = this.getClass().getResourceAsStream("/model-units/database-properties.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 

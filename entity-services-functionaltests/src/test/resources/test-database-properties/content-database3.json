@@ -476,6 +476,16 @@
       "scalar-type":"decimal"
     }
   ],
+  "range-element-index":[  
+    {  
+      "collation":"http://marklogic.com/collation/",
+      "invalid-values":"reject",
+      "localname":"orderId",
+      "namespace-uri":null,
+      "range-value-positions":false,
+      "scalar-type":"string"
+    }
+  ],
   "triple-index":true,
   "collection-lexicon":true
 }

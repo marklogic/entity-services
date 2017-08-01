@@ -152,6 +152,7 @@
       <es:primary-key>orderId</es:primary-key>
       <es:required>orderId</es:required>
       <es:required>dateKey</es:required>
+      <es:element-range-index>orderId</es:element-range-index>
       <es:range-index>orderId</es:range-index>
       <es:range-index>anyURIKey</es:range-index>
       <es:range-index>dateKey</es:range-index>

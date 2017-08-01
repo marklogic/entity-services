@@ -26,7 +26,7 @@
         "Age":{"datatype":"double"},
         "Height":{"datatype":"int"},
         "Weight":{"datatype":"short"},
-        "YearsofService":{"datatype":"gYearMonth"},
+        "YearsofService":{"datatype":"gMonthDay"},
         "Numberyrs":{"datatype":"byte"},
         "Awards":{"datatype":"float"},
         "dateofShipment":{"datatype":"date"},

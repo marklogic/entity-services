@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-07-13T12:59:09.017011-07:00
+ Generated at timestamp: 2017-07-29T17:10:08.430942-07:00
  :)
 
 module namespace northwind-Ref-Same-Document
@@ -19,6 +19,9 @@ module namespace northwind-Ref-Same-Document
 
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
+
+
+        
 
 declare option xdmp:mapping 'false';
 
@@ -44,7 +47,7 @@ declare function northwind-Ref-Same-Document:extract-instance-Customer(
 
     let $instance := es:init-instance($source-node, 'Customer')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source-node, $source)
+        =>es:add-attachments($source)
 
     return
     if (empty($source-node/*)) 
@@ -78,7 +81,7 @@ declare function northwind-Ref-Same-Document:extract-instance-Product(
 
     let $instance := es:init-instance($source-node, 'Product')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source-node, $source)
+        =>es:add-attachments($source)
 
     return
     if (empty($source-node/*)) 
@@ -114,7 +117,7 @@ declare function northwind-Ref-Same-Document:extract-instance-Order(
 
     let $instance := es:init-instance($source-node, 'Order')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source-node, $source)
+        =>es:add-attachments($source)
 
     return
     if (empty($source-node/*)) 
@@ -148,7 +151,7 @@ declare function northwind-Ref-Same-Document:extract-instance-OrderDetail(
 
     let $instance := es:init-instance($source-node, 'OrderDetail')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source-node, $source)
+        =>es:add-attachments($source)
 
     return
     if (empty($source-node/*)) 
@@ -157,6 +160,74 @@ declare function northwind-Ref-Same-Document:extract-instance-OrderDetail(
         =>es:optional('productID', $productID)
         =>es:optional('unitPrice', $unitPrice)
         =>es:optional('Quantity', $Quantity)
+};
+
+
+
+
+
+(:~
+ : Turns an entity instance into a JSON structure.
+ : This out-of-the box implementation traverses a map structure
+ : and turns it deterministically into a JSON tree.
+ : Using this function as-is should be sufficient for most use
+ : cases, and will play well with other generated artifacts.
+ : @param $entity-instance A map:map instance returned from one of the extract-instance
+ :    functions.
+ : @return An XML element that encodes the instance.
+ :)
+declare function northwind-Ref-Same-Document:instance-to-canonical-json(
+
+    $entity-instance as map:map
+) as object-node()
+{
+    xdmp:to-json( northwind-Ref-Same-Document:canonicalize($entity-instance) )/node()
+};
+
+
+declare function northwind-Ref-Same-Document:canonicalize(
+    $entity-instance as map:map
+) as map:map
+{
+    json:object()
+    =>map:with( map:get($entity-instance,'$type'),
+        if ( map:contains($entity-instance, '$ref') )
+        then map:get($entity-instance, '$ref')
+        else
+        let $m := json:object()
+        let $_ := 
+            for $key in map:keys($entity-instance)
+            let $instance-property := map:get($entity-instance, $key)
+            where ($key castable as xs:NCName)
+            return
+                typeswitch ($instance-property)
+                (: This branch handles embedded objects.  You can choose to prune
+                   an entity's representation of extend it with lookups here. :)
+                case json:object+
+                    return
+                        for $prop in $instance-property
+                        return map:put($m, $key, northwind-Ref-Same-Document:canonicalize($prop))
+                (: An array can also treated as multiple elements :)
+                case json:array
+                    return
+                        (
+                        for $val at $i in json:array-values($instance-property)
+                        return
+                            if ($val instance of json:object)
+                            then json:set-item-at($instance-property, $i, northwind-Ref-Same-Document:canonicalize($val))
+                            else (),
+                        map:put($m, $key, $instance-property)
+                        )
+                        
+                (: A sequence of values should be simply treated as multiple elements :)
+                (: TODO is this lossy? :)
+                case item()+
+                    return
+                        for $val in $instance-property
+                        return map:put($m, $key, $val)
+                default return map:put($m, $key, $instance-property)
+        return $m)
+
 };
 
 
@@ -178,40 +249,58 @@ declare function northwind-Ref-Same-Document:instance-to-canonical-xml(
 ) as element()
 {
     (: Construct an element that is named the same as the Entity Type :)
-    element { map:get($entity-instance, '$type') }  {
-        if ( map:contains($entity-instance, '$ref') )
-        then map:get($entity-instance, '$ref')
-        else
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName)
-            return
-                typeswitch ($instance-property)
-                (: This branch handles embedded objects.  You can choose to prune
-                   an entity's representation of extend it with lookups here. :)
-                case json:object+
-                    return
-                        for $prop in $instance-property
-                        return element { $key } { northwind-Ref-Same-Document:instance-to-canonical-xml($prop) }
-                (: An array can also treated as multiple elements :)
-                case json:array
-                    return
-                        for $val in json:array-values($instance-property)
+    let $namespace := map:get($entity-instance, "$namespace")
+    let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
+    let $nsdecl := 
+        if ($namespace) then
+        namespace { $namespace-prefix } { $namespace }
+        else ()
+    let $type-name := map:get($entity-instance, '$type') 
+    let $type-qname :=
+        if ($namespace)
+        then fn:QName( $namespace, $namespace-prefix || ":" || $type-name)
+        else $type-name
+    return
+        element { $type-qname }  {
+            $nsdecl,
+            if ( map:contains($entity-instance, '$ref') )
+            then map:get($entity-instance, '$ref')
+            else
+                for $key in map:keys($entity-instance)
+                let $instance-property := map:get($entity-instance, $key)
+                let $ns-key :=
+                    if ($namespace and $key castable as xs:NCName)
+                    then fn:QName( $namespace, $namespace-prefix || ":" || $key)
+                    else $key
+                where ($key castable as xs:NCName)
+                return
+                    typeswitch ($instance-property)
+                    (: This branch handles embedded objects.  You can choose to prune
+                       an entity's representation of extend it with lookups here. :)
+                    case json:object+
                         return
-                            if ($val instance of json:object)
-                            then element { $key } {
-                                attribute datatype { 'array' },
-                                northwind-Ref-Same-Document:instance-to-canonical-xml($val) }
-                            else element { $key } {
-                                attribute datatype { 'array' },
-                                $val }
-                (: A sequence of values should be simply treated as multiple elements :)
-                case item()+
-                    return
-                        for $val in $instance-property
-                        return element { $key } { $val }
-                default return element { $key } { $instance-property }
-    }
+                            for $prop in $instance-property
+                            return element { $ns-key } { northwind-Ref-Same-Document:instance-to-canonical-xml($prop) }
+                    (: An array can also treated as multiple elements :)
+                    case json:array
+                        return
+                            for $val in json:array-values($instance-property)
+                            return
+                                if ($val instance of json:object)
+                                then element { $ns-key } {
+                                    attribute datatype { 'array' },
+                                    northwind-Ref-Same-Document:instance-to-canonical-xml($val)
+                                }
+                                else element { $ns-key } {
+                                    attribute datatype { 'array' },
+                                    $val }
+                    (: A sequence of values should be simply treated as multiple elements :)
+                    case item()+
+                        return
+                            for $val in $instance-property
+                            return element { $ns-key } { $val }
+                    default return element { $ns-key } { $instance-property }
+        }
 };
 
 
@@ -223,7 +312,7 @@ declare function northwind-Ref-Same-Document:instance-to-canonical-xml(
  : function
  : @return A document which wraps both the canonical instance and source docs.
  :)
-declare function northwind-Ref-Same-Document:instance-to-envelope(
+declare function northwind-Ref-Same-Document:instance-to-xml-envelope(
     $entity-instance as map:map
 ) as document-node()
 {
@@ -236,10 +325,52 @@ declare function northwind-Ref-Same-Document:instance-to-envelope(
                 },
                 northwind-Ref-Same-Document:instance-to-canonical-xml($entity-instance)
             },
-            element es:attachments {
-                map:get($entity-instance, '$attachments')
-            }
+            es:serialize-attachments($entity-instance, "xml")
         }
     }
 };
 
+
+(:
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @return A document which wraps both the canonical instance and source docs.
+ :)
+declare function northwind-Ref-Same-Document:instance-to-envelope(
+    $entity-instance as map:map
+) as document-node()
+{
+    northwind-Ref-Same-Document:instance-to-xml-envelope($entity-instance)
+};
+
+
+
+(:
+ : Wraps a canonical instance (returned by instance-to-canonical-json())
+ : within an envelope patterned document, along with the source
+ : document, which is stored in an attachments section.
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @return A document which wraps both the canonical instance and source docs.
+ :)
+declare function northwind-Ref-Same-Document:instance-to-json-envelope(
+    $entity-instance as map:map
+) as document-node()
+{
+    document {
+        object-node { 'envelope' : 
+            object-node { 'instance' :
+                object-node { 'info' :
+                    object-node {
+                        'title' : map:get($entity-instance,'$type'),
+                        'version' : '0.0.1'
+                    }
+                }
+                +
+                northwind-Ref-Same-Document:instance-to-canonical-json($entity-instance)
+            }
+            +
+            es:serialize-attachments($entity-instance, "json")
+        }
+    }
+};

@@ -73,7 +73,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 				logger.debug("Saved file to " + outputFile.getName());
 				os.close(); */
 				
-				logger.debug("Control document: " + entityTypeFileName);
+				//logger.debug("Control document: " + entityTypeFileName);
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
 				Document controlDoc = builder.parse(is);
 				

@@ -327,7 +327,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Order( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Order.json");
 
@@ -349,7 +349,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Customer.json");
 
@@ -372,7 +372,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Product.json");
 
@@ -393,7 +393,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Invalid.json");
 
@@ -430,7 +430,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-SchemaCompleteEntityType( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-SchemaCompleteEntityType.json");
 
@@ -452,7 +452,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Product( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Product2.json");
 
@@ -474,7 +474,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
                                   "ext:extract-instance-Customer( doc('"+sourceDocument+"') )", new JacksonHandle());
 		
 		JsonNode extractInstanceResult = handle.get();
-		logger.info("This is the extracted instance: \n" + extractInstanceResult);
+		//logger.info("This is the extracted instance: \n" + extractInstanceResult);
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/instance-Customer2.json");
 
@@ -685,6 +685,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
+	//This also tests backward compatibility of the function instance-to-envelope 
     public void testInstanceGetAttachmentsJSON() throws IOException, TestEvalException, SAXException, TransformerException {
         
         String sourceDocument = "VINET.json";
@@ -696,6 +697,26 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
         //Get the keys file as controlDoc
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = this.getClass().getResourceAsStream("/test-attachments/jsonAttachment.json");
+
+        JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(actualDoc));   
+	
+	}
+	
+	@Test
+	//This tests get-attachments with json envelope 
+    public void testInstanceGetAttachmentsbug319() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        String sourceDocument = "VINET.json";
+        
+        JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                          "(es:instance-get-attachments(ext:instance-to-json-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')))))", new JacksonHandle());
+        
+        JsonNode actualDoc = handle.get();
+        //Get the keys file as controlDoc
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = this.getClass().getResourceAsStream("/test-attachments/bug319.json");
 
         JsonNode control = mapper.readValue(is, JsonNode.class);
 
@@ -749,9 +770,9 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		}
 		transformer.transform(domSource, result);
 
-		logger.error("Checking entity type " + entityType);
-		logger.error("XML IN String format is: \n" + writer.toString());
-		logger.error("actualDoc now ::::" + actualDoc);
+		//logger.error("Checking entity type " + entityType);
+		//logger.error("XML IN String format is: \n" + writer.toString());
+		//logger.error("actualDoc now ::::" + actualDoc);
 		assertThat(actualDoc, CompareMatcher.isIdenticalTo(writer.toString()).ignoreWhitespace());
 	}
 	

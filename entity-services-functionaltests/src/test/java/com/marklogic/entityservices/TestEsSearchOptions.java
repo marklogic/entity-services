@@ -79,7 +79,7 @@ public class TestEsSearchOptions extends EntityServicesTestBase {
 		DOMHandle handle = evalOneResult("", "es:model-from-xml(fn:doc('"+entityType+"'))=>es:search-options-generate()", new DOMHandle());
 		Document searchOptions = handle.get();
 
-        debugOutput(searchOptions);
+        //debugOutput(searchOptions);
 		InputStream is = this.getClass().getResourceAsStream("/test-search-options/valid-northwind1.xml");
 		Document filesystemXML = builder.parse(is);
 		assertThat("Search options validation failed.  " + entityType + ".",

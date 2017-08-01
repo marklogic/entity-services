@@ -93,11 +93,11 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testValidJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
-        	logger.info("Checking "+entityType);
-        	
+        	        	
         	if (entityType.contains(".xml")||entityType.contains("person.json")||entityType.contains("-Src.json")||entityType.contains("-Tgt.json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
 
                 if ( entityType.toString().endsWith(".json")) {
+                	logger.info("Checking "+entityType);
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
                 	JsonNode original = mapper.readValue(is, JsonNode.class);
                 	JacksonHandle handle  = evalOneResult("", "fn:doc('"+ entityType  + "')", new JacksonHandle());
@@ -114,10 +114,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testValidXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     	for (String entityType : entityTypes) {
           ObjectMapper mapper = new ObjectMapper();
-          logger.info("Checking... "+entityType);
-            	
+                      	
             	if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
-            	
+            	logger.info("Checking... "+entityType);
             	String jsonFileName = entityType.toString().replace(".xml", ".json");
             	
             	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
@@ -735,9 +734,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 	
 		bindings.replaceAll(" ","");
-		System.out.println("bindings:::"+bindings);
+		//System.out.println("bindings:::"+bindings);
 		control.toString().replaceAll(" ","");
-		System.out.println("control:::"+control.toString());
+		//System.out.println("control:::"+control.toString());
 		
   	    //assertEquals(control.toString(),bindings);
 		assertNotNull(bindings);
@@ -754,10 +753,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("", "es:database-properties-generate(es:model-validate(fn:doc('invalid-db-prop-rangeindex.json')))", new JacksonHandle());	
-    				//fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
+    				fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("gYearMonth in property YearsofService is unsupported for a range index."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("gMonthDay in property YearsofService is unsupported for a range index."));
     	}
     }
 

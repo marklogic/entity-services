@@ -27,6 +27,7 @@
         }
       },
       "primaryKey":"id",
+      "wordLexicon":["firstName"],
       "namespace":"http://ex.org/Person",
       "namespacePrefix":"p"
     }

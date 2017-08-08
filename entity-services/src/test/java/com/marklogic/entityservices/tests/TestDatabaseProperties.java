@@ -30,6 +30,7 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
     public static void setup() {
            setupClients();
         TestSetup.getInstance().loadEntityTypes("/json-models", "SchemaCompleteEntityType-0.0.1.json");
+        TestSetup.getInstance().loadEntityTypes("/json-models", "Person-0.0.2.json");
     }
 
     @Test
@@ -43,6 +44,18 @@ public class TestDatabaseProperties extends EntityServicesTestBase {
         ObjectMapper mapper = new ObjectMapper();
         InputStream is = this.getClass().getResourceAsStream("/expected-database-properties/content-database.json");
         JsonNode control = mapper.readValue(is, JsonNode.class);
+
+        org.hamcrest.MatcherAssert.assertThat(databaseConfiguration, org.hamcrest.Matchers.equalTo(control));
+
+        // another test case for namespace-uri checking
+        handle =
+            evalOneResult("","fn:doc('Person-0.0.2.json')=>es:database-properties-generate()", new JacksonHandle());
+        databaseConfiguration = handle.get();
+
+        //logger.debug(databaseConfiguration.toString());
+
+        is = this.getClass().getResourceAsStream("/expected-database-properties/person-content-database.json");
+        control = mapper.readValue(is, JsonNode.class);
 
         org.hamcrest.MatcherAssert.assertThat(databaseConfiguration, org.hamcrest.Matchers.equalTo(control));
     }

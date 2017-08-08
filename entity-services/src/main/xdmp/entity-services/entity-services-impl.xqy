@@ -599,7 +599,7 @@ declare function esi:database-properties-generate(
     let $path-range-indexes := json:array()
     let $element-range-indexes := json:array()
     let $word-lexicons := json:array()
-    let $path-namespaces := json:array()
+    let $path-namespaces := json:object()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
@@ -619,7 +619,8 @@ declare function esi:database-properties-generate(
             if ($namespace-uri)
             then 
                 (
-                json:array-push($path-namespaces,
+                map:put($path-namespaces,
+                        $namespace-prefix,
                         json:object()
                         =>map:with("prefix",$namespace-prefix)
                         =>map:with("namespace-uri", $namespace-uri)),
@@ -666,12 +667,13 @@ declare function esi:database-properties-generate(
     let $pn := json:object()
         =>map:with("prefix", "es")
         =>map:with("namespace-uri", "http://marklogic.com/entity-services")
-    let $_ := json:array-push($path-namespaces, $pn)
+    let $_ := map:put($path-namespaces, "es", $pn)
+    let $values := function($map) { json:to-array( for $k in $map=>map:keys() return map:get($map, $k)) }
     let $database-properties := 
         json:object()
         =>map:with("database-name", "%%DATABASE%%")
         =>map:with("schema-database", "%%SCHEMAS_DATABASE%%")
-        =>map:with("path-namespace", $path-namespaces)
+        =>map:with("path-namespace", $values($path-namespaces))
         =>esi:with-if-exists("element-word-lexicon", $word-lexicons)
         =>esi:with-if-exists("range-path-index", $path-range-indexes)
         =>esi:with-if-exists("range-element-index", $element-range-indexes)

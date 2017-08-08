@@ -7,6 +7,7 @@
 order:shortKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:short ;
         es:title "shortKey" .
 
@@ -18,6 +19,7 @@ order:decimalKey
 order:stringKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         a es:WordLexiconProperty ;
         es:datatype xs:string ;
         es:title "stringKey" .
@@ -35,6 +37,7 @@ type:OrderDetails
 order:iriKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype <http://marklogic.com/semantics#iri> ;
         es:title "iriKey" .
 
@@ -51,30 +54,35 @@ order:floatKey
 order:integerKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:integer ;
         es:title "integerKey" .
 
 order:negativeIntegerKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:negativeInteger ;
         es:title "negativeIntegerKey" .
 
 order:nonNegativeIntegerKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:nonNegativeInteger ;
         es:title "nonNegativeIntegerKey" .
 
 order:positiveIntegerKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:positiveInteger ;
         es:title "positiveIntegerKey" .
 
 order:nonPositiveIntegerKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:nonPositiveInteger ;
         es:title "nonPositiveIntegerKey" .
 
@@ -86,6 +94,7 @@ order:yearMonthDurationKey
 order:externalReference
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:ref <http://myorganization.com/Schema-1.1.1/OrderDetails> ;
         es:description  "This property refers to a type externally with no array declaration." ;
         es:title "externalReference" .
@@ -101,6 +110,7 @@ type:SchemaCompleteEntityType
 order:byteKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:byte ;
         es:title "byteKey" .
 
@@ -172,6 +182,7 @@ order:longKey
 order:arrayreferenceInThisFile
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items  <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayreferenceInThisFile/items> ;
         es:description  "This property refers to OrderDetails with an array declaration." ;
@@ -188,6 +199,7 @@ order:unsignedIntKey
 order:unsignedByteKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:unsignedByte ;
         es:title "unsignedByteKey" .
 
@@ -199,6 +211,7 @@ orderdetails:quantity
 order:externalArrayReference
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/externalArrayReference/items> ;
         es:description  "This property refers to external OrderDetails with an array declaration." ;
@@ -217,6 +230,7 @@ order:arrayKey
         a es:Property ;
         a es:RequiredProperty ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype <http://marklogic.com/json#array> ;
         es:items <http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.1/SchemaCompleteEntityType/arrayKey/items> ;
         es:title "arrayKey" .
@@ -237,6 +251,7 @@ order:arrayStringKey
 order:unsignedShortKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:unsignedShort ;
         es:title "unsignedShortKey" .
 
@@ -248,12 +263,14 @@ order:timeKey
 order:anyURIKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:anyURI ;
         es:title "anyURIKey" .
 
 order:booleanKey
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:boolean ;
         es:title "booleanKey" .
 
@@ -271,6 +288,7 @@ order:dateKey
         a es:Property ;
         a es:RequiredProperty ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:datatype xs:date ;
         es:title "dateKey" .
 
@@ -285,6 +303,7 @@ orderdetails:productName
 order:referenceInThisFile
         a es:Property ;
         a es:RangeIndexedProperty ;
+        a es:PathRangeIndexedProperty ;
         es:ref type:OrderDetails ;
         es:description  "This property refers to OrderDetails with no array declaration." ;
         es:title "referenceInThisFile" .

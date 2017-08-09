@@ -200,7 +200,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             String entityTypeTestFileName = entityType.replace(".json", "-0.xml");
 
             String entityTypeName = entityType.replace(".json",  "");
-            String entityTypeNoVersion = entityTypeName.replaceAll("-.*$", "");
+            String entityTypeNoVersion = entityTypeName.replaceAll("-\\d.*$", "");
 
             logger.debug("Checking canonical XML function and envelope function and empty extraction: " + entityType);
 

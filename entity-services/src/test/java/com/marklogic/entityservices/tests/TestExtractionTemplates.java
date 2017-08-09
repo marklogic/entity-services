@@ -90,19 +90,21 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     @Test
     public void testExtractionTemplates() {
         for (String entityType : entityTypes) {
-            String schemaName = entityType.replaceAll("-.*$", "");
+            String baseName = entityType.replaceAll("-\\d.*$", "");
+            String schemaName = baseName.replaceAll("-","_");
+            String viewName = schemaName;
             JacksonHandle template = new JacksonHandle();
             logger.info("Testing extraction template for " + entityType);
             storeExtractionTempate(entityType);
             try {
-                template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+                template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+viewName+"')", template);
             } catch (TestEvalException e) {
-                fail("Extraction template generation failed.  View " + schemaName + " didn't exist");
+                fail("Extraction template generation failed.  View " + schemaName + "." + viewName + " didn't exist");
             }
             JsonNode schemaJson = template.get();
 
             JsonNode body = schemaJson.get("view");
-            assertEquals("View name", schemaName, body.get("name").asText());
+            assertEquals("View name", viewName, body.get("name").asText());
             assertTrue("View has columns", body.get("columns").isArray());
 
             logger.debug( body.asText() );

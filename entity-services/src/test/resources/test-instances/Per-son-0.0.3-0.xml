@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
-<Person>
+<Per-son>
   <id>some string</id>
   <firstName>some string</firstName>
   <lastName>some string</lastName>
   <fullName>some string</fullName>
   <address>some string</address>
-  <bestFriend>
-    <Person>
+  <best-friend>
+    <Per-son>
       <id>some string</id>
       <firstName>some string</firstName>
       <lastName>some string</lastName>
       <fullName>some string</fullName>
       <address>some string</address>
-      <bestFriend>
-        <Person>some string</Person>
-      </bestFriend>
+      <best-friend>
+        <Per-son>some string</Per-son>
+      </best-friend>
       <friendOf datatype="array">
-        <Person>some string</Person>
+        <Per-son>some string</Per-son>
       </friendOf>
-    </Person>
-  </bestFriend>
+    </Per-son>
+  </best-friend>
   <friendOf datatype="array">
-    <Person>
+    <Per-son>
       <id>some string</id>
       <firstName>some string</firstName>
       <lastName>some string</lastName>
       <fullName>some string</fullName>
       <address>some string</address>
-      <bestFriend>
-        <Person>some string</Person>
-      </bestFriend>
+      <best-friend>
+        <Per-son>some string</Per-son>
+      </best-friend>
       <friendOf datatype="array">
-        <Person>some string</Person>
+        <Per-son>some string</Per-son>
       </friendOf>
-    </Person>
+    </Per-son>
   </friendOf>
-</Person>
+</Per-son>
 

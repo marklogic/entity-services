@@ -58,7 +58,7 @@ graph uri: http://baloo#et-required-0.0.1</description>
       <context>./ETOne</context>
       <rows>
 	<row>
-	  <schema-name>et-required</schema-name>
+	  <schema-name>et_required</schema-name>
 	  <view-name>ETOne</view-name>
 	  <view-layout>sparse</view-layout>
 	  <columns>

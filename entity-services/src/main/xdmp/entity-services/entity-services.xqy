@@ -297,9 +297,9 @@ declare function es:init-source(
     $entity-type-name as xs:string
 ) as item()*
 {
-    if ( ($source instance of document-node())
-        or (exists
-            ($source/element()[fn:local-name(.) eq $entity-type-name] )))
+    if ( ($source instance of document-node()) )
+    then $source/node()
+    else if (exists ($source/element()[fn:local-name(.) eq $entity-type-name] ))
     then $source/*
     else $source
 };
@@ -319,7 +319,6 @@ declare function es:init-instance(
     let $instance := json:object()
             =>map:with('$type', $entity-type-name)
     let $source-qname := fn:node-name($source-node)
-    let $_ := xdmp:log(("OH QNAME", $source-qname))
     let $_ :=
         if (fn:prefix-from-QName($source-qname))
         then (
@@ -347,6 +346,7 @@ declare function es:add-attachments(
     $source as item()*
 ) as map:map
 {
+    let $_ := xdmp:log( ( "BAH", $source) ) return
     $instance=>map:with('$attachments', $source)
 };
 
@@ -401,16 +401,18 @@ declare function es:serialize-attachments(
     switch ($envelope-format)
     case "json" return
         object-node { 'attachments' :
-            for $attachment in $instance=>map:get('$attachments')
-            let $attachment :=
-                if ($attachment instance of document-node())
-                then $attachment/node()
-                else $attachment
-            return
-                typeswitch ($attachment)
-                case object-node() return $attachment
-                case array-node() return $attachment
-                default return xdmp:quote($attachment)
+            array-node {
+                for $attachment in $instance=>map:get('$attachments')
+                let $attachment :=
+                    if ($attachment instance of document-node())
+                    then $attachment/node()
+                    else $attachment
+                return
+                    typeswitch ($attachment)
+                    case object-node() return $attachment
+                    case array-node() return $attachment
+                    default return xdmp:quote($attachment)
+            }
         }
     case "xml" return
         element es:attachments {

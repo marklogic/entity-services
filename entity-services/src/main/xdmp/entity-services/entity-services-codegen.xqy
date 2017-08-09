@@ -289,43 +289,45 @@ declare function {$prefix}:canonicalize(
 {{
     json:object()
     =>map:with( map:get($entity-instance,'$type'),
-        if ( map:contains($entity-instance, '$ref') )
-        then map:get($entity-instance, '$ref')
-        else
-        let $m := json:object()
-        let $_ := 
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName)
-            return
-                typeswitch ($instance-property)
-                (: This branch handles embedded objects.  You can choose to prune
-                   an entity's representation of extend it with lookups here. :)
-                case json:object+
+                if ( map:contains($entity-instance, '$ref') )
+                then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
+                else
+                let $m := json:object()
+                let $_ := 
+                    for $key in map:keys($entity-instance)
+                    let $instance-property := map:get($entity-instance, $key)
+                    where ($key castable as xs:NCName)
                     return
-                        for $prop in $instance-property
-                        return map:put($m, $key, {$prefix}:canonicalize($prop))
-                (: An array can also treated as multiple elements :)
-                case json:array
-                    return
-                        (
-                        for $val at $i in json:array-values($instance-property)
-                        return
-                            if ($val instance of json:object)
-                            then json:set-item-at($instance-property, $i, {$prefix}:canonicalize($val))
-                            else (),
-                        map:put($m, $key, $instance-property)
-                        )
-                        
-                (: A sequence of values should be simply treated as multiple elements :)
-                (: TODO is this lossy? :)
-                case item()+
-                    return
-                        for $val in $instance-property
-                        return map:put($m, $key, $val)
-                default return map:put($m, $key, $instance-property)
-        return $m)
-
+                        typeswitch ($instance-property)
+                        (: This branch handles embedded objects.  You can choose to prune
+                           an entity's representation of extend it with lookups here. :)
+                        case json:object
+                            return
+                                if (empty(map:keys($instance-property)))
+                                then map:put($m, $key, json:object())
+                                else
+                                    for $prop in $instance-property
+                                    return map:put($m, $key, {$prefix}:canonicalize($prop))
+                        (: An array can also treated as multiple elements :)
+                        case json:array
+                            return
+                                (
+                                for $val at $i in json:array-values($instance-property)
+                                return
+                                    if ($val instance of json:object)
+                                    then json:set-item-at($instance-property, $i, {$prefix}:canonicalize($val))
+                                    else (),
+                                map:put($m, $key, $instance-property)
+                                )
+                                
+                        (: A sequence of values should be simply treated as multiple elements :)
+                        (: TODO is this lossy? :)
+                        case item()+
+                            return
+                                for $val in $instance-property
+                                return map:put($m, $key, $val)
+                        default return map:put($m, $key, $instance-property)
+                return $m)
 }};
 
 

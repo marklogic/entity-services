@@ -124,6 +124,13 @@ declare function inst:instance-json-from-document(
     $document as document-node()
 ) as object-node()*
 {
+    if ($document/object-node())
+    then
+        for $n in $document//instance/*
+        where fn:node-name($n) ne xs:QName("info")
+        return
+        object-node { fn:node-name($n) : $n }
+    else
     (inst:instance-from-document($document) !
         (inst:wrap-instance(.)=>xdmp:to-json()))/node()
 };

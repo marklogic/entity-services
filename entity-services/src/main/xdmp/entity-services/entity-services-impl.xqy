@@ -1046,6 +1046,7 @@ declare function esi:extraction-template-generate(
     let $schema-name := $model=>map:get("info")=>map:get("title")
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $scalar-rows := map:map()
+    let $secure-tde-name := fn:replace(?, "-", "_")
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
@@ -1057,8 +1058,8 @@ declare function esi:extraction-template-generate(
         map:put($scalar-rows, $entity-type-name,
             <tde:rows>
                 <tde:row>
-                    <tde:schema-name>{ $schema-name }</tde:schema-name>
-                    <tde:view-name>{ $entity-type-name }</tde:view-name>
+                    <tde:schema-name>{ $schema-name=>$secure-tde-name() }</tde:schema-name>
+                    <tde:view-name>{ $entity-type-name=>$secure-tde-name() }</tde:view-name>
                     <tde:view-layout>sparse</tde:view-layout>
                     <tde:columns>
                     {
@@ -1080,14 +1081,14 @@ declare function esi:extraction-template-generate(
                             if ( map:contains($property-definition, "$ref") )
                             then
                             <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
+                                <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) } </tde:scalar-type>
                                 <tde:val>{ $property-name }/{ esi:ref-type-name($model, $entity-type-name, $property-name) }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                             else
                             <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
+                                <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ $datatype }</tde:scalar-type>
                                 <tde:val>{ $property-name }</tde:val>
                                 {$is-nullable}
@@ -1136,15 +1137,15 @@ declare function esi:extraction-template-generate(
                     <tde:context>./{ $property-name }</tde:context>
                     <tde:rows>
                       <tde:row>
-                        <tde:schema-name>{ $schema-name }</tde:schema-name>
-                        <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
+                        <tde:schema-name>{ $schema-name=>$secure-tde-name() }</tde:schema-name>
+                        <tde:view-name>{ $entity-type-name=>$secure-tde-name() }_{ $property-name=>$secure-tde-name() }</tde:view-name>
                         <tde:view-layout>sparse</tde:view-layout>
                         <tde:columns>
                             <tde:column>
                                 { comment { "This column joins to property",
                                             $primary-key-name, "of",
                                             $entity-type-name } }
-                                <tde:name>{ $primary-key-name }</tde:name>
+                                <tde:name>{ $primary-key-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
                                 <tde:val>../{ $primary-key-name }</tde:val>
                             </tde:column>
@@ -1165,7 +1166,7 @@ declare function esi:extraction-template-generate(
                                 <tde:column>
                                     { comment { "This column joins to primary key of",
                                                 $ref-type-name } }
-                                    <tde:name>{ $property-name || "_" || $ref-primary-key }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() || "_" || $ref-primary-key=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
                                     <tde:val>{ $ref-name }</tde:val>
                                 </tde:column>
@@ -1174,7 +1175,7 @@ declare function esi:extraction-template-generate(
                             then
                                 <tde:column>
                                     { comment { "This column joins to primary key of an external reference" } }
-                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>string</tde:scalar-type>
                                     <tde:val>{ $ref-name }</tde:val>
                                     {$is-nullable}
@@ -1184,7 +1185,7 @@ declare function esi:extraction-template-generate(
                                     { comment { "This column holds array values from property",
                                                 $primary-key-name, "of",
                                                 $entity-type-name } }
-                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
                                     <tde:val>.</tde:val>
                                     {$is-nullable}

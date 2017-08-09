@@ -418,7 +418,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             evalOneResult("", "es:instance-json-from-document( doc('Order-Source-2.xml-envelope.xml') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
-        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+        org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
 
         // another test for new failing instance.
         instanceDocument = "Order-Source-4.xml";
@@ -470,6 +470,37 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+    }
+
+    @Test
+    public void testJSONObjectNodeInput() throws IOException, ParserConfigurationException, SAXException {
+
+        String initialTest = "Order-0.0.4.json";
+        String instanceDocument = "Order-Source-5.json";
+
+        JsonNode instanceNode = new ObjectMapper().readTree(this.getClass().getResourceAsStream("/source-documents/" + instanceDocument));
+        client.newJSONDocumentManager().write(instanceDocument, new JacksonHandle(instanceNode));
+
+        // control in this test will not be the same as input.  We're testing for liberal input acceptance
+        JsonNode control = new ObjectMapper()
+            .readValue(
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-3.json"),
+                JsonNode.class);
+
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-json-envelope( conv:extract-instance-Order( doc('Order-Source-5.json') ) )"
+                +"return xdmp:document-insert('Order-Source-5.json-envelope.json', $envelope) ",
+            new StringHandle());
+
+        JacksonHandle instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-5.json-envelope.json') )", new JacksonHandle());
+
+        JsonNode jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+
+        client.newJSONDocumentManager().delete(instanceDocument);
+        client.newJSONDocumentManager().delete("Order-Source-5.json-envelope.json");
     }
 
     @AfterClass

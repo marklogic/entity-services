@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-08-09T23:38:41.383426Z
+ Generated at timestamp: 2017-08-10T17:49:34.347263Z
  :)
 
 module namespace et-required
@@ -86,48 +86,45 @@ declare function et-required:canonicalize(
 {
     json:object()
     =>map:with( map:get($entity-instance,'$type'),
-        if ( map:contains($entity-instance, '$ref') )
-        then fn:head( (map:get($entity-instance, '$ref'), object-node()) )
-        else
-        let $m := json:object()
-        let $_ := 
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            return
-                if ($key castable as xs:NCName)
-                then
-                    typeswitch ($instance-property)
-                    (: This branch handles embedded objects.  You can choose to prune
-                       an entity's representation of extend it with lookups here. :)
-                    case json:object
-                        return
-                            if (empty(map:keys($instance-property)))
-                            then map:put($m, $key, json:object())
-                            else
-                                for $prop in $instance-property
-                                return map:put($m, $key, et-required:canonicalize($prop))
-                    (: An array can also treated as multiple elements :)
-                    case json:array
-                        return
-                            (
-                            for $val at $i in json:array-values($instance-property)
+                if ( map:contains($entity-instance, '$ref') )
+                then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
+                else
+                let $m := json:object()
+                let $_ := 
+                    for $key in map:keys($entity-instance)
+                    let $instance-property := map:get($entity-instance, $key)
+                    where ($key castable as xs:NCName)
+                    return
+                        typeswitch ($instance-property)
+                        (: This branch handles embedded objects.  You can choose to prune
+                           an entity's representation of extend it with lookups here. :)
+                        case json:object
                             return
-                                if ($val instance of object-node())
-                                then json:set-item-at($instance-property, $i, et-required:canonicalize($val))
-                                else (),
-                            map:put($m, $key, $instance-property)
-                            )
-                            
-                    (: A sequence of values should be simply treated as multiple elements :)
-                    (: TODO is this lossy? :)
-                    case item()+
-                        return
-                            for $val in $instance-property
-                            return map:put($m, $key, $val)
-                    default return map:put($m, $key, $instance-property)
-                else map:delete($entity-instance, $key)
-        return $m)
-
+                                if (empty(map:keys($instance-property)))
+                                then map:put($m, $key, json:object())
+                                else
+                                    for $prop in $instance-property
+                                    return map:put($m, $key, et-required:canonicalize($prop))
+                        (: An array can also treated as multiple elements :)
+                        case json:array
+                            return
+                                (
+                                for $val at $i in json:array-values($instance-property)
+                                return
+                                    if ($val instance of json:object)
+                                    then json:set-item-at($instance-property, $i, et-required:canonicalize($val))
+                                    else (),
+                                map:put($m, $key, $instance-property)
+                                )
+                                
+                        (: A sequence of values should be simply treated as multiple elements :)
+                        (: TODO is this lossy? :)
+                        case item()+
+                            return
+                                for $val in $instance-property
+                                return map:put($m, $key, $val)
+                        default return map:put($m, $key, $instance-property)
+                return $m)
 };
 
 

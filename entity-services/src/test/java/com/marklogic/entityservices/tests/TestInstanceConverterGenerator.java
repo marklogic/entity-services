@@ -329,7 +329,6 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             Element docElement = document.getDocumentElement();
             assertEquals("envelope function verification", "envelope", docElement.getLocalName());
             NodeList nl = docElement.getChildNodes();
-            assertEquals("Envelope must have two children.", 2, nl.getLength());
             for (int i=0; i<nl.getLength(); i++) {
                 Node n = nl.item(i);
                 if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -343,7 +342,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
     }
 
     @Test
-    public void testEnvelopeFunction() throws TestEvalException {
+    public void testEnvelopeFunction() throws TestEvalException, TransformerException {
 
         for (String entityType : converters.keySet()) {
             String functionCall =
@@ -356,9 +355,9 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             DOMHandle handle = evalOneResult(moduleImport(entityType), functionCall, new DOMHandle());
             Document document = handle.get();
             Element docElement = document.getDocumentElement();
+            debugOutput(document);
             assertEquals("envelope function verification", "envelope", docElement.getLocalName());
             NodeList nl = docElement.getChildNodes();
-            assertEquals("Envelope must have two children.", 2, nl.getLength());
             for (int i=0; i<nl.getLength(); i++) {
                 Node n = nl.item(i);
                 if (n.getNodeType() == Node.ELEMENT_NODE) {

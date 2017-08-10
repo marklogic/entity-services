@@ -83,4 +83,21 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 		//org.hamcrest.MatcherAssert.assertThat("Expected: "+control+"\n\tGot: "+databaseConfiguration,control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
 	}
 	
+	@Test
+	public void testDBpropNamespace() throws IOException, TestEvalException {
+		String[] eTs = {"valid-1-namespace.json","valid-2-namespace.json"};
+		
+		for (String entityType : eTs) {
+			logger.info("Validating for "+entityType);
+			JacksonHandle handle = evalOneResult("", "es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
+			JsonNode databaseConfiguration = handle.get();
+			//logger.debug(databaseConfiguration.toString());
+
+			ObjectMapper mapper = new ObjectMapper();
+			InputStream is = this.getClass().getResourceAsStream("/test-database-properties/"+entityType);
+			JsonNode control = mapper.readValue(is, JsonNode.class);
+			assertEquals(control,databaseConfiguration);
+		}
+	}
+	
 }

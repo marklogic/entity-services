@@ -906,6 +906,7 @@ declare function esi:schema-generate(
             {$target-attribute}
             {$imports=>map:get($namespace)}
             {
+                functx:distinct-deep(
                 for $entity-type-name in json:array-values($names-by-namespace=>map:get($namespace))
                 let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
                 let $namespace := $entity-type=>map:get("namespace")
@@ -918,6 +919,7 @@ declare function esi:schema-generate(
                     for $k in $keys 
                     return map:get($m, $k),
                     json:array-values($entity-type-declarations=>map:get($entity-type-name))
+                )
                 )
             }
             </xs:schema>)

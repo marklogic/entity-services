@@ -1,0 +1,6 @@
+<cust:Customer xmlns:cust="http://marklogic.com/customer">
+<cust:CustomerId>some string</cust:CustomerId>
+<cust:CompanyName>some string</cust:CompanyName>
+<cust:Country>some string</cust:Country>
+<cust:Address>some string</cust:Address>
+</cust:Customer>

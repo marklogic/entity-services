@@ -1,0 +1,95 @@
+{  
+   "info":{  
+      "title":"Model_1ns",
+      "version":"0.0.1",
+      "baseUri":"http://marklogic.com/ns1"
+   },
+   "definitions":{  
+      "Customer":{  
+         "properties":{  
+            "CustomerId":{  
+               "datatype":"string"
+            },
+            "CompanyName":{  
+               "datatype":"string"
+            },
+            "Country":{  
+               "datatype":"string"
+            },
+            "Address":{  
+               "datatype":"string"
+            }
+         },
+         "namespace": "http://marklogic.com/customer",
+         "namespacePrefix": "cust",
+         "primaryKey":"CustomerId",
+         "required": ["CustomerId"],
+         "rangeIndex": [ "CustomerId" ],
+         "pathRangeIndex": [ "CompanyName" ],
+         "elementRangeIndex": [ "Country", "Address" ]
+      },
+      "Product":{  
+         "properties":{  
+            "ProductName":{  
+               "datatype":"string"
+            },
+            "ProductID":{  
+               "datatype":"integer"
+            },
+            "UnitPrice":{  
+               "datatype":"integer"
+            },
+            "SupplierID":{  
+               "datatype":"integer"
+            },
+            "Discontinued":{  
+               "datatype":"boolean"
+            }
+         },
+         "required": ["ProductID"],
+         "rangeIndex": [ "UnitPrice" ],
+         "pathRangeIndex": [ "Discontinued" ],
+         "elementRangeIndex": [ "SupplierID", "ProductID" ]
+      },
+      "Order":{  
+         "properties":{  
+            "OrderID":{  
+               "datatype":"integer"
+            },
+            "CustomerID":{  
+               "datatype":"string"
+            },
+            "OrderDate":{  
+               "datatype":"dateTime"
+            },
+            "ShipAddress":{  
+               "datatype":"string"
+            },
+            "OrderDetails":{  
+               "datatype":"array",
+               "items":{  
+                  "$ref":"#/definitions/OrderDetail"
+               }
+            }
+         },
+         "required": ["OrderID"],
+         "rangeIndex": [ "OrderDate" ],
+         "pathRangeIndex": [ "CustomerID" ],
+         "elementRangeIndex": [ "ShipAddress", "OrderID" ],
+         "wordLexicon": [ "OrderDetails" ]
+      },
+      "OrderDetail":{  
+         "properties":{  
+            "ProductID":{  
+               "$ref":"#/definitions/Product"
+            },
+            "UnitPrice":{  
+               "datatype":"integer"
+            },
+            "Quantity":{  
+               "datatype":"integer"
+            }
+         }
+      }
+   }
+}

@@ -1,0 +1,21 @@
+{
+"Superstore": {
+"OrderID": 43911, 
+"CustomerID": "Tamara Manning", 
+"OrderDate": "2009-01-14T00:00:00", 
+"ShippedDate": "2009-01-14T00:00:00", 
+"ProductName": "Telescoping Adjustable Floor Lamp", 
+"UnitPrice": 19.99, 
+"Discount": "0.06", 
+"ShipAddress": [
+{
+"ShipDetails": {
+"Province": "Alberta", 
+"Region": "West", 
+"ShipMode": "Regular Air", 
+"ShippingCost": 11.17
+}
+}
+]
+}
+}

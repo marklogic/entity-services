@@ -1,0 +1,52 @@
+{
+"$type": "Order", 
+"$namespace": "http://marklogic.com/order", 
+"$namespacePrefix": "ord", 
+"$attachments": "<ord:Order OrderID=\"10250\" xmlns:ord=\"http://marklogic.com/order\">\n<ord:CustomerID>HANAR</ord:CustomerID>\n<ord:EmployeeID>4</ord:EmployeeID>\n<ord:OrderDate>1996-07-08T16:46:22</ord:OrderDate>\n<ord:RequiredDate>1996-08-05T06:26:46</ord:RequiredDate>\n<ord:ShippedDate>1996-07-12T00:57:04</ord:ShippedDate>\n<ord:ShipVia>2</ord:ShipVia>\n<ord:Freight>65.8300</ord:Freight>\n<ord:ShipName>Hanari Carnes</ord:ShipName>\n<ord:ShipAddress>Rua do Paço, 67</ord:ShipAddress>\n<ord:ShipCity>Rio de Janeiro</ord:ShipCity>\n<ord:ShipRegion>RJ</ord:ShipRegion>\n<ord:ShipPostalCode>05454-876</ord:ShipPostalCode>\n<ord:ShipCountry>Brazil</ord:ShipCountry>\n<ord:OrderDetails>\n<OrderDetail>\n<ProductID>41</ProductID>\n<UnitPrice>7.7000</UnitPrice>\n<Quantity>10</Quantity>\n<Discount>0</Discount>\n</OrderDetail>\n<OrderDetail>\n<ProductID>51</ProductID>\n<UnitPrice>42.4000</UnitPrice>\n<Quantity>35</Quantity>\n<Discount>0.15</Discount>\n</OrderDetail>\n<OrderDetail>\n<ProductID>65</ProductID>\n<UnitPrice>16.8000</UnitPrice>\n<Quantity>15</Quantity>\n<Discount>0.15</Discount>\n</OrderDetail>\n</ord:OrderDetails>\n</ord:Order>", 
+"OrderID": 10250, 
+"CustomerID": {
+"$type": "Customer", 
+"$namespace": "http://marklogic.com/order", 
+"$namespacePrefix": "ord", 
+"$ref": "HANAR", 
+"$attachments": "<ord:CustomerID xmlns:ord=\"http://marklogic.com/order\">HANAR</ord:CustomerID>"
+}, 
+"OrderDate": "1996-07-08T16:46:22", 
+"ShippedDate": "1996-07-12T00:57:04", 
+"ShipAddress": "Rua do Paço, 67", 
+"OrderDetails": [
+{
+"$type": "OrderDetail", 
+"$attachments": "<OrderDetail xmlns:ord=\"http://marklogic.com/order\">\n<ProductID>41</ProductID>\n<UnitPrice>7.7000</UnitPrice>\n<Quantity>10</Quantity>\n<Discount>0</Discount>\n</OrderDetail>", 
+"ProductID": {
+"$type": "Product", 
+"$ref": "41", 
+"$attachments": "<ProductID xmlns:ord=\"http://marklogic.com/order\">41</ProductID>"
+}, 
+"UnitPrice": 7.7, 
+"Quantity": 10
+}, 
+{
+"$type": "OrderDetail", 
+"$attachments": "<OrderDetail xmlns:ord=\"http://marklogic.com/order\">\n<ProductID>51</ProductID>\n<UnitPrice>42.4000</UnitPrice>\n<Quantity>35</Quantity>\n<Discount>0.15</Discount>\n</OrderDetail>", 
+"ProductID": {
+"$type": "Product", 
+"$ref": "51", 
+"$attachments": "<ProductID xmlns:ord=\"http://marklogic.com/order\">51</ProductID>"
+}, 
+"UnitPrice": 42.4, 
+"Quantity": 35
+}, 
+{
+"$type": "OrderDetail", 
+"$attachments": "<OrderDetail xmlns:ord=\"http://marklogic.com/order\">\n<ProductID>65</ProductID>\n<UnitPrice>16.8000</UnitPrice>\n<Quantity>15</Quantity>\n<Discount>0.15</Discount>\n</OrderDetail>", 
+"ProductID": {
+"$type": "Product", 
+"$ref": "65", 
+"$attachments": "<ProductID xmlns:ord=\"http://marklogic.com/order\">65</ProductID>"
+}, 
+"UnitPrice": 16.8, 
+"Quantity": 15
+}
+]
+}

@@ -1,0 +1,25 @@
+{
+"$type": "Superstore", 
+"$namespace": "http://marklogic.com/super", 
+"$namespacePrefix": "sup", 
+"$attachments": "<sup:Superstore xmlns:sup=\"http://marklogic.com/super\">\n<sup:RowID>6200</sup:RowID> \n<sup:OrderID>43911</sup:OrderID> \n<sup:OrderDate>2009-01-14T00:00:00</sup:OrderDate> \n<sup:OrderPriority>Medium</sup:OrderPriority> \n<sup:OrderQuantity>29</sup:OrderQuantity> \n<sup:Sales>577.89</sup:Sales> \n<sup:Discount>0.06</sup:Discount> \n<ShipMode>Regular Air</ShipMode> \n<sup:Profit>-53.89</sup:Profit> \n<sup:UnitPrice>19.99</sup:UnitPrice> \n<ShippingCost>11.17</ShippingCost> \n<sup:CustomerID>Tamara Manning</sup:CustomerID> \n<Province>Alberta</Province> \n<Region>West</Region> \n<sup:CustomerSegment>Corporate</sup:CustomerSegment> \n<sup:ProductCategory>Furniture</sup:ProductCategory> \n<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory> \n<sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName> \n<sup:ProductContainer>Large Box</sup:ProductContainer> \n<sup:ProductBaseMargin>0.6</sup:ProductBaseMargin> \n<sup:ShippedDate>2009-01-14T00:00:00</sup:ShippedDate>\n</sup:Superstore>", 
+"OrderID": 43911, 
+"CustomerID": "Tamara Manning", 
+"OrderDate": "2009-01-14T00:00:00", 
+"ShippedDate": "2009-01-14T00:00:00", 
+"ProductName": "Telescoping Adjustable Floor Lamp", 
+"UnitPrice": 19.99, 
+"Discount": "0.06", 
+"ShipAddress": [
+{
+"$type": "ShipDetails", 
+"$namespace": "http://marklogic.com/super", 
+"$namespacePrefix": "sup", 
+"$attachments": "<sup:Superstore xmlns:sup=\"http://marklogic.com/super\">\n<sup:RowID>6200</sup:RowID> \n<sup:OrderID>43911</sup:OrderID> \n<sup:OrderDate>2009-01-14T00:00:00</sup:OrderDate> \n<sup:OrderPriority>Medium</sup:OrderPriority> \n<sup:OrderQuantity>29</sup:OrderQuantity> \n<sup:Sales>577.89</sup:Sales> \n<sup:Discount>0.06</sup:Discount> \n<ShipMode>Regular Air</ShipMode> \n<sup:Profit>-53.89</sup:Profit> \n<sup:UnitPrice>19.99</sup:UnitPrice> \n<ShippingCost>11.17</ShippingCost> \n<sup:CustomerID>Tamara Manning</sup:CustomerID> \n<Province>Alberta</Province> \n<Region>West</Region> \n<sup:CustomerSegment>Corporate</sup:CustomerSegment> \n<sup:ProductCategory>Furniture</sup:ProductCategory> \n<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory> \n<sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName> \n<sup:ProductContainer>Large Box</sup:ProductContainer> \n<sup:ProductBaseMargin>0.6</sup:ProductBaseMargin> \n<sup:ShippedDate>2009-01-14T00:00:00</sup:ShippedDate>\n</sup:Superstore>", 
+"Province": "Alberta", 
+"Region": "West", 
+"ShipMode": "Regular Air", 
+"ShippingCost": 11.17
+}
+]
+}

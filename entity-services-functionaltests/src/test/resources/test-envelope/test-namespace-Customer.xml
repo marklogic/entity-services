@@ -1,0 +1,30 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<es:envelope xmlns:es="http://marklogic.com/entity-services">
+<es:instance>
+<es:info>
+<es:title>Customer</es:title>
+<es:version>0.0.1</es:version>
+</es:info>
+<cust:Customer xmlns:cust="http://marklogic.com/customer">
+<cust:CustomerId>ALFKI</cust:CustomerId>
+<cust:CompanyName>Alfreds Futterkiste</cust:CompanyName>
+<cust:Country>Germany</cust:Country>
+<cust:Address>Obere Str. 57</cust:Address>
+</cust:Customer>
+</es:instance>
+<es:attachments>
+<cust:Customer CustomerID="ALFKI" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Alfreds Futterkiste</cust:CompanyName>
+<cust:ContactName>Maria Anders</cust:ContactName>
+<cust:ContactTitle>Sales Representative</cust:ContactTitle>
+<cust:Address>Obere Str. 57</cust:Address>
+<cust:City>Berlin</cust:City>
+<cust:Region>
+</cust:Region>
+<cust:PostalCode>12209</cust:PostalCode>
+<cust:Country>Germany</cust:Country>
+<cust:Phone>030-0074321</cust:Phone>
+<cust:Fax>030-0076545</cust:Fax>
+</cust:Customer>
+</es:attachments>
+</es:envelope>

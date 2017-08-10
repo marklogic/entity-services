@@ -1,0 +1,127 @@
+{
+  "info": {
+    "title": "Model_2ns",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/ns2"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerID": {
+          "datatype": "string"
+        }
+      },
+      "primaryKey" : "CustomerID",
+      "rangeIndex" : [ "CustomerID" ],
+      "wordLexicon" : [ "CustomerID" ]
+    },
+    "Product": {
+      "properties": {
+        "ProductID":{
+          "datatype":"integer"
+        }
+      },
+      "primaryKey" : "ProductID",
+      "required": [ "ProductID" ],
+      "rangeIndex" : [ "ProductID" ]
+    },
+    "Order": {
+      "properties": {
+        "OrderID": {
+          "datatype":"integer"
+        },
+        "CustomerID": {
+          "$ref": "#/definitions/Customer"
+        },
+        "OrderDate": {
+          "datatype": "dateTime"
+        },
+        "ShippedDate":{
+          "datatype":"dateTime"
+        },
+        "ShipAddress":{
+          "datatype":"string"
+        },
+        "OrderDetails":{
+          "datatype":"array",
+          "items": {
+          	 "$ref": "#/definitions/OrderDetail"
+          }
+        }      
+      },
+      "primaryKey" : "OrderID",
+      "namespace": "http://marklogic.com/order",
+      "namespacePrefix": "ord",
+      "pathRangeIndex": [ "OrderID", "CustomerID" ],
+      "elementRangeIndex": [ "OrderDate", "ShippedDate", "OrderDetails" ]
+    },
+    "OrderDetail": {
+      "properties":{  
+        "ProductID":{  
+           "$ref":"#/definitions/Product"
+        },
+        "UnitPrice":{  
+           "datatype":"integer"
+        },
+        "Quantity":{  
+           "datatype":"integer"
+        }
+      }
+    },
+    "Superstore": {
+      "properties":{
+    	"OrderID":{
+    		"datatype":"integer"
+    	},
+    	"CustomerID":{
+    		"datatype":"string"
+    	},
+    	"OrderDate":{
+    		"datatype":"dateTime"
+    	},
+    	"ShippedDate":{
+    		"datatype":"dateTime"
+    	},
+    	"ProductName":{
+    		"datatype":"string"
+    	},
+    	"UnitPrice":{
+    		"datatype":"double"
+    	},
+    	"Quantity":{
+    		"datatype":"integer"
+    	},
+    	"Discount":{
+    		"datatype":"string"
+    	},
+    	"ShipAddress":{
+    		"datatype":"array",
+    		"items": {
+    			"$ref": "#/definitions/ShipDetails"
+    	    }
+    	}
+      },
+      "primaryKey": "OrderID",
+      "namespace": "http://marklogic.com/super",
+      "namespacePrefix": "sup",
+      "pathRangeIndex": [ "Discount", "UnitPrice" ],
+      "elementRangeIndex": [ "OrderID", "CustomerID", "ProductName", "Quantity" ]
+    },
+    "ShipDetails":{
+    	"properties":{
+			"Province":{
+				"datatype":"string"
+			},
+			"Region":{
+				"datatype":"string"
+			},
+			"ShipMode":{
+				"datatype":"string"
+			},
+			"ShippingCost":{
+				"datatype":"double"
+			}    	
+    	}
+    }
+  }
+}

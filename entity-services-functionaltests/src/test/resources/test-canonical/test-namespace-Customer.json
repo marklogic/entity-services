@@ -1,0 +1,8 @@
+{
+"Customer": {
+"CustomerId": "ALFKI", 
+"CompanyName": "Alfreds Futterkiste", 
+"Country": "Germany", 
+"Address": "Obere Str. 57"
+}
+}

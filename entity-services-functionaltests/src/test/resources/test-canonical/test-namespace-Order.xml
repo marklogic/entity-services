@@ -1,0 +1,36 @@
+<ord:Order xmlns:ord="http://marklogic.com/order">
+<ord:OrderID>10250</ord:OrderID>
+<ord:CustomerID>
+<ord:Customer>HANAR</ord:Customer>
+</ord:CustomerID>
+<ord:OrderDate>1996-07-08T16:46:22</ord:OrderDate>
+<ord:ShippedDate>1996-07-12T00:57:04</ord:ShippedDate>
+<ord:ShipAddress>Rua do Paço, 67</ord:ShipAddress>
+<ord:OrderDetails datatype="array">
+<OrderDetail>
+<ProductID>
+<Product>41</Product>
+</ProductID>
+<UnitPrice>7.7</UnitPrice>
+<Quantity>10</Quantity>
+</OrderDetail>
+</ord:OrderDetails>
+<ord:OrderDetails datatype="array">
+<OrderDetail>
+<ProductID>
+<Product>51</Product>
+</ProductID>
+<UnitPrice>42.4</UnitPrice>
+<Quantity>35</Quantity>
+</OrderDetail>
+</ord:OrderDetails>
+<ord:OrderDetails datatype="array">
+<OrderDetail>
+<ProductID>
+<Product>65</Product>
+</ProductID>
+<UnitPrice>16.8</UnitPrice>
+<Quantity>15</Quantity>
+</OrderDetail>
+</ord:OrderDetails>
+</ord:Order>

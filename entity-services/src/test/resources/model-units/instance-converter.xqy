@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-08-10T17:49:34.347263Z
+ Generated at timestamp: 2017-08-11T16:40:06.460309Z
  :)
 
 module namespace et-required
@@ -102,9 +102,7 @@ declare function et-required:canonicalize(
                             return
                                 if (empty(map:keys($instance-property)))
                                 then map:put($m, $key, json:object())
-                                else
-                                    for $prop in $instance-property
-                                    return map:put($m, $key, et-required:canonicalize($prop))
+                                else map:put($m, $key, et-required:canonicalize($instance-property))
                         (: An array can also treated as multiple elements :)
                         case json:array
                             return

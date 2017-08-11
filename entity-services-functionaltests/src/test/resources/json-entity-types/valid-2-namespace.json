@@ -53,6 +53,7 @@
       "namespace": "http://marklogic.com/order",
       "namespacePrefix": "ord",
       "pathRangeIndex": [ "OrderID", "CustomerID" ],
+      "wordLexicon": [ "CustomerID" ],
       "elementRangeIndex": [ "OrderDate", "ShippedDate", "OrderDetails" ]
     },
     "OrderDetail": {
@@ -94,7 +95,7 @@
     	"Discount":{
     		"datatype":"string"
     	},
-    	"ShipAddress":{
+    	"Ship-Address":{
     		"datatype":"array",
     		"items": {
     			"$ref": "#/definitions/ShipDetails"
@@ -105,6 +106,7 @@
       "namespace": "http://marklogic.com/super",
       "namespacePrefix": "sup",
       "pathRangeIndex": [ "Discount", "UnitPrice" ],
+      "wordLexicon": [ "Ship-Address" ],
       "elementRangeIndex": [ "OrderID", "CustomerID", "ProductName", "Quantity" ]
     },
     "ShipDetails":{

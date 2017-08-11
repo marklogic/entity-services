@@ -20,6 +20,16 @@
       "collation":"http://marklogic.com/collation/en",
       "localname":"CustomerID",
       "namespace-uri":""
+    },
+    {  
+      "collation":"http://marklogic.com/collation/en",
+      "localname":"CustomerID",
+      "namespace-uri":"http://marklogic.com/order"
+    },
+    {  
+      "collation":"http://marklogic.com/collation/en",
+      "localname":"Ship-Address",
+      "namespace-uri":"http://marklogic.com/super"
     }
   ],
   "range-path-index":[  

@@ -7,12 +7,12 @@
 <sup:UnitPrice>123</sup:UnitPrice>
 <sup:Quantity>123</sup:Quantity>
 <sup:Discount>some string</sup:Discount>
-<sup:ShipAddress datatype="array">
+<sup:Ship-Address datatype="array">
 <ShipDetails>
 <Province>some string</Province>
 <Region>some string</Region>
 <ShipMode>some string</ShipMode>
 <ShippingCost>123</ShippingCost>
 </ShipDetails>
-</sup:ShipAddress>
+</sup:Ship-Address>
 </sup:Superstore>

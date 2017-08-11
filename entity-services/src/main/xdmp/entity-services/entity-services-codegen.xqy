@@ -305,9 +305,7 @@ declare function {$prefix}:canonicalize(
                             return
                                 if (empty(map:keys($instance-property)))
                                 then map:put($m, $key, json:object())
-                                else
-                                    for $prop in $instance-property
-                                    return map:put($m, $key, {$prefix}:canonicalize($prop))
+                                else map:put($m, $key, {$prefix}:canonicalize($instance-property))
                         (: An array can also treated as multiple elements :)
                         case json:array
                             return

@@ -346,7 +346,6 @@ declare function es:add-attachments(
     $source as item()*
 ) as map:map
 {
-    let $_ := xdmp:log( ( "BAH", $source) ) return
     $instance=>map:with('$attachments', $source)
 };
 

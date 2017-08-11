@@ -57,7 +57,7 @@ graph uri: http://refSubjectUri#Northwind-Ref-Subject-Uri-0.0.1</description>
       <context>./Customer</context>
       <rows>
         <row>
-          <schema-name>Northwind-Ref-Subject-Uri</schema-name>
+          <schema-name>Northwind_Ref_Subject_Uri</schema-name>
           <view-name>Customer</view-name>
           <view-layout>sparse</view-layout>
           <columns>

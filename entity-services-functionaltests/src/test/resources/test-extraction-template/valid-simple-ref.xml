@@ -57,7 +57,7 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
       <context>./SchemaCompleteEntityType</context>
       <rows>
         <row>
-          <schema-name>DBProp-Ref-Same</schema-name>
+          <schema-name>DBProp_Ref_Same</schema-name>
           <view-name>SchemaCompleteEntityType</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -283,7 +283,7 @@ graph uri: http://marklogic.com/testing-entity-type#DBProp-Ref-Same-0.0.1</descr
           <context>./arrayStringKey</context>
           <rows>
             <row>
-              <schema-name>DBProp-Ref-Same</schema-name>
+              <schema-name>DBProp_Ref_Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
               <view-layout>sparse</view-layout>
               <columns>
@@ -312,7 +312,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
           <context>./arrayreferenceInThisFile</context>
           <rows>
             <row>
-              <schema-name>DBProp-Ref-Same</schema-name>
+              <schema-name>DBProp_Ref_Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
               <view-layout>sparse</view-layout>
               <columns>
@@ -340,7 +340,7 @@ This column joins to primary key of OrderDetails
           <context>./arrayKey</context>
           <rows>
             <row>
-              <schema-name>DBProp-Ref-Same</schema-name>
+              <schema-name>DBProp_Ref_Same</schema-name>
               <view-name>SchemaCompleteEntityType_arrayKey</view-name>
               <view-layout>sparse</view-layout>
               <columns>
@@ -369,7 +369,7 @@ This column holds array values from property orderId of SchemaCompleteEntityType
           <context>./externalArrayReference</context>
           <rows>
             <row>
-              <schema-name>DBProp-Ref-Same</schema-name>
+              <schema-name>DBProp_Ref_Same</schema-name>
               <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
               <view-layout>sparse</view-layout>
               <columns>
@@ -433,7 +433,7 @@ This column joins to primary key of an external reference
       <context>./Order</context>
       <rows>
         <row>
-          <schema-name>DBProp-Ref-Same</schema-name>
+          <schema-name>DBProp_Ref_Same</schema-name>
           <view-name>Order</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -468,7 +468,7 @@ This column joins to primary key of an external reference
           <context>./orderDetails</context>
           <rows>
             <row>
-              <schema-name>DBProp-Ref-Same</schema-name>
+              <schema-name>DBProp_Ref_Same</schema-name>
               <view-name>Order_orderDetails</view-name>
               <view-layout>sparse</view-layout>
               <columns>
@@ -531,7 +531,7 @@ This column joins to primary key of OrderDetails
       <context>./OrderDetails</context>
       <rows>
         <row>
-          <schema-name>DBProp-Ref-Same</schema-name>
+          <schema-name>DBProp_Ref_Same</schema-name>
           <view-name>OrderDetails</view-name>
           <view-layout>sparse</view-layout>
           <columns>

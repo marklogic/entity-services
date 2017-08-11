@@ -24,7 +24,7 @@ graph uri: http://no-prim-yes-req#no-Primary-Yes-Required-0.0.1</description>
       <context>./Product</context>
       <rows>
         <row>
-          <schema-name>no-Primary-Yes-Required</schema-name>
+          <schema-name>no_Primary_Yes_Required</schema-name>
           <view-name>Product</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -65,7 +65,7 @@ graph uri: http://no-prim-yes-req#no-Primary-Yes-Required-0.0.1</description>
       <context>./Customer</context>
       <rows>
         <row>
-          <schema-name>no-Primary-Yes-Required</schema-name>
+          <schema-name>no_Primary_Yes_Required</schema-name>
           <view-name>Customer</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -100,7 +100,7 @@ graph uri: http://no-prim-yes-req#no-Primary-Yes-Required-0.0.1</description>
       <context>./Order</context>
       <rows>
         <row>
-          <schema-name>no-Primary-Yes-Required</schema-name>
+          <schema-name>no_Primary_Yes_Required</schema-name>
           <view-name>Order</view-name>
           <view-layout>sparse</view-layout>
           <columns>

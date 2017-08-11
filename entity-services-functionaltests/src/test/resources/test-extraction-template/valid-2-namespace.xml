@@ -330,11 +330,11 @@ The standalone template for OrderDetail cannot be generated.  Each template row 
       </rows>
       <templates>
         <template>
-          <context>./ShipAddress</context>
+          <context>./Ship-Address</context>
           <rows>
             <row>
               <schema-name>Model_2ns</schema-name>
-              <view-name>Superstore_ShipAddress</view-name>
+              <view-name>Superstore_Ship_Address</view-name>
               <view-layout>sparse</view-layout>
               <columns>
                 <column>

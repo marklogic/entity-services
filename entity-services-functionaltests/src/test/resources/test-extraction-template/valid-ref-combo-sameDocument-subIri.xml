@@ -60,7 +60,7 @@ The standalone template for Product cannot be generated.  Each template row requ
       <context>./Customer</context>
       <rows>
         <row>
-          <schema-name>Northwind-Ref-Combo-SameDocument-SubjectIri</schema-name>
+          <schema-name>Northwind_Ref_Combo_SameDocument_SubjectIri</schema-name>
           <view-name>Customer</view-name>
           <view-layout>sparse</view-layout>
           <columns>

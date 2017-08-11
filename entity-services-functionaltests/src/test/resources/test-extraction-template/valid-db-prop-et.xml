@@ -57,7 +57,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
       <context>./Product</context>
       <rows>
         <row>
-          <schema-name>Lets-test-DB-prop-generate</schema-name>
+          <schema-name>Lets_test_DB_prop_generate</schema-name>
           <view-name>Product</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -125,7 +125,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
       <context>./Customer</context>
       <rows>
         <row>
-          <schema-name>Lets-test-DB-prop-generate</schema-name>
+          <schema-name>Lets_test_DB_prop_generate</schema-name>
           <view-name>Customer</view-name>
           <view-layout>sparse</view-layout>
           <columns>
@@ -226,7 +226,7 @@ graph uri: http://marklogic.com/test#Lets-test-DB-prop-generate-0.0.1</descripti
           <context>./ProductsPurchased</context>
           <rows>
             <row>
-              <schema-name>Lets-test-DB-prop-generate</schema-name>
+              <schema-name>Lets_test_DB_prop_generate</schema-name>
               <view-name>Customer_ProductsPurchased</view-name>
               <view-layout>sparse</view-layout>
               <columns>

@@ -1143,15 +1143,18 @@ declare function esi:extraction-template-generate(
                         <tde:view-name>{ $entity-type-name=>$secure-tde-name() }_{ $property-name=>$secure-tde-name() }</tde:view-name>
                         <tde:view-layout>sparse</tde:view-layout>
                         <tde:columns>
-                            <tde:column>
-                                { comment { "This column joins to property",
-                                            $primary-key-name, "of",
-                                            $entity-type-name } }
-                                <tde:name>{ $primary-key-name=>$secure-tde-name() }</tde:name>
-                                <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
-                                <tde:val>../{ $primary-key-name }</tde:val>
-                            </tde:column>
-                            {
+                            { if (empty($primary-key-name))
+                              then comment { "Warning, no primary key in enclosing type",
+                                             $entity-type-name }
+                              else
+                                <tde:column>
+                                    { comment { "This column joins to property",
+                                                $primary-key-name, "of",
+                                                $entity-type-name } }
+                                    <tde:name>{ $primary-key-name=>$secure-tde-name() }</tde:name>
+                                    <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
+                                    <tde:val>../{ $primary-key-name }</tde:val>
+                                </tde:column>,
                             if ($is-local-ref and empty($ref-primary-key))
                             then
                                 (

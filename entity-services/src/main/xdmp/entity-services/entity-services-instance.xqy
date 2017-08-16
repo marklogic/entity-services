@@ -22,6 +22,7 @@ declare namespace xq = "http://www.w3.org/2012/xquery";
 
 
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
+import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
@@ -87,7 +88,13 @@ declare function inst:instance-xml-from-document(
     $document as document-node()
 ) as element()*
 {
-    $document//es:instance/(* except es:info)
+    if ($document/element())
+    then $document//es:instance/(* except es:info)
+    else
+        let $json := inst:instance-json-from-document($document)
+        return json:transform-from-json($json, 
+            json:config("custom")=>map:with("element-namespace",""))
+        
 };
 
 declare private function inst:wrap-instance(

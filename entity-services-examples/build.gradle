@@ -7,9 +7,7 @@ repositories {
 }
 
 dependencies {
-  compile('com.marklogic:marklogic-client-api:4.0.1') {
-    exclude(group: 'com.google.guava')
-  }
+  compile('com.marklogic:marklogic-client-api:4.0.1')
   compile('io.codearte.jfairy:jfairy:0.5.6')
   compile('ch.qos.logback:logback-classic:1.1.9')
   compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')

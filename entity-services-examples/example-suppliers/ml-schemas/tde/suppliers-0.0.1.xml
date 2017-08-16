@@ -3,7 +3,7 @@
   <description>
 Extraction Template Generated from Entity Type Document
 graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</description>
-  <context>//es:instance</context>
+  <context>//instance[info/version="0.0.1"</context>
   <vars>
     <var>
       <name>RDF</name>
@@ -26,7 +26,7 @@ graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("https://en.wikipedia.org/wiki/Suppliers_and_Parts_database/SP-0.0.1/Part/", fn:encode-for-uri(./pid)))</val>
+	  <val>sem:iri(concat("https://en.wikipedia.org/wiki/Suppliers_and_Parts_database/SP-0.0.1/Part/", fn:encode-for-uri(xs:string(./pid))))</val>
 	</var>
       </vars>
       <triples>
@@ -60,6 +60,7 @@ graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</
 	<row>
 	  <schema-name>SP</schema-name>
 	  <view-name>Part</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>pid</name>
@@ -96,6 +97,7 @@ graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</
 	<row>
 	  <schema-name>SP</schema-name>
 	  <view-name>Shipment</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>sid</name>
@@ -121,7 +123,7 @@ graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</
       <vars>
 	<var>
 	  <name>subject-iri</name>
-	  <val>sem:iri(concat("https://en.wikipedia.org/wiki/Suppliers_and_Parts_database/SP-0.0.1/Supplier/", fn:encode-for-uri(./sid)))</val>
+	  <val>sem:iri(concat("https://en.wikipedia.org/wiki/Suppliers_and_Parts_database/SP-0.0.1/Supplier/", fn:encode-for-uri(xs:string(./sid))))</val>
 	</var>
       </vars>
       <triples>
@@ -155,6 +157,7 @@ graph uri: https://en.wikipedia.org/wiki/Suppliers_and_Parts_database#SP-0.0.1</
 	<row>
 	  <schema-name>SP</schema-name>
 	  <view-name>Supplier</view-name>
+	  <view-layout>sparse</view-layout>
 	  <columns>
 	    <column>
 	      <name>sid</name>

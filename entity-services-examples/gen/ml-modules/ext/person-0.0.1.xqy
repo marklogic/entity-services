@@ -115,82 +115,80 @@ declare function person:extract-instance-Person(
 
 
 (:~
- : Turns an entity instance into an XML structure.
- : This out-of-the box implementation traverses a map structure
- : and turns it deterministically into an XML tree.
+ : Turns an entity instance into a canonical document structure.
+ : Results in either a JSON document, or an XML document that conforms
+ : to the entity-services schema.
  : Using this function as-is should be sufficient for most use
  : cases, and will play well with other generated artifacts.
  : @param $entity-instance A map:map instance returned from one of the extract-instance
  :    functions.
+ : @param $format Either "json" or "xml". Determines output format of function
  : @return An XML element that encodes the instance.
  :)
-declare function person:instance-to-canonical-xml(
-    $entity-instance as map:map
-) as element()
+declare function person:instance-to-canonical(
+
+    $entity-instance as map:map,
+    $instance-format as xs:string
+) as node()
 {
-    (: Construct an element that is named the same as the Entity Type :)
-    element { map:get($entity-instance, "$type") }  {
-        if ( map:contains($entity-instance, "$ref") )
-        then map:get($entity-instance, "$ref")
-        else
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName and $key ne "$type")
-            return
-                typeswitch ($instance-property)
-                (: This branch handles embedded objects.  You can choose to prune
-                   an entity's representation of extend it with lookups here. :)
-                case json:object+
-                    return
-                        for $prop in $instance-property
-                        return element { $key } { person:instance-to-canonical-xml($prop) }
-                (: An array can also treated as multiple elements :)
-                case json:array
-                    return
-                        for $val in json:array-values($instance-property)
-                        return
-                            if ($val instance of json:object)
-                            then element { $key } {
-                                attribute datatype { "array" },
-                                person:instance-to-canonical-xml($val) }
-                            else element { $key } {
-                                attribute datatype { "array" },
-                                $val }
-                (: A sequence of values should be simply treated as multiple elements :)
-                case item()+
-                    return
-                        for $val in $instance-property
-                        return element { $key } { $val }
-                default return element { $key } { $instance-property }
-    }
+
+        if ($instance-format eq "json")
+        then xdmp:to-json( person:canonicalize($entity-instance) )/node()
+        else person:instance-to-canonical-xml($entity-instance)
 };
 
 
-(:
- : Wraps a canonical instance (returned by instance-to-canonical-xml())
- : within an envelope patterned document, along with the source
- : document, which is stored in an attachments section.
- : @param $entity-instance an instance, as returned by an extract-instance
- : function
- : @return A document which wraps both the canonical instance and source docs.
+(:~
+ : helper function to turn map structure of an instance, which uses specialized
+ : keys to encode metadata, into a document tree, which uses the node structure
+ : to encode all type and property information.
  :)
-declare function person:instance-to-envelope(
+declare private function person:canonicalize(
     $entity-instance as map:map
-) as document-node()
+) as map:map
 {
-    document {
-        element es:envelope {
-            element es:instance {
-                element es:info {
-                    element es:title { map:get($entity-instance,'$type') },
-                    element es:version { "0.0.1" }
-                },
-                person:instance-to-canonical-xml($entity-instance)
-            },
-            element es:attachments {
-                map:get($entity-instance, "$attachments")
-            }
-        }
-    }
+    json:object()
+    =>map:with( map:get($entity-instance,'$type'),
+                if ( map:contains($entity-instance, '$ref') )
+                then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
+                else
+                let $m := json:object()
+                let $_ :=
+                    for $key in map:keys($entity-instance)
+                    let $instance-property := map:get($entity-instance, $key)
+                    where ($key castable as xs:NCName)
+                    return
+                        typeswitch ($instance-property)
+                        (: This branch handles embedded objects.  You can choose to prune
+                           an entity's representation of extend it with lookups here. :)
+                        case json:object
+                            return
+                                if (empty(map:keys($instance-property)))
+                                then map:put($m, $key, json:object())
+                                else map:put($m, $key, person:canonicalize($instance-property))
+                        (: An array can also treated as multiple elements :)
+                        case json:array
+                            return
+                                (
+                                for $val at $i in json:array-values($instance-property)
+                                return
+                                    if ($val instance of json:object)
+                                    then json:set-item-at($instance-property, $i, person:canonicalize($val))
+                                    else (),
+                                map:put($m, $key, $instance-property)
+                                )
+
+                        (: A sequence of values should be simply treated as multiple elements :)
+                        (: TODO is this lossy? :)
+                        case item()+
+                            return
+                                for $val in $instance-property
+                                return map:put($m, $key, $val)
+                        default return map:put($m, $key, $instance-property)
+                return $m)
 };
+
+
+
+
 

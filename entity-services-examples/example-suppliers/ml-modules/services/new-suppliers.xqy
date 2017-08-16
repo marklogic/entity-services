@@ -44,8 +44,8 @@ declare function nw:put(
         let $uri := xdmp:random()
         let $_ := xdmp:log( ("creating some stuff...", $create-n, $uri) )
         return (
-            xdmp:document-insert("/suppliers/" || $uri, sp:extract-instance-Supplier($supplier)=>sp:instance-to-envelope(), $perms),
-            xdmp:document-insert("/part/" || $uri, sp:extract-instance-Part($part)=>sp:instance-to-envelope(), $perms),
-            xdmp:document-insert("/shipment/" || $uri, sp:extract-instance-Shipment($shipment)=>sp:instance-to-envelope(), $perms)
+            xdmp:document-insert("/suppliers/" || $uri, sp:extract-instance-Supplier($supplier)=>sp:instance-to-envelope("json"), $perms),
+            xdmp:document-insert("/part/" || $uri, sp:extract-instance-Part($part)=>sp:instance-to-envelope("json"), $perms),
+            xdmp:document-insert("/shipment/" || $uri, sp:extract-instance-Shipment($shipment)=>sp:instance-to-envelope("json"), $perms)
         )
     };

@@ -1,4 +1,5 @@
 (:
+
  Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +26,9 @@ module namespace es-codegen = "http://marklogic.com/entity-services-codegen";
 import module namespace esi = "http://marklogic.com/entity-services-impl"
     at "entity-services-impl.xqy";
 
-import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
+import module namespace functx   = "http://www.functx.com"
+    at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
+
 
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
@@ -63,7 +66,7 @@ declare private function es-codegen:variable-line-for(
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
     let $namespace := $entity-type=>map:get("namespace")
     let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
-    let $property-qname := 
+    let $property-qname :=
         if ($namespace)
         then $namespace-prefix || ":" || $property-name
         else $property-name
@@ -115,11 +118,11 @@ declare private function es-codegen:variable-line-for(
 
     return
         fn:concat( $property-comment,
-                   "    let $", 
-                   $property-name, 
+                   "    let $",
+                   $property-name,
                functx:pad-string-to-length(
                  "  := ",
-                 " ", 
+                 " ",
                  max( ( (string-length($property-name)+4), 16 ) )+1),
                $value)
 };
@@ -144,7 +147,6 @@ declare private function es-codegen:setter-for(
         then "        =>   map:with("
         else "        =>es:optional("
     return fn:concat($function-call-string, "'", $property-name, "', $",$property-name,")")
-                     
 };
 
 declare function es-codegen:instance-converter-generate(
@@ -180,7 +182,11 @@ module namespace {$prefix}
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
-{ 
+import module namespace json = "http://marklogic.com/xdmp/json"
+    at "/MarkLogic/json/json.xqy";
+
+
+{
   (: namespace declarations :)
     for $entity-type-name in map:keys(map:get($model, "definitions"))
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
@@ -195,7 +201,7 @@ import module namespace es = 'http://marklogic.com/entity-services'
              "';&#10;")
         else ()
 }
-        
+
 
 declare option xdmp:mapping 'false';
 
@@ -216,12 +222,12 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
 {{
     let $source-node := es:init-source($source, '{$entity-type-name}')
     (: begin customizations here :)
-{ 
+{
     let $properties := $model
         =>map:get("definitions")
         =>map:get($entity-type-name)
         =>map:get("properties")
-    let $variable-setters := 
+    let $variable-setters :=
         for $property-name in map:keys($properties)
         return es-codegen:variable-line-for($prefix, $model, $entity-type-name, $property-name)
     return fn:string-join( $variable-setters, "&#10;")
@@ -233,7 +239,7 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
         =>es:add-attachments($source)
 
     return
-    if (empty($source-node/*)) 
+    if (empty($source-node/*))
     then $instance
     else $instance
 {
@@ -247,9 +253,9 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
         (
         for $property-name in map:keys($properties)
         return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name),
-        if ($namespace) 
+        if ($namespace)
         then (
-            "        =>map:with('$namespace', '"|| $namespace ||"')", 
+            "        =>map:with('$namespace', '"|| $namespace ||"')",
             "        =>map:with('$namespacePrefix', '"|| $namespace-prefix || "')"
             )
         else ()
@@ -265,25 +271,35 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
 
 
 (:~
- : Turns an entity instance into a JSON structure.
- : This out-of-the box implementation traverses a map structure
- : and turns it deterministically into a JSON tree.
+ : Turns an entity instance into a canonical document structure.
+ : Results in either a JSON document, or an XML document that conforms
+ : to the entity-services schema.
  : Using this function as-is should be sufficient for most use
  : cases, and will play well with other generated artifacts.
  : @param $entity-instance A map:map instance returned from one of the extract-instance
  :    functions.
+ : @param $format Either "json" or "xml". Determines output format of function
  : @return An XML element that encodes the instance.
  :)
-declare function {$prefix}:instance-to-canonical-json(
+declare function {$prefix}:instance-to-canonical(
 
-    $entity-instance as map:map
-) as object-node()
+    $entity-instance as map:map,
+    $instance-format as xs:string
+) as node()
 {{
-    xdmp:to-json( {$prefix}:canonicalize($entity-instance) )/node()
+
+        if ($instance-format eq "json")
+        then xdmp:to-json( {$prefix}:canonicalize($entity-instance) )/node()
+        else {$prefix}:instance-to-canonical-xml($entity-instance)
 }};
 
 
-declare function {$prefix}:canonicalize(
+(:~
+ : helper function to turn map structure of an instance, which uses specialized
+ : keys to encode metadata, into a document tree, which uses the node structure
+ : to encode all type and property information.
+ :)
+declare private function {$prefix}:canonicalize(
     $entity-instance as map:map
 ) as map:map
 {{
@@ -293,7 +309,7 @@ declare function {$prefix}:canonicalize(
                 then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
                 else
                 let $m := json:object()
-                let $_ := 
+                let $_ :=
                     for $key in map:keys($entity-instance)
                     let $instance-property := map:get($entity-instance, $key)
                     where ($key castable as xs:NCName)
@@ -317,7 +333,7 @@ declare function {$prefix}:canonicalize(
                                     else (),
                                 map:put($m, $key, $instance-property)
                                 )
-                                
+
                         (: A sequence of values should be simply treated as multiple elements :)
                         (: TODO is this lossy? :)
                         case item()+
@@ -342,18 +358,18 @@ declare function {$prefix}:canonicalize(
  :    functions.
  : @return An XML element that encodes the instance.
  :)
-declare function {$prefix}:instance-to-canonical-xml(
+declare private function {$prefix}:instance-to-canonical-xml(
     $entity-instance as map:map
 ) as element()
 {{
     (: Construct an element that is named the same as the Entity Type :)
     let $namespace := map:get($entity-instance, "$namespace")
     let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
-    let $nsdecl := 
+    let $nsdecl :=
         if ($namespace) then
         namespace {{ $namespace-prefix }} {{ $namespace }}
         else ()
-    let $type-name := map:get($entity-instance, '$type') 
+    let $type-name := map:get($entity-instance, '$type')
     let $type-qname :=
         if ($namespace)
         then fn:QName( $namespace, $namespace-prefix || ":" || $type-name)
@@ -403,27 +419,52 @@ declare function {$prefix}:instance-to-canonical-xml(
 
 
 (:
- : Wraps a canonical instance (returned by instance-to-canonical-xml())
+ : Wraps a canonical instance (returned by instance-to-canonical())
  : within an envelope patterned document, along with the source
  : document, which is stored in an attachments section.
  : @param $entity-instance an instance, as returned by an extract-instance
  : function
+ : @param $entity-format Either "json" or "xml", selects the output format
+ : for the envelope
  : @return A document which wraps both the canonical instance and source docs.
  :)
-declare function {$prefix}:instance-to-xml-envelope(
-    $entity-instance as map:map
+declare function {$prefix}:instance-to-envelope(
+    $entity-instance as map:map,
+    $envelope-format as xs:string
 ) as document-node()
 {{
-    document {{
-        element es:envelope {{
-            element es:instance {{
-                element es:info {{
-                    element es:title {{ map:get($entity-instance,'$type') }},
-                    element es:version {{ '{$version}' }}
+    let $canonical := {$prefix}:instance-to-canonical($entity-instance, $envelope-format)
+    let $attachments := es:serialize-attachments($entity-instance, $envelope-format)
+    return
+    if ($envelope-format eq "xml")
+    then
+        document {{
+            element es:envelope {{
+                element es:instance {{
+                    element es:info {{
+                        element es:title {{ map:get($entity-instance,'$type') }},
+                        element es:version {{ '{$version}' }}
+                    }},
+                    $canonical
                 }},
-                {$prefix}:instance-to-canonical-xml($entity-instance)
-            }},
-            es:serialize-attachments($entity-instance, "xml")
+                $attachments
+            }}
+        }}
+    else
+    document {{
+        object-node {{ 'envelope' :
+            object-node {{ 'instance' :
+                object-node {{ 'info' :
+                    object-node {{
+                        'title' : map:get($entity-instance,'$type'),
+                        'version' : '{$version}'
+                    }}
+                }}
+                +
+                $canonical
+            }}
+            +
+            $attachments
         }}
     }}
 }};
@@ -438,40 +479,11 @@ declare function {$prefix}:instance-to-envelope(
     $entity-instance as map:map
 ) as document-node()
 {{
-    {$prefix}:instance-to-xml-envelope($entity-instance)
+    {$prefix}:instance-to-envelope($entity-instance, "xml")
 }};
 
 
 
-(:
- : Wraps a canonical instance (returned by instance-to-canonical-json())
- : within an envelope patterned document, along with the source
- : document, which is stored in an attachments section.
- : @param $entity-instance an instance, as returned by an extract-instance
- : function
- : @return A document which wraps both the canonical instance and source docs.
- :)
-declare function {$prefix}:instance-to-json-envelope(
-    $entity-instance as map:map
-) as document-node()
-{{
-    document {{
-        object-node {{ 'envelope' : 
-            object-node {{ 'instance' :
-                object-node {{ 'info' :
-                    object-node {{
-                        'title' : map:get($entity-instance,'$type'),
-                        'version' : '{$version}'
-                    }}
-                }}
-                +
-                {$prefix}:instance-to-canonical-json($entity-instance)
-            }}
-            +
-            es:serialize-attachments($entity-instance, "json")
-        }}
-    }}
-}};
 </module>/text()
 }
 
@@ -621,14 +633,14 @@ declare private function es-codegen:value-for-conversion(
 
     let $let-expr := map:put($let-expressions, $target-property-name,
          concat(
-            $comment, 
+            $comment,
             "    let $", $target-property-name, " := ", $value
             ))
     return
-        fn:concat($function-call-string, 
-            $property-padding, 
+        fn:concat($function-call-string,
+            $property-padding,
             "$", $target-property-name,
-            ")","&#10;") 
+            ")","&#10;")
 };
 
 

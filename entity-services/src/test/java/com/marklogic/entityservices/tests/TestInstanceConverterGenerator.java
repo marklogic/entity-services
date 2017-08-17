@@ -136,7 +136,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         TestSetup.getInstance().loadExtraFiles("/source-documents", instanceDocument);
         DOMHandle handle = evalOneResult(
             "import module namespace conv = \"http://marklogic.com/entity-services/test#Order-0.0.4\" at \"/ext/Order-0.0.4.xqy\"; ",
-            "conv:extract-instance-Order( doc('"+instanceDocument+"') )=>conv:instance-to-canonical-xml()",
+            "conv:extract-instance-Order( doc('"+instanceDocument+"') )=>conv:instance-to-canonical('xml')",
             new DOMHandle());
         Document extractInstanceResult = handle.get();
 
@@ -179,7 +179,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
      * work out-of-the-box, and handle an identity transform from test instances.
      * This test thus tests
      * instance-extract and
-     * instance-to-canonical-xml
+     * instance-to-canonical
      * instance-from-document
      * instance-json-from-document
      * instance-xml-from-document
@@ -206,9 +206,9 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
             DOMHandle handle =
                     evalOneResult(
-                        moduleImport(entityType), "let $canonical := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
+                        moduleImport(entityType), "let $canonical := conv:instance-to-canonical( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ), 'xml' )"
                 +"let $envelope := conv:instance-to-envelope( conv:extract-instance-"+entityTypeNoVersion+"( doc('"+entityTypeTestFileName+"') ) )"
-                +"let $empty-extraction := conv:instance-to-canonical-xml( conv:extract-instance-"+entityTypeNoVersion+"( <bah/> ) )"
+                +"let $empty-extraction := conv:instance-to-canonical( conv:extract-instance-"+entityTypeNoVersion+"( <bah/> ), 'xml' )"
                 +"return (xdmp:document-insert('"+entityTypeTestFileName+ "-envelope.xml', $envelope), " +
                         " xdmp:document-insert('"+entityTypeTestFileName+"-empty.xml' ,$empty-extraction), " +
                         "$canonical)",
@@ -322,7 +322,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
                 +"let $_ := map:put($p, '$type', 'Order')"
                 +"let $_ := map:put($p, 'prop', 'val')"
                 +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
-                +"return conv:instance-to-xml-envelope( $p )";
+                +"return conv:instance-to-envelope( $p, 'xml' )";
 
             DOMHandle handle = evalOneResult(moduleImport(entityType), functionCall, new DOMHandle());
             Document document = handle.get();
@@ -379,7 +379,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
                     +"let $_ := map:put($p, '$type', 'Order')"
                     +"let $_ := map:put($p, 'prop', 'val')"
                     +"let $_ := map:put($p, '$attachments', element source { 'bah' })"
-                    +"return conv:instance-to-json-envelope( $p )";
+                    +"return conv:instance-to-envelope( $p, 'json' )";
 
             JacksonHandle handle = evalOneResult(moduleImport(entityType), functionCall, new JacksonHandle());
 
@@ -468,7 +468,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             evalOneResult("", "es:instance-json-from-document( doc('Order-Source-3.xml-envelope.xml') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
-        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+        org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
     }
 
     @Test
@@ -488,7 +488,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
         evalOneResult(
             moduleImport(initialTest),
-            "let $envelope := conv:instance-to-json-envelope( conv:extract-instance-Order( doc('Order-Source-5.json') ) )"
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-5.json') ), 'json' )"
                 +"return xdmp:document-insert('Order-Source-5.json-envelope.json', $envelope) ",
             new StringHandle());
 

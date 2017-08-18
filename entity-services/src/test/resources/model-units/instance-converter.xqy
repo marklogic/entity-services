@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-08-11T16:40:06.460309Z
+ Generated at timestamp: 2017-08-18T21:26:44.060857Z
  :)
 
 module namespace et-required
@@ -20,8 +20,12 @@ module namespace et-required
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+import module namespace json = "http://marklogic.com/xdmp/json"
+    at "/MarkLogic/json/json.xqy";
 
-        
+
+
+
 
 declare option xdmp:mapping 'false';
 
@@ -49,7 +53,7 @@ declare function et-required:extract-instance-ETOne(
         =>es:add-attachments($source)
 
     return
-    if (empty($source-node/*)) 
+    if (empty($source-node/*))
     then $instance
     else $instance
         =>   map:with('a', $a)
@@ -62,25 +66,35 @@ declare function et-required:extract-instance-ETOne(
 
 
 (:~
- : Turns an entity instance into a JSON structure.
- : This out-of-the box implementation traverses a map structure
- : and turns it deterministically into a JSON tree.
+ : Turns an entity instance into a canonical document structure.
+ : Results in either a JSON document, or an XML document that conforms
+ : to the entity-services schema.
  : Using this function as-is should be sufficient for most use
  : cases, and will play well with other generated artifacts.
  : @param $entity-instance A map:map instance returned from one of the extract-instance
  :    functions.
+ : @param $format Either "json" or "xml". Determines output format of function
  : @return An XML element that encodes the instance.
  :)
-declare function et-required:instance-to-canonical-json(
+declare function et-required:instance-to-canonical(
 
-    $entity-instance as map:map
-) as object-node()
+    $entity-instance as map:map,
+    $instance-format as xs:string
+) as node()
 {
-    xdmp:to-json( et-required:canonicalize($entity-instance) )/node()
+
+        if ($instance-format eq "json")
+        then xdmp:to-json( et-required:canonicalize($entity-instance) )/node()
+        else et-required:instance-to-canonical-xml($entity-instance)
 };
 
 
-declare function et-required:canonicalize(
+(:~
+ : helper function to turn map structure of an instance, which uses specialized
+ : keys to encode metadata, into a document tree, which uses the node structure
+ : to encode all type and property information.
+ :)
+declare private function et-required:canonicalize(
     $entity-instance as map:map
 ) as map:map
 {
@@ -90,7 +104,7 @@ declare function et-required:canonicalize(
                 then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
                 else
                 let $m := json:object()
-                let $_ := 
+                let $_ :=
                     for $key in map:keys($entity-instance)
                     let $instance-property := map:get($entity-instance, $key)
                     where ($key castable as xs:NCName)
@@ -114,7 +128,7 @@ declare function et-required:canonicalize(
                                     else (),
                                 map:put($m, $key, $instance-property)
                                 )
-                                
+
                         (: A sequence of values should be simply treated as multiple elements :)
                         (: TODO is this lossy? :)
                         case item()+
@@ -139,18 +153,18 @@ declare function et-required:canonicalize(
  :    functions.
  : @return An XML element that encodes the instance.
  :)
-declare function et-required:instance-to-canonical-xml(
+declare private function et-required:instance-to-canonical-xml(
     $entity-instance as map:map
 ) as element()
 {
     (: Construct an element that is named the same as the Entity Type :)
     let $namespace := map:get($entity-instance, "$namespace")
     let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
-    let $nsdecl := 
+    let $nsdecl :=
         if ($namespace) then
         namespace { $namespace-prefix } { $namespace }
         else ()
-    let $type-name := map:get($entity-instance, '$type') 
+    let $type-name := map:get($entity-instance, '$type')
     let $type-qname :=
         if ($namespace)
         then fn:QName( $namespace, $namespace-prefix || ":" || $type-name)
@@ -200,27 +214,52 @@ declare function et-required:instance-to-canonical-xml(
 
 
 (:
- : Wraps a canonical instance (returned by instance-to-canonical-xml())
+ : Wraps a canonical instance (returned by instance-to-canonical())
  : within an envelope patterned document, along with the source
  : document, which is stored in an attachments section.
  : @param $entity-instance an instance, as returned by an extract-instance
  : function
+ : @param $entity-format Either "json" or "xml", selects the output format
+ : for the envelope
  : @return A document which wraps both the canonical instance and source docs.
  :)
-declare function et-required:instance-to-xml-envelope(
-    $entity-instance as map:map
+declare function et-required:instance-to-envelope(
+    $entity-instance as map:map,
+    $envelope-format as xs:string
 ) as document-node()
 {
-    document {
-        element es:envelope {
-            element es:instance {
-                element es:info {
-                    element es:title { map:get($entity-instance,'$type') },
-                    element es:version { '0.0.1' }
+    let $canonical := et-required:instance-to-canonical($entity-instance, $envelope-format)
+    let $attachments := es:serialize-attachments($entity-instance, $envelope-format)
+    return
+    if ($envelope-format eq "xml")
+    then
+        document {
+            element es:envelope {
+                element es:instance {
+                    element es:info {
+                        element es:title { map:get($entity-instance,'$type') },
+                        element es:version { '0.0.1' }
+                    },
+                    $canonical
                 },
-                et-required:instance-to-canonical-xml($entity-instance)
-            },
-            es:serialize-attachments($entity-instance, "xml")
+                $attachments
+            }
+        }
+    else
+    document {
+        object-node { 'envelope' :
+            object-node { 'instance' :
+                object-node { 'info' :
+                    object-node {
+                        'title' : map:get($entity-instance,'$type'),
+                        'version' : '0.0.1'
+                    }
+                }
+                +
+                $canonical
+            }
+            +
+            $attachments
         }
     }
 };
@@ -235,37 +274,8 @@ declare function et-required:instance-to-envelope(
     $entity-instance as map:map
 ) as document-node()
 {
-    et-required:instance-to-xml-envelope($entity-instance)
+    et-required:instance-to-envelope($entity-instance, "xml")
 };
 
 
 
-(:
- : Wraps a canonical instance (returned by instance-to-canonical-json())
- : within an envelope patterned document, along with the source
- : document, which is stored in an attachments section.
- : @param $entity-instance an instance, as returned by an extract-instance
- : function
- : @return A document which wraps both the canonical instance and source docs.
- :)
-declare function et-required:instance-to-json-envelope(
-    $entity-instance as map:map
-) as document-node()
-{
-    document {
-        object-node { 'envelope' : 
-            object-node { 'instance' :
-                object-node { 'info' :
-                    object-node {
-                        'title' : map:get($entity-instance,'$type'),
-                        'version' : '0.0.1'
-                    }
-                }
-                +
-                et-required:instance-to-canonical-json($entity-instance)
-            }
-            +
-            es:serialize-attachments($entity-instance, "json")
-        }
-    }
-};

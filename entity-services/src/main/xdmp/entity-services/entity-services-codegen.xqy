@@ -801,20 +801,42 @@ declare function {$module-prefix}:convert-instance-{$removed-entity-type-name}(
     $source-node as node()
 ) as map:map
 {{
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>es:copy-attachments($source-node)
-    =>map:with('$type', '{ $removed-entity-type-name }')
 {
 
 map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
-let $values :=
-    for $removed-property-name in $removed-entity-type=>map:get("properties")=>map:keys()
-    return es-codegen:variable-line-for($module-prefix, $source-model, $removed-entity-type-name, $removed-property-name)
-return fn:string-join($values, "&#10;")
+    let $properties := $source-model
+        =>map:get("definitions")
+        =>map:get($removed-entity-type-name)
+        =>map:get("properties")
+    let $variable-setters :=
+        for $property-name in map:keys($properties)
+        return es-codegen:variable-line-for($module-prefix, $source-model, $removed-entity-type-name, $property-name)
+    let $values :=
+        for $property-name in map:keys($properties)
+        return
+            (: note, this call passes mutable let-expressions for modification :)
+            es-codegen:value-for-conversion($source-model,
+                $source-model,
+                $removed-entity-type-name,
+                $property-name,
+                $property-name,
+                map:map())
+    return
+
+    fn:concat(
+        fn:string-join( $variable-setters, "&#10;"),
+'&#10;
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "', $removed-entity-type-name, '" }',
+    '&#10;',
+    fn:string-join($values)
+    )
 }
+}};
 :)
 </removed-type>
 

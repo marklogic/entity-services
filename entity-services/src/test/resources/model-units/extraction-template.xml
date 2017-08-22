@@ -3,7 +3,14 @@
   <description>
 Extraction Template Generated from Entity Type Document
 graph uri: http://baloo#et-required-0.0.1</description>
-  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
+  <!-- The following line matches JSON and XML instances, but may be slower to index documents. -->
+  <context>//*:instance[*:info/*:version = "0.0.1"]</context>
+  <!-- Replace the above with the following line to match XML instances only.  This may speed up indexing
+        <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
+  <!-- Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
   <vars>
     <var>
       <name>RDF</name>

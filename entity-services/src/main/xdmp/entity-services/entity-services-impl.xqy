@@ -382,7 +382,7 @@ declare function esi:model-from-xml(
 (: experiment :)
 declare function esi:model-to-triples(
     $model as map:map
-) 
+)
 {
     tde:node-data-extract(xdmp:to-json($model))
 };
@@ -453,19 +453,19 @@ declare private function esi:resolve-test-reference(
         head( ($property-definition=>map:get("$ref"),
                               $property-definition=>map:get("items")=>map:get("$ref") ) )
     let $ref-name := functx:substring-after-last($reference-value, "/")
-    let $namespace-prefix := 
+    let $namespace-prefix :=
         $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
-    let $prefix-value := 
+    let $prefix-value :=
         if ($namespace-prefix)
         then $namespace-prefix || ":"
         else ""
     let $namespace-uri :=
         $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
-    let $nsdecl := 
-        if ($namespace-prefix) 
+    let $nsdecl :=
+        if ($namespace-prefix)
         then element { "X" } { namespace { $namespace-prefix } { $namespace-uri } }
         else <x/>
-    let $qname := fn:resolve-QName($prefix-value || $ref-name, $nsdecl) 
+    let $qname := fn:resolve-QName($prefix-value || $ref-name, $nsdecl)
     (: is the reference value in this model :)
     let $referenced-type :=
         if (contains($reference-value, "#/definitions"))
@@ -497,13 +497,13 @@ declare function esi:create-test-value(
     let $datatype := map:get($property,"datatype")
     let $items := map:get($property, "items")
     let $ref := map:get($property,"$ref")
-    let $namespace-prefix := 
+    let $namespace-prefix :=
         $model=>map:get("definitions")=>map:get($entity-name)=>map:get("namespacePrefix")
-    let $prefix-value := 
+    let $prefix-value :=
         if ($namespace-prefix)
         then $namespace-prefix || ":"
         else ""
-    let $qname := fn:resolve-QName($prefix-value || $property-name, $nsdecl) 
+    let $qname := fn:resolve-QName($prefix-value || $property-name, $nsdecl)
     return
         if (exists($datatype))
         then
@@ -541,11 +541,11 @@ declare function esi:create-test-instance(
                     =>map:get("definitions")
                     =>map:get($entity-type-name)
         let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
-        let $prefix-value := 
+        let $prefix-value :=
             if ($namespace-prefix)
             then $namespace-prefix || ":"
             else ""
-        let $nsdecl := 
+        let $nsdecl :=
             if ($namespace-prefix)
             then element { "X" } { namespace { $namespace-prefix } { $entity-type=>map:get("namespace") } }
             else element { "X" } { }
@@ -617,7 +617,7 @@ declare function esi:database-properties-generate(
         let $namespace-uri := $entity-type=>map:get("namespace")
         let $namespace-prefix-value :=
             if ($namespace-uri)
-            then 
+            then
                 (
                 map:put($path-namespaces,
                         $namespace-prefix,
@@ -669,7 +669,7 @@ declare function esi:database-properties-generate(
         =>map:with("namespace-uri", "http://marklogic.com/entity-services")
     let $_ := map:put($path-namespaces, "es", $pn)
     let $values := function($map) { json:to-array( for $k in $map=>map:keys() return map:get($map, $k)) }
-    let $database-properties := 
+    let $database-properties :=
         json:object()
         =>map:with("database-name", "%%DATABASE%%")
         =>map:with("schema-database", "%%SCHEMAS_DATABASE%%")
@@ -743,13 +743,13 @@ declare private function esi:element-for-reference(
         let $namespace := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
         let $version := $model=>map:get("info")=>map:get("version")
         let $namespace-prefix := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
-        let $prefix-value := 
+        let $prefix-value :=
             if ($namespace-prefix)
             then $namespace-prefix || ":"
             else ""
-        let $nsdecl := 
-            if ($namespace-prefix) 
-            then namespace { $namespace-prefix } { $namespace } 
+        let $nsdecl :=
+            if ($namespace-prefix)
+            then namespace { $namespace-prefix } { $namespace }
             else ()
         return
         (map:put($reference-declarations, $ref-name || "CONTAINER",
@@ -761,7 +761,7 @@ declare private function esi:element-for-reference(
                 </xs:sequence>
                 <xs:attribute name="datatype" />
             </xs:complexType>),
-         map:put($imports-accumulator, 
+         map:put($imports-accumulator,
             fn:head( ($namespace, "") ),
             if ($namespace) then
             <xs:import namespace="{$namespace}" schemaLocation="{$ref-name}-{$version}.xsd"/>
@@ -803,7 +803,7 @@ declare function esi:schema-generate(
         let $properties := map:get($entity-type, "properties")
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
-        let $_accumulate := 
+        let $_accumulate :=
                 (
                 for $property-name in map:keys($properties)
                 let $property := map:get($properties, $property-name)
@@ -876,7 +876,7 @@ declare function esi:schema-generate(
             map:put($imports, head( ($namespace, "") ), (map:keys($imports-accumulator) ! map:get($imports-accumulator, .)))
         )
     let $names-by-namespace := map:map()
-    let $_ := 
+    let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $namespace := $entity-type=>map:get("namespace")
@@ -892,7 +892,7 @@ declare function esi:schema-generate(
             else $extend($names-by-namespace, $namespace, $entity-type-name)
     let $_ :=
         for $namespace in map:keys($names-by-namespace)
-        let $target-attribute := 
+        let $target-attribute :=
             if ($namespace ne "")
             then attribute { "targetNamespace" } { $namespace }
             else ()
@@ -916,7 +916,7 @@ declare function esi:schema-generate(
                     json:array-values($element-declarations=>map:get($entity-type-name)),
                     let $m := $reference-declarations=>map:get($entity-type-name)
                     let $keys := $m=>map:keys()
-                    for $k in $keys 
+                    for $k in $keys
                     return map:get($m, $k),
                     json:array-values($entity-type-declarations=>map:get($entity-type-name))
                 )
@@ -1270,7 +1270,14 @@ declare function esi:extraction-template-generate(
 Extraction Template Generated from Entity Type Document
 graph uri: {esi:model-graph-iri($model)}
         </tde:description>
+        <!-- The following line matches JSON and XML instances, but may be slower to index documents. -->
+        <tde:context>//*:instance[*:info/*:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        <!-- Replace the above with the following line to match XML instances only.  This may speed up indexing
         <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
+        <!-- Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
         <tde:vars>
             <tde:var><tde:name>RDF</tde:name><tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val></tde:var>
             <tde:var><tde:name>RDF_TYPE</tde:name><tde:val>sem:iri(concat($RDF, "type"))</tde:val></tde:var>
@@ -1346,10 +1353,10 @@ declare function esi:search-options-generate(
         let $namespace-uri := $entity-type=>map:get("namespace")
         let $prefix-value :=
             if ($namespace-uri)
-            then 
+            then
                 $namespace-prefix || ":"
             else ""
-        let $nsdecl := 
+        let $nsdecl :=
             if ($namespace-uri)
             then
                 (

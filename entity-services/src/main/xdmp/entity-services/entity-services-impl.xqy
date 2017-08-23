@@ -1265,7 +1265,7 @@ declare function esi:extraction-template-generate(
         </tde:template>
         )
     return
-    <tde:template xmlns="http://marklogic.com/xdmp/tde">
+    <tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
         <tde:description>
 Extraction Template Generated from Entity Type Document
 graph uri: {esi:model-graph-iri($model)}

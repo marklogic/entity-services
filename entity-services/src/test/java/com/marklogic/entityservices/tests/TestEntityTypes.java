@@ -333,13 +333,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 // RDFDataMgr.write(System.out, actualTriples, Lang.TURTLE);
 
                 // A great class for debugging, Defference.
-                logger.debug("Difference, expected - actual");
-                Graph diff = new org.apache.jena.graph.compose.Difference(expectedTriples, actualTriples);
-                RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-
-                logger.debug("Difference, actual - expected");
-                Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
-                RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
+//                logger.debug("Difference, expected - actual");
+//                Graph diff = new org.apache.jena.graph.compose.Difference(expectedTriples, actualTriples);
+//                RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+//
+//                logger.debug("Difference, actual - expected");
+//                Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//                RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
 
 
                 assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));

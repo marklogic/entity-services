@@ -13,14 +13,14 @@
 <sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName>
 <sup:UnitPrice>19.99</sup:UnitPrice>
 <sup:Discount>0.06</sup:Discount>
-<sup:ShipAddress datatype="array">
+<sup:Ship-Address datatype="array">
 <sup:ShipDetails>
 <sup:Province>Alberta</sup:Province>
 <sup:Region>West</sup:Region>
 <sup:ShipMode>Regular Air</sup:ShipMode>
 <sup:ShippingCost>11.17</sup:ShippingCost>
 </sup:ShipDetails>
-</sup:ShipAddress>
+</sup:Ship-Address>
 </sup:Superstore>
 </es:instance>
 <es:attachments>

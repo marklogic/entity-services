@@ -7,7 +7,7 @@
 "ProductName": "Telescoping Adjustable Floor Lamp", 
 "UnitPrice": 19.99, 
 "Discount": "0.06", 
-"ShipAddress": [
+"Ship-Address": [
 {
 "ShipDetails": {
 "Province": "Alberta", 

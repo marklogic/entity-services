@@ -290,7 +290,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 				getConversionValidationResult(entityType, docTitle + ":extract-instance-" + result.get(new StringHandle()));
 			}
 		
-			getConversionValidationResult(entityType, docTitle+":instance-to-canonical-xml");
+			getConversionValidationResult(entityType, docTitle+":instance-to-canonical");
 			getConversionValidationResult(entityType, docTitle+":instance-to-envelope");
 			/*
 			StringHandle xqueryModule = new StringHandle();
@@ -529,7 +529,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		
 		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ",
-                          "ext:instance-to-canonical-xml(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+                          "ext:instance-to-canonical(ext:extract-instance-Order( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		
 		String actualDoc = handle.get();
 		//logger.info("actualDoc now ::::" + actualDoc);
@@ -544,7 +544,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		String ns = getNameSpace(entityType);
 		
 		StringHandle handle = evalOneResult("import module namespace ext = \""+ns+"\" at \"/conv/"+entityType.replaceAll("\\.(xml|json)", ".xqy")+"\"; ", 
-		        "ext:instance-to-canonical-xml(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+		        "ext:instance-to-canonical(ext:extract-instance-Customer( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		
 		String actualDoc = handle.get();
 		//logger.error("actualDoc now ::::" + actualDoc);
@@ -558,14 +558,14 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		//test for ET Order
 		StringHandle ord = evalOneResult("import module namespace ext = 'http://marklogic.com/ns2#Model_2ns-0.0.1' at '/conv/valid-2-namespace-gen.xqy'; ",
-                          "ext:instance-to-canonical-xml(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new StringHandle());
+                          "ext:instance-to-canonical(ext:extract-instance-Order( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		String actualDoc1 = ord.get();              
 		//logger.info("actualDoc now ::::" + actualDoc);
 		assertThat(actualDoc1, CompareMatcher.isIdenticalTo(domToString("/test-canonical/test-namespace-Order.xml")).ignoreWhitespace());
 		
 		//test for ET Customer
 		StringHandle cust = evalOneResult("import module namespace ext = 'http://marklogic.com/ns1#Model_1ns-0.0.1' at '/conv/valid-1-namespace-gen.xqy'; ",
-                "ext:instance-to-canonical-xml(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+                "ext:instance-to-canonical(ext:extract-instance-Customer( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		String actualDoc2 = cust.get();              
 		//logger.info("actualDoc now ::::" + actualDoc);
 		assertThat(actualDoc2, CompareMatcher.isIdenticalTo(domToString("/test-canonical/test-namespace-Customer.xml")).ignoreWhitespace());
@@ -598,14 +598,14 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		//test for ET Order
 		StringHandle sup = evalOneResult("import module namespace ext = 'http://marklogic.com/ns2#Model_2ns-0.0.1' at '/conv/valid-2-namespace-gen.xqy'; ",
-                          "ext:instance-to-xml-envelope(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ))", new StringHandle());
+                          "ext:instance-to-envelope(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		String actualDoc1 = sup.get();              
 		//logger.info("actualDoc now ::::" + actualDoc);
 		assertThat(actualDoc1, CompareMatcher.isIdenticalTo(domToString("/test-envelope/test-namespace-Superstore.xml")).ignoreWhitespace());
 		
 		//test for ET Customer
 		StringHandle cust = evalOneResult("import module namespace ext = 'http://marklogic.com/ns1#Model_1ns-0.0.1' at '/conv/valid-1-namespace-gen.xqy'; ",
-                "ext:instance-to-xml-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new StringHandle());
+                "ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"') ),'xml')", new StringHandle());
 		String actualDoc2 = cust.get();              
 		//logger.info("actualDoc now ::::" + actualDoc);
 		assertThat(actualDoc2, CompareMatcher.isIdenticalTo(domToString("/test-envelope/test-namespace-Customer.xml")).ignoreWhitespace());
@@ -648,14 +648,14 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		//test for ET Superstore
 		JacksonHandle sup = evalOneResult("import module namespace ext = 'http://marklogic.com/ns2#Model_2ns-0.0.1' at '/conv/valid-2-namespace-gen.xqy'; ",
-                          "ext:instance-to-canonical-json(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ))", new JacksonHandle());
+                          "ext:instance-to-canonical(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ),'json')", new JacksonHandle());
 		JsonNode actualDoc1 = sup.get();
         JsonNode control1 = getJsonKeys("/test-canonical/test-namespace-Superstore.json");
         org.hamcrest.MatcherAssert.assertThat(control1, org.hamcrest.Matchers.equalTo(actualDoc1)); 
 		
 		//test for ET Customer
         JacksonHandle cust = evalOneResult("import module namespace ext = 'http://marklogic.com/ns1#Model_1ns-0.0.1' at '/conv/valid-1-namespace-gen.xqy'; ",
-                "ext:instance-to-canonical-json(ext:extract-instance-Customer( doc('"+sourceDocument+"') ))", new JacksonHandle());
+                "ext:instance-to-canonical(ext:extract-instance-Customer( doc('"+sourceDocument+"') ),'json')", new JacksonHandle());
         JsonNode actualDoc2 = cust.get();
         JsonNode control2 = getJsonKeys("/test-canonical/test-namespace-Customer.json");
         org.hamcrest.MatcherAssert.assertThat(control2, org.hamcrest.Matchers.equalTo(actualDoc2));
@@ -668,14 +668,14 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 		
 		//test for ET Superstore
 		JacksonHandle sup = evalOneResult("import module namespace ext = 'http://marklogic.com/ns2#Model_2ns-0.0.1' at '/conv/valid-2-namespace-gen.xqy'; ",
-                          "ext:instance-to-json-envelope(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ))", new JacksonHandle());
+                          "ext:instance-to-envelope(ext:extract-instance-Superstore( doc('"+sourceDocument+"') ),'json')", new JacksonHandle());
 		JsonNode actualDoc1 = sup.get();
         JsonNode control1 = getJsonKeys("/test-envelope/test-namespace-Superstore.json");
         org.hamcrest.MatcherAssert.assertThat(control1, org.hamcrest.Matchers.equalTo(actualDoc1)); 
 		
 		//test for ET Order
         JacksonHandle ord = evalOneResult("import module namespace ext = 'http://marklogic.com/ns2#Model_2ns-0.0.1' at '/conv/valid-2-namespace-gen.xqy'; ",
-                "ext:instance-to-json-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ))", new JacksonHandle());
+                "ext:instance-to-envelope(ext:extract-instance-Order( doc('"+sourceDocument+"') ),'json')", new JacksonHandle());
         JsonNode actualDoc2 = ord.get();
         JsonNode control2 = getJsonKeys("/test-envelope/test-namespace-Order.json");
         org.hamcrest.MatcherAssert.assertThat(control2, org.hamcrest.Matchers.equalTo(actualDoc2));
@@ -718,7 +718,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
         String sourceDocument = "VINET.json";
         
         JacksonHandle handle = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
-                          "(es:instance-get-attachments(ext:instance-to-json-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')))))", new JacksonHandle());
+                          "(es:instance-get-attachments(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')),'json')))", new JacksonHandle());
         
         JsonNode actualDoc = handle.get();
         //Get the keys file as controlDoc

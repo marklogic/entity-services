@@ -20,7 +20,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-07-12T17:11:24.568807-07:00
+ Generated at timestamp: 2017-08-23T14:37:27.764219-07:00
 
  Target Model allDifferentTgt-0.0.2 Info:
 
@@ -87,14 +87,21 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Customer(
     $source-node as node()
 ) as map:map
 {
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>es:copy-attachments($source-node)
-    =>map:with('$type', 'Customer')
     let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
     let $CompanyName  :=             $source-node/CompanyName ! xs:string(.)
     let $Country  :=             $source-node/Country ! xs:string(.)
     let $ContactName  :=             $source-node/ContactName ! xs:string(.)
+
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "Customer" }
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('ContactName',  $ContactName)
+
+};
 :)

@@ -809,7 +809,7 @@ declare function esi:schema-generate(
                 let $property := map:get($properties, $property-name)
                 return
                 json:array-push($properties-accumulator,
-                    esi:wrap-duplicates($seen-keys, $property-name,
+                    esi:wrap-duplicates($seen-keys, "{" || $namespace || "}" || $property-name,
                         if (map:contains($property, "$ref"))
                         then
                             esi:element-for-reference(

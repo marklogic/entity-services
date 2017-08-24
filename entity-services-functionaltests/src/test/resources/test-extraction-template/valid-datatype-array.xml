@@ -1,126 +1,140 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<template xmlns="http://marklogic.com/xdmp/tde">
-  <description>Extraction Template Generated from Entity Type Document
-graph uri: http://marklogic.com/test#Northwind-0.0.1</description>
-  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
-  <vars>
-    <var>
-      <name>RDF</name>
-      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
-    </var>
-    <var>
-      <name>RDF_TYPE</name>
-      <val>sem:iri(concat($RDF, "type"))</val>
-    </var>
-  </vars>
-  <path-namespaces>
-    <path-namespace>
-      <prefix>es</prefix>
-      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-    </path-namespace>
-  </path-namespaces>
-  <templates>
-    <!--
+<?xml  version="1.0" encoding="UTF-8"?>
+<tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
+<tde:description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://marklogic.com/test#Northwind-0.0.1</tde:description>
+<!--
+ The following line matches JSON and XML instances, but may be slower to index documents. 
+-->
+<tde:context>//*:instance[*:info/*:version = "0.0.1"]</tde:context>
+<!--
+ Replace the above with the following line to match XML instances only.  This may speed up indexing
+        <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<!--
+ Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<tde:vars>
+<tde:var>
+<tde:name>RDF</tde:name>
+<tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val>
+</tde:var>
+<tde:var>
+<tde:name>RDF_TYPE</tde:name>
+<tde:val>sem:iri(concat($RDF, "type"))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:path-namespaces>
+<tde:path-namespace>
+<tde:prefix>es</tde:prefix>
+<tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
+</tde:path-namespace>
+</tde:path-namespaces>
+<tde:templates>
+<!--
 The standalone template for Product cannot be generated.  Each template row requires a primary key or at least one required property.
 -->
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./Customer</context>
-      <vars>
-        <var>
-          <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./CustomerId)))</val>
-        </var>
-      </vars>
-      <triples>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>$RDF_TYPE</val>
-          </predicate>
-          <object>
-            <val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</val>
-          </object>
-        </triple>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
-          </predicate>
-          <object>
-            <val>fn:base-uri(.)</val>
-          </object>
-        </triple>
-      </triples>
-    </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./Customer</context>
-      <rows>
-        <row>
-          <schema-name>Northwind</schema-name>
-          <view-name>Customer</view-name>
-          <view-layout>sparse</view-layout>
-          <columns>
-            <column>
-              <name>CustomerId</name>
-              <scalar-type>string</scalar-type>
-              <val>CustomerId</val>
-            </column>
-            <column>
-              <name>CompanyName</name>
-              <scalar-type>string</scalar-type>
-              <val>CompanyName</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>Country</name>
-              <scalar-type>string</scalar-type>
-              <val>Country</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>ContactName</name>
-              <scalar-type>string</scalar-type>
-              <val>ContactName</val>
-              <nullable>true</nullable>
-            </column>
-          </columns>
-        </row>
-      </rows>
-      <templates>
-        <template>
-          <context>./likes</context>
-          <rows>
-            <row>
-              <schema-name>Northwind</schema-name>
-              <view-name>Customer_likes</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--
+<tde:template>
+<tde:context>./Customer</tde:context>
+<tde:vars>
+<tde:var>
+<tde:name>subject-iri</tde:name>
+<tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./CustomerId)))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:triples>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>$RDF_TYPE</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</tde:val>
+</tde:object>
+</tde:triple>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>fn:base-uri(.)</tde:val>
+</tde:object>
+</tde:triple>
+</tde:triples>
+</tde:template>
+<tde:template>
+<tde:context>./Customer</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>Northwind</tde:schema-name>
+<tde:view-name>Customer</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<tde:name>CustomerId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>CustomerId</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>CompanyName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>CompanyName</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>Country</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>Country</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>ContactName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>ContactName</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+<tde:templates>
+<tde:template>
+<tde:context>./likes</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>Northwind</tde:schema-name>
+<tde:view-name>Customer_likes</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
 This column joins to property CustomerId of Customer
 -->
-                  <name>CustomerId</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../CustomerId</val>
-                </column>
-                <column>
-                  <!--
+<tde:name>CustomerId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../CustomerId</tde:val>
+</tde:column>
+<tde:column>
+<!--
 This column holds array values from property CustomerId of Customer
 -->
-                  <name>likes</name>
-                  <scalar-type>int</scalar-type>
-                  <val>.</val>
-                  <nullable>true</nullable>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-      </templates>
-    </template>
-  </templates>
-</template>
+<tde:name>likes</tde:name>
+<tde:scalar-type>int</tde:scalar-type>
+<tde:val>.</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+</tde:templates>
+</tde:template>
+</tde:templates>
+</tde:template>

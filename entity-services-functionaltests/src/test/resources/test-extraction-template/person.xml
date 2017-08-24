@@ -1,115 +1,133 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<template xmlns="http://marklogic.com/xdmp/tde">
-  <description>Extraction Template Generated from Entity Type Document
-graph uri: http://example.org/example-person/Person-0.0.1</description>
-  <context>//es:instance[es:info/es:version = "0.0.1"]</context>
-  <vars>
-    <var>
-      <name>RDF</name>
-      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
-    </var>
-    <var>
-      <name>RDF_TYPE</name>
-      <val>sem:iri(concat($RDF, "type"))</val>
-    </var>
-  </vars>
-  <path-namespaces>
-    <path-namespace>
-      <prefix>es</prefix>
-      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-    </path-namespace>
-  </path-namespaces>
-  <templates>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./Person</context>
-      <vars>
-        <var>
-          <name>subject-iri</name>
-          <val>sem:iri(concat("http://example.org/example-person/Person-0.0.1/Person/", fn:encode-for-uri(./id)))</val>
-        </var>
-      </vars>
-      <triples>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>$RDF_TYPE</val>
-          </predicate>
-          <object>
-            <val>sem:iri("http://example.org/example-person/Person-0.0.1/Person")</val>
-          </object>
-        </triple>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
-          </predicate>
-          <object>
-            <val>fn:base-uri(.)</val>
-          </object>
-        </triple>
-      </triples>
-    </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./Person</context>
-      <rows>
-        <row>
-          <schema-name>Person</schema-name>
-          <view-name>Person</view-name>
-          <view-layout>sparse</view-layout>
-          <columns>
-            <column>
-              <name>id</name>
-              <scalar-type>string</scalar-type>
-              <val>id</val>
-            </column>
-            <column>
-              <name>firstName</name>
-              <scalar-type>string</scalar-type>
-              <val>firstName</val>
-            </column>
-            <column>
-              <name>lastName</name>
-              <scalar-type>string</scalar-type>
-              <val>lastName</val>
-            </column>
-            <column>
-              <name>fullName</name>
-              <scalar-type>string</scalar-type>
-              <val>fullName</val>
-            </column>
-          </columns>
-        </row>
-      </rows>
-      <templates>
-        <template>
-          <context>./friends</context>
-          <rows>
-            <row>
-              <schema-name>Person</schema-name>
-              <view-name>Person_friends</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--This column joins to property id of Person-->
-                  <name>id</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../id</val>
-                </column>
-                <column>
-                  <!--This column joins to primary key of Person-->
-                  <name>friends_id</name>
-                  <scalar-type>string</scalar-type>
-                  <val>Person</val>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-      </templates>
-    </template>
-  </templates>
-</template>
+<?xml  version="1.0" encoding="UTF-8"?>
+<tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
+<tde:description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://example.org/example-person/Person-0.0.1</tde:description>
+<!--
+ The following line matches JSON and XML instances, but may be slower to index documents. 
+-->
+<tde:context>//*:instance[*:info/*:version = "0.0.1"]</tde:context>
+<!--
+ Replace the above with the following line to match XML instances only.  This may speed up indexing
+        <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<!--
+ Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<tde:vars>
+<tde:var>
+<tde:name>RDF</tde:name>
+<tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val>
+</tde:var>
+<tde:var>
+<tde:name>RDF_TYPE</tde:name>
+<tde:val>sem:iri(concat($RDF, "type"))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:path-namespaces>
+<tde:path-namespace>
+<tde:prefix>es</tde:prefix>
+<tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
+</tde:path-namespace>
+</tde:path-namespaces>
+<tde:templates>
+<tde:template>
+<tde:context>./Person</tde:context>
+<tde:vars>
+<tde:var>
+<tde:name>subject-iri</tde:name>
+<tde:val>sem:iri(concat("http://example.org/example-person/Person-0.0.1/Person/", fn:encode-for-uri(./id)))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:triples>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>$RDF_TYPE</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>sem:iri("http://example.org/example-person/Person-0.0.1/Person")</tde:val>
+</tde:object>
+</tde:triple>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>fn:base-uri(.)</tde:val>
+</tde:object>
+</tde:triple>
+</tde:triples>
+</tde:template>
+<tde:template>
+<tde:context>./Person</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>Person</tde:schema-name>
+<tde:view-name>Person</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<tde:name>id</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>id</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>firstName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>firstName</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>lastName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>lastName</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>fullName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>fullName</tde:val>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+<tde:templates>
+<tde:template>
+<tde:context>./friends</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>Person</tde:schema-name>
+<tde:view-name>Person_friends</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
+This column joins to property id of Person
+-->
+<tde:name>id</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../id</tde:val>
+</tde:column>
+<tde:column>
+<!--
+This column joins to primary key of Person
+-->
+<tde:name>friends_id</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>Person</tde:val>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+</tde:templates>
+</tde:template>
+</tde:templates>
+</tde:template>

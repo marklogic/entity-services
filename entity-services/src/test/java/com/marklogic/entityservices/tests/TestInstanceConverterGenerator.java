@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.eval.EvalResult;
@@ -311,6 +312,20 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         assertEquals("{\"bah\":\"yes\"}", actual);
 
         xmlDocMgr.delete("/test-envelope-json-attachment.xml");
+
+        testEnvelope = this.getClass().getResourceAsStream("/model-units/test-envelope-json.json");
+        JSONDocumentManager jsonDocumentManager = client.newJSONDocumentManager();
+        jsonDocumentManager.write("/test-envelope-json.json", new InputStreamHandle(testEnvelope).withFormat(Format.JSON));
+
+        stringHandle = evalOneResult("",
+            "es:instance-get-attachments( doc('/test-envelope-json.json') )",
+            new StringHandle());
+
+        actual = stringHandle.get();
+
+        assertEquals("<Order>oijasdf</Order>", actual);
+
+        jsonDocumentManager.delete("/test-envelope-json.json");
     }
 
     @Test

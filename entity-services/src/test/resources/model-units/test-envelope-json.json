@@ -3,6 +3,6 @@
     {"info":{"title":"Order", "version":"0.0.1"},
      "Order":"oijasdf"
     },
-   "attachments":"<Order>oijasdf</Order>"
+   "attachments":["<Order>oijasdf</Order>"]
  }
 }

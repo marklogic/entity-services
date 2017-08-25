@@ -80,10 +80,10 @@
       },
       "OrderDetail":{  
          "properties":{  
-            "ProductID":{  
+            "hasProductID":{  
                "$ref":"#/definitions/Product"
             },
-            "UnitPrice":{  
+            "hasUnitPrice":{  
                "datatype":"integer"
             },
             "Quantity":{  

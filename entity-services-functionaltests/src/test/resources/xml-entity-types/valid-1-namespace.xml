@@ -83,12 +83,12 @@
     </Order>
     <OrderDetail>
         <es:properties>
-	 <ProductID>
+	 <hasProductID>
              <es:ref>#/definitions/Product</es:ref>
-	 </ProductID>
-	 <UnitPrice>
+	 </hasProductID>
+	 <hasUnitPrice>
              <es:datatype>integer</es:datatype>
-	 </UnitPrice>
+	 </hasUnitPrice>
 	 <Quantity>
              <es:datatype>integer</es:datatype>
 	 </Quantity>

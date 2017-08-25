@@ -190,15 +190,15 @@ graph uri: http://marklogic.com/ns1#Model_1ns-0.0.1</tde:description>
 Warning, no primary key in enclosing type Order
 -->
 <tde:column>
-<tde:name>ProductID</tde:name>
+<tde:name>hasProductID</tde:name>
 <tde:scalar-type>string</tde:scalar-type>
-<tde:val>ProductID/Product</tde:val>
+<tde:val>hasProductID/Product</tde:val>
 <tde:nullable>true</tde:nullable>
 </tde:column>
 <tde:column>
-<tde:name>UnitPrice</tde:name>
+<tde:name>hasUnitPrice</tde:name>
 <tde:scalar-type>integer</tde:scalar-type>
-<tde:val>UnitPrice</tde:val>
+<tde:val>hasUnitPrice</tde:val>
 <tde:nullable>true</tde:nullable>
 </tde:column>
 <tde:column>

@@ -10,10 +10,10 @@
 <ord:ShipAddress>some string</ord:ShipAddress>
 <ord:OrderDetails datatype="array">
 <OrderDetail>
-<ProductID>
+<hasProductID>
 <Product>123</Product>
-</ProductID>
-<UnitPrice>123</UnitPrice>
+</hasProductID>
+<hasUnitPrice>123</hasUnitPrice>
 <Quantity>123</Quantity>
 </OrderDetail>
 </ord:OrderDetails>

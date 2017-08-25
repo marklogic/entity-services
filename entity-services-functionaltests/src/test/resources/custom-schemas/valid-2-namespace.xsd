@@ -1,0 +1,70 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+<xs:element name="CustomerID" type="xs:string">
+</xs:element>
+<xs:complexType name="CustomerType" mixed="true">
+<xs:sequence minOccurs="0">
+<xs:element ref="CustomerID">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Customer" type="CustomerType">
+</xs:element>
+<xs:element name="ProductID" type="xs:integer">
+</xs:element>
+<xs:complexType name="ProductType" mixed="true">
+<xs:sequence minOccurs="0">
+<xs:element ref="ProductID">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Product" type="ProductType">
+</xs:element>
+<xs:element name="hasProductID" type="ProductContainerType">
+</xs:element>
+<xs:element name="hasUnitPrice" type="xs:integer">
+</xs:element>
+<xs:element name="Quantity" type="xs:integer">
+</xs:element>
+<xs:complexType name="ProductContainerType">
+<xs:sequence>
+<xs:element ref="Product">
+</xs:element>
+</xs:sequence>
+<xs:attribute name="datatype">
+</xs:attribute>
+</xs:complexType>
+<xs:complexType name="OrderDetailType" mixed="true">
+<xs:sequence minOccurs="0">
+<xs:element minOccurs="0" ref="hasProductID">
+</xs:element>
+<xs:element minOccurs="0" ref="hasUnitPrice">
+</xs:element>
+<xs:element minOccurs="0" ref="Quantity">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="OrderDetail" type="OrderDetailType">
+</xs:element>
+<xs:element name="Province" type="xs:string">
+</xs:element>
+<xs:element name="Region" type="xs:string">
+</xs:element>
+<xs:element name="ShipMode" type="xs:string">
+</xs:element>
+<xs:element name="ShippingCost" type="xs:double">
+</xs:element>
+<xs:complexType name="ShipDetailsType" mixed="true">
+<xs:sequence minOccurs="0">
+<xs:element minOccurs="0" ref="Province">
+</xs:element>
+<xs:element minOccurs="0" ref="Region">
+</xs:element>
+<xs:element minOccurs="0" ref="ShipMode">
+</xs:element>
+<xs:element minOccurs="0" ref="ShippingCost">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="ShipDetails" type="ShipDetailsType">
+</xs:element>
+</xs:schema>

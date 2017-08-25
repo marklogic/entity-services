@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.document.TextDocumentManager;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.eval.EvalResult;
@@ -68,6 +69,7 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupClass() {
 		setupClients();
+		TestSetup.getInstance().storeCustomConversionModules();
 		// save xquery module to modules database
 		docMgr = modulesClient.newTextDocumentManager();	
 		

@@ -20,6 +20,7 @@ import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.Authentication;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.JSONDocumentManager;
+import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
 import org.apache.commons.io.FileUtils;
@@ -99,7 +100,7 @@ public class TestSetup {
         instance.loadEntityTypes();
         instance.loadInvalidEntityTypes();
         instance.loadExtraFiles();
-        instance.storeCustomConversionModules();
+        //instance.storeCustomConversionModules();
         return instance;
     }
     
@@ -213,7 +214,7 @@ public class TestSetup {
 	    logger.info("Done loading Source Documents");
 	}
 	
-    private void storeCustomConversionModules() {
+    public void storeCustomConversionModules() {
         
         JSONDocumentManager docMgr = _modulesClient.newJSONDocumentManager();
         DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -225,6 +226,22 @@ public class TestSetup {
             DocumentMetadataHandle metadata = new DocumentMetadataHandle();
             logger.info("Loading custom xqy module " + f.getName());
             writeSet.add(moduleName, metadata, new FileHandle(f));
+        }
+        docMgr.write(writeSet);
+    }
+    
+    public void storeCustomSchema() {
+        
+        XMLDocumentManager docMgr = _schemasClient.newXMLDocumentManager();
+        DocumentWriteSet writeSet = docMgr.newWriteSet();
+        Collection<File> custSchema = getTestResources("/custom-schemas");
+        
+        for (File f : custSchema) {
+        
+            String schemaName = f.getName();
+            DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+            logger.info("Loading custom xsd " + f.getName());
+            writeSet.add(schemaName, metadata, new FileHandle(f));
         }
         docMgr.write(writeSet);
     }

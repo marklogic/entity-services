@@ -147,8 +147,10 @@ declare function inst:instance-get-attachments(
     $document as document-node()
 ) as item()*
 {
-    if (exists($document//*:attachments/*))
-    then $document//*:attachments/*
-    else $document//*:attachments/text()
+    if (exists($document//es:attachments/node()))
+    then $document//es:attachments/node()
+    else if (exists($document//array-node("attachments")))
+    then $document//attachments
+    else ()
 };
 

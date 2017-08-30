@@ -270,7 +270,7 @@ order:anyURIKey
 order:booleanKey
         a es:Property ;
         a es:RangeIndexedProperty ;
-        a es:PathRangeIndexedProperty ;
+        a es:ElementRangeIndexedProperty ;
         es:datatype xs:boolean ;
         es:title "booleanKey" .
 

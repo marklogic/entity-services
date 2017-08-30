@@ -166,12 +166,12 @@
       <es:range-index>stringKey</es:range-index>
       <es:range-index>iriKey</es:range-index>
       <es:range-index>anyURIKey</es:range-index>
-      <es:range-index>booleanKey</es:range-index>
       <es:range-index>integerKey</es:range-index>
       <es:range-index>negativeIntegerKey</es:range-index>
       <es:range-index>nonNegativeIntegerKey</es:range-index>
       <es:range-index>positiveIntegerKey</es:range-index>
       <es:range-index>nonPositiveIntegerKey</es:range-index>
+      <es:element-range-index>booleanKey</es:element-range-index>
       <es:word-lexicon>stringKey</es:word-lexicon>
     </SchemaCompleteEntityType>
     <OrderDetails>

@@ -74,11 +74,6 @@
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
     </search:range>
   </search:constraint>
-  <search:constraint name="booleanKey">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-    </search:range>
-  </search:constraint>
   <search:constraint name="integerKey">
     <search:range facet="true" type="xs:decimal">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
@@ -102,6 +97,11 @@
   <search:constraint name="nonPositiveIntegerKey">
     <search:range facet="true" type="xs:decimal">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/nonPositiveIntegerKey</search:path-index>
+    </search:range>
+  </search:constraint>
+  <search:constraint name="booleanKey">
+    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+      <search:element ns="" name="booleanKey"/>
     </search:range>
   </search:constraint>
   <!--This item is a duplicate and is commented out so as to create a valid artifact.
@@ -161,9 +161,6 @@
     <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/anyURIKey</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/booleanKey</search:path-index>
-    </search:range>
     <search:range facet="true" type="xs:decimal">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/integerKey</search:path-index>
     </search:range>
@@ -178,6 +175,9 @@
     </search:range>
     <search:range facet="true" type="xs:decimal">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/SchemaCompleteEntityType/nonPositiveIntegerKey</search:path-index>
+    </search:range>
+    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+      <search:element ns="" name="booleanKey"/>
     </search:range>
   </search:tuples>
   <search:tuples name="OrderDetails">

@@ -70,8 +70,9 @@
       "required": ["orderId", "dateKey","arrayKey"],
       "rangeIndex": ["arrayKey", "dateKey", "referenceInThisFile", "arrayreferenceInThisFile", "externalReference",
                      "externalArrayReference", "byteKey", "shortKey", "unsignedByteKey", "unsignedShortKey", "stringKey",
-                     "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
+                     "iriKey", "anyURIKey", "integerKey", "negativeIntegerKey",
                      "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey"],
+      "elementRangeIndex" : ["booleanKey"],
       "wordLexicon": ["stringKey"],
       "description": "The type itself, with lots of properties."
     },

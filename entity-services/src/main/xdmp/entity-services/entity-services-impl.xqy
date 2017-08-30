@@ -1423,7 +1423,10 @@ declare function esi:search-options-generate(
                     attribute { "ns" }  { $namespace-uri },
                     attribute { "name" } { $property-name }
                     )
-                else ()
+                else (
+                    attribute { "ns" }  { "" },
+                    attribute { "name" } { $property-name }
+                    )
             let $range-definition :=
                 <search:range type="xs:{ $datatype }" facet="true">
                     { $collation }

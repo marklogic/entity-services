@@ -978,6 +978,24 @@ declare private function esi:ref-datatype(
 };
 
 
+
+declare private function esi:ref-prefixed-name(
+    $model as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as xs:string
+{
+    let $ref-type := esi:ref-type( $model, $entity-type-name, $property-name )
+    let $ref-name := esi:ref-type-name($model, $entity-type-name, $property-name)
+    let $namespace-prefix := $ref-type=>map:get("namespacePrefix")
+    let $is-local-ref := esi:is-local-reference($model, $entity-type-name, $property-name)
+    return
+        if ($namespace-prefix and $is-local-ref)
+        then $namespace-prefix || ":" || $ref-name
+        else $ref-name
+};
+
+
 declare private function esi:is-local-reference(
     $model as map:map,
     $entity-type-name as xs:string,
@@ -1010,7 +1028,7 @@ declare function esi:ref-type-name(
         =>map:get("properties")
         =>map:get($property-name)
     let $ref-target := head( ($property=>map:get("$ref"),
-                              $property=>map:get("items")=>map:get("$ref") ) )
+                  $property=>map:get("items")=>map:get("$ref") ) )
     return functx:substring-after-last($ref-target, "/")
 };
 
@@ -1049,6 +1067,7 @@ declare function esi:extraction-template-generate(
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $scalar-rows := map:map()
     let $secure-tde-name := fn:replace(?, "-", "_")
+    let $path-namespaces := map:map()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
@@ -1056,6 +1075,20 @@ declare function esi:extraction-template-generate(
         let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            (
+            map:put($path-namespaces,
+                    $namespace-prefix,
+                    <tde:path-namespace>
+                        <tde:prefix>{$namespace-prefix}</tde:prefix>
+                        <tde:namespace-uri>{$namespace-uri}</tde:namespace-uri>
+                    </tde:path-namespace>),
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+            )
         return
         map:put($scalar-rows, $entity-type-name,
             <tde:rows>
@@ -1085,14 +1118,14 @@ declare function esi:extraction-template-generate(
                             <tde:column>
                                 <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) } </tde:scalar-type>
-                                <tde:val>{ $property-name }/{ esi:ref-type-name($model, $entity-type-name, $property-name) }</tde:val>
+                                <tde:val>{ $prefix-value }{ $property-name }/{ esi:ref-prefixed-name($model, $entity-type-name, $property-name) }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                             else
                             <tde:column>
                                 <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ $datatype }</tde:scalar-type>
-                                <tde:val>{ $property-name }</tde:val>
+                                <tde:val>{ $prefix-value }{$property-name }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                     }
@@ -1108,6 +1141,11 @@ declare function esi:extraction-template-generate(
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $prefix-value :=
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
         let $required-properties := ($primary-key-name, json:array-values(map:get($entity-type, "required")))
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
@@ -1136,7 +1174,7 @@ declare function esi:extraction-template-generate(
             return
             map:put($column-map, $property-name,
                 <tde:template>
-                    <tde:context>./{ $property-name }</tde:context>
+                    <tde:context>./{ $prefix-value }{ $property-name }</tde:context>
                     <tde:rows>
                       <tde:row>
                         <tde:schema-name>{ $schema-name=>$secure-tde-name() }</tde:schema-name>
@@ -1153,7 +1191,7 @@ declare function esi:extraction-template-generate(
                                                 $entity-type-name } }
                                     <tde:name>{ $primary-key-name=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
-                                    <tde:val>../{ $primary-key-name }</tde:val>
+                                    <tde:val>../{ $prefix-value }{ $primary-key-name }</tde:val>
                                 </tde:column>,
                             if ($is-local-ref and empty($ref-primary-key))
                             then
@@ -1173,7 +1211,7 @@ declare function esi:extraction-template-generate(
                                                 $ref-type-name } }
                                     <tde:name>{ $property-name=>$secure-tde-name() || "_" || $ref-primary-key=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
-                                    <tde:val>{ $ref-name }</tde:val>
+                                    <tde:val>{ $prefix-value }{ $ref-name }</tde:val>
                                 </tde:column>
                             else
                             if ($is-external-ref)
@@ -1207,14 +1245,14 @@ declare function esi:extraction-template-generate(
         then
         map:put($triples-templates, $entity-type-name,
             <tde:template>
-                <tde:context>./{ $entity-type-name }</tde:context>
+                <tde:context>./{ $prefix-value }{ $entity-type-name }</tde:context>
                 <tde:vars>
                     {
                         if ($primary-key-type eq "string")
                         then
-                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $prefix-value }{ $primary-key-name })))</tde:val></tde:var>
                         else
-                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(xs:string(./{ $primary-key-name }))))</tde:val></tde:var>
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(xs:string(./{ $prefix-value }{ $primary-key-name }))))</tde:val></tde:var>
                     }
                 </tde:vars>
                 <tde:triples>
@@ -1239,10 +1277,18 @@ declare function esi:extraction-template-generate(
 
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows)
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name) 
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            if ($namespace-uri)
+            then
+                $namespace-prefix || ":"
+            else ""
         return
         if (empty ( ( json:array-values(
-                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("required")),
-                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("primaryKey"))
+                        $entity-type=>map:get("required")),
+                        $entity-type=>map:get("primaryKey"))
                     ))
         then comment { "The standalone template for " || $entity-type-name ||
                        " cannot be generated.  Each template row requires " ||
@@ -1252,7 +1298,7 @@ declare function esi:extraction-template-generate(
         (
         map:get($triples-templates, $entity-type-name),
         <tde:template>
-            <tde:context>./{ $entity-type-name }</tde:context>
+            <tde:context>./{ $prefix-value }{ $entity-type-name }</tde:context>
             {
             map:get($scalar-rows, $entity-type-name),
             if (map:contains($array-rows, $entity-type-name))
@@ -1287,6 +1333,7 @@ graph uri: {esi:model-graph-iri($model)}
                 <tde:prefix>es</tde:prefix>
                 <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
             </tde:path-namespace>
+            { ($path-namespaces=>map:keys()) ! ($path-namespaces=>map:get(.)) }
         </tde:path-namespaces>
         {
         if ( $entity-type-templates/element() )

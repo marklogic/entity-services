@@ -170,6 +170,35 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     }
 
     @Test
+    public void testNamespaces() throws SAXException, IOException {
+        String entityType  = "Person-0.0.2.json";
+
+        String template = extractionTemplates.get(entityType).get();
+
+        Map<String, String> ctx = new HashMap<String, String>();
+        ctx.put("tde", "http://marklogic.com/xdmp/tde");
+        ctx.put("p", "http://ex.org/Person");
+        //logger.debug(template);
+
+        assertThat( template, hasXPath("//tde:row[tde:view-name='Person']//tde:column[tde:name='firstName'][tde:val='p:firstName']")
+            .withNamespaceContext(ctx));
+
+        // another test case with multiple namespaces
+        entityType  = "SchemaCompleteEntityType-0.0.1.json";
+
+        template = extractionTemplates.get(entityType).get();
+
+        ctx = new HashMap<String, String>();
+        ctx.put("tde", "http://marklogic.com/xdmp/tde");
+        ctx.put("ex", "http://example.org/order-details-namespace");
+        //logger.debug(template);
+
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType_arrayreferenceInThisFile']//tde:column[tde:name='quantity'][tde:val='ex:quantity']")
+            .withNamespaceContext(ctx));
+    }
+
+
+    @Test
     public void testReferences() throws SAXException, IOException {
         String entityType  = "SchemaCompleteEntityType-0.0.1.json";
 
@@ -177,7 +206,8 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
 
         Map<String, String> ctx = new HashMap<String, String>();
         ctx.put("tde", "http://marklogic.com/xdmp/tde");
-        //logger.debug(template);
+        ctx.put("ex", "http://example.org/order-details-namespace");
+        logger.debug(template);
 
 
         assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType_externalArrayReference']//tde:column[tde:name='externalArrayReference'][tde:val='OrderDetails']")
@@ -185,7 +215,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         assertThat( template, not(hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalArrayReference'][tde:val='.']")
             .withNamespaceContext(ctx)));
 
-        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='referenceInThisFile'][tde:val='referenceInThisFile/OrderDetails']")
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='referenceInThisFile'][tde:val='referenceInThisFile/ex:OrderDetails']")
             .withNamespaceContext(ctx));
         assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalReference'][tde:val='externalReference/OrderDetails']")
             .withNamespaceContext(ctx));

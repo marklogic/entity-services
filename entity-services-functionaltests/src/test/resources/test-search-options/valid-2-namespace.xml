@@ -14,13 +14,15 @@
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerID</search:path-index>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="CustomerID"/>
   </search:word>
-</search:constraint>-->
+</search:constraint> 
+-->
   <search:constraint name="ProductID">
     <search:value>
       <search:element name="ProductID" ns=""/>
@@ -31,7 +33,8 @@
   <search:range type="xs:decimal" facet="true">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/ProductID</search:path-index>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <search:constraint name="OrderID">
     <search:value>
       <search:element name="OrderID" ns=""/>
@@ -42,13 +45,15 @@
   <search:range type="xs:decimal" facet="true">
     <search:path-index xmlns:es="http://marklogic.com/entity-services" xmlns:ord="http://marklogic.com/order">//es:instance/ord:Order/ord:OrderID</search:path-index>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:path-index xmlns:es="http://marklogic.com/entity-services" xmlns:ord="http://marklogic.com/order">//es:instance/ord:Order/ord:CustomerID</search:path-index>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <search:constraint name="OrderDate">
     <search:range facet="true" type="xs:dateTime">
       <search:element xmlns:es="http://marklogic.com/entity-services" name="OrderDate" ns="http://marklogic.com/order"/>
@@ -69,13 +74,15 @@
   <search:word>
     <search:element ns="" name="CustomerID"/>
   </search:word>
-</search:constraint>-->
+</search:constraint> 
+-->
   <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="OrderID" xmlns:search="http://marklogic.com/appservices/search">
   <search:value>
     <search:element ns="" name="OrderID"/>
   </search:value>
-</search:constraint>-->
+</search:constraint> 
+-->
   <search:constraint name="Discount">
     <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
       <search:path-index xmlns:es="http://marklogic.com/entity-services" xmlns:sup="http://marklogic.com/super">//es:instance/sup:Superstore/sup:Discount</search:path-index>
@@ -91,13 +98,15 @@
   <search:range type="xs:decimal" facet="true">
     <search:element ns="http://marklogic.com/super" name="OrderID" xmlns:es="http://marklogic.com/entity-services"/>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:element ns="http://marklogic.com/super" name="CustomerID" xmlns:es="http://marklogic.com/entity-services"/>
   </search:range>
-</search:constraint>-->
+</search:constraint> 
+-->
   <search:constraint name="ProductName">
     <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
       <search:element xmlns:es="http://marklogic.com/entity-services" name="ProductName" ns="http://marklogic.com/super"/>
@@ -163,7 +172,8 @@
   <!--Uncomment to return no results for a blank search, rather than the default of all results
  <search:term xmlns:search="http://marklogic.com/appservices/search">
   <search:empty apply="no-results"/>
-</search:term>-->
+</search:term> 
+-->
   <search:values name="uris">
     <search:uri/>
   </search:values>

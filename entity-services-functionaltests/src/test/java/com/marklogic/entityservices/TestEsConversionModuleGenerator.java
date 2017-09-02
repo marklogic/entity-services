@@ -730,6 +730,27 @@ public class TestEsConversionModuleGenerator extends EntityServicesTestBase {
 	}
 	
 	@Test
+	//This tests get-attachments with json envelope 
+    public void testCardinalityWithJSONEnvelopes() throws IOException, TestEvalException, SAXException, TransformerException {
+        
+        String sourceDocument = "VINET.xml";
+        
+        JacksonHandle fromDoc = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                          "(es:instance-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')),'json')))", new JacksonHandle());
+
+        StringHandle xmlFromDoc = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                "(es:instance-xml-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')),'json')))", new StringHandle());
+
+        JacksonHandle jsonFromDoc = evalOneResult("import module namespace ext = 'http://refSameDocument#Northwind-Ref-Same-Document-0.0.1' at '/conv/valid-ref-same-doc-gen.xqy';\n",
+                "(es:instance-json-from-document(ext:instance-to-envelope(ext:extract-instance-Customer( doc('"+sourceDocument+"')),'json')))", new JacksonHandle());
+
+        org.hamcrest.MatcherAssert.assertThat(getJsonKeys("/test-instance-from-document/fromDoc.json"), org.hamcrest.Matchers.equalTo(fromDoc.get())); 
+        assertThat(xmlFromDoc.get(), CompareMatcher.isIdenticalTo(domToString("/test-instance-from-document/xmlFromDoc.xml")).ignoreWhitespace()); 
+        org.hamcrest.MatcherAssert.assertThat(getJsonKeys("/test-instance-from-document/jsonFromDoc.json"), org.hamcrest.Matchers.equalTo(jsonFromDoc.get())); 
+	
+	}
+	
+	@Test
 	public void testInstanceFromDocumentNoRef() throws IOException, TestEvalException, SAXException, TransformerException {
 		
 		String entityType = "valid-ref-same-document.xml";

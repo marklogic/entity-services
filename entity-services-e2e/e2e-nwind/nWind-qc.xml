@@ -1,10 +1,10 @@
-<export><workspace name="nWind"><query name="00. README" focus="true" listorder="1" taborder="2" active="true" database="1963686336565512507" server="9354120800095099084" database-name="Documents" server-name="App-Services" mode="xquery">(:
+<export><workspace name="nWind"><query name="00. README" focus="true" listorder="1" taborder="2" active="true" database="14885391728350191049" server="11734516266193597571" database-name="Documents" server-name="App-Services" mode="xquery">(:
  : This Workspace contains reports and examples about an Entity Services scenario,
  : using Northwind data. It's designed with simplicity in mind, not real business data.
  : Once you have deployed code artefacts (either './gradlew -PexampleDir=e2e-nwind mldeploy' or './gradlew mldeploy' from e2e directory.) 
  : and run the e2e Loader ('./gradlew rune2eNwind') you can step
  : through these tabs to see what happened.
- :)</query><query name="01. load report" focus="false" listorder="2" taborder="3" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
+ :)</query><query name="01. load report" focus="false" listorder="2" taborder="3" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 
 (
@@ -17,7 +17,7 @@ import module namespace es = "http://marklogic.com/entity-services" at "/MarkLog
 "Product envelopes (77 expected): ", count(cts:search(collection("product-envelopes"), cts:true-query())),
 "Product version 2 envelopes (77 expected): ", count(cts:search(collection("Product-0.0.2-envelopes"), cts:true-query())),
 "Collection names", cts:collections()
-)</query><query name="02. check extract-instance" focus="false" listorder="3" taborder="4" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
+)</query><query name="02. check extract-instance" focus="false" listorder="3" taborder="4" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
 xquery version "1.0-ml";
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy";
 import module namespace nwind = "http://marklogic.com/test#Northwind-0.0.1" at "/ext/Northwind-0.0.1.xqy";
@@ -40,7 +40,7 @@ return (
   $order-e, nwind:instance-to-envelope($order-e),
   $customer-e, nwind:instance-to-envelope($customer-e),
   $product-e, nwind:instance-to-envelope($product-e)
-)</query><query name="03. check tables" focus="false" listorder="5" taborder="5" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">/* 
+)</query><query name="03. check tables" focus="false" listorder="5" taborder="5" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">/* 
  * Using database entity-services-e2e-content
  * Making sure that none of the tables have null entry
  * Northwind1 is the schema name for version1 
@@ -49,10 +49,10 @@ return (
  */
 
 -- select * from Northwind1.'order'; -- 829 rows
--- select * from customer; -- 91 rows
+ select * from Northwind1.customer order by CustomerID; -- 91 rows
 -- select * from Northwind2.product; -- 81 rows
 -- select * from order_orderdetails order by orderid;-- 2152 rows
- select * from superstore -- 1261 rows</query><query name="04. tde-manual" focus="false" listorder="6" taborder="6" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
+-- select * from superstore -- 1261 rows</query><query name="04. tde-manual" focus="false" listorder="6" taborder="6" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
 xquery version "1.0-ml";
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 
@@ -66,7 +66,7 @@ let $extract1 := tde:node-data-extract($doc1, xdmp:unquote($tde1)/node())
 let $extract2 := tde:node-data-extract($doc2, xdmp:unquote($tde2)/node())
 
 return (tde:validate($tde1),tde:validate($tde2),$extract1,$extract2)
-</query><query name="05. Product Details based on Order" focus="false" listorder="7" taborder="7" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">-- USE entity-services-e2e-content;
+</query><query name="05. Product Details based on Order" focus="false" listorder="7" taborder="7" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">-- USE entity-services-e2e-content;
 -- Query to list all product details per order id
 
 SELECT 
@@ -78,11 +78,11 @@ SELECT
   Northwind1.Product.UnitPrice, 
   Northwind1.Product.SupplierID
 FROM 
-  'Order'
+  Northwind1.'Order'
 JOIN Northwind1.Order_OrderDetails AS o ON Northwind1.'Order'.OrderID = o.OrderID
 JOIN Northwind1.Product ON o.ProductID = Northwind1.Product.ProductID
 Order By Northwind1.'Order'.OrderID
-</query><query name="06. Customer Details based on Order" focus="false" listorder="8" taborder="8" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">-- USE entity-services-e2e-content;
+</query><query name="06. Customer Details based on Order" focus="false" listorder="8" taborder="8" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">-- USE entity-services-e2e-content;
 -- Query to list all customers and their details who purchased a particular product
 /* Query for Order Total by country
 SELECT c.Country as Country, COUNT(o.OrderID) as Order_Total_By_Country
@@ -92,15 +92,16 @@ group by c.Country
 */
 
 SELECT 
- 'Order'.OrderID,
-  Customer.CustomerID, 
-  Customer.CompanyName, 
-  Customer.Country, 
-  Customer.ContactTitle
+ Northwind1.'Order'.OrderID,
+  Northwind1.Customer.CustomerID, 
+  Northwind1.Customer.CompanyName, 
+  Northwind1.Customer.Country, 
+  Northwind1.Customer.ContactTitle
 FROM 
-   'Order'
-JOIN Customer ON 'Order'.CustomerID = Customer.CustomerID
-JOIN Order_OrderDetails As o ON 'Order'.orderid=o.OrderID where productid=1</query><query name="07. instances" focus="false" listorder="9" taborder="9" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Test to verify that subject iri can be linked to doc uri :)
+   Northwind1.'Order'
+JOIN Northwind1.Customer ON 'Order'.CustomerID = Northwind1.Customer.CustomerID
+JOIN Northwind1.Order_OrderDetails As o ON Northwind1.'Order'.orderid=o.OrderID where productid=1
+Order By Northwind1.'Order'.orderid</query><query name="07. instances" focus="false" listorder="9" taborder="9" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Test to verify that subject iri can be linked to doc uri :)
 
 sem:sparql('
            prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
@@ -111,7 +112,7 @@ sem:sparql('
            ?s a &lt;http://marklogic.com/test/Northwind-0.0.1/Order&gt; ;
                rdfs:isDefinedBy ?docUri .
            }
-           ', (), (), ())</query><query name="08. inference instance" focus="false" listorder="10" taborder="10" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Test to bind envelopes to doc uri :)
+           ', (), (), ())</query><query name="08. inference instance" focus="false" listorder="10" taborder="10" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Test to bind envelopes to doc uri :)
 
 sem:sparql('
            prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
@@ -126,8 +127,8 @@ sem:sparql('
            BIND (fn:doc($docUri) as $xml)
            }
            LIMIT 2
-           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="09. Optic" focus="false" listorder="11" taborder="11" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Optic query test to pull up all order details :)
-
+           ', (), (), sem:ruleset-store("subClassOf.rules", sem:store()))</query><query name="09. Optic" focus="false" listorder="11" taborder="11" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Optic query test to pull up all order details :)
+xquery version '1.0-ml';
 import module namespace op = "http://marklogic.com/optic" at "/MarkLogic/optic.xqy";
 
 let $nv := op:from-view("Northwind1", "Order")
@@ -136,24 +137,19 @@ let $join-table :=  op:from-view("Northwind1", "Order_OrderDetails")
 let $joined := op:join-inner($nv, 
               $join-table, 
               op:on(op:view-col("Order","OrderID"), op:view-col("Order_OrderDetails", "OrderID")))
-let $final-join := 
-   op:join-inner($joined, op:from-view("Northwind1", "Order"), 
-   op:on(op:view-col("Order","OrderID"), op:view-col("Order_OrderDetails", "OrderID")))
-   =&gt;op:order-by(op:view-col("Order", "OrderID"))
+              =&gt;op:order-by((op:view-col("Order","OrderID"), op:view-col("Order_OrderDetails", "ProductID")))
    
-   
-return $final-join=&gt;op:result()</query><query name="10. Superstore" focus="false" listorder="11" taborder="11" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: source loaded from csv :)
-
+return $joined=&gt;op:result()</query><query name="10. Superstore" focus="false" listorder="11" taborder="11" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: source loaded from csv :)
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 import module namespace nwind = "http://marklogic.com/test#Northwind-0.0.1" at "/ext/Northwind-0.0.1.xqy";
 
-let $superstore-e := nwind:extract-instance-Superstore(
-  doc("/entity-services-e2e/e2e-nwind/data/third-party/csv/superstore.csv-1086.json")
-)
+let $source := doc("/entity-services-e2e/e2e-nwind/data/third-party/csv/superstore.csv-1086.json")
+let $superstore-e := nwind:extract-instance-Superstore($source)
 return
 (
-  $superstore-e, nwind:instance-to-envelope($superstore-e)
+  $superstore-e, nwind:instance-to-envelope($superstore-e, 'xml')
 )
-</query><query name="11. Translator" focus="false" listorder="12" taborder="12" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: version translator test :)
+</query><query name="11. Translator" focus="false" listorder="12" taborder="12" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: version translator test :)
 
 xquery version "1.0-ml";
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
@@ -162,8 +158,8 @@ import module namespace new = "http://marklogic.com/test#Northwind-0.0.2" at "/e
     
 let $old-inst := fn:doc("/orders/10615.xml")
 let $new-version := t:convert-instance-Order($old-inst)
-return ($old-inst, $new-version, new:instance-to-canonical-xml($new-version))
-</query><query name="12. Range Indexes" focus="false" listorder="13" taborder="13" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Range index test for DB properties generated :)
+return ($old-inst, $new-version, new:instance-to-canonical($new-version,'xml'))
+</query><query name="12. Range Indexes" focus="false" listorder="13" taborder="13" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Range index test for DB properties generated :)
 xquery version "1.0-ml";
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
 
@@ -174,7 +170,7 @@ cts:search(doc(), cts:path-range-query("//es:instance/Customer/CustomerID","=","
 (: should return 1 macthed result from superstore dataset :)
 cts:search(doc(), cts:path-range-query("//es:instance/Superstore/ProductName","=","Xerox 1981","collation=http://marklogic.com/collation/en"))
 
-</query><query name="13. Search options" focus="false" listorder="14" taborder="14" active="true" database="342718043104088081" server="14588345390858412845" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Search options test to search for entity type and customer id :)
+</query><query name="13. Search options" focus="false" listorder="14" taborder="14" active="true" database="13044020281708421734" server="17860691841385475139" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Search options test to search for entity type and customer id :)
 xquery version "1.0-ml";
 declare namespace search = "http://marklogic.com/appservices/search";
 

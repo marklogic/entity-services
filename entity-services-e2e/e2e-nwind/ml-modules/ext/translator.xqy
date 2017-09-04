@@ -20,7 +20,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-07-14T14:02:17.083834-07:00
+ Generated at timestamp: 2017-09-03T16:45:34.328537-07:00
 
  Target Model Northwind-0.0.2 Info:
 
@@ -247,16 +247,23 @@ declare function northwind-from-northwind:convert-instance-ShipDetails(
     $source-node as node()
 ) as map:map
 {
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>es:copy-attachments($source-node)
-    =>map:with('$type', 'ShipDetails')
     let $Province  :=             $source-node/Province ! xs:string(.)
     let $Region  :=             $source-node/Region ! xs:string(.)
     let $ShipMode  :=             $source-node/ShipMode ! xs:string(.)
     let $ShippingCost  :=             $source-node/ShippingCost ! xs:double(.)
+
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "ShipDetails" }
+    =>es:optional('Province',  $Province)
+    =>es:optional('Region',  $Region)
+    =>es:optional('ShipMode',  $ShipMode)
+    =>es:optional('ShippingCost',  $ShippingCost)
+
+};
 :)
 
 (:
@@ -271,12 +278,6 @@ declare function northwind-from-northwind:convert-instance-Superstore(
     $source-node as node()
 ) as map:map
 {
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>es:copy-attachments($source-node)
-    =>map:with('$type', 'Superstore')
     let $OrderID  :=             $source-node/OrderID ! xs:integer(.)
     let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
     let $OrderDate  :=             $source-node/OrderDate ! xs:dateTime(.)
@@ -287,4 +288,22 @@ declare function northwind-from-northwind:convert-instance-Superstore(
     let $Discount  :=             $source-node/Discount ! xs:string(.)
     (: The following property is a local reference.  :)
     let $ShipAddress  :=             es:extract-array($source-node/ShipAddress, northwind-from-northwind:extract-instance-ShipDetails#1)
+
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "Superstore" }
+    =>   map:with('OrderID',  $OrderID)
+    =>es:optional('CustomerID',  $CustomerID)
+    =>es:optional('OrderDate',  $OrderDate)
+    =>es:optional('ShippedDate',  $ShippedDate)
+    =>es:optional('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('Quantity',  $Quantity)
+    =>es:optional('Discount',  $Discount)
+    =>es:optional('ShipAddress',  $ShipAddress)
+
+};
 :)

@@ -27,7 +27,7 @@ declare function translator:transform(
     	        	xdmp:log(("Procesing Translator URI " || $uri)),
     	        	xdmp:document-insert(
     	                fn:concat("/upconverts", $uri),
-    	                new:instance-to-envelope(t:convert-instance-Order(fn:doc($uri))),
+    	                validate strict { new:instance-to-envelope(t:convert-instance-Order(fn:doc($uri))) },
     	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
     	                "Order-0.0.2-envelopes")
     	        )
@@ -37,7 +37,7 @@ declare function translator:transform(
     	        	xdmp:log(("Procesing Translator URI " || $uri)),
 	    	        xdmp:document-insert(
     	                fn:concat("/upconverts", $uri),
-    	                new:instance-to-envelope(t:convert-instance-Customer(fn:doc($uri))),
+    	                validate strict { new:instance-to-envelope(t:convert-instance-Customer(fn:doc($uri))) },
     	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
     	                "Customer-0.0.2-envelopes")
 	    	    )
@@ -47,7 +47,7 @@ declare function translator:transform(
         	    	xdmp:log(("Procesing Translator URI " || $uri)),
 	        	    xdmp:document-insert(
     	                fn:concat("/upconverts", $uri),
-    	                new:instance-to-envelope(t:convert-instance-Product(fn:doc($uri))),
+    	                validate strict { new:instance-to-envelope(t:convert-instance-Product(fn:doc($uri))) },
     	                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
     	                "Product-0.0.2-envelopes")
 	        	)

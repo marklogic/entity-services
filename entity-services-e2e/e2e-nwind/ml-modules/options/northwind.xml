@@ -9,7 +9,7 @@
       <search:element ns="" name="CustomerID"/>
     </search:value>
   </search:constraint>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CustomerID</search:path-index>
@@ -21,14 +21,14 @@
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Customer/CompanyName</search:path-index>
     </search:range>
   </search:constraint>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="CustomerID"/>
   </search:word>
 </search:constraint> 
 -->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CompanyName" xmlns:search="http://marklogic.com/appservices/search">
   <search:word>
     <search:element ns="" name="CompanyName"/>
@@ -40,7 +40,7 @@
       <search:element ns="" name="ProductID"/>
     </search:value>
   </search:constraint>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="ProductID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:decimal" facet="true">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/ProductID</search:path-index>
@@ -52,21 +52,21 @@
       <search:element ns="" name="OrderID"/>
     </search:value>
   </search:constraint>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="OrderID" xmlns:search="http://marklogic.com/appservices/search">
   <search:value>
     <search:element ns="" name="OrderID"/>
   </search:value>
 </search:constraint> 
 -->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="OrderID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:decimal" facet="true">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/OrderID</search:path-index>
   </search:range>
 </search:constraint> 
 -->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerID" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Superstore/CustomerID</search:path-index>

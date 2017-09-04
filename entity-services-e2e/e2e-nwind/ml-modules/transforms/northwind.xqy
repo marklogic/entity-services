@@ -23,7 +23,7 @@ declare function ingest:transform(
         xdmp:log(("Procesing Northwind URI " || $uri)),
         xdmp:document-insert(
                 concat("/customers/", $uri=>fn:substring-after("customers/")=>fn:substring-before(".xml"), ".xml"),
-                northwind:instance-to-envelope(northwind:extract-instance-Customer(doc($uri))),
+                validate strict { northwind:instance-to-envelope(northwind:extract-instance-Customer(doc($uri))) },
                 (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")), 
                 "customer-envelopes")
         )
@@ -33,8 +33,8 @@ declare function ingest:transform(
             	xdmp:log(("Procesing Northwind URI " || $uri)),
                 xdmp:document-insert(
                 		"/orders/" || $uri=>fn:substring-after("orders/")=>substring-before(".xml") || ".xml",
-                		northwind:instance-to-envelope(
-                		northwind:extract-instance-Order(doc($uri))),
+                		validate strict { northwind:instance-to-envelope(
+                		northwind:extract-instance-Order(doc($uri))) },
                         (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")),
                         ("order-envelopes","upconverts"))
         )
@@ -44,7 +44,7 @@ declare function ingest:transform(
         	xdmp:log(("Procesing Northwind URI " || $uri)),
             xdmp:document-insert(
                     concat("/products/", $uri=>fn:substring-after("products/")=>fn:substring-before(".xml"), ".xml"),
-                    northwind:instance-to-envelope(northwind:extract-instance-Product(doc($uri))),
+                    validate strict { northwind:instance-to-envelope(northwind:extract-instance-Product(doc($uri))) },
                     (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")), 
                     ("product-envelopes","upconverts"))    
         )

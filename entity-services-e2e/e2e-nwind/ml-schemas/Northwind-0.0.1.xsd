@@ -5,66 +5,38 @@
   <xs:element name="ContactName" type="xs:string"/>
   <xs:element name="ContactTitle" type="xs:string"/>
   <xs:element name="Phone" type="xs:string"/>
+  <xs:complexType name="CustomerType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="CustomerID"/>
+      <xs:element minOccurs="0" ref="CompanyName"/>
+      <xs:element minOccurs="0" ref="Country"/>
+      <xs:element minOccurs="0" ref="ContactName"/>
+      <xs:element minOccurs="0" ref="ContactTitle"/>
+      <xs:element minOccurs="0" ref="Phone"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Customer" type="CustomerType"/>
   <xs:element name="ProductID" type="xs:integer"/>
   <xs:element name="ProductName" type="xs:string"/>
   <xs:element name="UnitPrice" type="xs:double"/>
   <xs:element name="SupplierID" type="xs:integer"/>
+  <xs:complexType name="ProductType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="ProductID"/>
+      <xs:element minOccurs="0" ref="ProductName"/>
+      <xs:element minOccurs="0" ref="UnitPrice"/>
+      <xs:element minOccurs="0" ref="SupplierID"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Product" type="ProductType"/>
   <xs:element name="OrderID" type="xs:integer"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
  <xs:element name="CustomerID" type="CustomerContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
 -->
   <xs:element name="OrderDate" type="xs:dateTime"/>
   <xs:element name="ShippedDate" type="xs:dateTime"/>
   <xs:element name="ShipAddress" type="xs:string"/>
   <xs:element name="OrderDetails" type="OrderDetailContainerType"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ProductID" type="ProductContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="UnitPrice" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Quantity" type="xs:integer"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="OrderID" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="CustomerID" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="OrderDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ShippedDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ProductName" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="UnitPrice" type="xs:double" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="Quantity" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Discount" type="xs:string"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ShipAddress" type="ShipDetailsContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Province" type="xs:string"/>
-  <xs:element name="Region" type="xs:string"/>
-  <xs:element name="ShipMode" type="xs:string"/>
-  <xs:element name="ShippingCost" type="xs:double"/>
-  <xs:complexType name="ShipDetailsContainerType">
-    <xs:sequence>
-      <xs:element ref="ShipDetails"/>
-    </xs:sequence>
-    <xs:attribute name="datatype"/>
-  </xs:complexType>
-  <xs:complexType name="ProductContainerType">
-    <xs:sequence>
-      <xs:element ref="Product"/>
-    </xs:sequence>
-    <xs:attribute name="datatype"/>
-  </xs:complexType>
   <xs:complexType name="CustomerContainerType">
     <xs:sequence>
       <xs:element ref="Customer"/>
@@ -77,26 +49,6 @@
     </xs:sequence>
     <xs:attribute name="datatype"/>
   </xs:complexType>
-  <xs:complexType name="CustomerType" mixed="true">
-    <xs:sequence minOccurs="0">
-      <xs:element ref="CustomerID"/>
-      <xs:element minOccurs="0" ref="CompanyName"/>
-      <xs:element minOccurs="0" ref="Country"/>
-      <xs:element minOccurs="0" ref="ContactName"/>
-      <xs:element minOccurs="0" ref="ContactTitle"/>
-      <xs:element minOccurs="0" ref="Phone"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Customer" type="CustomerType"/>
-  <xs:complexType name="ProductType" mixed="true">
-    <xs:sequence minOccurs="0">
-      <xs:element ref="ProductID"/>
-      <xs:element minOccurs="0" ref="ProductName"/>
-      <xs:element minOccurs="0" ref="UnitPrice"/>
-      <xs:element minOccurs="0" ref="SupplierID"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Product" type="ProductType"/>
   <xs:complexType name="OrderType" mixed="true">
     <xs:sequence minOccurs="0">
       <xs:element ref="OrderID"/>
@@ -108,6 +60,19 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Order" type="OrderType"/>
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="ProductID" type="ProductContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="UnitPrice" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:element name="Quantity" type="xs:integer"/>
+  <xs:complexType name="ProductContainerType">
+    <xs:sequence>
+      <xs:element ref="Product"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
   <xs:complexType name="OrderDetailType" mixed="true">
     <xs:sequence minOccurs="0">
       <xs:element minOccurs="0" ref="ProductID"/>
@@ -116,6 +81,37 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="OrderDetail" type="OrderDetailType"/>
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="OrderID" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="CustomerID" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="OrderDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="ShippedDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="ProductName" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="UnitPrice" type="xs:double" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="Quantity" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:element name="Discount" type="xs:string"/>
+  <!--XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
+ <xs:element name="ShipAddress" type="ShipDetailsContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
+-->
+  <xs:complexType name="ShipDetailsContainerType">
+    <xs:sequence>
+      <xs:element ref="ShipDetails"/>
+    </xs:sequence>
+    <xs:attribute name="datatype"/>
+  </xs:complexType>
   <xs:complexType name="SuperstoreType" mixed="true">
     <xs:sequence minOccurs="0">
       <xs:element ref="OrderID"/>
@@ -130,6 +126,10 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Superstore" type="SuperstoreType"/>
+  <xs:element name="Province" type="xs:string"/>
+  <xs:element name="Region" type="xs:string"/>
+  <xs:element name="ShipMode" type="xs:string"/>
+  <xs:element name="ShippingCost" type="xs:double"/>
   <xs:complexType name="ShipDetailsType" mixed="true">
     <xs:sequence minOccurs="0">
       <xs:element minOccurs="0" ref="Province"/>

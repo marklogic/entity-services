@@ -8,7 +8,7 @@
   "definitions": {
     "Race": {
         "properties": {
-            "id": {
+            "raceIri": {
                 "datatype": "iri",
                 "description":"A unique identifier for a race."
             },

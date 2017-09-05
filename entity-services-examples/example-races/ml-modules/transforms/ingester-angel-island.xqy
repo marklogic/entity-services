@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 module namespace ingester = "http://marklogic.com/rest-api/transform/ingester-angel-island";
 
 import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1"
-    at "/ext/Race-0.0.1.xqy";
+    at "/ext/entity-services/Race-0.0.1.xqy";
 
 
 (:

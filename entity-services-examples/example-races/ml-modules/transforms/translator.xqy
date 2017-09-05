@@ -2,9 +2,9 @@ xquery version "1.0-ml";
 module namespace translator = "http://marklogic.com/rest-api/transform/translator";
 
 import module namespace t = "http://grechaw.github.io/entity-types#Race-0.0.2-from-Race-0.0.1"
-    at "/ext/translator.xqy";
+    at "/ext/entity-services/translator.xqy";
 import module namespace new = "http://grechaw.github.io/entity-types#Race-0.0.2"
-    at "/ext/Race-0.0.2.xqy";
+    at "/ext/entity-services/Race-0.0.2.xqy";
 
 declare namespace es = "http://marklogic.com/entity-services";
 

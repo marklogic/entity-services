@@ -329,7 +329,7 @@ declare function es:init-instance(
 
     return
         if (empty($source-node/*))
-        then $instance=>map:with('$ref', $source-node/text())
+        then $instance=>map:with('$ref', $source-node/data())
         (: Otherwise, this source node contains instance data. Populate it. :)
         else $instance
 };

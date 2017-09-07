@@ -42,7 +42,7 @@ declare function inst:child-instance(
     $element as element()
 ) as map:map*
 {
-    if (empty($element/*) and exists($element/text()))
+    if (empty($element/*))
     then json:object()
             =>map:with("$type", local-name($element))
             =>map:with("$ref", $element/data())

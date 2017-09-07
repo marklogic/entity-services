@@ -621,7 +621,7 @@ declare private function es-codegen:value-for-conversion(
         then "    =>   map:with("
         else "    =>es:optional("
     let $property-padding :=
-        functx:pad-string-to-length("'" || $display-property-name || "',", " ", max((  (string-length($target-property-name)+4), 10) )+1 )
+        functx:pad-string-to-length("'" || $display-property-name || "',", " ", max((  (string-length($target-property-name)+5), 10) )+1 )
     let $value :=
         if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
@@ -753,7 +753,7 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
             for $property-name in map:keys(map:get($source-entity-type, "properties"))
             where not($property-name = map:keys(map:get($entity-type, "properties")))
                 return
-                    es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET", map:map())
+                    es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET", $let-expressions)
         else ()
     return
         fn:concat(

@@ -20,7 +20,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-07-12T17:05:46.384628-07:00
+ Generated at timestamp: 2017-09-11T14:44:34.975693-07:00
 
  Target Model srcHasMorePropTgt-0.0.2 Info:
 
@@ -59,6 +59,7 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Custo
     let $CustomerID := $source-node/CustomerID ! xs:string(.)
     let $CompanyName := $source-node/CompanyName ! xs:string(.)
     let $Country := $source-node/Country ! xs:string(.)
+    let $ContactName := $source-node/ContactName ! xs:string(.)
 
     return
     json:object()
@@ -66,11 +67,11 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Custo
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Customer" entity type. :)
-    =>   map:with('CustomerID',  $CustomerID)
-    =>es:optional('CompanyName',  $CompanyName)
-    =>es:optional('Country',  $Country)
+    =>   map:with('CustomerID',   $CustomerID)
+    =>es:optional('CompanyName',   $CompanyName)
+    =>es:optional('Country',   $Country)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('NO TARGET',    $ContactName)
+    =>es:optional('NO TARGET',     $ContactName)
   :)
 
 };
@@ -95,6 +96,7 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Produ
     let $ProductName := $source-node/ProductName ! xs:string(.)
     let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
     let $SupplierID := $source-node/SupplierID ! xs:integer(.)
+    let $Discontinued := $source-node/Discontinued ! xs:string(.)
 
     return
     json:object()
@@ -102,11 +104,12 @@ declare function srcHasMorePropTgt-from-srcHasMorePropSrc:convert-instance-Produ
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Product" entity type. :)
-    =>   map:with('ProductName',  $ProductName)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('SupplierID',  $SupplierID)
+    =>   map:with('ProductName',   $ProductName)
+    =>es:optional('UnitPrice',   $UnitPrice)
+    =>es:optional('SupplierID',   $SupplierID)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('NO TARGET',     $Discontinued)
+    =>es:optional('NO TARGET',      $Discontinued)
   :)
 
 };
+    

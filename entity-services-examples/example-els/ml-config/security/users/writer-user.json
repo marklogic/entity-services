@@ -1,0 +1,6 @@
+{
+  "user-name": "writer-user",
+  "description": "This user can write documents (but doesn't have privilege to read...",
+  "password": "xxx",
+  "role": ["examples-reader", "examples-writer"]
+}

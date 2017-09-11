@@ -1,0 +1,6 @@
+{
+  "user-name": "adminy-user",
+  "description": "This user can write and invoke the extension that configures ELS.",
+  "password": "yyy",
+  "role": ["examples-reader", "examples-writer","examples-admin"]
+}

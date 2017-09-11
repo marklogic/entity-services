@@ -511,7 +511,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
             evalOneResult("", "es:instance-json-from-document( doc('Order-Source-5.json-envelope.json') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
-        org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+        org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
 
         client.newJSONDocumentManager().delete(instanceDocument);
         client.newJSONDocumentManager().delete("Order-Source-5.json-envelope.json");

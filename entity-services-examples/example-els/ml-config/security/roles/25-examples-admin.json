@@ -1,0 +1,13 @@
+{
+  "role-name": "examples-admin",
+  "description": "Can read and write documents, and install and run the extension for protecting paths.",
+  "role": ["examples-reader", "rest-writer","examples-writer"],
+  "permission":[{"role-name":"examples-writer", "capability":"update"}],
+  "privilege": [
+    { "privilege-name": "xdmp-invoke", "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke", "kind": "execute"},
+    { "privilege-name": "xdmp-invoke-in", "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke-in", "kind": "execute"},
+    { "privilege-name": "protect-path", "action": "http://marklogic.com/xdmp/privileges/protect-path", "kind": "execute"},
+    { "privilege-name": "remove-path", "action": "http://marklogic.com/xdmp/privileges/remove-path", "kind": "execute"},
+    { "privilege-name": "xdmp-with-namespaces", "action": "http://marklogic.com/xdmp/privileges/xdmp-with-namespaces", "kind": "execute"}
+  ]
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
+  <tde:description>
+Extraction Template Generated from Entity Type Document.
+graph uri: http://marklogic.com/entity-services/example-els/Secure-0.0.1</tde:description>
+  <tde:context>//*:instance[*:info/*:version = "0.0.1"]</tde:context>
+  <tde:vars>
+    <tde:var>
+      <tde:name>RDF</tde:name>
+      <tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val>
+    </tde:var>
+    <tde:var>
+      <tde:name>RDF_TYPE</tde:name>
+      <tde:val>sem:iri(concat($RDF, "type"))</tde:val>
+    </tde:var>
+  </tde:vars>
+  <tde:path-namespaces>
+    <tde:path-namespace>
+      <tde:prefix>es</tde:prefix>
+      <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
+    </tde:path-namespace>
+  </tde:path-namespaces>
+  <tde:templates>
+    <tde:template>
+      <tde:context>./Customer</tde:context>
+      <tde:vars>
+	<tde:var>
+	  <tde:name>subject-iri</tde:name>
+	  <tde:val>sem:iri(concat("http://marklogic.com/entity-services/example-els/Secure-0.0.1/Customer/", fn:encode-for-uri(./id)))</tde:val>
+	</tde:var>
+      </tde:vars>
+      <tde:triples>
+	<tde:triple>
+	  <tde:subject>
+	    <tde:val>$subject-iri</tde:val>
+	  </tde:subject>
+	  <tde:predicate>
+	    <tde:val>$RDF_TYPE</tde:val>
+	  </tde:predicate>
+	  <tde:object>
+	    <tde:val>sem:iri("http://marklogic.com/entity-services/example-els/Secure-0.0.1/Customer")</tde:val>
+	  </tde:object>
+	</tde:triple>
+	<tde:triple>
+	  <tde:subject>
+	    <tde:val>$subject-iri</tde:val>
+	  </tde:subject>
+	  <tde:predicate>
+	    <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+	  </tde:predicate>
+	  <tde:object>
+	    <tde:val>fn:base-uri(.)</tde:val>
+	  </tde:object>
+	</tde:triple>
+      </tde:triples>
+    </tde:template>
+    <tde:template>
+      <tde:context>./Customer</tde:context>
+      <tde:rows>
+	<tde:row>
+	  <tde:schema-name>Secure</tde:schema-name>
+	  <tde:view-name>Customer</tde:view-name>
+	  <tde:view-layout>sparse</tde:view-layout>
+	  <tde:columns>
+	    <tde:column>
+	      <tde:name>id</tde:name>
+	      <tde:scalar-type>string</tde:scalar-type>
+	      <tde:val>id</tde:val>
+	    </tde:column>
+	    <tde:column>
+	      <tde:name>name</tde:name>
+	      <tde:scalar-type>string</tde:scalar-type>
+	      <tde:val>name</tde:val>
+	    </tde:column>
+	  </tde:columns>
+	</tde:row>
+      </tde:rows>
+    </tde:template>
+  </tde:templates>
+</tde:template>

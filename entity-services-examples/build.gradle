@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-  compile('com.marklogic:marklogic-client-api:4.0.1')
+  compile('com.marklogic:marklogic-client-api:4.0.2')
   compile('io.codearte.jfairy:jfairy:0.5.6')
   compile('ch.qos.logback:logback-classic:1.1.9')
   compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')
@@ -40,6 +40,11 @@ task runExampleSuppliers(type: JavaExec) {
 task runExampleVersions(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.marklogic.entityservices.examples.versions.HubRunner'
+}
+
+task runExampleEls(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.examples.els.ElementLevelSecurityExample'
 }
 task genCode(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath

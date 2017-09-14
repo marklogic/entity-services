@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-08-18T21:26:44.060857Z
+ Generated at timestamp: 2017-09-14T17:35:38.399827Z
  :)
 
 module namespace et-required
@@ -42,12 +42,9 @@ declare function et-required:extract-instance-ETOne(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'ETOne')
-    (: begin customizations here :)
     let $a  :=             $source-node/a ! xs:integer(.)
     let $b  :=             $source-node/b ! xs:string(.)
-    let $c  :=             $source-node/c ! xs:date(.)
-    (: end customizations :)
-
+    let $c  :=             $source-node/c ! xs:date(.) 
     let $instance := es:init-instance($source-node, 'ETOne')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)

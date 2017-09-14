@@ -104,7 +104,21 @@ declare private function es-codegen:variable-line-for(
             'The following property assigment comes from an external reference.',
             'Its generated value probably requires developer attention.'))
     let $ref-name := functx:substring-after-last($ref, "/")
-    let $extract-reference-fn := concat("es:init-instance(?, '",$ref-name,"')")
+    let $ref-namespace-prefix :=
+        if (contains($ref, "#/definitions"))
+        then $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+        else ()
+    let $ref-namespace :=
+        if (contains($ref, "#/definitions"))
+        then $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+        else ()
+    let $extract-reference-fn := 
+            concat("es:init-instance(?, '",$ref-name,"')",
+                if ($ref-namespace-prefix) 
+                then
+                concat("&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')")
+                else ()
+            )
     let $value :=
         if (empty($ref))
         then
@@ -221,20 +235,29 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
 ) as map:map
 {{
     let $source-node := es:init-source($source, '{$entity-type-name}')
-    (: begin customizations here :)
 {
-    let $properties := $model
-        =>map:get("definitions")
-        =>map:get($entity-type-name)
-        =>map:get("properties")
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $properties := $entity-type=>map:get("properties")
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
     let $variable-setters :=
         for $property-name in map:keys($properties)
         return es-codegen:variable-line-for($prefix, $model, $entity-type-name, $property-name)
-    return fn:string-join( $variable-setters, "&#10;")
+    return (
+        fn:string-join( $variable-setters, "&#10;"),
+        "&#10;   ",
+        if ($namespace-prefix)
+        then
+            concat("let $instance := es:init-instance($source-node, '",
+                    $entity-type-name,
+                    "')",
+                    "&#10;    =>es:with-namespace('",$namespace,"','",$namespace-prefix,"')")
+        else
+            concat("let $instance := es:init-instance($source-node, '",
+                    $entity-type-name,
+                    "')")
+        )
     }
-    (: end customizations :)
-
-    let $instance := es:init-instance($source-node, '{ $entity-type-name }')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
 
@@ -252,13 +275,7 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
     let $value-lines :=
         (
         for $property-name in map:keys($properties)
-        return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name),
-        if ($namespace)
-        then (
-            "        =>map:with('$namespace', '"|| $namespace ||"')",
-            "        =>map:with('$namespacePrefix', '"|| $namespace-prefix || "')"
-            )
-        else ()
+        return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name)
         )
     return fn:string-join($value-lines, "&#10;")
         (: end code generation block :)
@@ -585,7 +602,25 @@ declare private function es-codegen:value-for-conversion(
     let $is-reference-from-scalar-or-array :=
         exists($target-ref) and empty($source-ref)
 
-    let $extract-scalar-fn := "es:init-instance(?, '"||$target-ref-name||"')"
+    let $extract-scalar-fn := 
+        let $ref-namespace-prefix :=
+            if (contains($target-ref, "#/definitions"))
+            then $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+            else ()
+        let $ref-namespace :=
+            if (contains($target-ref, "#/definitions"))
+            then $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+            else ()
+        return
+            if ($ref-namespace-prefix) then
+                concat(
+                    "es:init-instance(?, '", $target-ref-name, "')",
+                    "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')")
+            else
+                concat(
+                    "es:init-instance(?, '",
+                    $target-ref-name,
+                    "')")
 
     let $comment :=
         if ($is-missing-source)
@@ -603,11 +638,26 @@ declare private function es-codegen:value-for-conversion(
                 concat('    let $extract-reference-',$target-ref-name,' := '),
                 if (contains($target-ref, "#/definitions"))
                 then
+                    let $ref-namespace-prefix :=
+                        $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+                    let $ref-namespace :=
+                        $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+                    return
+                        if ($ref-namespace)
+                        then
+                    ("        function($path) { ",
+                     "         if ($path/*)",
+                     concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                     concat("         else es:init-instance($path, '", $target-ref-name, "')",
+                            "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')",
+                            "         }"))
+                        else
                     ("        function($path) { ",
                      "         if ($path/*)",
                      concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
                      concat("         else es:init-instance($path, '", $target-ref-name, "')"),
                     "         }")
+
                 else
                     concat("        es:init-instance(?, '", $target-ref-name, "')"),
                     ""

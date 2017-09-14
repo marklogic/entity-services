@@ -307,6 +307,7 @@ declare function es:init-source(
 (:~
  : Initializes an instance data structure, by adding a type key and, if appropriate,
  : a ref key.
+ : @param $source-node The input to extractions. Used to determine whether to extract a pointer or an instance node.
  : @param $entity-type-name  The name of this instance's type.
  : @return A json object with $type key, and, if appropriate, a $ref key.
  :)
@@ -318,20 +319,35 @@ declare function es:init-instance(
     let $source-node := es:init-source($source-node, $entity-type-name)
     let $instance := json:object()
             =>map:with('$type', $entity-type-name)
-    let $source-qname := fn:node-name($source-node)
-    let $_ :=
-        if (fn:prefix-from-QName($source-qname))
-        then (
-            map:put($instance, "$namespace", fn:namespace-uri-from-QName($source-qname)),
-            map:put($instance, "$namespacePrefix", fn:prefix-from-QName($source-qname))
-        )
-        else ()
-
     return
         if (empty($source-node/*))
         then $instance=>map:with('$ref', $source-node/data())
         (: Otherwise, this source node contains instance data. Populate it. :)
         else $instance
+};
+
+
+(:~
+ : Adds namespace information to an instance.
+ : @param $instance the existing instance
+ : @param $namespace The namespace uri to be included as metadata.
+ : @param $namespace-prefix A prefix to be passed to the instance for its namespace
+ : @return The $instance, with namespace info appended
+ :)
+declare function es:with-namespace(
+    $instance as map:map,
+    $namespace as xs:string?,
+    $namespace-prefix as xs:string?
+) as json:object
+{
+    let $_ :=
+        if ($namespace-prefix)
+        then (
+            map:put($instance, "$namespace", $namespace),
+            map:put($instance, "$namespacePrefix", $namespace-prefix)
+        )
+        else ()
+    return $instance
 };
 
 

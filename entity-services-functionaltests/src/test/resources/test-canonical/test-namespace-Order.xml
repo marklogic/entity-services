@@ -1,7 +1,7 @@
 <ord:Order xmlns:ord="http://marklogic.com/order">
 <ord:OrderID>10250</ord:OrderID>
 <ord:CustomerID>
-<ord:Customer>HANAR</ord:Customer>
+<Customer>HANAR</Customer>
 </ord:CustomerID>
 <ord:OrderDate>1996-07-08T16:46:22</ord:OrderDate>
 <ord:ShippedDate>1996-07-12T00:57:04</ord:ShippedDate>

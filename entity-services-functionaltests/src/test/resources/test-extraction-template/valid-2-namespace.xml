@@ -231,7 +231,7 @@ graph uri: http://marklogic.com/ns2#Model_2ns-0.0.1</tde:description>
 		</tde:column>
 		<tde:column>
 		  <tde:name>hasUnitPrice</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
+		  <tde:scalar-type>double</tde:scalar-type>
 		  <tde:val>hasUnitPrice</tde:val>
 		  <tde:nullable>true</tde:nullable>
 		</tde:column>

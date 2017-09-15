@@ -11,17 +11,17 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-08-23T10:26:38.120832-07:00
+ Generated at timestamp: 2017-09-14T23:57:05.716318Z
  :)
 
 module namespace model_1ns
-    = 'http://marklogic.com/ns1#Model_1ns-0.0.1';
+= 'http://marklogic.com/ns1#Model_1ns-0.0.1';
 
 import module namespace es = 'http://marklogic.com/entity-services'
-    at '/MarkLogic/entity-services/entity-services.xqy';
+at '/MarkLogic/entity-services/entity-services.xqy';
 
 import module namespace json = "http://marklogic.com/xdmp/json"
-    at "/MarkLogic/json/json.xqy";
+at "/MarkLogic/json/json.xqy";
 
 
 declare namespace cust = 'http://marklogic.com/customer';
@@ -43,27 +43,23 @@ declare function model_1ns:extract-instance-Customer(
 ) as map:map
 {
     let $source-node := es:init-source($source/root/cust:Customer, 'Customer')
-    (: begin customizations here :)
     let $CustomerId  :=             $source-node/@CustomerID ! xs:string(.)
     let $CompanyName  :=             $source-node/cust:CompanyName ! xs:string(.)
     let $Country  :=             $source-node/cust:Country ! xs:string(.)
     let $Address  :=             $source-node/cust:Address ! xs:string(.)
-    (: end customizations :)
-
     let $instance := es:init-instance($source-node, 'Customer')
+    =>es:with-namespace('http://marklogic.com/customer','cust')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source/root/cust:Customer)
+    =>es:add-attachments($source/root/cust:Customer)
 
     return
-    if (empty($source-node/*))
-    then $instance
-    else $instance
+        if (empty($source-node/*))
+        then $instance
+        else $instance
         =>   map:with('CustomerId', $CustomerId)
         =>es:optional('CompanyName', $CompanyName)
         =>es:optional('Country', $Country)
         =>es:optional('Address', $Address)
-        =>map:with('$namespace', 'http://marklogic.com/customer')
-        =>map:with('$namespacePrefix', 'cust')
 };
 
 (:~
@@ -78,22 +74,19 @@ declare function model_1ns:extract-instance-Product(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Product')
-    (: begin customizations here :)
     let $ProductName  :=             $source-node/ProductName ! xs:string(.)
     let $ProductID  :=             $source-node/@ProductID ! xs:integer(.)
-    let $UnitPrice  :=             $source-node/UnitPrice ! xs:integer(.)
+    let $UnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
     let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.)
     let $Discontinued  :=             $source-node/Discontinued ! xs:boolean(.)
-    (: end customizations :)
-
     let $instance := es:init-instance($source-node, 'Product')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source)
+    =>es:add-attachments($source)
 
     return
-    if (empty($source-node/*))
-    then $instance
-    else $instance
+        if (empty($source-node/*))
+        then $instance
+        else $instance
         =>es:optional('ProductName', $ProductName)
         =>   map:with('ProductID', $ProductID)
         =>es:optional('UnitPrice', $UnitPrice)
@@ -113,23 +106,20 @@ declare function model_1ns:extract-instance-Order(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Order')
-    (: begin customizations here :)
     let $OrderID  :=             $source-node/@OrderID ! xs:integer(.)
     let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
     let $OrderDate  :=             $source-node/OrderDate ! xs:dateTime(.)
     let $ShipAddress  :=             $source-node/ShipAddress ! xs:string(.)
     (: The following property is a local reference.  :)
     let $OrderDetails  :=             es:extract-array($source-node/OrderDetails/*, model_1ns:extract-instance-OrderDetail#1)
-    (: end customizations :)
-
     let $instance := es:init-instance($source-node, 'Order')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source)
+    =>es:add-attachments($source)
 
     return
-    if (empty($source-node/*))
-    then $instance
-    else $instance
+        if (empty($source-node/*))
+        then $instance
+        else $instance
         =>   map:with('OrderID', $OrderID)
         =>es:optional('CustomerID', $CustomerID)
         =>es:optional('OrderDate', $OrderDate)
@@ -149,23 +139,20 @@ declare function model_1ns:extract-instance-OrderDetail(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'OrderDetail')
-    (: begin customizations here :)
     (: The following property is a local reference.  :)
-    let $ProductID  :=             $source-node/ProductID ! model_1ns:extract-instance-Product(.)
-    let $UnitPrice  :=             $source-node/UnitPrice ! xs:integer(.)
+    let $hasProductID  :=             $source-node/ProductID ! model_1ns:extract-instance-Product(.)
+    let $hasUnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
     let $Quantity  :=             $source-node/Quantity ! xs:integer(.)
-    (: end customizations :)
-
     let $instance := es:init-instance($source-node, 'OrderDetail')
     (: Comment or remove the following line to suppress attachments :)
-        =>es:add-attachments($source)
+    =>es:add-attachments($source)
 
     return
-    if (empty($source-node/*))
-    then $instance
-    else $instance
-        =>es:optional('ProductID', $ProductID)
-        =>es:optional('UnitPrice', $UnitPrice)
+        if (empty($source-node/*))
+        then $instance
+        else $instance
+        =>es:optional('ProductID', $hasProductID)
+        =>es:optional('UnitPrice', $hasUnitPrice)
         =>es:optional('Quantity', $Quantity)
 };
 
@@ -191,9 +178,9 @@ declare function model_1ns:instance-to-canonical(
 ) as node()
 {
 
-        if ($instance-format eq "json")
-        then xdmp:to-json( model_1ns:canonicalize($entity-instance) )/node()
-        else model_1ns:instance-to-canonical-xml($entity-instance)
+    if ($instance-format eq "json")
+    then xdmp:to-json( model_1ns:canonicalize($entity-instance) )/node()
+    else model_1ns:instance-to-canonical-xml($entity-instance)
 };
 
 
@@ -208,43 +195,43 @@ declare private function model_1ns:canonicalize(
 {
     json:object()
     =>map:with( map:get($entity-instance,'$type'),
-                if ( map:contains($entity-instance, '$ref') )
-                then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
-                else
-                let $m := json:object()
-                let $_ :=
-                    for $key in map:keys($entity-instance)
-                    let $instance-property := map:get($entity-instance, $key)
-                    where ($key castable as xs:NCName)
-                    return
-                        typeswitch ($instance-property)
-                        (: This branch handles embedded objects.  You can choose to prune
+        if ( map:contains($entity-instance, '$ref') )
+        then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
+        else
+            let $m := json:object()
+            let $_ :=
+                for $key in map:keys($entity-instance)
+                let $instance-property := map:get($entity-instance, $key)
+                where ($key castable as xs:NCName)
+                return
+                    typeswitch ($instance-property)
+                    (: This branch handles embedded objects.  You can choose to prune
                            an entity's representation of extend it with lookups here. :)
                         case json:object
                             return
                                 if (empty(map:keys($instance-property)))
                                 then map:put($m, $key, json:object())
                                 else map:put($m, $key, model_1ns:canonicalize($instance-property))
-                        (: An array can also treated as multiple elements :)
+                    (: An array can also treated as multiple elements :)
                         case json:array
                             return
                                 (
-                                for $val at $i in json:array-values($instance-property)
-                                return
-                                    if ($val instance of json:object)
-                                    then json:set-item-at($instance-property, $i, model_1ns:canonicalize($val))
-                                    else (),
-                                map:put($m, $key, $instance-property)
+                                    for $val at $i in json:array-values($instance-property)
+                                    return
+                                        if ($val instance of json:object)
+                                        then json:set-item-at($instance-property, $i, model_1ns:canonicalize($val))
+                                        else (),
+                                    map:put($m, $key, $instance-property)
                                 )
 
-                        (: A sequence of values should be simply treated as multiple elements :)
-                        (: TODO is this lossy? :)
+                    (: A sequence of values should be simply treated as multiple elements :)
+                    (: TODO is this lossy? :)
                         case item()+
                             return
                                 for $val in $instance-property
                                 return map:put($m, $key, $val)
                         default return map:put($m, $key, $instance-property)
-                return $m)
+            return $m)
 };
 
 
@@ -265,12 +252,12 @@ declare private function model_1ns:instance-to-canonical-xml(
     $entity-instance as map:map
 ) as element()
 {
-    (: Construct an element that is named the same as the Entity Type :)
+(: Construct an element that is named the same as the Entity Type :)
     let $namespace := map:get($entity-instance, "$namespace")
     let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
     let $nsdecl :=
         if ($namespace) then
-        namespace { $namespace-prefix } { $namespace }
+            namespace { $namespace-prefix } { $namespace }
         else ()
     let $type-name := map:get($entity-instance, '$type')
     let $type-qname :=
@@ -294,29 +281,29 @@ declare private function model_1ns:instance-to-canonical-xml(
                     typeswitch ($instance-property)
                     (: This branch handles embedded objects.  You can choose to prune
                        an entity's representation of extend it with lookups here. :)
-                    case json:object+
-                        return
-                            for $prop in $instance-property
-                            return element { $ns-key } { model_1ns:instance-to-canonical-xml($prop) }
-                    (: An array can also treated as multiple elements :)
-                    case json:array
-                        return
-                            for $val in json:array-values($instance-property)
+                        case json:object+
                             return
-                                if ($val instance of json:object)
-                                then element { $ns-key } {
-                                    attribute datatype { 'array' },
-                                    model_1ns:instance-to-canonical-xml($val)
-                                }
-                                else element { $ns-key } {
-                                    attribute datatype { 'array' },
-                                    $val }
+                                for $prop in $instance-property
+                                return element { $ns-key } { model_1ns:instance-to-canonical-xml($prop) }
+                    (: An array can also treated as multiple elements :)
+                        case json:array
+                            return
+                                for $val in json:array-values($instance-property)
+                                return
+                                    if ($val instance of json:object)
+                                    then element { $ns-key } {
+                                        attribute datatype { 'array' },
+                                        model_1ns:instance-to-canonical-xml($val)
+                                    }
+                                    else element { $ns-key } {
+                                        attribute datatype { 'array' },
+                                        $val }
                     (: A sequence of values should be simply treated as multiple elements :)
-                    case item()+
-                        return
-                            for $val in $instance-property
-                            return element { $ns-key } { $val }
-                    default return element { $ns-key } { $instance-property }
+                        case item()+
+                            return
+                                for $val in $instance-property
+                                return element { $ns-key } { $val }
+                        default return element { $ns-key } { $instance-property }
         }
 };
 
@@ -339,37 +326,37 @@ declare function model_1ns:instance-to-envelope(
     let $canonical := model_1ns:instance-to-canonical($entity-instance, $envelope-format)
     let $attachments := es:serialize-attachments($entity-instance, $envelope-format)
     return
-    if ($envelope-format eq "xml")
-    then
-        document {
-            element es:envelope {
-                element es:instance {
-                    element es:info {
-                        element es:title { map:get($entity-instance,'$type') },
-                        element es:version { '0.0.1' }
+        if ($envelope-format eq "xml")
+        then
+            document {
+                element es:envelope {
+                    element es:instance {
+                        element es:info {
+                            element es:title { map:get($entity-instance,'$type') },
+                            element es:version { '0.0.1' }
+                        },
+                        $canonical
                     },
-                    $canonical
-                },
-                $attachments
-            }
-        }
-    else
-    document {
-        object-node { 'envelope' :
-            object-node { 'instance' :
-                object-node { 'info' :
-                    object-node {
-                        'title' : map:get($entity-instance,'$type'),
-                        'version' : '0.0.1'
-                    }
+                    $attachments
                 }
-                +
-                $canonical
             }
-            +
-            $attachments
-        }
-    }
+        else
+            document {
+                object-node { 'envelope' :
+                object-node { 'instance' :
+                object-node { 'info' :
+                object-node {
+                'title' : map:get($entity-instance,'$type'),
+                'version' : '0.0.1'
+                }
+                }
+                    +
+                    $canonical
+                }
+                    +
+                    $attachments
+                }
+            }
 };
 
 
@@ -384,5 +371,3 @@ declare function model_1ns:instance-to-envelope(
 {
     model_1ns:instance-to-envelope($entity-instance, "xml")
 };
-
-

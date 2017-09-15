@@ -52,7 +52,7 @@ graph uri: http://marklogic.com/ns1#Model_1ns-0.0.1</tde:description>
 	    </tde:column>
 	    <tde:column>
 	      <tde:name>UnitPrice</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
+	      <tde:scalar-type>double</tde:scalar-type>
 	      <tde:val>UnitPrice</tde:val>
 	      <tde:nullable>true</tde:nullable>
 	    </tde:column>
@@ -192,7 +192,7 @@ graph uri: http://marklogic.com/ns1#Model_1ns-0.0.1</tde:description>
 		</tde:column>
 		<tde:column>
 		  <tde:name>hasUnitPrice</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
+		  <tde:scalar-type>double</tde:scalar-type>
 		  <tde:val>hasUnitPrice</tde:val>
 		  <tde:nullable>true</tde:nullable>
 		</tde:column>

@@ -14,12 +14,12 @@
 <sup:UnitPrice>19.99</sup:UnitPrice>
 <sup:Discount>0.06</sup:Discount>
 <sup:Ship-Address datatype="array">
-<sup:ShipDetails>
-<sup:Province>Alberta</sup:Province>
-<sup:Region>West</sup:Region>
-<sup:ShipMode>Regular Air</sup:ShipMode>
-<sup:ShippingCost>11.17</sup:ShippingCost>
-</sup:ShipDetails>
+<ShipDetails>
+<Province>Alberta</Province>
+<Region>West</Region>
+<ShipMode>Regular Air</ShipMode>
+<ShippingCost>11.17</ShippingCost>
+</ShipDetails>
 </sup:Ship-Address>
 </sup:Superstore>
 </es:instance>

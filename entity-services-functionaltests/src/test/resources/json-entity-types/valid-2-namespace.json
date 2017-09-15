@@ -62,7 +62,7 @@
            "$ref":"#/definitions/Product"
         },
         "hasUnitPrice":{  
-           "datatype":"integer"
+           "datatype":"double"
         },
         "Quantity":{  
            "datatype":"integer"

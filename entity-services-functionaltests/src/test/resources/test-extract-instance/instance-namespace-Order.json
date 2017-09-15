@@ -6,9 +6,7 @@
 "OrderID": 10250, 
 "CustomerID": {
 "$type": "Customer", 
-"$namespace": "http://marklogic.com/order", 
-"$namespacePrefix": "ord", 
-"$ref": "HANAR", 
+"$ref": "HANAR",
 "$attachments": "<ord:CustomerID xmlns:ord=\"http://marklogic.com/order\">HANAR</ord:CustomerID>"
 }, 
 "OrderDate": "1996-07-08T16:46:22", 

@@ -37,7 +37,7 @@
                "datatype":"integer"
             },
             "UnitPrice":{  
-               "datatype":"integer"
+               "datatype":"double"
             },
             "SupplierID":{  
                "datatype":"integer"
@@ -84,7 +84,7 @@
                "$ref":"#/definitions/Product"
             },
             "hasUnitPrice":{  
-               "datatype":"integer"
+               "datatype":"double"
             },
             "Quantity":{  
                "datatype":"integer"

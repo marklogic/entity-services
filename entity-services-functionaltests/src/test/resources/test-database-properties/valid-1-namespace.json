@@ -38,7 +38,7 @@
       "invalid-values":"reject",
       "path-expression":"//es:instance/Product/UnitPrice",
       "range-value-positions":false,
-      "scalar-type":"decimal"
+      "scalar-type":"double"
     },
     {  
       "collation":"http://marklogic.com/collation/en",

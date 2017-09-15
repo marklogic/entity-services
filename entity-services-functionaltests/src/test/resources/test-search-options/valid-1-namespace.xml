@@ -32,7 +32,7 @@
     </search:range>
   </search:constraint>
   <search:constraint name="UnitPrice">
-    <search:range facet="true" type="xs:decimal">
+    <search:range facet="true" type="xs:double">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
     </search:range>
   </search:constraint>
@@ -91,7 +91,7 @@
     </search:range>
   </search:tuples>
   <search:tuples name="Product">
-    <search:range facet="true" type="xs:decimal">
+    <search:range facet="true" type="xs:double">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
     </search:range>
     <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">

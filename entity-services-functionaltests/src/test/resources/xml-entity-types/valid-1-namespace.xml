@@ -38,7 +38,7 @@
 	    	<es:datatype>integer</es:datatype>
 	 	</ProductID> 
         <UnitPrice>
-           <es:datatype>integer</es:datatype>
+           <es:datatype>double</es:datatype>
         </UnitPrice>
         <SupplierID>
             <es:datatype>integer</es:datatype>
@@ -87,7 +87,7 @@
              <es:ref>#/definitions/Product</es:ref>
 	 </hasProductID>
 	 <hasUnitPrice>
-             <es:datatype>integer</es:datatype>
+             <es:datatype>double</es:datatype>
 	 </hasUnitPrice>
 	 <Quantity>
              <es:datatype>integer</es:datatype>

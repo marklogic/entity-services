@@ -45,6 +45,7 @@ declare function person:extract-instance-Person-source-1(
     let $fullName := concat( $firstName, " ", $lastName)
 
     let $instance := es:init-instance($source-node, 'Person')
+    =>es:with-namespace('http://example.org/example-person', 'p')
     return
         $instance
         (: The following line identifies the type of this instance.  Do not change it.      :)
@@ -53,8 +54,6 @@ declare function person:extract-instance-Person-source-1(
         =>   map:with('firstName',              $firstName)
         =>   map:with('lastName',               $lastName)
         =>   map:with('fullName',               $fullName)
-        =>map:with('$namespace', 'http://example.org/example-person')
-        =>map:with('$namespacePrefix', 'p')
 };
 
 declare function person:extract-instance-Person-source-2(
@@ -67,6 +66,7 @@ declare function person:extract-instance-Person-source-2(
     let $lastName := xs:string($source-node/last_name)
     let $fullName := xs:string( concat( $firstName, " ", $lastName) )
     let $instance := es:init-instance($source-node, 'Person')
+    =>es:with-namespace('http://example.org/example-person', 'p')
     return
         $instance
         (: The following line identifies the type of this instance.  Do not change it.      :)
@@ -75,8 +75,6 @@ declare function person:extract-instance-Person-source-2(
         =>   map:with('firstName',              $firstName)
         =>   map:with('lastName',               $lastName)
         =>   map:with('fullName',               $fullName)
-        =>map:with('$namespace', 'http://example.org/example-person')
-        =>map:with('$namespacePrefix', 'p')
 };
 
 
@@ -85,10 +83,9 @@ declare function person:friend-ref(
 ) as map:map
 {
     json:object()
+    =>es:with-namespace('http://example.org/example-person', 'p')
     =>map:with('$type', 'Person')
     =>map:with('$ref', $source-node/Person/id/text())
-    =>map:with('$namespace', 'http://example.org/example-person')
-    =>map:with('$namespacePrefix', 'p')
 };
 
 (: a normalizing transform, changed signature to return a sequence :)
@@ -104,6 +101,7 @@ declare function person:extract-instance-Person-source-3(
     let $friends := $source-node/friendOf[id] ! person:extract-instance-Person-source-3(.)
     return ($friends ,
     let $instance := es:init-instance($source-node, 'person')
+    =>es:with-namespace('http://example.org/example-person', 'p')
     return
         $instance
         (: The following line identifies the type of this instance.  Do not change it.      :)
@@ -113,8 +111,6 @@ declare function person:extract-instance-Person-source-3(
         =>   map:with('lastName',               $lastName)
         =>   map:with('fullName',               $fullName)
         =>es:optional('friends',                $source-node/friendOf ! person:friend-ref(.)))
-        =>map:with('$namespace', 'http://example.org/example-person')
-        =>map:with('$namespacePrefix', 'p')
 };
 
 (: a normalizing transform, changed signature to return a sequence :)
@@ -127,6 +123,7 @@ declare function person:extract-instance-Person-source-4(
         for $friend in $source-node/friendOf return
             (
                 let $instance := es:init-instance($source-node, 'person')
+                =>es:with-namespace('http://example.org/example-person', 'p')
                 return
                     $instance
                     =>map:with("$type", "Person")
@@ -134,11 +131,10 @@ declare function person:extract-instance-Person-source-4(
                     =>map:with("firstName", fn:substring-before($friend, " "))
                     =>map:with("lastName",  fn:substring-after($friend, " "))
                     =>map:with("fullName",  $friend)
-                    =>map:with('$namespace', 'http://example.org/example-person')
-                    =>map:with('$namespacePrefix', 'p')
             )
     return
         json:object()
+        =>es:with-namespace('http://example.org/example-person', 'p')
         (: The following line identifies the type of this instance.  Do not change it.      :)
         =>map:with('$type', 'Person')
         =>   map:with('id',                     xs:string($source-node/name))
@@ -146,8 +142,6 @@ declare function person:extract-instance-Person-source-4(
         =>   map:with("lastName",               fn:substring-after($source-node/name, " "))
         =>   map:with('fullName',               xs:string($source-node/name))
         =>es:optional('friends',                json:to-array($friends))
-        =>map:with('$namespace', 'http://example.org/example-person')
-        =>map:with('$namespacePrefix', 'p')
 };
 
 

@@ -11,7 +11,7 @@ xquery version '1.0-ml';
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Generated at timestamp: 2017-09-03T16:45:34.328537-07:00
+ Generated at timestamp: 2017-09-15T13:42:12.043392-07:00
  :)
 
 module namespace northwind
@@ -42,15 +42,12 @@ declare function northwind:extract-instance-Customer(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Customer')
-    (: begin customizations here :)
     let $CustomerID  :=             $source-node/@CustomerID ! xs:string(.)
     let $CompanyName  :=             $source-node/CompanyName ! xs:string(.)
     let $Country  :=             $source-node/Country ! xs:string(.)
     let $ContactName  :=             $source-node/ContactName ! xs:string(.)
     let $ContactTitle  :=             $source-node/ContactTitle ! xs:string(.)
-    let $Phone  :=             $source-node/Phone ! xs:string(.)
-    (: end customizations :)
-
+    let $Phone  :=             $source-node/Phone ! xs:string(.) 
     let $instance := es:init-instance($source-node, 'Customer')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -79,13 +76,10 @@ declare function northwind:extract-instance-Product(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Product')
-    (: begin customizations here :)
     let $ProductID  :=             $source-node/@ProductID ! xs:integer(.)
     let $ProductName  :=             $source-node/ProductName ! xs:string(.)
     let $UnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
-    let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.)
-    (: end customizations :)
-
+    let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.) 
     let $instance := es:init-instance($source-node, 'Product')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -112,17 +106,14 @@ declare function northwind:extract-instance-Order(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Order')
-    (: begin customizations here :)
     let $OrderID  :=             $source-node/@OrderID ! xs:integer(.)
     (: The following property is a local reference.  :)
-    let $CustomerID  :=             $source-node/CustomerID ! northwind:extract-instance-Customer(.)
+    let $hasCustomerID  :=              $source-node/CustomerID ! northwind:extract-instance-Customer(.)
     let $OrderDate  :=             $source-node/OrderDate ! xs:dateTime(.)
     let $ShippedDate  :=             $source-node/ShippedDate ! xs:dateTime(.)
     let $ShipAddress  :=             $source-node/ShipAddress ! xs:string(.)
     (: The following property is a local reference.  :)
-    let $OrderDetails  :=             es:extract-array($source-node/OrderDetails/*, northwind:extract-instance-OrderDetail#1)
-    (: end customizations :)
-
+    let $OrderDetails  :=             es:extract-array($source-node/OrderDetails/*, northwind:extract-instance-OrderDetail#1) 
     let $instance := es:init-instance($source-node, 'Order')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -132,7 +123,7 @@ declare function northwind:extract-instance-Order(
     then $instance
     else $instance
         =>   map:with('OrderID', $OrderID)
-        =>es:optional('CustomerID', $CustomerID)
+        =>es:optional('hasCustomerID', $hasCustomerID)
         =>es:optional('OrderDate', $OrderDate)
         =>es:optional('ShippedDate', $ShippedDate)
         =>es:optional('ShipAddress', $ShipAddress)
@@ -151,13 +142,10 @@ declare function northwind:extract-instance-OrderDetail(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'OrderDetail')
-    (: begin customizations here :)
     (: The following property is a local reference.  :)
-    let $ProductID  :=             $source-node/ProductID ! northwind:extract-instance-Product(.)
-    let $UnitPrice  :=             $source-node/UnitPrice ! xs:integer(.)
-    let $Quantity  :=             $source-node/Quantity ! xs:integer(.)
-    (: end customizations :)
-
+    let $hasProductID  :=             $source-node/ProductID ! northwind:extract-instance-Product(.)
+    let $hasUnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
+    let $Quantity  :=             $source-node/Quantity ! xs:integer(.) 
     let $instance := es:init-instance($source-node, 'OrderDetail')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -166,8 +154,8 @@ declare function northwind:extract-instance-OrderDetail(
     if (empty($source-node/*))
     then $instance
     else $instance
-        =>es:optional('ProductID', $ProductID)
-        =>es:optional('UnitPrice', $UnitPrice)
+        =>es:optional('hasProductID', $hasProductID)
+        =>es:optional('hasUnitPrice', $hasUnitPrice)
         =>es:optional('Quantity', $Quantity)
 };
 
@@ -183,19 +171,16 @@ declare function northwind:extract-instance-Superstore(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'Superstore')
-    (: begin customizations here :)
-    let $OrderID  :=             $source-node/OrderID ! xs:integer(.)
-    let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
-    let $OrderDate  :=             $source-node/OrderDate ! xs:dateTime(.)
-    let $ShippedDate  :=             $source-node/ShippedDate ! xs:dateTime(.)
-    let $ProductName  :=             $source-node/ProductName ! xs:string(.)
-    let $UnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
-    let $Quantity  :=             $source-node/OrderQuantity ! xs:integer(.)
+    let $OrdID  :=             $source-node/OrderID ! xs:integer(.)
+    let $CustID  :=             $source-node/CustomerID ! xs:string(.)
+    let $OrdDate  :=             $source-node/OrderDate ! xs:dateTime(.)
+    let $Shipped-Date  :=             $source-node/ShippedDate ! xs:dateTime(.)
+    let $Product-Name  :=             $source-node/ProductName ! xs:string(.)
+    let $Unit-Price  :=             $source-node/UnitPrice ! xs:double(.)
+    let $Quant  :=             $source-node/OrderQuantity ! xs:integer(.)
     let $Discount  :=             $source-node/Discount ! xs:string(.)
     (: The following property is a local reference.  :)
-    let $ShipAddress  :=             es:extract-array($source-node, northwind:extract-instance-ShipDetails#1)
-    (: end customizations :)
-
+    let $Ship-Address  :=             es:extract-array($source-node, northwind:extract-instance-ShipDetails#1) 
     let $instance := es:init-instance($source-node, 'Superstore')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -204,15 +189,15 @@ declare function northwind:extract-instance-Superstore(
     if (empty($source-node/*))
     then $instance
     else $instance
-        =>   map:with('OrderID', $OrderID)
-        =>es:optional('CustomerID', $CustomerID)
-        =>es:optional('OrderDate', $OrderDate)
-        =>es:optional('ShippedDate', $ShippedDate)
-        =>es:optional('ProductName', $ProductName)
-        =>es:optional('UnitPrice', $UnitPrice)
-        =>es:optional('Quantity', $Quantity)
+        =>   map:with('OrdID', $OrdID)
+        =>es:optional('CustID', $CustID)
+        =>es:optional('OrdDate', $OrdDate)
+        =>es:optional('Shipped-Date', $Shipped-Date)
+        =>es:optional('Product-Name', $Product-Name)
+        =>es:optional('Unit-Price', $Unit-Price)
+        =>es:optional('Quant', $Quant)
         =>es:optional('Discount', $Discount)
-        =>es:optional('ShipAddress', $ShipAddress)
+        =>es:optional('Ship-Address', $Ship-Address)
 };
 
 (:~
@@ -227,13 +212,10 @@ declare function northwind:extract-instance-ShipDetails(
 ) as map:map
 {
     let $source-node := es:init-source($source, 'ShipDetails')
-    (: begin customizations here :)
     let $Province  :=             $source-node/Province ! xs:string(.)
     let $Region  :=             $source-node/Region ! xs:string(.)
     let $ShipMode  :=             $source-node/ShipMode ! xs:string(.)
-    let $ShippingCost  :=             $source-node/ShippingCost ! xs:double(.)
-    (: end customizations :)
-
+    let $ShippingCost  :=             $source-node/ShippingCost ! xs:double(.) 
     let $instance := es:init-instance($source-node, 'ShipDetails')
     (: Comment or remove the following line to suppress attachments :)
         =>es:add-attachments($source)
@@ -463,6 +445,5 @@ declare function northwind:instance-to-envelope(
 {
     northwind:instance-to-envelope($entity-instance, "xml")
 };
-
 
 

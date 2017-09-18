@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
-  <tde:description>
-Extraction Template Generated from Entity Type Document
+  <tde:description>Extraction Template Generated from Entity Type Document
 graph uri: http://marklogic.com/test#Northwind-0.0.1</tde:description>
-  <!-- The following line matches JSON and XML instances, but may be slower to index documents. -->
+  <!--
+ The following line matches JSON and XML instances, but may be slower to index documents. 
+-->
   <tde:context>//*:instance[*:info/*:version = "0.0.1"]</tde:context>
-  <!-- Replace the above with the following line to match XML instances only.  This may speed up indexing
+  <!--
+ Replace the above with the following line to match XML instances only.  This may speed up indexing
         <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
-        -->
-  <!-- Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        
+-->
+  <!--
+ Replace the above with the following line to match JSON instances only.  This may speed up indexing
         <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
-        -->
+        
+-->
   <tde:vars>
     <tde:var>
       <tde:name>RDF</tde:name>
@@ -31,401 +36,409 @@ graph uri: http://marklogic.com/test#Northwind-0.0.1</tde:description>
     <tde:template>
       <tde:context>./Product</tde:context>
       <tde:vars>
-	<tde:var>
-	  <tde:name>subject-iri</tde:name>
-	  <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Product/", fn:encode-for-uri(xs:string(./ProductID))))</tde:val>
-	</tde:var>
+        <tde:var>
+          <tde:name>subject-iri</tde:name>
+          <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Product/", fn:encode-for-uri(xs:string(./ProductID))))</tde:val>
+        </tde:var>
       </tde:vars>
       <tde:triples>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>$RDF_TYPE</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Product")</tde:val>
-	  </tde:object>
-	</tde:triple>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>fn:base-uri(.)</tde:val>
-	  </tde:object>
-	</tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>$RDF_TYPE</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Product")</tde:val>
+          </tde:object>
+        </tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>fn:base-uri(.)</tde:val>
+          </tde:object>
+        </tde:triple>
       </tde:triples>
     </tde:template>
     <tde:template>
       <tde:context>./Product</tde:context>
       <tde:rows>
-	<tde:row>
-	  <tde:schema-name>Northwind1</tde:schema-name>
-	  <tde:view-name>Product</tde:view-name>
-	  <tde:view-layout>sparse</tde:view-layout>
-	  <tde:columns>
-	    <tde:column>
-	      <tde:name>ProductID</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
-	      <tde:val>ProductID</tde:val>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ProductName</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>ProductName</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>UnitPrice</tde:name>
-	      <tde:scalar-type>double</tde:scalar-type>
-	      <tde:val>UnitPrice</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>SupplierID</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
-	      <tde:val>SupplierID</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	  </tde:columns>
-	</tde:row>
+        <tde:row>
+          <tde:schema-name>Northwind1</tde:schema-name>
+          <tde:view-name>Product</tde:view-name>
+          <tde:view-layout>sparse</tde:view-layout>
+          <tde:columns>
+            <tde:column>
+              <tde:name>ProductID</tde:name>
+              <tde:scalar-type>integer</tde:scalar-type>
+              <tde:val>ProductID</tde:val>
+            </tde:column>
+            <tde:column>
+              <tde:name>ProductName</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>ProductName</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>UnitPrice</tde:name>
+              <tde:scalar-type>double</tde:scalar-type>
+              <tde:val>UnitPrice</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>SupplierID</tde:name>
+              <tde:scalar-type>integer</tde:scalar-type>
+              <tde:val>SupplierID</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+          </tde:columns>
+        </tde:row>
       </tde:rows>
     </tde:template>
     <tde:template>
       <tde:context>./Customer</tde:context>
       <tde:vars>
-	<tde:var>
-	  <tde:name>subject-iri</tde:name>
-	  <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./CustomerID)))</tde:val>
-	</tde:var>
+        <tde:var>
+          <tde:name>subject-iri</tde:name>
+          <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Customer/", fn:encode-for-uri(./CustomerID)))</tde:val>
+        </tde:var>
       </tde:vars>
       <tde:triples>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>$RDF_TYPE</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</tde:val>
-	  </tde:object>
-	</tde:triple>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>fn:base-uri(.)</tde:val>
-	  </tde:object>
-	</tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>$RDF_TYPE</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Customer")</tde:val>
+          </tde:object>
+        </tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>fn:base-uri(.)</tde:val>
+          </tde:object>
+        </tde:triple>
       </tde:triples>
     </tde:template>
     <tde:template>
       <tde:context>./Customer</tde:context>
       <tde:rows>
-	<tde:row>
-	  <tde:schema-name>Northwind1</tde:schema-name>
-	  <tde:view-name>Customer</tde:view-name>
-	  <tde:view-layout>sparse</tde:view-layout>
-	  <tde:columns>
-	    <tde:column>
-	      <tde:name>CustomerID</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>CustomerID</tde:val>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>CompanyName</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>CompanyName</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>Country</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>Country</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ContactName</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>ContactName</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ContactTitle</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>ContactTitle</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>Phone</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>Phone</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	  </tde:columns>
-	</tde:row>
+        <tde:row>
+          <tde:schema-name>Northwind1</tde:schema-name>
+          <tde:view-name>Customer</tde:view-name>
+          <tde:view-layout>sparse</tde:view-layout>
+          <tde:columns>
+            <tde:column>
+              <tde:name>CustomerID</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>CustomerID</tde:val>
+            </tde:column>
+            <tde:column>
+              <tde:name>CompanyName</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>CompanyName</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Country</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>Country</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>ContactName</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>ContactName</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>ContactTitle</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>ContactTitle</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Phone</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>Phone</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+          </tde:columns>
+        </tde:row>
       </tde:rows>
     </tde:template>
     <tde:template>
       <tde:context>./Order</tde:context>
       <tde:vars>
-	<tde:var>
-	  <tde:name>subject-iri</tde:name>
-	  <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Order/", fn:encode-for-uri(xs:string(./OrderID))))</tde:val>
-	</tde:var>
+        <tde:var>
+          <tde:name>subject-iri</tde:name>
+          <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Order/", fn:encode-for-uri(xs:string(./OrderID))))</tde:val>
+        </tde:var>
       </tde:vars>
       <tde:triples>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>$RDF_TYPE</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Order")</tde:val>
-	  </tde:object>
-	</tde:triple>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>fn:base-uri(.)</tde:val>
-	  </tde:object>
-	</tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>$RDF_TYPE</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Order")</tde:val>
+          </tde:object>
+        </tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>fn:base-uri(.)</tde:val>
+          </tde:object>
+        </tde:triple>
       </tde:triples>
     </tde:template>
     <tde:template>
       <tde:context>./Order</tde:context>
       <tde:rows>
-	<tde:row>
-	  <tde:schema-name>Northwind1</tde:schema-name>
-	  <tde:view-name>Order</tde:view-name>
-	  <tde:view-layout>sparse</tde:view-layout>
-	  <tde:columns>
-	    <tde:column>
-	      <tde:name>OrderID</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
-	      <tde:val>OrderID</tde:val>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>CustomerID</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>CustomerID/Customer</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>OrderDate</tde:name>
-	      <tde:scalar-type>dateTime</tde:scalar-type>
-	      <tde:val>OrderDate</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ShippedDate</tde:name>
-	      <tde:scalar-type>dateTime</tde:scalar-type>
-	      <tde:val>ShippedDate</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ShipAddress</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>ShipAddress</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	  </tde:columns>
-	</tde:row>
+        <tde:row>
+          <tde:schema-name>Northwind1</tde:schema-name>
+          <tde:view-name>Order</tde:view-name>
+          <tde:view-layout>sparse</tde:view-layout>
+          <tde:columns>
+            <tde:column>
+              <tde:name>OrderID</tde:name>
+              <tde:scalar-type>integer</tde:scalar-type>
+              <tde:val>OrderID</tde:val>
+            </tde:column>
+            <tde:column>
+              <tde:name>hasCustomerID</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>hasCustomerID/Customer</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>OrderDate</tde:name>
+              <tde:scalar-type>dateTime</tde:scalar-type>
+              <tde:val>OrderDate</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>ShippedDate</tde:name>
+              <tde:scalar-type>dateTime</tde:scalar-type>
+              <tde:val>ShippedDate</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>ShipAddress</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>ShipAddress</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+          </tde:columns>
+        </tde:row>
       </tde:rows>
       <tde:templates>
-	<tde:template>
-	  <tde:context>./OrderDetails</tde:context>
-	  <tde:rows>
-	    <tde:row>
-	      <tde:schema-name>Northwind1</tde:schema-name>
-	      <tde:view-name>Order_OrderDetails</tde:view-name>
-	      <tde:view-layout>sparse</tde:view-layout>
-	      <tde:columns>
-		<tde:column>
-		  <!--This column joins to property OrderID of Order-->
-		  <tde:name>OrderID</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
-		  <tde:val>../OrderID</tde:val>
-		</tde:column>
-		<!-- Below 3 column values had to be customized to include OrderDetail/ to work with northwind data -->
-		<tde:column>
-		  <tde:name>ProductID</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
-		  <tde:val>OrderDetail/ProductID/Product</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-		<tde:column>
-		  <tde:name>UnitPrice</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
-		  <tde:val>OrderDetail/UnitPrice</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-		<tde:column>
-		  <tde:name>Quantity</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
-		  <tde:val>OrderDetail/Quantity</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-	      </tde:columns>
-	    </tde:row>
-	  </tde:rows>
-	</tde:template>
+        <tde:template>
+          <tde:context>./OrderDetails</tde:context>
+          <tde:rows>
+            <tde:row>
+              <tde:schema-name>Northwind1</tde:schema-name>
+              <tde:view-name>Order_OrderDetails</tde:view-name>
+              <tde:view-layout>sparse</tde:view-layout>
+              <tde:columns>
+                <tde:column>
+                  <!--
+This column joins to property OrderID of Order
+-->
+                  <tde:name>OrderID</tde:name>
+                  <tde:scalar-type>integer</tde:scalar-type>
+                  <tde:val>../OrderID</tde:val>
+                </tde:column>
+                <!-- Below 3 column values had to be customized to include OrderDetail/ to work with northwind data -->
+                <tde:column>
+                  <tde:name>hasProductID</tde:name>
+                  <tde:scalar-type>integer</tde:scalar-type>
+                  <tde:val>OrderDetail/hasProductID/Product</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+                <tde:column>
+                  <tde:name>hasUnitPrice</tde:name>
+                  <tde:scalar-type>double</tde:scalar-type>
+                  <tde:val>OrderDetail/hasUnitPrice</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+                <tde:column>
+                  <tde:name>Quantity</tde:name>
+                  <tde:scalar-type>integer</tde:scalar-type>
+                  <tde:val>OrderDetail/Quantity</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+              </tde:columns>
+            </tde:row>
+          </tde:rows>
+        </tde:template>
       </tde:templates>
     </tde:template>
-    <!--The standalone template for OrderDetail cannot be generated.  Each template row requires a primary key or at least one required property.-->
+    <!--
+The standalone template for OrderDetail cannot be generated.  Each template row requires a primary key or at least one required property.
+-->
     <tde:template>
       <tde:context>./Superstore</tde:context>
       <tde:vars>
-	<tde:var>
-	  <tde:name>subject-iri</tde:name>
-	  <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Superstore/", fn:encode-for-uri(xs:string(./OrderID))))</tde:val>
-	</tde:var>
+        <tde:var>
+          <tde:name>subject-iri</tde:name>
+          <tde:val>sem:iri(concat("http://marklogic.com/test/Northwind-0.0.1/Superstore/", fn:encode-for-uri(xs:string(./OrdID))))</tde:val>
+        </tde:var>
       </tde:vars>
       <tde:triples>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>$RDF_TYPE</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Superstore")</tde:val>
-	  </tde:object>
-	</tde:triple>
-	<tde:triple>
-	  <tde:subject>
-	    <tde:val>$subject-iri</tde:val>
-	  </tde:subject>
-	  <tde:predicate>
-	    <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
-	  </tde:predicate>
-	  <tde:object>
-	    <tde:val>fn:base-uri(.)</tde:val>
-	  </tde:object>
-	</tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>$RDF_TYPE</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>sem:iri("http://marklogic.com/test/Northwind-0.0.1/Superstore")</tde:val>
+          </tde:object>
+        </tde:triple>
+        <tde:triple>
+          <tde:subject>
+            <tde:val>$subject-iri</tde:val>
+          </tde:subject>
+          <tde:predicate>
+            <tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+          </tde:predicate>
+          <tde:object>
+            <tde:val>fn:base-uri(.)</tde:val>
+          </tde:object>
+        </tde:triple>
       </tde:triples>
     </tde:template>
     <tde:template>
       <tde:context>./Superstore</tde:context>
       <tde:rows>
-	<tde:row>
-	  <tde:schema-name>Northwind1</tde:schema-name>
-	  <tde:view-name>Superstore</tde:view-name>
-	  <tde:view-layout>sparse</tde:view-layout>
-	  <tde:columns>
-	    <tde:column>
-	      <tde:name>OrderID</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
-	      <tde:val>OrderID</tde:val>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>CustomerID</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>CustomerID</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>OrderDate</tde:name>
-	      <tde:scalar-type>dateTime</tde:scalar-type>
-	      <tde:val>OrderDate</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ShippedDate</tde:name>
-	      <tde:scalar-type>dateTime</tde:scalar-type>
-	      <tde:val>ShippedDate</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>ProductName</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>ProductName</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>UnitPrice</tde:name>
-	      <tde:scalar-type>double</tde:scalar-type>
-	      <tde:val>UnitPrice</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>Quantity</tde:name>
-	      <tde:scalar-type>integer</tde:scalar-type>
-	      <tde:val>Quantity</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	    <tde:column>
-	      <tde:name>Discount</tde:name>
-	      <tde:scalar-type>string</tde:scalar-type>
-	      <tde:val>Discount</tde:val>
-	      <tde:nullable>true</tde:nullable>
-	    </tde:column>
-	  </tde:columns>
-	</tde:row>
+        <tde:row>
+          <tde:schema-name>Northwind1</tde:schema-name>
+          <tde:view-name>Superstore</tde:view-name>
+          <tde:view-layout>sparse</tde:view-layout>
+          <tde:columns>
+            <tde:column>
+              <tde:name>OrdID</tde:name>
+              <tde:scalar-type>integer</tde:scalar-type>
+              <tde:val>OrdID</tde:val>
+            </tde:column>
+            <tde:column>
+              <tde:name>CustID</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>CustID</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>OrdDate</tde:name>
+              <tde:scalar-type>dateTime</tde:scalar-type>
+              <tde:val>OrdDate</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Shipped_Date</tde:name>
+              <tde:scalar-type>dateTime</tde:scalar-type>
+              <tde:val>Shipped-Date</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Product_Name</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>Product-Name</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Unit_Price</tde:name>
+              <tde:scalar-type>double</tde:scalar-type>
+              <tde:val>Unit-Price</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Quant</tde:name>
+              <tde:scalar-type>integer</tde:scalar-type>
+              <tde:val>Quant</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+            <tde:column>
+              <tde:name>Discount</tde:name>
+              <tde:scalar-type>string</tde:scalar-type>
+              <tde:val>Discount</tde:val>
+              <tde:nullable>true</tde:nullable>
+            </tde:column>
+          </tde:columns>
+        </tde:row>
       </tde:rows>
       <tde:templates>
-	<tde:template>
-	  <tde:context>./ShipAddress</tde:context>
-	  <tde:rows>
-	    <tde:row>
-	      <tde:schema-name>Northwind1</tde:schema-name>
-	      <tde:view-name>ShipAddress</tde:view-name>
-	      <tde:view-layout>sparse</tde:view-layout>
-	      <tde:columns>
-		<tde:column>
-		  <!--This column joins to property OrderID of Superstore-->
-		  <tde:name>OrderID</tde:name>
-		  <tde:scalar-type>integer</tde:scalar-type>
-		  <tde:val>../OrderID</tde:val>
-		</tde:column>
-		<tde:column>
-		  <tde:name>Province</tde:name>
-		  <tde:scalar-type>string</tde:scalar-type>
-		  <tde:val>Province</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-		<tde:column>
-		  <tde:name>Region</tde:name>
-		  <tde:scalar-type>string</tde:scalar-type>
-		  <tde:val>Region</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-		<tde:column>
-		  <tde:name>ShipMode</tde:name>
-		  <tde:scalar-type>string</tde:scalar-type>
-		  <tde:val>ShipMode</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-		<tde:column>
-		  <tde:name>ShippingCost</tde:name>
-		  <tde:scalar-type>double</tde:scalar-type>
-		  <tde:val>ShippingCost</tde:val>
-		  <tde:nullable>true</tde:nullable>
-		</tde:column>
-	      </tde:columns>
-	    </tde:row>
-	  </tde:rows>
-	</tde:template>
+        <tde:template>
+          <tde:context>./Ship-Address</tde:context>
+          <tde:rows>
+            <tde:row>
+              <tde:schema-name>Northwind1</tde:schema-name>
+              <tde:view-name>Ship_Address</tde:view-name>
+              <tde:view-layout>sparse</tde:view-layout>
+              <tde:columns>
+                <tde:column>
+                  <!--
+This column joins to property OrdID of Superstore
+-->
+                  <tde:name>OrdID</tde:name>
+                  <tde:scalar-type>integer</tde:scalar-type>
+                  <tde:val>../OrdID</tde:val>
+                </tde:column>
+                <tde:column>
+                  <tde:name>Province</tde:name>
+                  <tde:scalar-type>string</tde:scalar-type>
+                  <tde:val>Province</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+                <tde:column>
+                  <tde:name>Region</tde:name>
+                  <tde:scalar-type>string</tde:scalar-type>
+                  <tde:val>Region</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+                <tde:column>
+                  <tde:name>ShipMode</tde:name>
+                  <tde:scalar-type>string</tde:scalar-type>
+                  <tde:val>ShipMode</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+                <tde:column>
+                  <tde:name>ShippingCost</tde:name>
+                  <tde:scalar-type>double</tde:scalar-type>
+                  <tde:val>ShippingCost</tde:val>
+                  <tde:nullable>true</tde:nullable>
+                </tde:column>
+              </tde:columns>
+            </tde:row>
+          </tde:rows>
+        </tde:template>
       </tde:templates>
     </tde:template>
-    <!--The standalone template for ShipDetails cannot be generated.  Each template row requires a primary key or at least one required property.-->
+    <!--
+The standalone template for ShipDetails cannot be generated.  Each template row requires a primary key or at least one required property.
+-->
   </tde:templates>
 </tde:template>

@@ -20,7 +20,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-09-03T16:45:34.328537-07:00
+ Generated at timestamp: 2017-09-15T13:54:23.208131-07:00
 
  Target Model Northwind-0.0.2 Info:
 
@@ -39,8 +39,8 @@ declare option xdmp:mapping 'false';
  Type Order: 
     primaryKey: OrderID, ( in source: OrderID )
     required: None, ( in source: None )
-    range indexes: OrderID, ShipName, CustomerID, ( in source: None )
-    word lexicons: OrderID, CustomerID, ( in source: None )
+    range indexes: OrderID, ShipName, hasCustomerID, ( in source: None )
+    word lexicons: OrderID, hasCustomerID, ( in source: None )
  
  Type OrderDetail: 
     primaryKey: None, ( in source: None )
@@ -79,6 +79,7 @@ declare function northwind-from-northwind:convert-instance-Customer(
     let $Country := $source-node/Country ! xs:string(.)
     let $ContactName := $source-node/ContactName ! xs:string(.)
     let $Phone := $source-node/Phone ! xs:string(.)
+    let $ContactTitle := $source-node/ContactTitle ! xs:string(.)
 
     return
     json:object()
@@ -86,13 +87,13 @@ declare function northwind-from-northwind:convert-instance-Customer(
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Customer" entity type. :)
-    =>   map:with('CustomerID',  $CustomerID)
-    =>es:optional('CompanyName',  $CompanyName)
-    =>es:optional('Country',  $Country)
-    =>es:optional('ContactName',  $ContactName)
+    =>   map:with('CustomerID',   $CustomerID)
+    =>es:optional('CompanyName',   $CompanyName)
+    =>es:optional('Country',   $Country)
+    =>es:optional('ContactName',   $ContactName)
     =>es:optional('Phone',   $Phone)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('NO TARGET',     $ContactTitle)
+    =>es:optional('NO TARGET',      $ContactTitle)
   :)
 
 };
@@ -122,7 +123,7 @@ declare function northwind-from-northwind:convert-instance-Order(
          else es:init-instance($path, 'Customer')
          }
 
-    let $CustomerID := $source-node/CustomerID/* ! $extract-reference-Customer(.)
+    let $hasCustomerID := $source-node/hasCustomerID/* ! $extract-reference-Customer(.)
     let $OrderDate := $source-node/OrderDate ! xs:dateTime(.)
     let $ShippedDate := $source-node/ShippedDate ! xs:dateTime(.)
     (: The following property was missing from the source type.
@@ -145,13 +146,13 @@ declare function northwind-from-northwind:convert-instance-Order(
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Order" entity type. :)
-    =>   map:with('OrderID',  $OrderID)
-    =>es:optional('CustomerID',  $CustomerID)
-    =>es:optional('OrderDate',  $OrderDate)
-    =>es:optional('ShippedDate',  $ShippedDate)
-    =>es:optional('ShipName',  $ShipName)
-    =>es:optional('ShipAddress',  $ShipAddress)
-    =>es:optional('OrderDetails',  $OrderDetails)
+    =>   map:with('OrderID',   $OrderID)
+    =>es:optional('hasCustomerID',   $hasCustomerID)
+    =>es:optional('OrderDate',   $OrderDate)
+    =>es:optional('ShippedDate',   $ShippedDate)
+    =>es:optional('ShipName',   $ShipName)
+    =>es:optional('ShipAddress',   $ShipAddress)
+    =>es:optional('OrderDetails',   $OrderDetails)
 
 };
     
@@ -179,8 +180,8 @@ declare function northwind-from-northwind:convert-instance-OrderDetail(
          else es:init-instance($path, 'Product')
          }
 
-    let $ProductID := $source-node/ProductID/* ! $extract-reference-Product(.)
-    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $hasProductID := $source-node/hasProductID/* ! $extract-reference-Product(.)
+    let $hasUnitPrice := $source-node/hasUnitPrice ! xs:double(.)
     let $Quantity := $source-node/Quantity ! xs:integer(.)
 
     return
@@ -189,9 +190,9 @@ declare function northwind-from-northwind:convert-instance-OrderDetail(
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "OrderDetail" entity type. :)
-    =>es:optional('ProductID',  $ProductID)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('Quantity',  $Quantity)
+    =>es:optional('hasProductID',   $hasProductID)
+    =>es:optional('hasUnitPrice',   $hasUnitPrice)
+    =>es:optional('Quantity',   $Quantity)
 
 };
     
@@ -227,11 +228,11 @@ declare function northwind-from-northwind:convert-instance-Product(
     (: Copy attachments from source document to the target :)
     =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Product" entity type. :)
-    =>es:optional('ProductName',  $ProductName)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('SupplierID',  $SupplierID)
-    =>es:optional('QuantityPerUnit',  $QuantityPerUnit)
-    =>   map:with('ProductID',  $ProductID)
+    =>es:optional('ProductName',   $ProductName)
+    =>es:optional('UnitPrice',   $UnitPrice)
+    =>es:optional('SupplierID',   $SupplierID)
+    =>es:optional('QuantityPerUnit',   $QuantityPerUnit)
+    =>   map:with('ProductID',   $ProductID)
 
 };
     
@@ -258,10 +259,10 @@ declare function northwind-from-northwind:convert-instance-ShipDetails(
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
     =>map:with("$type", "ShipDetails" }
-    =>es:optional('Province',  $Province)
-    =>es:optional('Region',  $Region)
-    =>es:optional('ShipMode',  $ShipMode)
-    =>es:optional('ShippingCost',  $ShippingCost)
+    =>es:optional('Province',   $Province)
+    =>es:optional('Region',   $Region)
+    =>es:optional('ShipMode',   $ShipMode)
+    =>es:optional('ShippingCost',   $ShippingCost)
 
 };
 :)
@@ -278,16 +279,16 @@ declare function northwind-from-northwind:convert-instance-Superstore(
     $source-node as node()
 ) as map:map
 {
-    let $OrderID  :=             $source-node/OrderID ! xs:integer(.)
-    let $CustomerID  :=             $source-node/CustomerID ! xs:string(.)
-    let $OrderDate  :=             $source-node/OrderDate ! xs:dateTime(.)
-    let $ShippedDate  :=             $source-node/ShippedDate ! xs:dateTime(.)
-    let $ProductName  :=             $source-node/ProductName ! xs:string(.)
-    let $UnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
-    let $Quantity  :=             $source-node/Quantity ! xs:integer(.)
+    let $OrdID  :=             $source-node/OrderID ! xs:integer(.)
+    let $CustID  :=             $source-node/CustomerID ! xs:string(.)
+    let $OrdDate  :=             $source-node/OrderDate ! xs:dateTime(.)
+    let $Shipped-Date  :=             $source-node/ShippedDate ! xs:dateTime(.)
+    let $Product-Name  :=             $source-node/ProductName ! xs:string(.)
+    let $Unit-Price  :=             $source-node/UnitPrice ! xs:double(.)
+    let $Quant  :=             $source-node/OrderQuantity ! xs:integer(.)
     let $Discount  :=             $source-node/Discount ! xs:string(.)
     (: The following property is a local reference.  :)
-    let $ShipAddress  :=             es:extract-array($source-node/ShipAddress, northwind-from-northwind:extract-instance-ShipDetails#1)
+    let $Ship-Address  :=             es:extract-array($source-node, northwind-from-northwind:extract-instance-ShipDetails#1)
 
     return
     json:object()
@@ -295,15 +296,15 @@ declare function northwind-from-northwind:convert-instance-Superstore(
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
     =>map:with("$type", "Superstore" }
-    =>   map:with('OrderID',  $OrderID)
-    =>es:optional('CustomerID',  $CustomerID)
-    =>es:optional('OrderDate',  $OrderDate)
-    =>es:optional('ShippedDate',  $ShippedDate)
-    =>es:optional('ProductName',  $ProductName)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('Quantity',  $Quantity)
-    =>es:optional('Discount',  $Discount)
-    =>es:optional('ShipAddress',  $ShipAddress)
+    =>   map:with('OrdID',   $OrdID)
+    =>es:optional('CustID',   $CustID)
+    =>es:optional('OrdDate',   $OrdDate)
+    =>es:optional('Shipped-Date',   $Shipped-Date)
+    =>es:optional('Product-Name',   $Product-Name)
+    =>es:optional('Unit-Price',   $Unit-Price)
+    =>es:optional('Quant',   $Quant)
+    =>es:optional('Discount',   $Discount)
+    =>es:optional('Ship-Address',   $Ship-Address)
 
 };
 :)

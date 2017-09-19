@@ -97,7 +97,7 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Customer(
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "Customer" }
+    =>map:with("$type", "Customer" )
     =>   map:with('CustomerID',  $CustomerID)
     =>es:optional('CompanyName',  $CompanyName)
     =>es:optional('Country',  $Country)

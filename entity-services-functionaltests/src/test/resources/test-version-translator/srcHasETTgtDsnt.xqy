@@ -92,7 +92,7 @@ declare function srcHasETTgt-from-srcHasETSrc:convert-instance-Product(
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "Product" }
+    =>map:with("$type", "Product" )
     =>   map:with('ProductName',  $ProductName)
     =>es:optional('UnitPrice',  $UnitPrice)
     =>es:optional('SupplierID',  $SupplierID)

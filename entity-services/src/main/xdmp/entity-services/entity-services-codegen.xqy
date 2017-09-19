@@ -602,25 +602,6 @@ declare private function es-codegen:value-for-conversion(
     let $is-reference-from-scalar-or-array :=
         exists($target-ref) and empty($source-ref)
 
-    let $extract-scalar-fn := 
-        let $ref-namespace-prefix :=
-            if (contains($target-ref, "#/definitions"))
-            then $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
-            else ()
-        let $ref-namespace :=
-            if (contains($target-ref, "#/definitions"))
-            then $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
-            else ()
-        return
-            if ($ref-namespace-prefix) then
-                concat(
-                    "es:init-instance(?, '", $target-ref-name, "')",
-                    "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')")
-            else
-                concat(
-                    "es:init-instance(?, '",
-                    $target-ref-name,
-                    "')")
 
     let $comment :=
         if ($is-missing-source)
@@ -631,38 +612,67 @@ declare private function es-codegen:value-for-conversion(
         then es-codegen:comment("Warning: potential data loss, truncated array.")
         else ""
 
-    let $extract-reference-fn :=
-        map:put($let-expressions, $target-ref-name,
-            fn:string-join(
-                (
-                concat('    let $extract-reference-',$target-ref-name,' := '),
-                if (contains($target-ref, "#/definitions"))
-                then
-                    let $ref-namespace-prefix :=
-                        $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
-                    let $ref-namespace :=
-                        $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
-                    return
-                        if ($ref-namespace)
-                        then
-                    ("        function($path) { ",
-                     "         if ($path/*)",
-                     concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
-                     concat("         else es:init-instance($path, '", $target-ref-name, "')",
-                            "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')",
-                            "         }"))
-                        else
-                    ("        function($path) { ",
-                     "         if ($path/*)",
-                     concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
-                     concat("         else es:init-instance($path, '", $target-ref-name, "')"),
-                    "         }")
+    let $extract-fn :=
+        if ($is-reference-from-scalar-or-array)
+        then
+            map:put($let-expressions, $target-ref-name,
+                fn:string-join(
+                    (
+                    concat('    let $extract-scalar-',$target-ref-name,' := '),
+                    if (contains($target-ref, "#/definitions"))
+                    then
+                        let $ref-namespace-prefix :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+                        let $ref-namespace :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+                        return
+                            if ($ref-namespace) 
+                            then
+                                (
+                         "        function($src-node) { ",
+                  concat("            es:init-instance($src-node, '", $target-ref-name, "')"),
+                  concat("            =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')"),
+                         "        }"
+                                )
+                            else
+                  concat( "       es:init-instance(?, '", $target-ref-name, "')")
+                    else
+                  concat( "       es:init-instance(?, '", $target-ref-name, "')"),
+                        ""
+                        ),
+                    "&#10;"))
+        else
+            map:put($let-expressions, $target-ref-name,
+                fn:string-join(
+                    (
+                    concat('    let $extract-reference-',$target-ref-name,' := '),
+                    if (contains($target-ref, "#/definitions"))
+                    then
+                        let $ref-namespace-prefix :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+                        let $ref-namespace :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+                        return
+                            if ($ref-namespace)
+                            then
+                        ("        function($path) { ",
+                         "         if ($path/*)",
+                         concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                         concat("         else es:init-instance($path, '", $target-ref-name, "')",
+                                "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')",
+                                "         }"))
+                            else
+                        ("        function($path) { ",
+                         "         if ($path/*)",
+                         concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                         concat("         else es:init-instance($path, '", $target-ref-name, "')"),
+                        "         }")
 
-                else
-                    concat("        es:init-instance(?, '", $target-ref-name, "')"),
-                    ""
-                ),
-            "&#10;")
+                    else
+                        concat("        es:init-instance(?, '", $target-ref-name, "')"),
+                        ""
+                    ),
+                "&#10;")
         )
 
 
@@ -678,7 +688,7 @@ declare private function es-codegen:value-for-conversion(
         else if (empty($target-ref))
         then $wrap-if-array($path-to-property, $casting-function-name, true())
         else if ($is-reference-from-scalar-or-array)
-        then $wrap-if-array($path-to-property, $extract-scalar-fn, true())
+        then $wrap-if-array($path-to-property, "$extract-scalar-" || $target-ref-name, false())
         else $wrap-if-array($path-to-property || "/*", "$extract-reference-" || $target-ref-name, false() )
 
     let $let-expr := map:put($let-expressions, $target-property-name,
@@ -881,7 +891,7 @@ map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "', $removed-entity-type-name, '" }',
+    =>map:with("$type", "', $removed-entity-type-name, '" )',
     '&#10;',
     fn:string-join($values)
     )

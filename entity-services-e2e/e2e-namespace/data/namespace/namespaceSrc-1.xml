@@ -1,0 +1,85 @@
+<root>
+<cust:Customer CustomerID="ALFKI" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Alfreds Futterkiste</cust:CompanyName>
+<cust:ContactName>Maria Anders</cust:ContactName>
+<cust:ContactTitle>Sales Representative</cust:ContactTitle>
+<cust:Address>Obere Str. 57</cust:Address>
+<cust:City>Berlin</cust:City>
+<cust:Region>
+</cust:Region>
+<cust:PostalCode>12209</cust:PostalCode>
+<cust:Country>Germany</cust:Country>
+<cust:Phone>030-0074321</cust:Phone>
+<cust:Fax>030-0076545</cust:Fax>
+</cust:Customer>
+<Order OrderID="10250">
+<CustomerID>HANAR</CustomerID>
+<EmployeeID>1</EmployeeID>
+<OrderDate>1996-07-08T16:46:22</OrderDate>
+<RequiredDate>1996-08-05T06:26:46</RequiredDate>
+<ShippedDate>1996-07-12T00:57:04</ShippedDate>
+<ShipVia>2</ShipVia>
+<Freight>65.8300</Freight>
+<ShipName>Hanari Carnes</ShipName>
+<ShipAddress>Rua do Paço, 67</ShipAddress>
+<ShipCity>Rio de Janeiro</ShipCity>
+<ShipRegion>RJ</ShipRegion>
+<ShipPostalCode>05454-876</ShipPostalCode>
+<ShipCountry>Brazil</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<hasProductID>41</hasProductID>
+<hasUnitPrice>7.7000</hasUnitPrice>
+<Quantity>10</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>51</hasProductID>
+<hasUnitPrice>42.4000</hasUnitPrice>
+<Quantity>35</Quantity>
+<Discount>0.15</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>65</hasProductID>
+<hasUnitPrice>16.8000</hasUnitPrice>
+<Quantity>15</Quantity>
+<Discount>0.15</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+<Product ProductID="51">
+<CustomerID>123</CustomerID>
+<ProductName>Manjimup Dried Apples</ProductName>
+<SupplierID>24</SupplierID>
+<CompanyName>Marklogic</CompanyName>
+<QuantityPerUnit>50 - 300 g pkgs.</QuantityPerUnit>
+<UnitPrice>53</UnitPrice>
+<UnitsInStock>20</UnitsInStock>
+<ContactName>Srikanth</ContactName>
+<Country>India</Country>
+<Discontinued>false</Discontinued>
+</Product>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>6200</sup:RowID> 
+<sup:OrderID>43911</sup:OrderID> 
+<sup:OrderDate>2009-01-14T00:00:00</sup:OrderDate> 
+<sup:OrderPriority>Medium</sup:OrderPriority> 
+<sup:OrderQuantity>29</sup:OrderQuantity> 
+<sup:Sales>577.89</sup:Sales> 
+<sup:Discount>0.06</sup:Discount> 
+<ShipMode>Regular Air</ShipMode> 
+<sup:Profit>-53.89</sup:Profit> 
+<sup:UnitPrice>19.99</sup:UnitPrice> 
+<ShippingCost>11.17</ShippingCost> 
+<sup:CustomerID>Tamara Manning</sup:CustomerID> 
+<Province>Alberta</Province> 
+<Region>West</Region> 
+<sup:CustomerSegment>Corporate</sup:CustomerSegment> 
+<sup:ProductCategory>Furniture</sup:ProductCategory> 
+<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory> 
+<sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName> 
+<sup:ProductContainer>Large Box</sup:ProductContainer> 
+<sup:ProductBaseMargin>0.6</sup:ProductBaseMargin> 
+<sup:ShippedDate>2009-01-14T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</root>

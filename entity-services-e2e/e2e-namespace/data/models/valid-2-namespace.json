@@ -1,0 +1,96 @@
+{
+  "info": {
+    "title": "Model_2ns",
+    "version": "0.0.2",
+    "baseUri":"http://marklogic.com/ns2"
+  },
+  "definitions": {
+	  "Customer":{  
+	     "properties":{  
+	        "CustomerID":{  
+	           "datatype":"string"
+	        },
+	        "CompanyName":{  
+	           "datatype":"string"
+	        },
+	        "ContactTitle":{  
+	           "datatype":"string"
+	        },
+	        "Address":{  
+	           "datatype":"string"
+	        }
+      	 },
+	     "namespace": "http://marklogic.com/customer",
+	     "namespacePrefix": "cust",
+	     "primaryKey":"CustomerID",
+	     "required": ["CustomerID"],
+	     "rangeIndex": [ "CustomerID" ],
+	     "pathRangeIndex": [ "ContactTitle" ],
+	     "elementRangeIndex": [ "ContactTitle", "Address" ]
+   	  },
+	  "Product":{  
+   		 "properties":{  
+            "ProductName":{  
+               "datatype":"string"
+            },
+            "ProductID":{  
+               "datatype":"integer"
+            },
+            "UnitPrice":{  
+               "datatype":"double"
+            },
+            "Discontinued":{  
+               "datatype":"boolean"
+            }
+         },
+         "required": ["ProductID"],
+         "rangeIndex": [ "UnitPrice" ],
+         "pathRangeIndex": [ "Discontinued" ],
+         "elementRangeIndex": [ "ProductID" ]
+      },
+    "Order": {
+      "properties": {
+        "OrderID": {
+          "datatype":"integer"
+        },
+        "hasCustomerID": {
+          "$ref": "#/definitions/Customer"
+        },
+        "OrderDate": {
+          "datatype": "dateTime"
+        },
+        "ShippedDate":{
+          "datatype":"dateTime"
+        },
+        "ShipAddress":{
+          "datatype":"string"
+        },
+        "OrderDetails":{
+          "datatype":"array",
+          "items": {
+          	 "$ref": "#/definitions/OrderDetail"
+          }
+        }      
+      },
+      "primaryKey" : "OrderID",
+      "namespace": "http://marklogic.com/order",
+      "namespacePrefix": "ord",
+      "pathRangeIndex": [ "OrderID", "hasCustomerID" ],
+      "wordLexicon": [ "hasCustomerID" ],
+      "elementRangeIndex": [ "OrderDate", "ShippedDate", "OrderDetails" ]
+    },
+    "OrderDetail": {
+      "properties":{  
+        "hasProductID":{  
+           "datatype":"integer"
+        },
+        "hasUnitPrice":{  
+           "datatype":"double"
+        },
+        "Quantity":{  
+           "datatype":"integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+<export><workspace name="Namespace"><query name="00. README" focus="true" listorder="1" taborder="2" active="true" database="15763136252405532243" server="14437958768542462528" database-name="Documents" server-name="App-Services" mode="xquery">(:
+ : This Workspace contains reports and examples about an Entity Services scenario,
+ : to verify 9.0-3 implementation and enhancements involving addition of namespaces 
+ : in the model descriptor. Once you have deployed code artefacts  
+ : ('./gradlew -PexampleDir=e2e-namespace mldeploy')and run the e2e Namespace loader ('./gradlew rune2eNamespace') you can step
+ : through these tabs to see what happened.
+ :)</query><query name="01. load report" focus="false" listorder="2" taborder="3" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Using database entity-services-e2e-content :)
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+(
+"Raw docs (5 expected): ", count(cts:search(collection("raw"), cts:true-query())),
+"Non raw (37 expected): ", count(cts:search(collection(), cts:not-query(cts:collection-query("raw")))),
+"Namespace envelopes (20 expected): ", count(cts:search(collection("namespace-envelopes"), cts:true-query())),
+"Upconvert envelopes (15 expected): ", count(cts:search(collection("ns-translator-envelopes"), cts:true-query())),
+"Collection names", cts:collections()
+)</query><query name="02. json envelopes" focus="false" listorder="3" taborder="4" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">import module namespace es = 'http://marklogic.com/entity-services' at '/MarkLogic/entity-services/entity-services.xqy';
+import module namespace t = 'http://marklogic.com/ns2#Model_2ns-0.0.2-from-Model_1ns-0.0.1' at '/ext/nstranslate.xqy';
+import module namespace ns1 = 'http://marklogic.com/ns1#Model_1ns-0.0.1' at '/ext/valid-1-namespace.xqy';
+import module namespace ns2 = 'http://marklogic.com/ns2#Model_2ns-0.0.2' at '/ext/valid-2-namespace.xqy';
+
+(: Raw source documents :)
+let $src1 := ('/entity-services-e2e/e2e-namespace/data/namespace/namespaceSrc-1.xml')
+let $src2 := ('/entity-services-e2e/e2e-namespace/data/namespace/namespaceSrc-2.xml')
+let $src3 := ('/entity-services-e2e/e2e-namespace/data/namespace/namespaceSrc-3.xml')
+let $src4 := ('/entity-services-e2e/e2e-namespace/data/namespace/namespaceSrc-4.xml')
+
+(: Model1 envelope documents :)
+let $cust := ('/customer/namespaceSrc-2.xml')
+let $prod := ('/product/namespaceSrc-3.xml')
+let $ord := ('/order/namespaceSrc-4.xml')
+
+(: JSON envelope test :)
+let $cust-env := ns2:instance-to-envelope(ns2:extract-instance-Customer(doc($src1)), 'json')    
+let $prod-env := ns1:instance-to-envelope(ns1:extract-instance-Product(doc($src2)), 'json')
+let $ord-env :=  ns2:instance-to-envelope(ns2:extract-instance-Order(doc($src3)), 'json')       
+let $sup-env :=  ns1:instance-to-envelope(ns1:extract-instance-Superstore(doc($src4)), 'xml')  (: Expect namespace in the xml envelope for superstore :)
+
+(: JSON envelope test for upconverts:)
+let $upconvert-cust := ns2:instance-to-envelope(t:convert-instance-Customer(doc($cust)), 'json')
+let $upconvert-ord := ns2:instance-to-envelope(t:convert-instance-Order(doc($ord)), 'json')
+
+return ( $cust-env ,
+         $prod-env ,
+         $ord-env  ,
+         $sup-env  ,
+         $upconvert-cust,
+         $upconvert-ord
+       )
+       
+(:
+let $valid_sup :=  validate strict { northwind:instance-to-envelope(northwind:extract-instance-Superstore(doc($sup)))//es:instance } 
+&lt;es:envelope xmlns:es="http://marklogic.com/entity-services"&gt;{$valid_sup}&lt;/es:envelope&gt;
+:)</query><query name="03. check tables" focus="false" listorder="5" taborder="5" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sql">/* 
+ * Using database entity-services-e2e-content
+ * Making sure that TDE has extracted the data as expected
+ *
+ */
+
+-- select * from Model_1ns.Customer
+-- select * from Model_1ns.Product
+ select * from Model_1ns.Superstore
+-- select * from Model_1ns.Order_OrderDetails
+-- select * from Model_2ns.Order_OrderDetails order by OrderID
+-- select * from Model_2ns.Customer
+-- select * from Model_2ns.Product
+-- select * from Model_2ns.Order
+</query><query name="04. path-range" focus="false" listorder="6" taborder="6" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Range index test for DB properties generated :)
+xquery version "1.0-ml";
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+declare namespace sup = 'http://marklogic.com/super';
+declare namespace cust = 'http://marklogic.com/customer';
+declare namespace ord = 'http://marklogic.com/order';
+
+(: should return 4 results :)
+cts:search(fn:collection("namespace-envelopes"), cts:path-range-query("//es:instance/Product/UnitPrice","&gt;=",30)),
+(: should return 1 result :)
+cts:search(fn:collection("namespace-envelopes"), cts:path-range-query("//es:instance/cust:Customer/cust:CustomerID","=","ROMEY","collation=http://marklogic.com/collation/en")),
+(: should return 2 result :)
+cts:search(fn:collection("namespace-envelopes"), cts:path-range-query("//es:instance/sup:Superstore/sup:Unit-Price","&lt;",15))
+
+</query><query name="05. element-range" focus="false" listorder="7" taborder="7" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Range index test for DB properties generated :)
+xquery version "1.0-ml";
+import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 
+
+declare namespace sup = 'http://marklogic.com/super';
+declare namespace cust = 'http://marklogic.com/customer';
+declare namespace ord = 'http://marklogic.com/order';
+
+(: should return 3 results :)
+cts:search(fn:collection("namespace-envelopes"), cts:element-range-query(xs:QName("SupplierID"),"&lt;",15)),
+(: should return 1 result :)
+cts:search(fn:collection("namespace-envelopes"), cts:element-range-query(xs:QName("cust:Address"),"=","C/ Araquil, 67","collation=http://marklogic.com/collation/en")),
+(: should return 1 result :)
+cts:search(fn:collection("namespace-envelopes"), cts:element-range-query(xs:QName("sup:Product-Name"),"=","GE 48 Fluorescent Tube","collation=http://marklogic.com/collation/en"))
+
+</query><query name="06. triples with namespace" focus="false" listorder="11" taborder="11" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="sparql">PREFIX t: &lt;http://marklogic.com/ns1/Model_1ns-0.0.1/&gt;
+				
+SELECT ?p ?o 
+WHERE {  t:Superstore ?p ?o  }
+order by ?p</query><query name="07. Search options" focus="false" listorder="14" taborder="14" active="true" database="9717931647170227267" server="283393185839116113" database-name="entity-services-e2e-content" server-name="entity-services-e2e" mode="xquery">(: Search options test to search for entity type and customer id :)
+xquery version "1.0-ml";
+declare namespace search = "http://marklogic.com/appservices/search";
+
+let $searches := 
+(
+"entity-type:Order",
+"OrderID:10250"
+)
+
+let $get-call := function($search) {
+ xdmp:http-get("http://localhost:8202/v1/search?options=valid-1-namespace&amp;amp;q=" || fn:encode-for-uri($search),
+   &lt;options xmlns="xdmp:http"&gt;
+    &lt;authentication method="digest"&gt;
+         &lt;username&gt;admin&lt;/username&gt;
+         &lt;password&gt;admin&lt;/password&gt;
+       &lt;/authentication&gt;
+    &lt;headers&gt;
+      &lt;accept&gt;application/xml&lt;/accept&gt;
+    &lt;/headers&gt;
+   &lt;/options&gt;)
+   }
+
+
+return ($searches ! $get-call(.))[4]//search:extracted</query></workspace></export>

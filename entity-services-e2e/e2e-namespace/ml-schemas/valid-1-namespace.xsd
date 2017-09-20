@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:es="http://marklogic.com/entity-services" xmlns:sem="http://marklogic.com/semantics" elementFormDefault="qualified">
+  <xs:element name="ProductName" type="xs:string" />
+  <xs:element name="ProductID" type="xs:integer" />
+  <xs:element name="UnitPrice" type="xs:double" />
+  <xs:element name="SupplierID" type="xs:integer" />
+  <xs:element name="Discontinued" type="xs:boolean" />
+  <xs:complexType name="ProductType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="ProductName" />
+      <xs:element ref="ProductID" />
+      <xs:element minOccurs="0" ref="UnitPrice" />
+      <xs:element minOccurs="0" ref="SupplierID" />
+      <xs:element minOccurs="0" ref="Discontinued" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Product" type="ProductType" />
+  <xs:element name="OrderID" type="xs:integer" />
+  <xs:element name="hasCustomerID" type="xs:string" />
+  <xs:element name="OrderDate" type="xs:dateTime" />
+  <xs:element name="ShipAddress" type="xs:string" />
+  <xs:element name="OrderDetails" type="OrderDetailContainerType" />
+  <xs:complexType name="OrderDetailContainerType">
+    <xs:sequence>
+      <xs:element ref="OrderDetail" />
+    </xs:sequence>
+    <xs:attribute name="datatype" />
+  </xs:complexType>
+  <xs:complexType name="OrderType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="OrderID" />
+      <xs:element minOccurs="0" ref="hasCustomerID" />
+      <xs:element minOccurs="0" ref="OrderDate" />
+      <xs:element minOccurs="0" ref="ShipAddress" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Order" type="OrderType" />
+  <xs:element name="hasProductID" type="xs:integer" />
+  <xs:element name="hasUnitPrice" type="xs:double" />
+  <xs:element name="Quantity" type="xs:integer" />
+  <xs:complexType name="OrderDetailType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="hasProductID" />
+      <xs:element minOccurs="0" ref="hasUnitPrice" />
+      <xs:element minOccurs="0" ref="Quantity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderDetail" type="OrderDetailType" />
+  <xs:element name="Province" type="xs:string" />
+  <xs:element name="Region" type="xs:string" />
+  <xs:element name="ShipMode" type="xs:string" />
+  <xs:element name="ShippingCost" type="xs:double" />
+  <xs:complexType name="ShipDetailsType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="Province" />
+      <xs:element minOccurs="0" ref="Region" />
+      <xs:element minOccurs="0" ref="ShipMode" />
+      <xs:element minOccurs="0" ref="ShippingCost" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ShipDetails" type="ShipDetailsType" />
+</xs:schema>

@@ -1,0 +1,84 @@
+<root>
+<cust:Customer CustomerID="QUEEN" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Queen Cozinha</cust:CompanyName>
+<cust:ContactName>Lúcia Carvalho</cust:ContactName>
+<cust:ContactTitle>Marketing Assistant</cust:ContactTitle>
+<cust:Address>Alameda dos Canàrios, 891</cust:Address>
+<cust:City>Sao Paulo</cust:City>
+<cust:Region>SP</cust:Region>
+<cust:PostalCode>05487-020</cust:PostalCode>
+<cust:Country>Brazil</cust:Country>
+<cust:Phone>(11) 555-1189</cust:Phone>
+<cust:Fax>(11) 555-1123</cust:Fax>
+</cust:Customer>
+<Order OrderID="10314">
+<CustomerID>RATTC</CustomerID>
+<EmployeeID>3</EmployeeID>
+<OrderDate>1996-09-25T11:33:35</OrderDate>
+<RequiredDate>1996-10-23T17:21:48</RequiredDate>
+<ShippedDate>1996-10-04T23:24:51</ShippedDate>
+<ShipVia>2</ShipVia>
+<Freight>74.1600</Freight>
+<ShipName>Rattlesnake Canyon Grocery</ShipName>
+<ShipAddress>2817 Milton Dr.</ShipAddress>
+<ShipCity>Albuquerque</ShipCity>
+<ShipRegion>NM</ShipRegion>
+<ShipPostalCode>87110</ShipPostalCode>
+<ShipCountry>USA</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<hasProductID>32</hasProductID>
+<hasUnitPrice>25.6000</hasUnitPrice>
+<Quantity>40</Quantity>
+<Discount>0.1</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>58</hasProductID>
+<hasUnitPrice>10.6000</hasUnitPrice>
+<Quantity>30</Quantity>
+<Discount>0.1</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>62</hasProductID>
+<hasUnitPrice>39.4000</hasUnitPrice>
+<Quantity>25</Quantity>
+<Discount>0.1</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+<Product ProductID="7">
+<CustomerID>345</CustomerID>
+<ProductName>Uncle Bob's Organic Dried Pears</ProductName>
+<SupplierID>3</SupplierID>
+<CompanyName>Orchard</CompanyName>
+<QuantityPerUnit>12 - 1 lb pkgs.</QuantityPerUnit>
+<UnitPrice>30.000</UnitPrice>
+<UnitsInStock>20</UnitsInStock>
+<ContactName>Spartan</ContactName>
+<Country>Greece</Country>
+<Discontinued>false</Discontinued>
+</Product>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>771</sup:RowID> 
+<sup:OrderID>5509</sup:OrderID> 
+<sup:OrderDate>2009-04-07T00:00:00</sup:OrderDate> 
+<sup:OrderPriority>Low</sup:OrderPriority> 
+<sup:OrderQuantity>21</sup:OrderQuantity> 
+<sup:Sales>885.23</sup:Sales> 
+<sup:Discount>0.03</sup:Discount> 
+<ShipMode>Regular Air</ShipMode> 
+<sup:Profit>78.98</sup:Profit> 
+<sup:UnitPrice>40.89</sup:UnitPrice> 
+<ShippingCost>18.98</ShippingCost> 
+<sup:CustomerID>Ashley Jarboe</sup:CustomerID> 
+<Province>Yukon</Province> 
+<Region>Yukon</Region> 
+<sup:CustomerSegment>Home Office</sup:CustomerSegment> 
+<sup:ProductCategory>Furniture</sup:ProductCategory> 
+<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory> 
+<sup:ProductName>Eldon Executive Woodline II Cherry Finish Desk Accessories</sup:ProductName> 
+<sup:ProductContainer>Small Box</sup:ProductContainer> 
+<sup:ProductBaseMargin>0.57</sup:ProductBaseMargin> 
+<sup:ShippedDate>2012-04-14T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</root>

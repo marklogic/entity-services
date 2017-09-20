@@ -1,0 +1,79 @@
+<root>
+<cust:Customer CustomerID="BOLID" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Bólido Comidas preparadas</cust:CompanyName>
+<cust:ContactName>Martín Sommer</cust:ContactName>
+<cust:ContactTitle>Owner</cust:ContactTitle>
+<cust:Address>C/ Araquil, 67</cust:Address>
+<cust:City>Madrid</cust:City>
+<cust:Region>
+</cust:Region>
+<cust:PostalCode>28023</cust:PostalCode>
+<cust:Country>Spain</cust:Country>
+<cust:Phone>(91) 555 22 82</cust:Phone>
+<cust:Fax>(91) 555 91 99</cust:Fax>
+</cust:Customer>
+<Order OrderID="10352">
+<CustomerID>MORGK</CustomerID>
+<EmployeeID>2</EmployeeID>
+<OrderDate>1996-08-09T21:49:38</OrderDate>
+<RequiredDate>1996-09-06T14:02:33</RequiredDate>
+<ShippedDate>1996-08-13T12:09:56</ShippedDate>
+<ShipVia>3</ShipVia>
+<Freight>125.7700</Freight>
+<ShipName>Morgenstern Gesundkost</ShipName>
+<ShipAddress>Heerstr. 22</ShipAddress>
+<ShipCity>Leipzig</ShipCity>
+<ShipRegion></ShipRegion>
+<ShipPostalCode>04179</ShipPostalCode>
+<ShipCountry>Germany</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<hasProductID>28</hasProductID>
+<hasUnitPrice>36.4000</hasUnitPrice>
+<Quantity>20</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>62</hasProductID>
+<hasUnitPrice>39.4000</hasUnitPrice>
+<Quantity>12</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+<Product ProductID="28">
+<CustomerID>234</CustomerID>
+<ProductName>Rössle Sauerkraut</ProductName>
+<SupplierID>12</SupplierID>
+<CompanyName>Walmart</CompanyName>
+<QuantityPerUnit>25 - 825 g cans</QuantityPerUnit>
+<UnitPrice>45.600</UnitPrice>
+<UnitsInStock>26</UnitsInStock>
+<ContactName>Charles</ContactName>
+<Country>USA</Country>
+<Discontinued>false</Discontinued>
+</Product>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>1569</sup:RowID> 
+<sup:OrderID>11335</sup:OrderID> 
+<sup:OrderDate>2009-10-21T00:00:00</sup:OrderDate> 
+<sup:OrderPriority>High</sup:OrderPriority> 
+<sup:OrderQuantity>3</sup:OrderQuantity> 
+<sup:Sales>14.84</sup:Sales> 
+<sup:Discount>0.08</sup:Discount> 
+<ShipMode>Regular Air</ShipMode> 
+<sup:Profit>-2.42</sup:Profit> 
+<sup:UnitPrice>4.98</sup:UnitPrice> 
+<ShippingCost>0.49</ShippingCost> 
+<sup:CustomerID>Maya Herman</sup:CustomerID> 
+<Province>Saskachewan</Province> 
+<Region>Prarie</Region> 
+<sup:CustomerSegment>Small Business</sup:CustomerSegment> 
+<sup:ProductCategory>Technology</sup:ProductCategory> 
+<sup:ProductSubCategory>Office Machines</sup:ProductSubCategory> 
+<sup:ProductName>Hewlett-Packard Deskjet 940 REFURBISHED Color Inkjet Printer</sup:ProductName> 
+<sup:ProductContainer>Small Box</sup:ProductContainer> 
+<sup:ProductBaseMargin>0.36</sup:ProductBaseMargin> 
+<sup:ShippedDate>2011-05-29T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</root>

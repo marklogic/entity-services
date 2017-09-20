@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:es="http://marklogic.com/entity-services" xmlns:sem="http://marklogic.com/semantics" elementFormDefault="qualified">
+  <xs:element name="ProductName" type="xs:string" />
+  <xs:element name="ProductID" type="xs:integer" />
+  <xs:element name="UnitPrice" type="xs:double" />
+  <xs:element name="Discontinued" type="xs:boolean" />
+  <xs:complexType name="ProductType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="ProductName" />
+      <xs:element ref="ProductID" />
+      <xs:element minOccurs="0" ref="UnitPrice" />
+      <xs:element minOccurs="0" ref="Discontinued" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Product" type="ProductType" />
+  <xs:element name="hasProductID" type="xs:integer" />
+  <xs:element name="hasUnitPrice" type="xs:double" />
+  <xs:element name="Quantity" type="xs:integer" />
+  <xs:complexType name="OrderDetailType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" ref="hasProductID" />
+      <xs:element minOccurs="0" ref="hasUnitPrice" />
+      <xs:element minOccurs="0" ref="Quantity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderDetail" type="OrderDetailType" />
+</xs:schema>

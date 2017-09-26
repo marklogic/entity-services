@@ -1,0 +1,20 @@
+<ord:Order xmlns:ord="http://marklogic.com/order">
+<ord:OrderID>123</ord:OrderID>
+<ord:CustomerID>
+<Customer>
+<CustomerID>some string</CustomerID>
+</Customer>
+</ord:CustomerID>
+<ord:OrderDate>2000-01-23T17:00:26.789186-08:00</ord:OrderDate>
+<ord:ShippedDate>2000-01-23T17:00:26.789186-08:00</ord:ShippedDate>
+<ord:ShipAddress>some string</ord:ShipAddress>
+<ord:OrderDetails datatype="array">
+<OrderDetail>
+<hasProductID>
+<Product>123</Product>
+</hasProductID>
+<hasUnitPrice>123</hasUnitPrice>
+<Quantity>123</Quantity>
+</OrderDetail>
+</ord:OrderDetails>
+</ord:Order>

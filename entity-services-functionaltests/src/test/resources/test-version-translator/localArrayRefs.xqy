@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  localArrayRefSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:23:25.15556-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:11:46.341549-07:00
 
  Target Model localArrayRefTgt-0.0.2 Info:
 
@@ -52,29 +54,32 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
     $source as node()
 ) as map:map
 {
-    let $source-node := localArrayRefTgt-from-localArrayRefSrc:init-source($source, 'Order')
+    let $source-node := es:init-translation-source($source, 'Order')
 
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $OrderDate := $source-node/OrderDate ! xs:dateTime(.)
+    let $ShipAddress := $source-node/ShipAddress ! xs:string(.)
+    let $arr2arr := es:extract-array($source-node/arr2arr, xs:string#1)
     let $extract-reference-OrderDetail := 
         function($path) { 
          if ($path/*)
          then localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDetail($path)
-         else 
-           json:object()
-           =>map:with('$type', 'OrderDetail')
-           =>map:with('$ref', $path/text() ) 
-        }    return
+         else es:init-instance($path, 'OrderDetail')
+         }
+
+    let $OrderDetails := es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail)
+
+    return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Order")
-    (: The following lines are generated from the "Order" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('OrderDate',              xs:dateTime($source-node/OrderDate))
-    =>es:optional('ShipAddress',            xs:string($source-node/ShipAddress))
-    =>es:optional('arr2arr',                es:extract-array($source-node/arr2arr, xs:string#1))
-    =>es:optional('OrderDetails',           es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Order" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('OrderDate',  $OrderDate)
+    =>es:optional('ShipAddress',  $ShipAddress)
+    =>es:optional('arr2arr',  $arr2arr)
+    =>es:optional('OrderDetails',  $OrderDetails)
 
 };
     
@@ -93,41 +98,20 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDe
     $source as node()
 ) as map:map
 {
-    let $source-node := localArrayRefTgt-from-localArrayRefSrc:init-source($source, 'OrderDetail')
+    let $source-node := es:init-translation-source($source, 'OrderDetail')
+
+    let $ProductID := $source-node/ProductID ! xs:integer(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $Quantity := $source-node/Quantity ! xs:integer(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>localArrayRefTgt-from-localArrayRefSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "OrderDetail")
-    (: The following lines are generated from the "OrderDetail" entity type. :)    =>   map:with('ProductID',              xs:integer($source-node/ProductID))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>es:optional('Quantity',               xs:integer($source-node/Quantity))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "OrderDetail" entity type. :)
+    =>   map:with('ProductID',  $ProductID)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('Quantity',  $Quantity)
 
-};
-    
-
-
-declare private function localArrayRefTgt-from-localArrayRefSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function localArrayRefTgt-from-localArrayRefSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

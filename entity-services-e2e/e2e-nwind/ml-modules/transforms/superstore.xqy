@@ -20,13 +20,12 @@ declare function ingest:transform(
     let $_ :=
         if (contains($uri, "superstore"))
         then (
-        	xdmp:log(("Procesing Superstore URI " || $uri)),
-        	xdmp:document-insert(
+        xdmp:log(("Procesing Superstore URI " || $uri)),
+        xdmp:document-insert(
         		concat("/superstore",$uri=>fn:substring-after("superstore.csv")=>fn:substring-before(".json"),".xml"),
-                northwind:instance-to-envelope(
-                northwind:extract-instance-Superstore(doc($uri))),
-                (xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")), 
-                ("superstore-envelopes"))
+        		northwind:instance-to-envelope(northwind:extract-instance-Superstore(doc($uri))),
+        		(xdmp:permission("nwind-reader", "read"), xdmp:permission("nwind-writer", "insert"), xdmp:permission("nwind-writer", "update")), 
+        		("superstore-envelopes"))
         )
         else ()
     return document { " " }

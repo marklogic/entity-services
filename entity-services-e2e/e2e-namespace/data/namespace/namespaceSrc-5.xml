@@ -1,0 +1,85 @@
+<root>
+<cust:Customer CustomerID="TOMSP" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Toms Spezialitäten</cust:CompanyName>
+<cust:ContactName>Karin Josephs</cust:ContactName>
+<cust:ContactTitle>Marketing Manager</cust:ContactTitle>
+<cust:Address>Luisenstr. 48</cust:Address>
+<cust:City>Münster</cust:City>
+<cust:Region>
+</cust:Region>
+<cust:PostalCode>44087</cust:PostalCode>
+<cust:Country>Germany</cust:Country>
+<cust:Phone>0251-031259</cust:Phone>
+<cust:Fax>0251-035695</cust:Fax>
+</cust:Customer>
+<Order OrderID="11056">
+<CustomerID>EASTC</CustomerID>
+<EmployeeID>5</EmployeeID>
+<OrderDate>1998-04-28T10:20:51</OrderDate>
+<RequiredDate>1998-05-12T12:00:37</RequiredDate>
+<ShippedDate>1998-05-01T02:52:45</ShippedDate>
+<ShipVia>2</ShipVia>
+<Freight>278.9600</Freight>
+<ShipName>Eastern Connection</ShipName>
+<ShipAddress>35 King George</ShipAddress>
+<ShipCity>London</ShipCity>
+<ShipRegion></ShipRegion>
+<ShipPostalCode>WX3 6FW</ShipPostalCode>
+<ShipCountry>UK</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<hasProductID>7</hasProductID>
+<hasUnitPrice>30.0000</hasUnitPrice>
+<Quantity>40</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>55</hasProductID>
+<hasUnitPrice>24.0000</hasUnitPrice>
+<Quantity>35</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>60</hasProductID>
+<hasUnitPrice>34.0000</hasUnitPrice>
+<Quantity>50</Quantity>
+<Discount>0</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+<Product ProductID="55">
+<CustomerID>567</CustomerID>
+<ProductName>Pâté chinois</ProductName>
+<SupplierID>25</SupplierID>
+<CompanyName>Costco</CompanyName>
+<QuantityPerUnit>24 boxes x 2 pies</QuantityPerUnit>
+<UnitPrice>24.00</UnitPrice>
+<UnitsInStock>115</UnitsInStock>
+<ContactName>Brian</ContactName>
+<Country>France</Country>
+<Discontinued>false</Discontinued>
+</Product>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>1245</sup:RowID> 
+<sup:OrderID>9062</sup:OrderID> 
+<sup:OrderDate>2011-03-20T00:00:00</sup:OrderDate> 
+<sup:OrderPriority>High</sup:OrderPriority> 
+<sup:OrderQuantity>19</sup:OrderQuantity> 
+<sup:Sales>1825.42</sup:Sales> 
+<sup:Discount>0.06</sup:Discount> 
+<ShipMode>Regular Air</ShipMode> 
+<sup:Profit>1193.19</sup:Profit> 
+<sup:UnitPrice>99.23</sup:UnitPrice> 
+<ShippingCost>8.99</ShippingCost> 
+<sup:CustomerID>Eric Barreto</sup:CustomerID> 
+<Province>Newfoundland</Province> 
+<Region>Atlantic</Region> 
+<sup:CustomerSegment>Consumer</sup:CustomerSegment> 
+<sup:ProductCategory>Furniture</sup:ProductCategory> 
+<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory> 
+<sup:ProductName>GE 48 Fluorescent Tube</sup:ProductName> 
+<sup:ProductContainer>Small Pack</sup:ProductContainer> 
+<sup:ProductBaseMargin>0.35</sup:ProductBaseMargin> 
+<sup:ShippedDate>2011-03-23T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</root>

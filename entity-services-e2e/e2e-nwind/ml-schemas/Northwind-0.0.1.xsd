@@ -1,142 +1,121 @@
-<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
-  <xs:element name="CustomerID" type="xs:string"/>
-  <xs:element name="CompanyName" type="xs:string"/>
-  <xs:element name="Country" type="xs:string"/>
-  <xs:element name="ContactName" type="xs:string"/>
-  <xs:element name="ContactTitle" type="xs:string"/>
-  <xs:element name="Phone" type="xs:string"/>
-  <xs:element name="ProductID" type="xs:integer"/>
-  <xs:element name="ProductName" type="xs:string"/>
-  <xs:element name="UnitPrice" type="xs:double"/>
-  <xs:element name="SupplierID" type="xs:integer"/>
-  <xs:element name="OrderID" type="xs:integer"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="CustomerID" type="CustomerContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="OrderDate" type="xs:dateTime"/>
-  <xs:element name="ShippedDate" type="xs:dateTime"/>
-  <xs:element name="ShipAddress" type="xs:string"/>
-  <xs:element name="OrderDetails" type="OrderDetailContainerType"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ProductID" type="ProductContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="UnitPrice" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Quantity" type="xs:integer"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="OrderID" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="CustomerID" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="OrderDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ShippedDate" type="xs:dateTime" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ProductName" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="UnitPrice" type="xs:double" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="Quantity" type="xs:integer" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Discount" type="xs:string"/>
-  <!--This item is a duplicate and is commented out so as to create a valid artifact.
- <xs:element name="ShipAddress" type="ShipDetailsContainerType" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
--->
-  <xs:element name="Province" type="xs:string"/>
-  <xs:element name="Region" type="xs:string"/>
-  <xs:element name="ShipMode" type="xs:string"/>
-  <xs:element name="ShippingCost" type="xs:double"/>
-  <xs:complexType name="ShipDetailsContainerType">
-    <xs:sequence>
-      <xs:element ref="ShipDetails"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:es="http://marklogic.com/entity-services" xmlns:sem="http://marklogic.com/semantics" elementFormDefault="qualified">
+  <xs:element name="CustomerID" type="xs:string" />
+  <xs:element name="CompanyName" type="xs:string" />
+  <xs:element name="Country" type="xs:string" />
+  <xs:element name="ContactName" type="xs:string" />
+  <xs:element name="ContactTitle" type="xs:string" />
+  <xs:element name="Phone" type="xs:string" />
+  <xs:complexType name="CustomerType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="CustomerID" />
+      <xs:element minOccurs="0" ref="CompanyName" />
+      <xs:element minOccurs="0" ref="Country" />
+      <xs:element minOccurs="0" ref="ContactName" />
+      <xs:element minOccurs="0" ref="ContactTitle" />
+      <xs:element minOccurs="0" ref="Phone" />
     </xs:sequence>
-    <xs:attribute name="datatype"/>
   </xs:complexType>
-  <xs:complexType name="ProductContainerType">
-    <xs:sequence>
-      <xs:element ref="Product"/>
+  <xs:element name="Customer" type="CustomerType" />
+  <xs:element name="ProductID" type="xs:integer" />
+  <xs:element name="ProductName" type="xs:string" />
+  <xs:element name="UnitPrice" type="xs:double" />
+  <xs:element name="SupplierID" type="xs:integer" />
+  <xs:complexType name="ProductType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="ProductID" />
+      <xs:element minOccurs="0" ref="ProductName" />
+      <xs:element minOccurs="0" ref="UnitPrice" />
+      <xs:element minOccurs="0" ref="SupplierID" />
     </xs:sequence>
-    <xs:attribute name="datatype"/>
   </xs:complexType>
+  <xs:element name="Product" type="ProductType" />
+  <xs:element name="OrderID" type="xs:integer" />
+  <xs:element name="hasCustomerID" type="CustomerContainerType" />
+  <xs:element name="OrderDate" type="xs:dateTime" />
+  <xs:element name="ShippedDate" type="xs:dateTime" />
+  <xs:element name="ShipAddress" type="xs:string" />
+  <xs:element name="OrderDetails" type="OrderDetailContainerType" />
   <xs:complexType name="CustomerContainerType">
     <xs:sequence>
-      <xs:element ref="Customer"/>
+      <xs:element ref="Customer" />
     </xs:sequence>
-    <xs:attribute name="datatype"/>
+    <xs:attribute name="datatype" />
   </xs:complexType>
   <xs:complexType name="OrderDetailContainerType">
     <xs:sequence>
-      <xs:element ref="OrderDetail"/>
+      <xs:element ref="OrderDetail" />
     </xs:sequence>
-    <xs:attribute name="datatype"/>
+    <xs:attribute name="datatype" />
   </xs:complexType>
-  <xs:complexType name="CustomerType" mixed="true">
-    <xs:sequence minOccurs="0">
-      <xs:element ref="CustomerID"/>
-      <xs:element minOccurs="0" ref="CompanyName"/>
-      <xs:element minOccurs="0" ref="Country"/>
-      <xs:element minOccurs="0" ref="ContactName"/>
-      <xs:element minOccurs="0" ref="ContactTitle"/>
-      <xs:element minOccurs="0" ref="Phone"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Customer" type="CustomerType"/>
-  <xs:complexType name="ProductType" mixed="true">
-    <xs:sequence minOccurs="0">
-      <xs:element ref="ProductID"/>
-      <xs:element minOccurs="0" ref="ProductName"/>
-      <xs:element minOccurs="0" ref="UnitPrice"/>
-      <xs:element minOccurs="0" ref="SupplierID"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Product" type="ProductType"/>
   <xs:complexType name="OrderType" mixed="true">
     <xs:sequence minOccurs="0">
-      <xs:element ref="OrderID"/>
-      <xs:element minOccurs="0" ref="CustomerID"/>
-      <xs:element minOccurs="0" ref="OrderDate"/>
-      <xs:element minOccurs="0" ref="ShippedDate"/>
-      <xs:element minOccurs="0" ref="ShipAddress"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails"/>
+      <xs:element ref="OrderID" />
+      <xs:element minOccurs="0" ref="hasCustomerID" />
+      <xs:element minOccurs="0" ref="OrderDate" />
+      <xs:element minOccurs="0" ref="ShippedDate" />
+      <xs:element minOccurs="0" ref="ShipAddress" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="OrderDetails" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Order" type="OrderType"/>
+  <xs:element name="Order" type="OrderType" />
+  <xs:element name="hasProductID" type="ProductContainerType" />
+  <xs:element name="hasUnitPrice" type="xs:double" />
+  <xs:element name="Quantity" type="xs:integer" />
+  <xs:complexType name="ProductContainerType">
+    <xs:sequence>
+      <xs:element ref="Product" />
+    </xs:sequence>
+    <xs:attribute name="datatype" />
+  </xs:complexType>
   <xs:complexType name="OrderDetailType" mixed="true">
     <xs:sequence minOccurs="0">
-      <xs:element minOccurs="0" ref="ProductID"/>
-      <xs:element minOccurs="0" ref="UnitPrice"/>
-      <xs:element minOccurs="0" ref="Quantity"/>
+      <xs:element minOccurs="0" ref="hasProductID" />
+      <xs:element minOccurs="0" ref="hasUnitPrice" />
+      <xs:element minOccurs="0" ref="Quantity" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="OrderDetail" type="OrderDetailType"/>
+  <xs:element name="OrderDetail" type="OrderDetailType" />
+  <xs:element name="OrdID" type="xs:integer" />
+  <xs:element name="CustID" type="xs:string" />
+  <xs:element name="OrdDate" type="xs:dateTime" />
+  <xs:element name="Shipped-Date" type="xs:dateTime" />
+  <xs:element name="Product-Name" type="xs:string" />
+  <xs:element name="Unit-Price" type="xs:double" />
+  <xs:element name="Quant" type="xs:integer" />
+  <xs:element name="Discount" type="xs:string" />
+  <xs:element name="Ship-Address" type="ShipDetailsContainerType" />
+  <xs:complexType name="ShipDetailsContainerType">
+    <xs:sequence>
+      <xs:element ref="ShipDetails" />
+    </xs:sequence>
+    <xs:attribute name="datatype" />
+  </xs:complexType>
   <xs:complexType name="SuperstoreType" mixed="true">
     <xs:sequence minOccurs="0">
-      <xs:element ref="OrderID"/>
-      <xs:element minOccurs="0" ref="CustomerID"/>
-      <xs:element minOccurs="0" ref="OrderDate"/>
-      <xs:element minOccurs="0" ref="ShippedDate"/>
-      <xs:element minOccurs="0" ref="ProductName"/>
-      <xs:element minOccurs="0" ref="UnitPrice"/>
-      <xs:element minOccurs="0" ref="Quantity"/>
-      <xs:element minOccurs="0" ref="Discount"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="ShipAddress"/>
+      <xs:element ref="OrdID" />
+      <xs:element minOccurs="0" ref="CustID" />
+      <xs:element minOccurs="0" ref="OrdDate" />
+      <xs:element minOccurs="0" ref="Shipped-Date" />
+      <xs:element minOccurs="0" ref="Product-Name" />
+      <xs:element minOccurs="0" ref="Unit-Price" />
+      <xs:element minOccurs="0" ref="Quant" />
+      <xs:element minOccurs="0" ref="Discount" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="Ship-Address" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Superstore" type="SuperstoreType"/>
+  <xs:element name="Superstore" type="SuperstoreType" />
+  <xs:element name="Province" type="xs:string" />
+  <xs:element name="Region" type="xs:string" />
+  <xs:element name="ShipMode" type="xs:string" />
+  <xs:element name="ShippingCost" type="xs:double" />
   <xs:complexType name="ShipDetailsType" mixed="true">
     <xs:sequence minOccurs="0">
-      <xs:element minOccurs="0" ref="Province"/>
-      <xs:element minOccurs="0" ref="Region"/>
-      <xs:element minOccurs="0" ref="ShipMode"/>
-      <xs:element minOccurs="0" ref="ShippingCost"/>
+      <xs:element minOccurs="0" ref="Province" />
+      <xs:element minOccurs="0" ref="Region" />
+      <xs:element minOccurs="0" ref="ShipMode" />
+      <xs:element minOccurs="0" ref="ShippingCost" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ShipDetails" type="ShipDetailsType"/>
+  <xs:element name="ShipDetails" type="ShipDetailsType" />
 </xs:schema>

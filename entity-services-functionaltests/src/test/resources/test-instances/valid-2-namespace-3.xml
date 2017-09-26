@@ -1,0 +1,9 @@
+<OrderDetail>
+<hasProductID>
+<Product>
+<ProductID>123</ProductID>
+</Product>
+</hasProductID>
+<hasUnitPrice>123</hasUnitPrice>
+<Quantity>123</Quantity>
+</OrderDetail>

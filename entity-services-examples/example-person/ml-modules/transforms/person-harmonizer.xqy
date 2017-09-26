@@ -7,8 +7,8 @@ import module namespace functx = "http://www.functx.com"
     at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
 
 (: The extractions import :)
-import module namespace person = "http://example.org/example-person#Person-0.0.1"
-    at "/ext/person-extractions-0.0.1.xqy";
+import module namespace person = "http://example.org/example-person/Person-0.0.1"
+    at "/ext/entity-services/Person-0.0.1.xqy";
 
 (:
  Applies an extraction function to the body.  This harmonizer

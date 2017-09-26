@@ -20,16 +20,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.JSONDocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 /**
  * This class tests the various artifacts for required vs. non-required handling.
@@ -94,7 +97,7 @@ public class TestEsRequired  extends EntityServicesTestBase {
 		InputStream is = this.getClass().getResourceAsStream("/entity-type-units/database-properties.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
-		org.hamcrest.MatcherAssert.assertThat(handle.get(), org.hamcrest.Matchers.equalTo(control));
+		assertThat(handle.get(), org.hamcrest.Matchers.equalTo(control));
 
     }
 
@@ -108,8 +111,9 @@ public class TestEsRequired  extends EntityServicesTestBase {
         // save("/entity-type-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/extraction-template.xml");
 		Document filesystemXML = builder.parse(is);
-		XMLUnit.setIgnoreWhitespace(true);
-		assertXMLEqual("Control document for 'required' values extraction templates. ", filesystemXML, handle.get());
+		assertThat("Control document for 'required' values extraction templates. ",
+            handle.get(),
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
     }
 
 
@@ -122,9 +126,9 @@ public class TestEsRequired  extends EntityServicesTestBase {
         // save("/entity-type-units/schema.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/entity-type-units/schema.xml");
         Document filesystemXML = builder.parse(is);
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreComments(true);
-        assertXMLEqual("Control document for 'required' values in schemas. ", filesystemXML, handle.get());
+        assertThat("Control document for 'required' values in schemas. ",
+            handle.get(),
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
     }
 
 

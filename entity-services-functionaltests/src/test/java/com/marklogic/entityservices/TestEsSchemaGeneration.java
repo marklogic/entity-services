@@ -16,26 +16,30 @@
 package com.marklogic.entityservices;
 
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.eval.ServerEvaluationCall;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+import com.marklogic.client.io.marker.AbstractReadHandle;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the server-side function es:echema-generate($model) as
@@ -52,6 +56,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	@BeforeClass
 	public static void setupClass() {
 		setupClients();
+		TestSetup.getInstance().storeCustomSchema();
 
 		docMgr = schemasClient.newXMLDocumentManager();
 		schemas = generateSchemas();
@@ -67,7 +72,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		Map<String, StringHandle> map = new HashMap<String, StringHandle>();
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")) {
 				continue;
 			}
 
@@ -83,12 +88,29 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 		}
 		return map;
 	}
+	
+	private void validateSchema(String entityType, String testInstanceName, String imports) throws SAXException, IOException {
+		
+		logger.info("Validating for instance: "+testInstanceName);
+		try{
+		DOMHandle validateResult = evalOneResult(imports, "validate strict { doc('" + testInstanceName + "') }", new DOMHandle());
+			
+		InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
+		Document filesystemXML = builder.parse(is);
+		assertThat("Must be no validation errors for schema " + entityType + ".",
+               validateResult.get(),
+               CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
+		
+		}catch (TestEvalException e) {
+			throw new RuntimeException("Error validating "+entityType,e);
+		}
+	}
 
 	@Test
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")) {
 				continue;
 			}
 			
@@ -98,26 +120,12 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 			storeSchema(entityType, schemas.get(entityType));
 			
 			for(int i=0;i<Integer.valueOf(instances.get());i++) {
-			
+				
 				String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-"+i+".xml");
-				logger.info("Validating for instance: "+testInstanceName);
-				try{
-				DOMHandle validateResult = evalOneResult("import schema \"\" at \""+entityType.replaceAll("\\.(xml|json)", ".xsd")+"\";\n",
-					"validate strict { doc('" + testInstanceName + "') }", new DOMHandle());
-				
-				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
-				Document filesystemXML = builder.parse(is);
-				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-						validateResult.get());
-				
-				}catch (TestEvalException e) {
-					throw new RuntimeException("Error validating "+entityType,e);
-				}	
+				validateSchema(entityType, testInstanceName, "import schema \"\" at \""+entityType.replaceAll("\\.(xml|json)", ".xsd")+"\";\n");
 			}
-
+			docMgr.delete(entityType.replaceAll("\\.(xml|json)", ".xsd"));
 		}
-
 	}
 	
 	@Test
@@ -150,16 +158,45 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 
 		InputStream is = this.getClass().getResourceAsStream("/test-instances/bug43212.xml");
 		Document filesystemXML = builder.parse(is);
-		XMLUnit.setIgnoreWhitespace(true);
 		try {
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateXML.get());
-			//XMLAssert.assertXMLEqual("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
+			assertThat("Must be no validation errors for schema.",
+                validateXML.get(),
+                CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
+			//assertThat("Must be no validation errors for schema.", filesystemXML, validateJSON.get());
 		} catch (TestEvalException e) {
 			throw new RuntimeException("Error validating test bug43212SchemaGen",e);
 		}
 	}
+	
+	@Test
+	public void test1NamespaceSchema() throws SAXException, IOException {
+		
+		String entityType = "valid-1-namespace.xml";
+		
+		validateSchema(entityType, "valid-1-namespace-0.xml", "import schema 'http://marklogic.com/customer' at 'valid-1-namespace-cust.xsd';");
+		validateSchema(entityType, "valid-1-namespace-1.xml", "import schema '' at 'valid-1-namespace.xsd';");
+		validateSchema(entityType, "valid-1-namespace-2.xml", "import schema '' at 'valid-1-namespace.xsd';");
+		validateSchema(entityType, "valid-1-namespace-3.xml", "import schema '' at 'valid-1-namespace.xsd';");
+		
+		docMgr.delete("valid-1-namespace.xsd","valid-1-namespace-cust.xsd");
+	}
+	
+	@Test
+	public void test2NamespaceSchema() throws SAXException, IOException {
 
-	@AfterClass
+		String entityType = "valid-2-namespace.xml";
+		
+		validateSchema(entityType, "valid-2-namespace-0.xml", "import schema '' at 'valid-2-namespace.xsd';");
+		validateSchema(entityType, "valid-2-namespace-1.xml", "import schema '' at 'valid-2-namespace.xsd';");
+		validateSchema(entityType, "valid-2-namespace-2.xml", "import schema 'http://marklogic.com/order' at 'valid-2-namespace-ord.xsd';");
+		validateSchema(entityType, "valid-2-namespace-3.xml", "import schema '' at 'valid-2-namespace.xsd';");
+		validateSchema(entityType, "valid-2-namespace-4.xml", "import schema 'http://marklogic.com/super' at 'valid-2-namespace-sup.xsd';");
+		validateSchema(entityType, "valid-2-namespace-5.xml", "import schema '' at 'valid-2-namespace.xsd';");
+		
+		docMgr.delete("valid-2-namespace.xsd","valid-2-namespace-ord.xsd","valid-2-namespace-sup.xsd");		
+	}
+
+	//@AfterClass
 	public static void cleanupSchemas() {
 		for (String entityType : schemas.keySet()) {
 

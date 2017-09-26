@@ -1,0 +1,6 @@
+<cust:Customer xmlns:cust="http://marklogic.com/customer">
+<cust:CustomerId>ALFKI</cust:CustomerId>
+<cust:CompanyName>Alfreds Futterkiste</cust:CompanyName>
+<cust:Country>Germany</cust:Country>
+<cust:Address>Obere Str. 57</cust:Address>
+</cust:Customer>

@@ -1,44 +1,32 @@
-<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
-<xs:element name="OrderID" type="xs:string">
-</xs:element>
-<xs:element name="productName" type="OrderDetailsContainerType">
-</xs:element>
-<xs:element name="OrderDate" type="xs:dateTime">
-</xs:element>
-<xs:element name="quantity" type="xs:integer">
-</xs:element>
-<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:es="http://marklogic.com/entity-services" xmlns:sem="http://marklogic.com/semantics" elementFormDefault="qualified">
+  <xs:element name="OrderID" type="xs:string" />
+  <xs:element name="productName" type="OrderDetailsContainerType" />
+  <xs:element name="OrderDate" type="xs:dateTime" />
+  <xs:complexType name="OrderDetailsContainerType">
+    <xs:sequence>
+      <xs:element ref="OrderDetails" />
+    </xs:sequence>
+    <xs:attribute name="datatype" />
+  </xs:complexType>
+  <xs:complexType name="OrderType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="OrderID" />
+      <xs:element minOccurs="0" ref="productName" />
+      <xs:element minOccurs="0" ref="OrderDate" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Order" type="OrderType" />
+  <xs:element name="quantity" type="xs:integer" />
+  <!--
 XSD schemas prohibit duplicate element names. This element is commented out because it conflicts with another of the same name.
  <xs:element name="productName" type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"/> 
 -->
-<xs:complexType name="OrderDetailsContainerType">
-<xs:sequence>
-<xs:element ref="OrderDetails">
-</xs:element>
-</xs:sequence>
-<xs:attribute name="datatype">
-</xs:attribute>
-</xs:complexType>
-<xs:complexType name="OrderType" mixed="true">
-<xs:sequence minOccurs="0">
-<xs:element ref="OrderID">
-</xs:element>
-<xs:element minOccurs="0" ref="productName">
-</xs:element>
-<xs:element minOccurs="0" ref="OrderDate">
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-<xs:element name="Order" type="OrderType">
-</xs:element>
-<xs:complexType name="OrderDetailsType" mixed="true">
-<xs:sequence minOccurs="0">
-<xs:element ref="quantity">
-</xs:element>
-<xs:element minOccurs="0" ref="productName">
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-<xs:element name="OrderDetails" type="OrderDetailsType">
-</xs:element>
+  <xs:complexType name="OrderDetailsType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="quantity" />
+      <xs:element minOccurs="0" ref="productName" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderDetails" type="OrderDetailsType" />
 </xs:schema>

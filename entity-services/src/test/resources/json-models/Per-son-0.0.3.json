@@ -1,0 +1,36 @@
+{
+  "info": {
+    "title": "Per-son",
+    "version": "0.0.3",
+    "baseUri" : "http://example.org/mytypeschema/"
+  },
+  "definitions": {
+    "Per-son": {
+      "properties": {
+        "id": {
+          "datatype": "string"
+        },
+        "firstName": {
+          "datatype": "string"
+        },
+        "lastName": {
+          "datatype": "string"
+        },
+        "fullName": {
+          "datatype": "string"
+        },
+        "address": {
+          "datatype": "string"
+        },
+        "best-friend": {
+          "$ref": "#/definitions/Per-son"
+        },
+        "friendOf": {
+          "datatype":"array",
+          "items":{"$ref": "#/definitions/Per-son"}
+        }
+      },
+      "primaryKey":"id"
+    }
+  }
+}

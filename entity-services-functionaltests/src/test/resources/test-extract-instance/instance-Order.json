@@ -1,32 +1,32 @@
 {
-"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Order OrderID=\"10249\">\n\t<CustomerID>123</CustomerID>\n\t<EmployeeID>6</EmployeeID>\n\t<OrderDate>1996-07-05T06:39:18</OrderDate>\n\t<RequiredDate>1996-08-16T03:39:38</RequiredDate>\n\t<ShippedDate>1996-07-10T14:39:39</ShippedDate>\n\t<ShipVia>1</ShipVia>\n\t<Freight>11.6100</Freight>\n\t<ShipName>Toms Spezialitäten</ShipName>\n\t<ShipAddress>Luisenstr. 48</ShipAddress>\n\t<ShipCity>Münster</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>44087</ShipPostalCode>\n\t<ShipCountry>Germany</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>14</ProductID>\n\t\t\t<UnitPrice>18</UnitPrice>\n\t\t\t<Quantity>9</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>51</ProductID>\n\t\t\t<UnitPrice>42</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>",  
 "$type": "Order", 
+"$attachments": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Order OrderID=\"10249\">\n\t<CustomerID>123</CustomerID>\n\t<EmployeeID>6</EmployeeID>\n\t<OrderDate>1996-07-05T06:39:18</OrderDate>\n\t<RequiredDate>1996-08-16T03:39:38</RequiredDate>\n\t<ShippedDate>1996-07-10T14:39:39</ShippedDate>\n\t<ShipVia>1</ShipVia>\n\t<Freight>11.6100</Freight>\n\t<ShipName>Toms Spezialitäten</ShipName>\n\t<ShipAddress>Luisenstr. 48</ShipAddress>\n\t<ShipCity>Münster</ShipCity>\n\t<ShipRegion/>\n\t<ShipPostalCode>44087</ShipPostalCode>\n\t<ShipCountry>Germany</ShipCountry>\n\t<OrderDetails>\n\t\t<OrderDetail>\n\t\t\t<ProductID>14</ProductID>\n\t\t\t<UnitPrice>18</UnitPrice>\n\t\t\t<Quantity>9</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t\t<OrderDetail>\n\t\t\t<ProductID>51</ProductID>\n\t\t\t<UnitPrice>42</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>\n\t</OrderDetails>\n</Order>", 
 "OrderID": 10249, 
-"CustomerID": 123, 
+"CustomerID": "123", 
 "OrderDate": "1996-07-05T06:39:18", 
 "ShipAddress": "Luisenstr. 48", 
 "OrderDetails": [
 {
-"$attachments": "<OrderDetail>\n\t\t\t<ProductID>14</ProductID>\n\t\t\t<UnitPrice>18</UnitPrice>\n\t\t\t<Quantity>9</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>", 
 "$type": "OrderDetail", 
+"$attachments": "<OrderDetail>\n\t\t\t<ProductID>14</ProductID>\n\t\t\t<UnitPrice>18</UnitPrice>\n\t\t\t<Quantity>9</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>", 
 "productID": {
-"$attachments": "<ProductID>14</ProductID>", 
 "$type": "Product", 
-"$ref": "14"
+"$ref": "14", 
+"$attachments": "<ProductID>14</ProductID>"
 }, 
 "unitPrice": 18, 
 "Quantity": 9
 }, 
 {
-"$attachments": "<OrderDetail>\n\t\t\t<ProductID>51</ProductID>\n\t\t\t<UnitPrice>42</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>", 
 "$type": "OrderDetail", 
+"$attachments": "<OrderDetail>\n\t\t\t<ProductID>51</ProductID>\n\t\t\t<UnitPrice>42</UnitPrice>\n\t\t\t<Quantity>40</Quantity>\n\t\t\t<Discount>0</Discount>\n\t\t</OrderDetail>", 
 "productID": {
-"$attachments": "<ProductID>51</ProductID>", 
 "$type": "Product", 
-"$ref": "51"
+"$ref": "51", 
+"$attachments": "<ProductID>51</ProductID>"
 }, 
 "unitPrice": 42, 
 "Quantity": 40
- }
- ]
- }
+}
+]
+}

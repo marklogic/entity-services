@@ -43,7 +43,10 @@ declare private variable $esi:keys-to-element-names as map:map :=
     let $m := map:map()
     let $_ := map:put($m, "primaryKey", xs:QName("es:primary-key"))
     let $_ := map:put($m, "rangeIndex", xs:QName("es:range-index"))
+    let $_ := map:put($m, "pathRangeIndex", xs:QName("es:path-range-index"))
+    let $_ := map:put($m, "elementRangeIndex", xs:QName("es:element-range-index"))
     let $_ := map:put($m, "wordLexicon", xs:QName("es:word-lexicon"))
+    let $_ := map:put($m, "namespacePrefix", xs:QName("es:namespace-prefix"))
     let $_ := map:put($m, "baseUri", xs:QName("es:base-uri"))
     let $_ := map:put($m, "$ref", xs:QName("es:ref"))
     return $m;
@@ -100,13 +103,13 @@ declare private variable $esi:model-schematron :=
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(..))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../es:items/(es:datatype|es:ref)) else true()">Property <xsl:value-of select="local-name(..)" /> is of type "array" and must contain a valid "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../es:items/es:datatype = 'array') else true()">Property <xsl:value-of select="local-name(..)" /> cannot both be an "array" and have items of type "array".</iso:assert>
-         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and local-name(..) = ../../../es:range-index/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and local-name(..) = ../../../(es:range-index|es:path-range-index|es:element-range-index)/text())"><xsl:value-of select="."/> in property <xsl:value-of select="local-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="datatype">
          <iso:assert test=". = ('anyURI', 'base64Binary' , 'boolean' , 'byte', 'date', 'dateTime', 'dayTimeDuration', 'decimal', 'double', 'duration', 'float', 'gDay', 'gMonth', 'gMonthDay', 'gYear', 'gYearMonth', 'hexBinary', 'int', 'integer', 'long', 'negativeInteger', 'nonNegativeInteger', 'nonPositiveInteger', 'positiveInteger', 'short', 'string', 'time', 'unsignedByte', 'unsignedInt', 'unsignedLong', 'unsignedShort', 'yearMonthDuration', 'iri', 'array')" id="ES-UNSUPPORTED-DATATYPE">Property '<xsl:value-of select="xs:string(node-name(.))"/>' has unsupported datatype: <xsl:value-of select='.'/>.</iso:assert>
          <iso:assert test="if (. eq 'array') then exists(../items/*[string(node-name(.)) = ('$ref', 'datatype')]) else true()">Property <xsl:value-of select="node-name(.)" /> is of type "array" and must contain a valid "items" declaration.</iso:assert>
          <iso:assert test="if (. eq 'array') then not(../items/datatype = 'array') else true()">Property <xsl:value-of select="node-name(.)" /> cannot both be an "array" and have items of type "array".</iso:assert>
-         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and node-name(..) = ../../../rangeIndex)"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
+         <iso:assert test="not( . = ('base64Binary', 'hexBinary', 'duration', 'gMonthDay') and node-name(..) = ../../../(pathRangeIndex|elementRangeIndex|rangeIndex))"><xsl:value-of select="."/> in property <xsl:value-of select="node-name(..)" /> is unsupported for a range index.</iso:assert>
         </iso:rule>
         <iso:rule context="es:collation|collation">
          <!-- this function throws an error for invalid collations, so must be caught in alidate function -->
@@ -125,10 +128,10 @@ declare private variable $esi:model-schematron :=
         <iso:rule context="es:required">
          <iso:assert test="string(.) = (../es:properties/*/local-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
-        <iso:rule context="rangeIndex">
+        <iso:rule context="(pathRangeIndex|elementRangeIndex|rangeIndex)">
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
-        <iso:rule context="es:range-index">
+        <iso:rule context="(es:range-index|es:path-range-index|es:element-range-index)">
          <iso:assert test="string(.) = (../es:properties/*/local-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="wordLexicon">
@@ -314,7 +317,11 @@ declare function esi:model-to-xml(
                 esi:key-convert-to-xml($entity-type, "description"),
                 esi:key-convert-to-xml($entity-type, "primaryKey"),
                 esi:key-convert-to-xml($entity-type, "required"),
+                esi:key-convert-to-xml($entity-type, "namespace"),
+                esi:key-convert-to-xml($entity-type, "namespacePrefix"),
                 esi:key-convert-to-xml($entity-type, "rangeIndex"),
+                esi:key-convert-to-xml($entity-type, "pathRangeIndex"),
+                esi:key-convert-to-xml($entity-type, "elementRangeIndex"),
                 esi:key-convert-to-xml($entity-type, "wordLexicon")
             }
         }
@@ -356,7 +363,11 @@ declare function esi:model-from-xml(
             let $_ := map:put($entity-type, "properties", $properties)
             let $_ := esi:with-if-exists($entity-type, "primaryKey", data($entity-type-node/es:primary-key))
             let $_ := esi:with-if-exists($entity-type, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "namespace", $entity-type-node/es:namespace/xs:string(.))
+            let $_ := esi:with-if-exists($entity-type, "namespacePrefix", $entity-type-node/es:namespace-prefix/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "pathRangeIndex", json:to-array($entity-type-node/es:path-range-index/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "elementRangeIndex", json:to-array($entity-type-node/es:element-range-index/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "wordLexicon", json:to-array($entity-type-node/es:word-lexicon/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "description", data($entity-type-node/es:description))
             return map:put($d, fn:local-name($entity-type-node), $entity-type)
@@ -371,7 +382,7 @@ declare function esi:model-from-xml(
 (: experiment :)
 declare function esi:model-to-triples(
     $model as map:map
-) 
+)
 {
     tde:node-data-extract(xdmp:to-json($model))
 };
@@ -442,13 +453,26 @@ declare private function esi:resolve-test-reference(
         head( ($property-definition=>map:get("$ref"),
                               $property-definition=>map:get("items")=>map:get("$ref") ) )
     let $ref-name := functx:substring-after-last($reference-value, "/")
+    let $namespace-prefix :=
+        $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+    let $prefix-value :=
+        if ($namespace-prefix)
+        then $namespace-prefix || ":"
+        else ""
+    let $namespace-uri :=
+        $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+    let $nsdecl :=
+        if ($namespace-prefix)
+        then element { "X" } { namespace { $namespace-prefix } { $namespace-uri } }
+        else <x/>
+    let $qname := fn:resolve-QName($prefix-value || $ref-name, $nsdecl)
     (: is the reference value in this model :)
     let $referenced-type :=
         if (contains($reference-value, "#/definitions"))
         then
             if ($depth eq $esi:MAX_TEST_INSTANCE_DEPTH - 1)
             then
-                element {$ref-name} {
+                element {$qname} {
                     esi:ref-datatype($model, $entity-type-name, $property-name)
                       =>esi:create-test-value-from-datatype()
                 }
@@ -466,20 +490,28 @@ declare function esi:create-test-value(
     $property-name as xs:string,
     $property as map:map,
     $depth as xs:int,
-    $parent-type as xs:string
+    $parent-type as xs:string,
+    $nsdecl as element()
 ) as element()+
 {
     let $datatype := map:get($property,"datatype")
     let $items := map:get($property, "items")
     let $ref := map:get($property,"$ref")
+    let $namespace-prefix :=
+        $model=>map:get("definitions")=>map:get($entity-name)=>map:get("namespacePrefix")
+    let $prefix-value :=
+        if ($namespace-prefix)
+        then $namespace-prefix || ":"
+        else ""
+    let $qname := fn:resolve-QName($prefix-value || $property-name, $nsdecl)
     return
         if (exists($datatype))
         then
             if ($datatype eq "array")
             then
-                esi:create-test-value($model, $entity-name, $property-name, $items, $depth, "array")
+                esi:create-test-value($model, $entity-name, $property-name, $items, $depth, "array", $nsdecl)
             else
-                element { $property-name } {
+                element { $qname } {
                     if ($parent-type eq "array")
                     then attribute datatype { "array" }
                     else (),
@@ -487,12 +519,12 @@ declare function esi:create-test-value(
                 }
         else if (exists($ref))
         then
-            element { $property-name } {
+            element { $qname } {
                 if ($parent-type eq "array")
                 then attribute datatype { "array" }
                 else (),
                 esi:resolve-test-reference($model, $entity-name, $property-name, $depth)
-        }
+            }
         else
             element { $property-name } { "This should not be here" }
 };
@@ -505,15 +537,26 @@ declare function esi:create-test-instance(
 {
     if ($depth lt $esi:MAX_TEST_INSTANCE_DEPTH)
     then
-        element { $entity-type-name } {
-            let $properties := $model
+        let $entity-type := $model
                     =>map:get("definitions")
                     =>map:get($entity-type-name)
-                    =>map:get("properties")
-            for $property in map:keys($properties)
-            return
-                esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth, "none")
-        }
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $prefix-value :=
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+        let $nsdecl :=
+            if ($namespace-prefix)
+            then element { "X" } { namespace { $namespace-prefix } { $entity-type=>map:get("namespace") } }
+            else element { "X" } { }
+        let $qname := fn:resolve-QName($prefix-value || $entity-type-name, $nsdecl)
+        return
+            element { $qname } {
+                let $properties := $entity-type=>map:get("properties")
+                for $property in map:keys($properties)
+                return
+                    esi:create-test-value($model, $entity-type-name, $property, map:get($properties, $property), $depth, "none", $nsdecl)
+            }
     else ()
 };
 
@@ -553,52 +596,89 @@ declare function esi:database-properties-generate(
 ) as document-node()
 {
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
-    let $range-path-indexes := json:array()
+    let $path-range-indexes := json:array()
+    let $element-range-indexes := json:array()
     let $word-lexicons := json:array()
+    let $path-namespaces := json:object()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         return
         (
-        let $range-index-properties := map:get($entity-type, "rangeIndex")
+        let $range-index-properties := (map:get($entity-type, "rangeIndex"), map:get($entity-type, "pathRangeIndex"))
         for $range-index-property in json:array-values($range-index-properties)
-        let $ri-map := json:object()
         let $property := $entity-type=>map:get("properties")=>map:get($range-index-property)
         let $specified-datatype := esi:resolve-datatype($model, $entity-type-name, $range-index-property)
 
         let $datatype := esi:indexable-datatype($specified-datatype)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
-        let $_ := map:put($ri-map, "collation", $collation)
         let $invalid-values := "reject"
-        let $_ := map:put($ri-map, "invalid-values", $invalid-values)
-        let $_ := map:put($ri-map, "path-expression", "//es:instance/" || $entity-type-name || "/" || $range-index-property)
-        let $_ := map:put($ri-map, "range-value-positions", false())
-        let $_ := map:put($ri-map, "scalar-type", $datatype)
-        return json:array-push($range-path-indexes, $ri-map)
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $namespace-prefix-value :=
+            if ($namespace-uri)
+            then
+                (
+                map:put($path-namespaces,
+                        $namespace-prefix,
+                        json:object()
+                        =>map:with("prefix",$namespace-prefix)
+                        =>map:with("namespace-uri", $namespace-uri)),
+                $namespace-prefix || ":"
+                )
+            else ""
+        let $ri-map := json:object()
+            =>map:with("collation", $collation)
+            =>map:with("invalid-values", $invalid-values)
+            =>map:with("path-expression", "//es:instance/" || $namespace-prefix-value || $entity-type-name || "/" || $namespace-prefix-value || $range-index-property)
+            =>map:with("range-value-positions", false())
+            =>map:with("scalar-type", $datatype)
+        return json:array-push($path-range-indexes, $ri-map)
         ,
+        let $element-range-index-properties := (map:get($entity-type, "elementRangeIndex"))
+        for $element-range-index-property in json:array-values($element-range-index-properties)
+        let $property := $entity-type=>map:get("properties")=>map:get($element-range-index-property)
+        let $specified-datatype := esi:resolve-datatype($model, $entity-type-name, $element-range-index-property)
+
+        let $datatype := esi:indexable-datatype($specified-datatype)
+        let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
+        let $invalid-values := "reject"
+        let $ri-map := json:object()
+            =>map:with("collation", $collation)
+            =>map:with("invalid-values", $invalid-values)
+            =>map:with("localname",  $element-range-index-property)
+            =>map:with("namespace-uri",  $entity-type=>map:get("namespace"))
+            =>map:with("range-value-positions", false())
+            =>map:with("scalar-type", $datatype)
+        return json:array-push($element-range-indexes, $ri-map)
+        ,
+
         let $word-lexicon-properties := $entity-type=>map:get("wordLexicon")
         for $word-lexicon-property in json:array-values($word-lexicon-properties)
-        let $wl-map := json:object()
         let $property := $entity-type=>map:get("properties")=>map:get($word-lexicon-property)
         let $collation := head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
-        let $_ := map:put($wl-map, "collation", $collation)
-        let $_ := map:put($wl-map, "localname", $word-lexicon-property)
-        let $_ := map:put($wl-map, "namespace-uri", "")
+        let $namespace-uri := head( ($entity-type=>map:get("namespace"), "") )
+        let $wl-map := json:object()
+            =>map:with("collation", $collation)
+            =>map:with("localname", $word-lexicon-property)
+            =>map:with("namespace-uri", $namespace-uri)
         return json:array-push($word-lexicons, $wl-map)
         )
-    let $path-namespaces := json:array()
     let $pn := json:object()
-    let $_ := map:put($pn, "prefix", "es")
-    let $_ := map:put($pn, "namespace-uri", "http://marklogic.com/entity-services")
-    let $_ := json:array-push($path-namespaces, $pn)
-    let $database-properties := json:object()
-    let $_ := map:put($database-properties, "database-name", "%%DATABASE%%")
-    let $_ := map:put($database-properties, "schema-database", "%%SCHEMAS_DATABASE%%")
-    let $_ := map:put($database-properties, "path-namespace", $path-namespaces)
-    let $_ := map:put($database-properties, "element-word-lexicon", $word-lexicons)
-    let $_ := map:put($database-properties, "range-path-index", $range-path-indexes)
-    let $_ := map:put($database-properties, "triple-index", true())
-    let $_ := map:put($database-properties, "collection-lexicon", true())
+        =>map:with("prefix", "es")
+        =>map:with("namespace-uri", "http://marklogic.com/entity-services")
+    let $_ := map:put($path-namespaces, "es", $pn)
+    let $values := function($map) { json:to-array( for $k in $map=>map:keys() return map:get($map, $k)) }
+    let $database-properties :=
+        json:object()
+        =>map:with("database-name", "%%DATABASE%%")
+        =>map:with("schema-database", "%%SCHEMAS_DATABASE%%")
+        =>map:with("path-namespace", $values($path-namespaces))
+        =>esi:with-if-exists("element-word-lexicon", $word-lexicons)
+        =>esi:with-if-exists("range-path-index", $path-range-indexes)
+        =>esi:with-if-exists("range-element-index", $element-range-indexes)
+        =>map:with("triple-index", true())
+        =>map:with("collection-lexicon", true())
     return xdmp:to-json($database-properties)
 };
 
@@ -650,6 +730,8 @@ declare private function esi:array-element-for-datatype(
 
 declare private function esi:element-for-reference(
     $reference-declarations as map:map,
+    $imports-accumulator as map:map,
+    $model as map:map,
     $property-name as xs:string,
     $ref-value as xs:string
 ) as element(xs:element)
@@ -658,14 +740,33 @@ declare private function esi:element-for-reference(
     return
     if (contains($ref-value, "#/definitions/"))
     then
+        let $namespace := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+        let $version := $model=>map:get("info")=>map:get("version")
+        let $namespace-prefix := $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+        let $prefix-value :=
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+        let $nsdecl :=
+            if ($namespace-prefix)
+            then namespace { $namespace-prefix } { $namespace }
+            else ()
+        return
         (map:put($reference-declarations, $ref-name || "CONTAINER",
             <xs:complexType name="{ $ref-name }ContainerType">
                 <xs:sequence>
-                    <xs:element ref="{ $ref-name }" />
+                    <xs:element ref="{ $prefix-value }{ $ref-name }" >
+                    {$nsdecl}
+                    </xs:element>
                 </xs:sequence>
                 <xs:attribute name="datatype" />
             </xs:complexType>),
-        <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>)
+         map:put($imports-accumulator,
+            fn:head( ($namespace, "") ),
+            if ($namespace) then
+            <xs:import namespace="{$namespace}" schemaLocation="{$ref-name}-{$version}.xsd"/>
+            else ()),
+         <xs:element name="{ $property-name }" type="{ $ref-name }ContainerType"/>)
     else
         (map:put($reference-declarations, $ref-name || "REFERENCE",
              <xs:complexType name="{ $ref-name }ReferenceType">
@@ -686,87 +787,143 @@ declare function esi:schema-generate(
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $seen-keys := map:map()
     let $reference-declarations := map:map()
-    let $element-declarations := json:array()
+    let $element-declarations := map:map()
+    let $entity-type-declarations := map:map()
+    let $schemas := json:array()
+    let $imports := map:map()
     (: construct all the element declarations :)
     let $_ :=
         for $entity-type-name in $entity-type-names
+        let $properties-accumulator := json:array()
+        let $reference-accumulator := map:map()
+        let $types-accumulator := json:array()
+        let $imports-accumulator := map:map()
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
         let $properties := map:get($entity-type, "properties")
-        for $property-name in map:keys($properties)
-        let $property := map:get($properties, $property-name)
-        return
-            json:array-push($element-declarations,
-                esi:wrap-duplicates($seen-keys, $property-name,
-                    if (map:contains($property, "$ref"))
-                    then
-                        esi:element-for-reference(
-                            $reference-declarations,
-                            $property-name,
-                            map:get($property, "$ref"))
-                    else if (map:contains($property, "datatype"))
-                    then
-                        let $datatype := map:get($property, "datatype")
-                        let $items-map := map:get($property, "items")
-                        return
-                            if ($datatype eq "array")
-                            then
-                                if (map:contains($items-map, "$ref"))
-                                then esi:element-for-reference(
-                                    $reference-declarations,
-                                    $property-name,
-                                    map:get($items-map, "$ref"))
-                                else
-                                    esi:array-element-for-datatype(
-                                        $reference-declarations,
-                                        $property-name,
-                                        map:get($items-map, "datatype"))
-                            else esi:element-for-datatype($property-name, $datatype)
-                    else (),
-                    "schema"))
-    return
-    <xs:schema
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns:sem="http://marklogic.com/semantics"
-        elementFormDefault="qualified"
-        xmlns:es="http://marklogic.com/entity-services">
-    {
-        json:array-values($element-declarations),
-        ($reference-declarations=>map:keys()) ! map:get($reference-declarations, .),
-        for $entity-type-name in $entity-type-names
-        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
-        let $properties := map:get($entity-type, "properties")
-        return
-        (
-        <xs:complexType name="{ $entity-type-name }Type" mixed="true">
-            <xs:sequence minOccurs="0">
-            {
-                (: construct xs:element element for each property :)
+        let $_accumulate :=
+                (
                 for $property-name in map:keys($properties)
                 let $property := map:get($properties, $property-name)
-                let $datatype := map:get($property, "datatype")
                 return
-                    element xs:element {
-                    (
-                    if ($datatype eq "array")
-                    then
-                       ( attribute minOccurs { "0" },
-                         attribute maxOccurs { "unbounded" }
-                        )
-                    else if ($property-name = $required-properties )
-                    then ()
-                    else attribute minOccurs { "0" },
-                    attribute ref { $property-name }
+                json:array-push($properties-accumulator,
+                    esi:wrap-duplicates($seen-keys, "{" || $namespace || "}" || $property-name,
+                        if (map:contains($property, "$ref"))
+                        then
+                            esi:element-for-reference(
+                                $reference-accumulator,
+                                $imports-accumulator,
+                                $model,
+                                $property-name,
+                                map:get($property, "$ref"))
+                        else if (map:contains($property, "datatype"))
+                        then
+                            let $datatype := map:get($property, "datatype")
+                            let $items-map := map:get($property, "items")
+                            return
+                                if ($datatype eq "array")
+                                then
+                                    if (map:contains($items-map, "$ref"))
+                                    then esi:element-for-reference(
+                                        $reference-accumulator,
+                                        $imports-accumulator,
+                                        $model,
+                                        $property-name,
+                                        map:get($items-map, "$ref"))
+                                    else
+                                        esi:array-element-for-datatype(
+                                            $reference-accumulator,
+                                            $property-name,
+                                            map:get($items-map, "datatype"))
+                                else esi:element-for-datatype($property-name, $datatype)
+                        else (),
+                        "schema")),
+                json:array-push($types-accumulator,
+                    <xs:complexType name="{ $entity-type-name }Type" mixed="true">
+                        <xs:sequence minOccurs="0">
+                        {
+                            (: construct xs:element element for each property :)
+                            for $property-name in map:keys($properties)
+                            let $property := map:get($properties, $property-name)
+                            let $datatype := map:get($property, "datatype")
+                            return
+                                    element xs:element {
+                                    (
+                                    if ($datatype eq "array")
+                                    then
+                                       ( attribute minOccurs { "0" },
+                                         attribute maxOccurs { "unbounded" }
+                                        )
+                                    else if ($property-name = $required-properties )
+                                    then ()
+                                    else attribute minOccurs { "0" },
+                                    attribute ref { $property-name }
+                                    )
+                                }
+                        }
+                        </xs:sequence>
+                    </xs:complexType>),
+                json:array-push($types-accumulator,
+                    <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>
                     )
-                }
-            }
-            </xs:sequence>
-        </xs:complexType>,
-        <xs:element name="{ $entity-type-name }" type="{ $entity-type-name }Type"/>
+                )
+        return (
+            map:put($element-declarations, $entity-type-name, $properties-accumulator),
+            map:put($reference-declarations, $entity-type-name, $reference-accumulator),
+            map:put($entity-type-declarations, $entity-type-name, $types-accumulator),
+            map:put($imports, head( ($namespace, "") ), (map:keys($imports-accumulator) ! map:get($imports-accumulator, .)))
         )
-    }
-    </xs:schema>
+    let $names-by-namespace := map:map()
+    let $_ :=
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $extend := function($m, $ns, $et) {
+            if (map:contains($m, $ns))
+            then $m=>map:get($ns)=>json:array-push($et)
+            else map:put($m, $ns, json:to-array( $et ))
+        }
+        return
+            if (empty($namespace))
+            then $extend($names-by-namespace, "", $entity-type-name)
+            else $extend($names-by-namespace, $namespace, $entity-type-name)
+    let $_ :=
+        for $namespace in map:keys($names-by-namespace)
+        let $target-attribute :=
+            if ($namespace ne "")
+            then attribute { "targetNamespace" } { $namespace }
+            else ()
+        return
+            json:array-push($schemas,
+            <xs:schema
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:sem="http://marklogic.com/semantics"
+                elementFormDefault="qualified"
+                xmlns:es="http://marklogic.com/entity-services">
+            {$target-attribute}
+            {$imports=>map:get($namespace)}
+            {
+                functx:distinct-deep(
+                for $entity-type-name in json:array-values($names-by-namespace=>map:get($namespace))
+                let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+                let $namespace := $entity-type=>map:get("namespace")
+                let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+                return
+                (
+                    json:array-values($element-declarations=>map:get($entity-type-name)),
+                    let $m := $reference-declarations=>map:get($entity-type-name)
+                    let $keys := $m=>map:keys()
+                    for $k in $keys
+                    return map:get($m, $k),
+                    json:array-values($entity-type-declarations=>map:get($entity-type-name))
+                )
+                )
+            }
+            </xs:schema>)
+    return json:array-values($schemas)
 };
 
 
@@ -821,6 +978,24 @@ declare private function esi:ref-datatype(
 };
 
 
+
+declare private function esi:ref-prefixed-name(
+    $model as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+) as xs:string
+{
+    let $ref-type := esi:ref-type( $model, $entity-type-name, $property-name )
+    let $ref-name := esi:ref-type-name($model, $entity-type-name, $property-name)
+    let $namespace-prefix := $ref-type=>map:get("namespacePrefix")
+    let $is-local-ref := esi:is-local-reference($model, $entity-type-name, $property-name)
+    return
+        if ($namespace-prefix and $is-local-ref)
+        then $namespace-prefix || ":" || $ref-name
+        else $ref-name
+};
+
+
 declare private function esi:is-local-reference(
     $model as map:map,
     $entity-type-name as xs:string,
@@ -853,7 +1028,7 @@ declare function esi:ref-type-name(
         =>map:get("properties")
         =>map:get($property-name)
     let $ref-target := head( ($property=>map:get("$ref"),
-                              $property=>map:get("items")=>map:get("$ref") ) )
+                  $property=>map:get("items")=>map:get("$ref") ) )
     return functx:substring-after-last($ref-target, "/")
 };
 
@@ -891,6 +1066,8 @@ declare function esi:extraction-template-generate(
     let $schema-name := $model=>map:get("info")=>map:get("title")
     let $entity-type-names := $model=>map:get("definitions")=>map:keys()
     let $scalar-rows := map:map()
+    let $secure-tde-name := fn:replace(?, "-", "_")
+    let $path-namespaces := map:map()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
@@ -898,12 +1075,26 @@ declare function esi:extraction-template-generate(
         let $required-properties := ( json:array-values(map:get($entity-type, "required")), $primary-key-name)
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            (
+            map:put($path-namespaces,
+                    $namespace-prefix,
+                    <tde:path-namespace>
+                        <tde:prefix>{$namespace-prefix}</tde:prefix>
+                        <tde:namespace-uri>{$namespace-uri}</tde:namespace-uri>
+                    </tde:path-namespace>),
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
+            )
         return
         map:put($scalar-rows, $entity-type-name,
             <tde:rows>
                 <tde:row>
-                    <tde:schema-name>{ $schema-name }</tde:schema-name>
-                    <tde:view-name>{ $entity-type-name }</tde:view-name>
+                    <tde:schema-name>{ $schema-name=>$secure-tde-name() }</tde:schema-name>
+                    <tde:view-name>{ $entity-type-name=>$secure-tde-name() }</tde:view-name>
                     <tde:view-layout>sparse</tde:view-layout>
                     <tde:columns>
                     {
@@ -925,16 +1116,16 @@ declare function esi:extraction-template-generate(
                             if ( map:contains($property-definition, "$ref") )
                             then
                             <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
+                                <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) } </tde:scalar-type>
-                                <tde:val>{ $property-name }/{ esi:ref-type-name($model, $entity-type-name, $property-name) }</tde:val>
+                                <tde:val>{ $prefix-value }{ $property-name }/{ esi:ref-prefixed-name($model, $entity-type-name, $property-name) }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                             else
                             <tde:column>
-                                <tde:name>{ $property-name }</tde:name>
+                                <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                 <tde:scalar-type>{ $datatype }</tde:scalar-type>
-                                <tde:val>{ $property-name }</tde:val>
+                                <tde:val>{ $prefix-value }{$property-name }</tde:val>
                                 {$is-nullable}
                             </tde:column>
                     }
@@ -950,6 +1141,11 @@ declare function esi:extraction-template-generate(
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $primary-key-name := map:get($entity-type, "primaryKey")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $prefix-value :=
+            if ($namespace-prefix)
+            then $namespace-prefix || ":"
+            else ""
         let $required-properties := ($primary-key-name, json:array-values(map:get($entity-type, "required")))
         let $properties := map:get($entity-type, "properties")
         let $primary-key-type := map:get( map:get($properties, $primary-key-name), "datatype" )
@@ -978,22 +1174,25 @@ declare function esi:extraction-template-generate(
             return
             map:put($column-map, $property-name,
                 <tde:template>
-                    <tde:context>./{ $property-name }</tde:context>
+                    <tde:context>./{ $prefix-value }{ $property-name }</tde:context>
                     <tde:rows>
                       <tde:row>
-                        <tde:schema-name>{ $schema-name }</tde:schema-name>
-                        <tde:view-name>{ $entity-type-name }_{ $property-name }</tde:view-name>
+                        <tde:schema-name>{ $schema-name=>$secure-tde-name() }</tde:schema-name>
+                        <tde:view-name>{ $entity-type-name=>$secure-tde-name() }_{ $property-name=>$secure-tde-name() }</tde:view-name>
                         <tde:view-layout>sparse</tde:view-layout>
                         <tde:columns>
-                            <tde:column>
-                                { comment { "This column joins to property",
-                                            $primary-key-name, "of",
-                                            $entity-type-name } }
-                                <tde:name>{ $primary-key-name }</tde:name>
-                                <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
-                                <tde:val>../{ $primary-key-name }</tde:val>
-                            </tde:column>
-                            {
+                            { if (empty($primary-key-name))
+                              then comment { "Warning, no primary key in enclosing type",
+                                             $entity-type-name }
+                              else
+                                <tde:column>
+                                    { comment { "This column joins to property",
+                                                $primary-key-name, "of",
+                                                $entity-type-name } }
+                                    <tde:name>{ $primary-key-name=>$secure-tde-name() }</tde:name>
+                                    <tde:scalar-type>{ $primary-key-type }</tde:scalar-type>
+                                    <tde:val>../{ $prefix-value }{ $primary-key-name }</tde:val>
+                                </tde:column>,
                             if ($is-local-ref and empty($ref-primary-key))
                             then
                                 (
@@ -1010,16 +1209,16 @@ declare function esi:extraction-template-generate(
                                 <tde:column>
                                     { comment { "This column joins to primary key of",
                                                 $ref-type-name } }
-                                    <tde:name>{ $property-name || "_" || $ref-primary-key }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() || "_" || $ref-primary-key=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ esi:ref-datatype($model, $entity-type-name, $property-name) }</tde:scalar-type>
-                                    <tde:val>{ $ref-name }</tde:val>
+                                    <tde:val>{ $prefix-value }{ $ref-name }</tde:val>
                                 </tde:column>
                             else
                             if ($is-external-ref)
                             then
                                 <tde:column>
                                     { comment { "This column joins to primary key of an external reference" } }
-                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>string</tde:scalar-type>
                                     <tde:val>{ $ref-name }</tde:val>
                                     {$is-nullable}
@@ -1029,7 +1228,7 @@ declare function esi:extraction-template-generate(
                                     { comment { "This column holds array values from property",
                                                 $primary-key-name, "of",
                                                 $entity-type-name } }
-                                    <tde:name>{ $property-name }</tde:name>
+                                    <tde:name>{ $property-name=>$secure-tde-name() }</tde:name>
                                     <tde:scalar-type>{ $items-datatype }</tde:scalar-type>
                                     <tde:val>.</tde:val>
                                     {$is-nullable}
@@ -1046,14 +1245,14 @@ declare function esi:extraction-template-generate(
         then
         map:put($triples-templates, $entity-type-name,
             <tde:template>
-                <tde:context>./{ $entity-type-name }</tde:context>
+                <tde:context>./{ $prefix-value }{ $entity-type-name }</tde:context>
                 <tde:vars>
                     {
                         if ($primary-key-type eq "string")
                         then
-                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $primary-key-name })))</tde:val></tde:var>
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(./{ $prefix-value }{ $primary-key-name })))</tde:val></tde:var>
                         else
-                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(xs:string(./{ $primary-key-name }))))</tde:val></tde:var>
+                        <tde:var><tde:name>subject-iri</tde:name><tde:val>sem:iri(concat("{ esi:model-graph-prefix($model) }/{ $entity-type-name }/", fn:encode-for-uri(xs:string(./{ $prefix-value }{ $primary-key-name }))))</tde:val></tde:var>
                     }
                 </tde:vars>
                 <tde:triples>
@@ -1078,10 +1277,18 @@ declare function esi:extraction-template-generate(
 
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows)
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name) 
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            if ($namespace-uri)
+            then
+                $namespace-prefix || ":"
+            else ""
         return
         if (empty ( ( json:array-values(
-                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("required")),
-                        $model=>map:get("definitions")=>map:get($entity-type-name)=>map:get("primaryKey"))
+                        $entity-type=>map:get("required")),
+                        $entity-type=>map:get("primaryKey"))
                     ))
         then comment { "The standalone template for " || $entity-type-name ||
                        " cannot be generated.  Each template row requires " ||
@@ -1091,7 +1298,7 @@ declare function esi:extraction-template-generate(
         (
         map:get($triples-templates, $entity-type-name),
         <tde:template>
-            <tde:context>./{ $entity-type-name }</tde:context>
+            <tde:context>./{ $prefix-value }{ $entity-type-name }</tde:context>
             {
             map:get($scalar-rows, $entity-type-name),
             if (map:contains($array-rows, $entity-type-name))
@@ -1104,12 +1311,19 @@ declare function esi:extraction-template-generate(
         </tde:template>
         )
     return
-    <tde:template xmlns="http://marklogic.com/xdmp/tde">
+    <tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
         <tde:description>
 Extraction Template Generated from Entity Type Document
 graph uri: {esi:model-graph-iri($model)}
         </tde:description>
+        <!-- The following line matches JSON and XML instances, but may be slower to index documents. -->
+        <tde:context>//*:instance[*:info/*:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        <!-- Replace the above with the following line to match XML instances only.  This may speed up indexing
         <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
+        <!-- Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        -->
         <tde:vars>
             <tde:var><tde:name>RDF</tde:name><tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val></tde:var>
             <tde:var><tde:name>RDF_TYPE</tde:name><tde:val>sem:iri(concat($RDF, "type"))</tde:val></tde:var>
@@ -1119,6 +1333,7 @@ graph uri: {esi:model-graph-iri($model)}
                 <tde:prefix>es</tde:prefix>
                 <tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
             </tde:path-namespace>
+            { ($path-namespaces=>map:keys()) ! ($path-namespaces=>map:get(.)) }
         </tde:path-namespaces>
         {
         if ( $entity-type-templates/element() )
@@ -1133,7 +1348,9 @@ graph uri: {esi:model-graph-iri($model)}
 };
 
 
-declare private function esi:wrap-duplicates(
+(: Function made public for us by MarkLogic DataHub framework,
+ : to expose internal workings of envelopes  :)
+declare function esi:wrap-duplicates(
     $duplicate-map as map:map,
     $property-name as xs:string,
     $item as element(),
@@ -1174,9 +1391,27 @@ declare function esi:search-options-generate(
     let $seen-keys := map:map()
     let $all-constraints := json:array()
     let $all-tuples-definitions := json:array()
+    let $prefixed-type-names := json:array()
+    let $nsdecls := json:array()
     let $_ :=
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        let $namespace-uri := $entity-type=>map:get("namespace")
+        let $prefix-value :=
+            if ($namespace-uri)
+            then
+                $namespace-prefix || ":"
+            else ""
+        let $nsdecl :=
+            if ($namespace-uri)
+            then
+                (
+                json:array-push($nsdecls, namespace { $namespace-prefix } { $namespace-uri }),
+                namespace { $namespace-prefix } { $namespace-uri }
+                )
+            else ()
+        let $_ := json:array-push($prefixed-type-names, ($prefix-value || $entity-type-name))
         let $primary-key-name := map:get($entity-type, "primaryKey")
         let $properties := map:get($entity-type, "properties")
         let $tuples-range-definitions := json:array()
@@ -1191,8 +1426,8 @@ declare function esi:search-options-generate(
                 </search:constraint>,
                 "options"))
             else ()
-        let $_range-constraints :=
-            for $property-name in json:array-values(map:get($entity-type, "rangeIndex"))
+        let $_path-range-constraints :=
+            for $property-name in json:array-values( (map:get($entity-type, "rangeIndex"), map:get($entity-type, "pathRangeIndex") ) )
             let $specified-datatype := esi:resolve-datatype($model,$entity-type-name,$property-name)
             let $property := map:get($properties, $property-name)
             let $datatype := esi:indexable-datatype($specified-datatype)
@@ -1206,7 +1441,45 @@ declare function esi:search-options-generate(
                 <search:range type="xs:{ $datatype }" facet="true">
                     { $collation }
                     <search:path-index
-                        xmlns:es="http://marklogic.com/entity-services">//es:instance/{$entity-type-name}/{$property-name}</search:path-index>
+                        xmlns:es="http://marklogic.com/entity-services">{
+                        $nsdecl
+                    }//es:instance/{$prefix-value}{$entity-type-name}/{$prefix-value}{$property-name}</search:path-index>
+                </search:range>
+            let $constraint-template :=
+                <search:constraint name="{ $property-name } ">
+                    {$range-definition}
+                </search:constraint>
+            (: the collecting array will be added once after accumulation :)
+            let $_ := json:array-push($tuples-range-definitions, $range-definition)
+            return
+                json:array-push($all-constraints, esi:wrap-duplicates($seen-keys, $property-name, $constraint-template, "options"))
+        let $_element-range-constraints :=
+            for $property-name in json:array-values( map:get($entity-type, "elementRangeIndex"))
+            let $specified-datatype := esi:resolve-datatype($model,$entity-type-name,$property-name)
+            let $property := map:get($properties, $property-name)
+            let $datatype := esi:indexable-datatype($specified-datatype)
+            let $collation := if ($datatype eq "string")
+                then attribute
+                    collation {
+                        head( (map:get($property, "collation"), "http://marklogic.com/collation/en") )
+                    }
+                else ()
+            let $element-range-attributes :=
+                if ($namespace-uri)
+                then (
+                    attribute { "ns" }  { $namespace-uri },
+                    attribute { "name" } { $property-name }
+                    )
+                else (
+                    attribute { "ns" }  { "" },
+                    attribute { "name" } { $property-name }
+                    )
+            let $range-definition :=
+                <search:range type="xs:{ $datatype }" facet="true">
+                    { $collation }
+                    <search:element xmlns:es="http://marklogic.com/entity-services">{
+                        $element-range-attributes
+                    }</search:element>
                 </search:range>
             let $constraint-template :=
                 <search:constraint name="{ $property-name } ">
@@ -1240,7 +1513,7 @@ declare function esi:search-options-generate(
                     </search:word>
                 </search:constraint>, "options"))
         return ()
-    let $types-expr := string-join( $entity-type-names, "|" )
+    let $types-expr := string-join( json:array-values($prefixed-type-names), "|" )
     let $type-constraint :=
         <search:constraint name="entity-type">
             <search:value>
@@ -1267,7 +1540,9 @@ declare function esi:search-options-generate(
         <search:search-option>unfiltered</search:search-option>,
         comment { "Modify document extraction to change results returned" },
         <search:extract-document-data selected="include">
-            <search:extract-path xmlns:es="http://marklogic.com/entity-services">//es:instance/({ $types-expr })</search:extract-path>
+            <search:extract-path xmlns:es="http://marklogic.com/entity-services">{
+                for $nsdecl in json:array-values($nsdecls) return $nsdecl
+            }//es:instance/({ $types-expr })</search:extract-path>
         </search:extract-document-data>,
 
         comment { "Change or remove this additional-query to broaden search beyond entity instance documents" },

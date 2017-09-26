@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  srcHasETSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:24:52.340173-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-08-23T14:21:43.107722-07:00
 
  Target Model srcHasETTgt-0.0.2 Info:
 
@@ -49,20 +51,23 @@ declare function srcHasETTgt-from-srcHasETSrc:convert-instance-Customer(
     $source as node()
 ) as map:map
 {
-    let $source-node := srcHasETTgt-from-srcHasETSrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
+    let $ContactName := $source-node/ContactName ! xs:string(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcHasETTgt-from-srcHasETSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:string($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    =>es:optional('ContactName',            xs:string($source-node/ContactName))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('ContactName',  $ContactName)
 
 };
     
@@ -78,36 +83,19 @@ declare function srcHasETTgt-from-srcHasETSrc:convert-instance-Product(
     $source-node as node()
 ) as map:map
 {
+    let $ProductName  :=             $source-node/ProductName ! xs:string(.)
+    let $UnitPrice  :=             $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.)
+
+    return
     json:object()
     (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcHasETTgt-from-srcHasETSrc:copy-attachments($source-node)
-    =>map:with('$type', 'Product')
-    =>   map:with('ProductName',            xs:string($source-node/ProductName))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>es:optional('SupplierID',             xs:integer($source-node/SupplierID))
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "Product" )
+    =>   map:with('ProductName',  $ProductName)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>es:optional('SupplierID',  $SupplierID)
+
+};
 :)
-
-
-
-declare private function srcHasETTgt-from-srcHasETSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function srcHasETTgt-from-srcHasETSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
-};

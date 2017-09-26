@@ -1,7 +1,7 @@
 xquery version "1.0-ml";
 module namespace test = "http://marklogic.com/rest-api/resource/test-example";
 
-import module namespace translator = "http://marklogic.com/example/translator" at "/ext/translator.xqy";
+import module namespace translator = "http://marklogic.com/example/translator" at "/ext/versions-translator.xqy";
 import module namespace m = "http://marklogic.com/example/Model" at "/ext/model-original.xqy";
 import module namespace m-next = "http://marklogic.com/example/Model-next" at "/ext/model-next.xqy";
 

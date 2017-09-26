@@ -70,6 +70,7 @@
       },
       "primaryKey": "orderId",
       "required": ["orderId", "dateKey"],
+      "elementRangeIndex": [ "orderId" ],
       "rangeIndex": ["orderId", "anyURIKey", "dateKey", "dateTimeKey", "dayTimeDurationKey", "decimalKey", "doubleKey", "byteKey", "shortKey",
       				 "unsignedByteKey", "unsignedShortKey", "stringKey", "iriKey", "anyURIKey", "booleanKey", "integerKey", "negativeIntegerKey", 
       				 "nonNegativeIntegerKey", "positiveIntegerKey", "nonPositiveIntegerKey", "floatKey", "gDayKey", "gMonthKey", "gYearKey", 

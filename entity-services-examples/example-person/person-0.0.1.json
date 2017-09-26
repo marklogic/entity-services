@@ -22,7 +22,9 @@
         }
       },
       "primaryKey" : "id",
-      "required" : ["firstName", "lastName", "fullName" ]
+      "required" : ["firstName", "lastName", "fullName" ],
+      "namespace" : "http://example.org/example-person",
+      "namespacePrefix" : "p"
     }
   },
   "info": {

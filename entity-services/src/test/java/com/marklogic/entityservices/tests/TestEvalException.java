@@ -15,8 +15,6 @@
 */
 package com.marklogic.entityservices.tests;
 
-import com.marklogic.client.FailedRequestException;
-
 @SuppressWarnings("serial")
 public class TestEvalException extends RuntimeException {
 

@@ -10,17 +10,18 @@ dependencies {
   compile('com.marklogic:marklogic-client-api:4.0.1') {
     exclude(group: 'com.google.guava')
   }
-  compile('ch.qos.logback:logback-classic:1.1.7')
+  compile('ch.qos.logback:logback-classic:1.1.8')
   compile('com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.8.2')
 }
 
 // default run the nwind example
-def exampleDir = project.findProperty('exampleDir') ?: 'e2e-nwind'
+def exampleDir = project.findProperty('exampleDir') ?: 'e2e'
 
 ext {
     mlAppConfig {
         modulePaths.add( exampleDir + "/ml-modules")
         schemasPath = exampleDir + "/ml-schemas"
+        configDir = new com.marklogic.appdeployer.ConfigDir(new java.io.File(exampleDir + "/ml-config"))
         //configPath = exampleDir + "/ml-config"
         createTriggersDatabase = false
     }
@@ -30,11 +31,15 @@ task rune2eNwind(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.marklogic.entityservices.e2e.nwind.ExamplesLoader'
 }
+task rune2eNamespace(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.marklogic.entityservices.e2e.ns.NamespaceTest'
+}
 task genCode(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.marklogic.entityservices.e2e.CodeGenerator'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+    gradleVersion = '3.5'
 }

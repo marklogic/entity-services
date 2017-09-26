@@ -22,6 +22,7 @@ declare namespace xq = "http://www.w3.org/2012/xquery";
 
 
 import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
+import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
@@ -41,7 +42,7 @@ declare function inst:child-instance(
     $element as element()
 ) as map:map*
 {
-    if (empty($element/*) and exists($element/text()))
+    if (empty($element/*))
     then json:object()
             =>map:with("$type", local-name($element))
             =>map:with("$ref", $element/data())
@@ -87,7 +88,13 @@ declare function inst:instance-xml-from-document(
     $document as document-node()
 ) as element()*
 {
-    $document//es:instance/(* except es:info)
+    if ($document/element())
+    then $document//es:instance/(* except es:info)
+    else
+        let $json := inst:instance-json-from-document($document)
+        return json:transform-from-json($json, 
+            json:config("custom")=>map:with("element-namespace",""))
+        
 };
 
 declare private function inst:wrap-instance(
@@ -124,6 +131,13 @@ declare function inst:instance-json-from-document(
     $document as document-node()
 ) as object-node()*
 {
+    if ($document/object-node())
+    then
+        for $n in $document//instance/*
+        where fn:node-name($n) ne xs:QName("info")
+        return
+        object-node { fn:node-name($n) : $n }
+    else
     (inst:instance-from-document($document) !
         (inst:wrap-instance(.)=>xdmp:to-json()))/node()
 };
@@ -133,7 +147,10 @@ declare function inst:instance-get-attachments(
     $document as document-node()
 ) as item()*
 {
-    if (exists($document//es:attachments/*))
-    then $document//es:attachments/*
-    else $document//es:attachments/text()
+    if (exists($document//es:attachments/node()))
+    then $document//es:attachments/node()
+    else if (exists($document//array-node("attachments")))
+    then $document//attachments
+    else ()
 };
+

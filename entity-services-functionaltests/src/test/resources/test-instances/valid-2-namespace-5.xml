@@ -1,0 +1,6 @@
+<ShipDetails>
+<Province>some string</Province>
+<Region>some string</Region>
+<ShipMode>some string</ShipMode>
+<ShippingCost>123</ShippingCost>
+</ShipDetails>

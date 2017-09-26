@@ -286,3 +286,160 @@ declare function es:extract-array(
 };
 
 
+(:~
+ : Examine an incoming data source to normalize the extraction context.
+ : @param $source An incoming source node, which may be an element, JSON node or document.
+ : @param $entity-type-name The expected entity type name.
+ : @return Either the incoming node intact, or its contents if it's already canonicalized.
+ :)
+declare function es:init-source(
+    $source as item()*,
+    $entity-type-name as xs:string
+) as item()*
+{
+    if ( ($source instance of document-node()) )
+    then $source/node()
+    else if (exists ($source/element()[fn:local-name(.) eq $entity-type-name] ))
+    then $source/*
+    else $source
+};
+
+(:~
+ : Initializes an instance data structure, by adding a type key and, if appropriate,
+ : a ref key.
+ : @param $source-node The input to extractions. Used to determine whether to extract a pointer or an instance node.
+ : @param $entity-type-name  The name of this instance's type.
+ : @return A json object with $type key, and, if appropriate, a $ref key.
+ :)
+declare function es:init-instance(
+    $source-node as item()*,
+    $entity-type-name as xs:string
+) as json:object
+{
+    let $source-node := es:init-source($source-node, $entity-type-name)
+    let $instance := json:object()
+            =>map:with('$type', $entity-type-name)
+    return
+        if (empty($source-node/*))
+        then $instance=>map:with('$ref', $source-node/data())
+        (: Otherwise, this source node contains instance data. Populate it. :)
+        else $instance
+};
+
+
+(:~
+ : Adds namespace information to an instance.
+ : @param $instance the existing instance
+ : @param $namespace The namespace uri to be included as metadata.
+ : @param $namespace-prefix A prefix to be passed to the instance for its namespace
+ : @return The $instance, with namespace info appended
+ :)
+declare function es:with-namespace(
+    $instance as map:map,
+    $namespace as xs:string?,
+    $namespace-prefix as xs:string?
+) as json:object
+{
+    let $_ :=
+        if ($namespace-prefix)
+        then (
+            map:put($instance, "$namespace", $namespace),
+            map:put($instance, "$namespacePrefix", $namespace-prefix)
+        )
+        else ()
+    return $instance
+};
+
+
+(:~
+ : Adds the original source document to the entity instance.
+ : @param $instance The instance data, to which the source will be attached.
+ : @param $source-node The extraction context for the incoming data
+ : @param $source The unmodified source document.
+ :)
+declare function es:add-attachments(
+    $instance as map:map,
+    $source as item()*
+) as map:map
+{
+    $instance=>map:with('$attachments', $source)
+};
+
+(:~
+ : Initializes the context to convert instances from one version to another
+ : @param $source Zero or more envelopes or canonical instances.
+ : @param $entity-type-name The name of the expected Entity Type
+ : @return Zero or more sources expected to contain the canonical data of the given type.
+ :)
+declare function es:init-translation-source(
+    $source as item()*,
+    $entity-type-name as xs:string
+) as item()*
+{
+    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
+    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
+    else $source
+};
+
+
+(:~
+ : Copies attachments from an envelope document to a new intance.
+ : @param $instance  The target to which to attach source data.
+ : @param $source The envelope or canonical instance from which to copy attachments.
+ :)
+declare function es:copy-attachments(
+    $instance as map:map,
+    $source as item()*
+) as map:map
+{
+    let $attachments := $source ! fn:root(.)/es:envelope/es:attachments/node()
+    return
+    if (exists($attachments))
+    then $instance=>map:with('$attachments', $attachments)
+    else $instance
+};
+
+
+(:~
+ : Serializes attachments for storage in an envelope document.  
+ : @param $instance  The isntance holding attachment data.
+ : @param $format The format of the envlosing envlelope.
+ : @return If the format does not match that supplied in $format, then the attachment
+ :     is returned as a quoted string.  Otherwise, the attachment is returned for inline 
+       inclusion as a node.
+ :)
+declare function es:serialize-attachments(
+    $instance as map:map,
+    $envelope-format as xs:string
+) as item()*
+{
+    switch ($envelope-format)
+    case "json" return
+        object-node { 'attachments' :
+            array-node {
+                for $attachment in $instance=>map:get('$attachments')
+                let $attachment :=
+                    if ($attachment instance of document-node())
+                    then $attachment/node()
+                    else $attachment
+                return
+                    typeswitch ($attachment)
+                    case object-node() return $attachment
+                    case array-node() return $attachment
+                    default return xdmp:quote($attachment)
+            }
+        }
+    case "xml" return
+        element es:attachments {
+            for $attachment in $instance=>map:get('$attachments')
+            let $attachment :=
+                if ($attachment instance of document-node())
+                then $attachment/node()
+                else $attachment
+            return
+                typeswitch ($attachment)
+                case element() return $attachment
+                default return xdmp:quote($attachment)
+        }
+    default return fn:error( (), 'Only available envelope formats are "xml" and "json"')
+};

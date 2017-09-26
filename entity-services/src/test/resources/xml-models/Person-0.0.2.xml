@@ -27,6 +27,9 @@
        </friendOf>
      </es:properties>
      <es:primary-key>id</es:primary-key>
+      <es:namespace>http://ex.org/Person</es:namespace>
+      <es:namespace-prefix>p</es:namespace-prefix>
+      <es:word-lexicon>firstName</es:word-lexicon>
    </Person>
  </es:definitions>
 </es:model>

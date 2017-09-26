@@ -1,0 +1,79 @@
+<root>
+<cust:Customer CustomerID="ROMEY" xmlns:cust="http://marklogic.com/customer">
+<cust:CompanyName>Romero y tomillo</cust:CompanyName>
+<cust:ContactName>Alejandra Camino</cust:ContactName>
+<cust:ContactTitle>Accounting Manager</cust:ContactTitle>
+<cust:Address>Gran Vía, 1</cust:Address>
+<cust:City>Madrid</cust:City>
+<cust:Region>
+</cust:Region>
+<cust:PostalCode>28001</cust:PostalCode>
+<cust:Country>Spain</cust:Country>
+<cust:Phone>(91) 745 6200</cust:Phone>
+<cust:Fax>(91) 745 6210</cust:Fax>
+</cust:Customer>
+<Order OrderID="10361">
+<CustomerID>QUICK</CustomerID>
+<EmployeeID>4</EmployeeID>
+<OrderDate>1996-11-22T16:21:09</OrderDate>
+<RequiredDate>1996-12-20T17:53:53</RequiredDate>
+<ShippedDate>1996-12-03T22:49:27</ShippedDate>
+<ShipVia>2</ShipVia>
+<Freight>183.1700</Freight>
+<ShipName>QUICK-Stop</ShipName>
+<ShipAddress>Taucherstraße 10</ShipAddress>
+<ShipCity>Cunewalde</ShipCity>
+<ShipRegion></ShipRegion>
+<ShipPostalCode>01307</ShipPostalCode>
+<ShipCountry>Germany</ShipCountry>
+<OrderDetails>
+<OrderDetail>
+<hasProductID>39</hasProductID>
+<hasUnitPrice>14.4000</hasUnitPrice>
+<Quantity>54</Quantity>
+<Discount>0.1</Discount>
+</OrderDetail>
+<OrderDetail>
+<hasProductID>60</hasProductID>
+<hasUnitPrice>27.2000</hasUnitPrice>
+<Quantity>55</Quantity>
+<Discount>0.1</Discount>
+</OrderDetail>
+</OrderDetails>
+</Order>
+<Product ProductID="63">
+<CustomerID>456</CustomerID>
+<ProductName>Vegie-spread</ProductName>
+<SupplierID>7</SupplierID>
+<CompanyName>Korrigg</CompanyName>
+<QuantityPerUnit>15 - 625 g jars</QuantityPerUnit>
+<UnitPrice>43.9000</UnitPrice>
+<UnitsInStock>24</UnitsInStock>
+<ContactName>Peter</ContactName>
+<Country>UK</Country>
+<Discontinued>false</Discontinued>
+</Product>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>58</sup:RowID> 
+<sup:OrderID>326</sup:OrderID> 
+<sup:OrderDate>2011-06-03T00:00:00</sup:OrderDate> 
+<sup:OrderPriority>High</sup:OrderPriority> 
+<sup:OrderQuantity>34</sup:OrderQuantity> 
+<sup:Sales>218.27</sup:Sales> 
+<sup:Discount>0.03</sup:Discount> 
+<ShipMode>Regular Air</ShipMode> 
+<sup:Profit>-44.14</sup:Profit> 
+<sup:UnitPrice>5.99</sup:UnitPrice> 
+<ShippingCost>4.92</ShippingCost> 
+<sup:CustomerID>Michelle Tran</sup:CustomerID> 
+<Province>Quebec</Province> 
+<Region>Quebec</Region> 
+<sup:CustomerSegment>Consumer</sup:CustomerSegment> 
+<sup:ProductCategory>Office Supplies</sup:ProductCategory> 
+<sup:ProductSubCategory>Binders and Binder Accessories</sup:ProductSubCategory> 
+<sup:ProductName>DXL Angle-View Binders with Locking Rings, Black</sup:ProductName> 
+<sup:ProductContainer>Wrap Box</sup:ProductContainer> 
+<sup:ProductBaseMargin>0.38</sup:ProductBaseMargin> 
+<sup:ShippedDate>2011-06-04T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</root>

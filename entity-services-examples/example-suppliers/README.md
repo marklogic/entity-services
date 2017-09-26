@@ -13,6 +13,8 @@ Once you have run the example code, simply import the QConsole workspace
 provide and you will see some SQL queries and Optic API expressions to help
 you explore the data.
 
+This example uses JSON envelopes, which are new for 9.0-3
+
 
 [1] https://en.wikipedia.org/wiki/Suppliers_and_Parts_database
 

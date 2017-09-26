@@ -91,7 +91,8 @@ each of which show something about what your simulated data hub accomplished.
 Generating Code
 ---------------
 
-If you have models loaded in the database, you can invoke the Entity Services code-generation API with `./gradlew genCode`.
+If you have models loaded in the database, you can invoke the Entity Services
+code-generation API with `./gradlew genCode`.
 
 This task iterates through models in the database and creates the code
 generation artifacts for use in applications (which were the sources for

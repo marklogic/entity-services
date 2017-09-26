@@ -15,10 +15,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  srcRefDatatypeSrc, version 0.0.1
 
- Modification History:
- Generated at timestamp: 2016-12-02T14:09:00.627701-08:00
- Persisted by AUTHOR
- Date: DATE
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
+ Generated at timestamp: 2017-07-12T17:10:55.25613-07:00
 
  Target Model srcRefDatatypeTgt-0.0.2 Info:
 
@@ -52,20 +54,23 @@ declare function srcRefDatatypeTgt-from-srcRefDatatypeSrc:convert-instance-Custo
     $source as node()
 ) as map:map
 {
-    let $source-node := srcRefDatatypeTgt-from-srcRefDatatypeSrc:init-source($source, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
+
+    let $CustomerID := $source-node/CustomerID ! xs:integer(.)
+    let $CompanyName := $source-node/CompanyName ! xs:string(.)
+    let $Country := $source-node/Country ! xs:string(.)
+    let $ContactName := $source-node/ContactName ! xs:string(.)
 
     return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcRefDatatypeTgt-from-srcRefDatatypeSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Customer")
-    (: The following lines are generated from the "Customer" entity type. :)    =>   map:with('CustomerID',             xs:integer($source-node/CustomerID))
-    =>es:optional('CompanyName',            xs:string($source-node/CompanyName))
-    =>es:optional('Country',                xs:string($source-node/Country))
-    =>es:optional('ContactName',            xs:string($source-node/ContactName))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Customer" entity type. :)
+    =>   map:with('CustomerID',  $CustomerID)
+    =>es:optional('CompanyName',  $CompanyName)
+    =>es:optional('Country',  $Country)
+    =>es:optional('ContactName',  $ContactName)
 
 };
     
@@ -84,50 +89,29 @@ declare function srcRefDatatypeTgt-from-srcRefDatatypeSrc:convert-instance-Produ
     $source as node()
 ) as map:map
 {
-    let $source-node := srcRefDatatypeTgt-from-srcRefDatatypeSrc:init-source($source, 'Product')
+    let $source-node := es:init-translation-source($source, 'Product')
 
     let $extract-reference-Customer := 
         function($path) { 
          if ($path/*)
          then srcRefDatatypeTgt-from-srcRefDatatypeSrc:convert-instance-Customer($path)
-         else 
-           json:object()
-           =>map:with('$type', 'Customer')
-           =>map:with('$ref', $path/text() ) 
-        }    return
+         else es:init-instance($path, 'Customer')
+         }
+
+    let $CustomerID := $source-node/CustomerID/* ! $extract-reference-Customer(.)
+    let $UnitPrice := $source-node/UnitPrice ! xs:integer(.)
+    let $SupplierID := $source-node/SupplierID ! xs:integer(.)
+    let $Discontinued := $source-node/Discontinued ! xs:boolean(.)
+
+    return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>srcRefDatatypeTgt-from-srcRefDatatypeSrc:copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "Product")
-    (: The following lines are generated from the "Product" entity type. :)    =>es:optional('CustomerID',             $extract-reference-Customer($source-node/CustomerID/*))
-    =>es:optional('UnitPrice',              xs:integer($source-node/UnitPrice))
-    =>   map:with('SupplierID',             xs:integer($source-node/SupplierID))
-    =>es:optional('Discontinued',           xs:boolean($source-node/Discontinued))
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "Product" entity type. :)
+    =>es:optional('CustomerID',  $CustomerID)
+    =>es:optional('UnitPrice',  $UnitPrice)
+    =>   map:with('SupplierID',  $SupplierID)
+    =>es:optional('Discontinued',  $Discontinued)
 
-};
-    
-
-
-declare private function srcRefDatatypeTgt-from-srcRefDatatypeSrc:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-};
-
-
-declare private function srcRefDatatypeTgt-from-srcRefDatatypeSrc:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
 };

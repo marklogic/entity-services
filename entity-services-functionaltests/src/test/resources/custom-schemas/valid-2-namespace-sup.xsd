@@ -1,0 +1,52 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://marklogic.com/super" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+<xs:element name="OrderID" type="xs:integer">
+</xs:element>
+<xs:element name="CustomerID" type="xs:string">
+</xs:element>
+<xs:element name="OrderDate" type="xs:dateTime">
+</xs:element>
+<xs:element name="ShippedDate" type="xs:dateTime">
+</xs:element>
+<xs:element name="ProductName" type="xs:string">
+</xs:element>
+<xs:element name="UnitPrice" type="xs:double">
+</xs:element>
+<xs:element name="Quantity" type="xs:integer">
+</xs:element>
+<xs:element name="Discount" type="xs:string">
+</xs:element>
+<xs:element name="Ship-Address" type="ShipDetailsContainerType">
+</xs:element>
+<xs:complexType name="ShipDetailsContainerType">
+<xs:sequence>
+<xs:element ref="ShipDetails">
+</xs:element>
+</xs:sequence>
+<xs:attribute name="datatype">
+</xs:attribute>
+</xs:complexType>
+<xs:complexType name="SuperstoreType" mixed="true">
+<xs:sequence minOccurs="0">
+<xs:element ref="OrderID">
+</xs:element>
+<xs:element minOccurs="0" ref="CustomerID">
+</xs:element>
+<xs:element minOccurs="0" ref="OrderDate">
+</xs:element>
+<xs:element minOccurs="0" ref="ShippedDate">
+</xs:element>
+<xs:element minOccurs="0" ref="ProductName">
+</xs:element>
+<xs:element minOccurs="0" ref="UnitPrice">
+</xs:element>
+<xs:element minOccurs="0" ref="Quantity">
+</xs:element>
+<xs:element minOccurs="0" ref="Discount">
+</xs:element>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="Ship-Address">
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="Superstore" type="SuperstoreType">
+</xs:element>
+</xs:schema>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:es="http://marklogic.com/entity-services" xmlns:sem="http://marklogic.com/semantics" elementFormDefault="qualified" targetNamespace="http://marklogic.com/customer">
+  <xs:element name="CustomerID" type="xs:string" />
+  <xs:element name="CompanyName" type="xs:string" />
+  <xs:element name="Country" type="xs:string" />
+  <xs:element name="Address" type="xs:string" />
+  <xs:complexType name="CustomerType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="CustomerID" />
+      <xs:element minOccurs="0" ref="CompanyName" />
+      <xs:element minOccurs="0" ref="Country" />
+      <xs:element minOccurs="0" ref="Address" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Customer" type="CustomerType" />
+</xs:schema>

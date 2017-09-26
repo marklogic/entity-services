@@ -22,16 +22,17 @@ import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.Format;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.StringHandle;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  */
@@ -91,13 +92,13 @@ public class TestVersionTranslator extends EntityServicesTestBase {
             "import module namespace m = 'http://example.org/tests/conversion-0.0.2' at '/ext/comparison-0.0.2.xqy';",
             "<x xmlns:es=\"http://marklogic.com/entity-services\">" +
                 "<es:instance>{" +
-                "doc('instance-0.0.1.xml')=>c:convert-instance-ETOne()=>m:instance-to-canonical-xml()" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETOne()=>m:instance-to-canonical('xml')" +
                 "}</es:instance>" +
                 "<es:instance>{" +
-                "doc('instance-0.0.1.xml')=>c:convert-instance-ETTwo()=>m:instance-to-canonical-xml()" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETTwo()=>m:instance-to-canonical('xml')" +
                 "}</es:instance>" +
                 "<es:instance>{" +
-                "doc('instance-0.0.1.xml')=>c:convert-instance-ETThree()=>m:instance-to-canonical-xml()" +
+                "doc('instance-0.0.1.xml')=>c:convert-instance-ETThree()=>m:instance-to-canonical('xml')" +
                 "}</es:instance>" +
                 "</x>",
             new DOMHandle());
@@ -113,8 +114,9 @@ public class TestVersionTranslator extends EntityServicesTestBase {
         // debugOutput(expectedDoc);
         // debugOutput(actualDoc);
 
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual("checking instance conversion to target", expectedDoc, actualDoc);
+        assertThat("checking instance conversion to target",
+            expectedDoc,
+            CompareMatcher.isIdenticalTo(actualDoc).ignoreWhitespace());
         //logger.info(handle.get());
 
 

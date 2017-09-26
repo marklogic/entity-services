@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 module namespace hub = "http://marklogic.com/rest-api/resource/transition-D";
 
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy";
-import module namespace translator = "http://marklogic.com/example/translator" at "/ext/translator.xqy";
+import module namespace translator = "http://marklogic.com/example/translator" at "/ext/versions-translator.xqy";
 import module namespace m-next = "http://marklogic.com/example/Model-next" at "/ext/model-next.xqy";
 import module namespace options = "http://marklogic.com/example/options.xqy" at "/ext/options.xqy";
 import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";

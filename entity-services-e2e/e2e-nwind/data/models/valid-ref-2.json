@@ -55,7 +55,7 @@
         "OrderID": {
           "datatype":"integer"
         },
-        "CustomerID": {
+        "hasCustomerID": {
           "$ref": "#/definitions/Customer"
         },
         "OrderDate": {
@@ -78,16 +78,16 @@
         }      
       },
       "primaryKey" : "OrderID",
-      "rangeIndex" : [ "OrderID","ShipName","CustomerID" ],
-      "wordLexicon" : [ "OrderID","CustomerID" ]
+      "rangeIndex" : [ "OrderID","ShipName","hasCustomerID" ],
+      "wordLexicon" : [ "OrderID","hasCustomerID" ]
     },
     "OrderDetail": {
       "properties":{  
-        "ProductID":{  
+        "hasProductID":{  
            "$ref":"#/definitions/Product"
         },
-        "UnitPrice":{  
-           "datatype":"integer"
+        "hasUnitPrice":{  
+           "datatype":"double"
         },
         "Quantity":{  
            "datatype":"integer"

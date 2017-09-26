@@ -15,96 +15,41 @@
  */
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.*;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.marklogic.client.eval.EvalResult.Type;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotNotFoundException;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.sparql.graph.GraphFactory;
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.eval.ServerEvaluationCall;
 import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.FileHandle;
 import com.marklogic.client.io.InputStreamHandle;
 import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
-
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotNotFoundException;
+import org.apache.jena.sparql.graph.GraphFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
+import org.xmlunit.diff.ElementSelectors;
+import org.xmlunit.matchers.CompareMatcher;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.jena.sparql.algebra.Transformer;
-import org.apache.jena.sparql.function.library.e;
-import com.marklogic.client.document.DocumentWriteSet;
-import com.marklogic.client.document.TextDocumentManager;
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.DocumentMetadataHandle;
-import com.marklogic.client.io.FileHandle;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.junit.Assert.*;
+import static org.xmlunit.builder.DiffBuilder.compare;
 
 
 @SuppressWarnings("unused")
@@ -121,8 +66,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     
     private void checkXMLRoundTrip(String message, Document original, Document actual) {
     	
-    	XMLUnit.setIgnoreWhitespace(true);
-    	XMLAssert.assertXMLEqual(message, original, actual);
+    	assertThat(message, actual, CompareMatcher
+            .isSimilarTo(original)
+            .ignoreWhitespace()
+            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)));
     }
     
     
@@ -146,11 +93,11 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testValidJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
         for (String entityType : entityTypes) {
         	ObjectMapper mapper = new ObjectMapper();
-        	logger.info("Checking "+entityType);
-        	
+        	        	
         	if (entityType.contains(".xml")||entityType.contains("person.json")||entityType.contains("-Src.json")||entityType.contains("-Tgt.json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
 
                 if ( entityType.toString().endsWith(".json")) {
+                	logger.info("Checking "+entityType);
                 	InputStream is = this.getClass().getResourceAsStream("/json-entity-types/"+entityType);
                 	JsonNode original = mapper.readValue(is, JsonNode.class);
                 	JacksonHandle handle  = evalOneResult("", "fn:doc('"+ entityType  + "')", new JacksonHandle());
@@ -167,10 +114,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     public void testValidXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {
     	for (String entityType : entityTypes) {
           ObjectMapper mapper = new ObjectMapper();
-          logger.info("Checking... "+entityType);
-            	
+                      	
             	if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains("jpg")) { continue; }
-            	
+            	logger.info("Checking... "+entityType);
             	String jsonFileName = entityType.toString().replace(".xml", ".json");
             	
             	InputStream jsonInputStreamControl = this.getClass().getResourceAsStream("/json-entity-types/" + jsonFileName);
@@ -788,9 +734,9 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 	
 		bindings.replaceAll(" ","");
-		System.out.println("bindings:::"+bindings);
+		//System.out.println("bindings:::"+bindings);
 		control.toString().replaceAll(" ","");
-		System.out.println("control:::"+control.toString());
+		//System.out.println("control:::"+control.toString());
 		
   	    //assertEquals(control.toString(),bindings);
 		assertNotNull(bindings);
@@ -807,10 +753,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     			JacksonHandle handle = null;
     			try {
     				handle = evalOneResult("", "es:database-properties-generate(es:model-validate(fn:doc('invalid-db-prop-rangeindex.json')))", new JacksonHandle());	
-    				//fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
+    				fail("eval should throw ES-MODEL-INVALID  exception for model-validate with rangeIndex error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("gYearMonth in property YearsofService is unsupported for a range index."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("gMonthDay in property YearsofService is unsupported for a range index."));
     	}
     }
 
@@ -860,18 +806,18 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 		
 		DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
 		Document actualXML = handle.get();
-		XMLUnit.setIgnoreWhitespace(true);
 		//debugOutput(expectedXML);
 		//debugOutput(actualXML);
 		
-		DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
+		Diff diff = compare(expectedXML).withTest(actualXML).ignoreWhitespace().build();
 
-		@SuppressWarnings("unchecked")
-		List<Difference> l = diff.getAllDifferences();
-		for (Difference d : l) {
+		for (Difference d : diff.getDifferences()) {
 			System.out.println(d.toString());
 		}
-		XMLAssert.assertXMLEqual(message, expectedXML, actualXML);
+		assertThat(message, actualXML,
+            CompareMatcher.isSimilarTo(expectedXML)
+                .ignoreWhitespace()
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)));
 	}
     
     /*

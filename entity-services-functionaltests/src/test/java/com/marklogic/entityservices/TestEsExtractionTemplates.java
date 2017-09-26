@@ -16,33 +16,28 @@
 
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.client.document.DocumentPage;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.io.StringHandle;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 public class TestEsExtractionTemplates extends EntityServicesTestBase {
 	
@@ -197,9 +192,8 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 
             //debugOutput(template);
 
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-					template);
+			assertThat("Must be no validation errors for schema " + entityType + ".",
+					template, CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
 			
 		}
 
@@ -226,10 +220,9 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 
             //debugOutput(template);
 
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-					template);
-			
+			assertThat("Must be no validation errors for schema " + entityType + ".", template,
+                CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
+
 		}
 	
 	@Test
@@ -253,9 +246,9 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 
             //debugOutput(template);
 
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-					template);
+			assertThat("Must be no validation errors for schema " + entityType + ".",
+                template,
+                CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
 			
 	}
 	
@@ -279,9 +272,9 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 
             //debugOutput(template);
 
-			XMLUnit.setIgnoreWhitespace(true);
-			XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-					template);
+			assertThat("Must be no validation errors for schema " + entityType + ".",
+				template,
+                CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
 			
 	}
 

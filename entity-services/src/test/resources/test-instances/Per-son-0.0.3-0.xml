@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<Per-son>
+  <id>some string</id>
+  <firstName>some string</firstName>
+  <lastName>some string</lastName>
+  <fullName>some string</fullName>
+  <address>some string</address>
+  <best-friend>
+    <Per-son>
+      <id>some string</id>
+      <firstName>some string</firstName>
+      <lastName>some string</lastName>
+      <fullName>some string</fullName>
+      <address>some string</address>
+      <best-friend>
+        <Per-son>some string</Per-son>
+      </best-friend>
+      <friendOf datatype="array">
+        <Per-son>some string</Per-son>
+      </friendOf>
+    </Per-son>
+  </best-friend>
+  <friendOf datatype="array">
+    <Per-son>
+      <id>some string</id>
+      <firstName>some string</firstName>
+      <lastName>some string</lastName>
+      <fullName>some string</fullName>
+      <address>some string</address>
+      <best-friend>
+        <Per-son>some string</Per-son>
+      </best-friend>
+      <friendOf datatype="array">
+        <Per-son>some string</Per-son>
+      </friendOf>
+    </Per-son>
+  </friendOf>
+</Per-son>
+

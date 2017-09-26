@@ -1,0 +1,10 @@
+{
+"$type": "Customer", 
+"$namespace": "http://marklogic.com/customer", 
+"$namespacePrefix": "cust", 
+"$attachments": "<cust:Customer CustomerID=\"ALFKI\" xmlns:cust=\"http://marklogic.com/customer\">\n<cust:CompanyName>Alfreds Futterkiste</cust:CompanyName>\n<cust:ContactName>Maria Anders</cust:ContactName>\n<cust:ContactTitle>Sales Representative</cust:ContactTitle>\n<cust:Address>Obere Str. 57</cust:Address>\n<cust:City>Berlin</cust:City>\n<cust:Region>\n</cust:Region>\n<cust:PostalCode>12209</cust:PostalCode>\n<cust:Country>Germany</cust:Country>\n<cust:Phone>030-0074321</cust:Phone>\n<cust:Fax>030-0076545</cust:Fax>\n</cust:Customer>", 
+"CustomerId": "ALFKI", 
+"CompanyName": "Alfreds Futterkiste", 
+"Country": "Germany", 
+"Address": "Obere Str. 57"
+}

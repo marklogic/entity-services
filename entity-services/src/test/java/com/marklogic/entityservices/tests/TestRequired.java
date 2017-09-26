@@ -17,21 +17,23 @@ package com.marklogic.entityservices.tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.marklogic.client.document.DocumentManager;
 import com.marklogic.client.io.*;
 import org.assertj.core.api.SoftAssertions;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * This class tests the various artifacts for required vs. non-required handling.
@@ -83,13 +85,17 @@ public class TestRequired  extends EntityServicesTestBase {
         JacksonHandle handle;
 
         handle = evalOneResult("", "fn:doc('" + entityType + "')=>es:database-properties-generate()", new JacksonHandle());
-        // save("/model-units/database-properties.json", handle.get());
+        ObjectMapper mapper = new ObjectMapper();
 
-		ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = handle.get();
+        ObjectWriter writer = mapper.writer();
+
+        // save("/model-units/database-properties.json", writer.writeValueAsString(node));
+
 		InputStream is = this.getClass().getResourceAsStream("/model-units/database-properties.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 
-		org.hamcrest.MatcherAssert.assertThat(handle.get(), org.hamcrest.Matchers.equalTo(control));
+		assertThat(handle.get(), org.hamcrest.Matchers.equalTo(control));
 
     }
 
@@ -103,8 +109,9 @@ public class TestRequired  extends EntityServicesTestBase {
         // save("/model-units/extraction-template.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/model-units/extraction-template.xml");
 		Document filesystemXML = builder.parse(is);
-		XMLUnit.setIgnoreWhitespace(true);
-		assertXMLEqual("Control document for 'required' values extraction templates. ", filesystemXML, handle.get());
+		assertThat("Control document for 'required' values extraction templates. ",
+            handle.get(),
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
     }
 
 
@@ -117,9 +124,8 @@ public class TestRequired  extends EntityServicesTestBase {
         // save("/model-units/schema.xml", toWrite);
         InputStream is = this.getClass().getResourceAsStream("/model-units/schema.xml");
         Document filesystemXML = builder.parse(is);
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreComments(true);
-        assertXMLEqual("Control document for 'required' values in schemas. ", filesystemXML, handle.get());
+        assertThat("Control document for 'required' values in schemas. ", handle.get(),
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace());
     }
 
 

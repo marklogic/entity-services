@@ -24,5 +24,6 @@ Uses codeGen:
 
 * extraction template (OOTB)
 * instance converter (customized several ways)
+* namespace configuration for instance data
 
 

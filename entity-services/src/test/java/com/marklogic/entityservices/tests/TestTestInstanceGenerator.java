@@ -15,22 +15,20 @@
  */
 package com.marklogic.entityservices.tests;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.transform.TransformerException;
-
-import org.apache.jena.atlas.logging.Log;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
+import com.marklogic.client.eval.EvalResult;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.io.DOMHandle;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
-import com.marklogic.client.eval.EvalResult;
-import com.marklogic.client.eval.EvalResultIterator;
-import com.marklogic.client.io.DOMHandle;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests server function es:model-get-test-instances( $model )
@@ -73,8 +71,7 @@ public class TestTestInstanceGenerator extends EntityServicesTestBase {
                 InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
                 Document controlDoc = builder.parse(is);
 
-                XMLUnit.setIgnoreWhitespace(true);
-                XMLAssert.assertXMLEqual(controlDoc, actualDoc);
+                assertThat(actualDoc, CompareMatcher.isIdenticalTo(controlDoc).ignoreWhitespace());
                 resultNumber++;
             }
         }

@@ -15,27 +15,23 @@
  */
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.transform.TransformerException;
-
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
 import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
 import com.marklogic.client.io.JacksonHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
+
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests server function es:entity-type-get-test-instances( $entity-type )
@@ -77,12 +73,13 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 				logger.debug("Saved file to " + outputFile.getName());
 				os.close(); */
 				
-				logger.debug("Control document: " + entityTypeFileName);
+				//logger.debug("Control document: " + entityTypeFileName);
 				InputStream is = this.getClass().getResourceAsStream("/test-instances/" + entityTypeFileName);
 				Document controlDoc = builder.parse(is);
 				
-				XMLUnit.setIgnoreWhitespace(true);
-				XMLAssert.assertXMLEqual("Failed validation of : "+entityTypeFileName, controlDoc, actualDoc);
+				assertThat("Failed validation of : "+entityTypeFileName,
+                    actualDoc,
+                    CompareMatcher.isIdenticalTo(controlDoc).ignoreWhitespace());
 				resultNumber++;
 			}
 		}

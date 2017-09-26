@@ -15,15 +15,6 @@
  */
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +22,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.marklogic.client.io.JacksonHandle;
 import com.marklogic.client.semantics.SPARQLQueryManager;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 
@@ -206,6 +205,60 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testSPARQLPropertyOrderId.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+		
+		assertEquals(control, bindings);
+	}
+	
+	@Test
+	public void testModel1Namespace() throws JsonGenerationException, JsonMappingException, IOException {
+		
+		// This test verifies that property has RDFtype,title,rangeIndex, wordLexicon,required,title,version,description,collation and data type
+		String query =  "PREFIX t: <http://marklogic.com/ns1/Model_1ns-0.0.1/>"
+				+"SELECT ?p ?o WHERE { t:Customer ?p ?o } order by ?s";
+					
+		JacksonHandle handle= queryMgr.executeSelect(queryMgr.newQueryDefinition(query), new JacksonHandle());
+		JsonNode results = handle.get();
+		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testModel1Namespace.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+		
+		assertEquals(control, bindings);
+	}
+	
+	@Test
+	public void testModel2NamespaceOrder() throws JsonGenerationException, JsonMappingException, IOException {
+		
+		// This test verifies that property has RDFtype,title,rangeIndex, wordLexicon,required,title,version,description,collation and data type
+		String query =  "PREFIX t: <http://marklogic.com/ns2/Model_2ns-0.0.1/>"
+				+"SELECT ?p ?o WHERE { t:Order ?p ?o }	order by ?s";
+					
+		JacksonHandle handle= queryMgr.executeSelect(queryMgr.newQueryDefinition(query), new JacksonHandle());
+		JsonNode results = handle.get();
+		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testModel2NamespaceOrder.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+		
+		assertEquals(control, bindings);
+	}
+	
+	@Test
+	public void testModel2NamespaceSuper() throws JsonGenerationException, JsonMappingException, IOException {
+		
+		// This test verifies that property has RDFtype,title,rangeIndex, wordLexicon,required,title,version,description,collation and data type
+		String query =  "PREFIX t: <http://marklogic.com/ns2/Model_2ns-0.0.1/>"
+				+"SELECT ?p ?o WHERE { t:Superstore ?p ?o }	order by ?s";
+					
+		JacksonHandle handle= queryMgr.executeSelect(queryMgr.newQueryDefinition(query), new JacksonHandle());
+		JsonNode results = handle.get();
+		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testModel2NamespaceSuper.json");
 		JsonNode control = mapper.readValue(is, JsonNode.class);
 		
 		assertEquals(control, bindings);

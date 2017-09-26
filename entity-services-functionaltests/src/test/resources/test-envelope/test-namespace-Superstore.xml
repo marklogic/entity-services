@@ -1,0 +1,51 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<es:envelope xmlns:es="http://marklogic.com/entity-services">
+<es:instance>
+<es:info>
+<es:title>Superstore</es:title>
+<es:version>0.0.1</es:version>
+</es:info>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:OrderID>43911</sup:OrderID>
+<sup:CustomerID>Tamara Manning</sup:CustomerID>
+<sup:OrderDate>2009-01-14T00:00:00</sup:OrderDate>
+<sup:ShippedDate>2009-01-14T00:00:00</sup:ShippedDate>
+<sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName>
+<sup:UnitPrice>19.99</sup:UnitPrice>
+<sup:Discount>0.06</sup:Discount>
+<sup:Ship-Address datatype="array">
+<ShipDetails>
+<Province>Alberta</Province>
+<Region>West</Region>
+<ShipMode>Regular Air</ShipMode>
+<ShippingCost>11.17</ShippingCost>
+</ShipDetails>
+</sup:Ship-Address>
+</sup:Superstore>
+</es:instance>
+<es:attachments>
+<sup:Superstore xmlns:sup="http://marklogic.com/super">
+<sup:RowID>6200</sup:RowID>
+<sup:OrderID>43911</sup:OrderID>
+<sup:OrderDate>2009-01-14T00:00:00</sup:OrderDate>
+<sup:OrderPriority>Medium</sup:OrderPriority>
+<sup:OrderQuantity>29</sup:OrderQuantity>
+<sup:Sales>577.89</sup:Sales>
+<sup:Discount>0.06</sup:Discount>
+<ShipMode>Regular Air</ShipMode>
+<sup:Profit>-53.89</sup:Profit>
+<sup:UnitPrice>19.99</sup:UnitPrice>
+<ShippingCost>11.17</ShippingCost>
+<sup:CustomerID>Tamara Manning</sup:CustomerID>
+<Province>Alberta</Province>
+<Region>West</Region>
+<sup:CustomerSegment>Corporate</sup:CustomerSegment>
+<sup:ProductCategory>Furniture</sup:ProductCategory>
+<sup:ProductSubCategory>Office Furnishings</sup:ProductSubCategory>
+<sup:ProductName>Telescoping Adjustable Floor Lamp</sup:ProductName>
+<sup:ProductContainer>Large Box</sup:ProductContainer>
+<sup:ProductBaseMargin>0.6</sup:ProductBaseMargin>
+<sup:ShippedDate>2009-01-14T00:00:00</sup:ShippedDate>
+</sup:Superstore>
+</es:attachments>
+</es:envelope>

@@ -15,10 +15,33 @@
  */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marklogic.client.document.DocumentWriteSet;
+import com.marklogic.client.document.JSONDocumentManager;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.FileHandle;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.sparql.graph.GraphFactory;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.Difference;
+import org.xmlunit.matchers.CompareMatcher;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,35 +49,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.sparql.graph.GraphFactory;
-import com.marklogic.client.document.DocumentWriteSet;
-import com.marklogic.client.document.JSONDocumentManager;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.FileHandle;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 public class TestEntityTypes extends EntityServicesTestBase {
 
@@ -71,8 +67,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
     
     private void checkXMLRoundTrip(String message, Document original, Document actual) {
 
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLAssert.assertXMLEqual(message, original, actual);
+        assertThat( actual, CompareMatcher.isIdenticalTo(original).ignoreWhitespace());
+
     }
     
     private static Map<String, String> invalidMessages = new HashMap<String, String>();
@@ -250,9 +246,13 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 //debugOutput(xmloriginal);
                 //debugOutput(xmlactual);
 
-                checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType, xmloriginal, xmlactual);
+                checkXMLRoundTrip("Original node should equal serialized retrieved one: " + entityType,
+                    xmloriginal,
+                    xmlactual);
 
-                checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload", entityType.toString(), jsonFileName);
+                checkEntityTypeToJSON("Retrieved as JSON, should match equivalent JSON payload",
+                    entityType.toString(),
+                    jsonFileName);
 
             }
         }
@@ -271,18 +271,18 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
         DOMHandle handle = evalOneResult("", evalXML, new DOMHandle());
         Document actualXML = handle.get();
-        XMLUnit.setIgnoreWhitespace(true);
         //debugOutput(expectedXML);
         //debugOutput(actualXML);
 
-        DetailedDiff diff = new DetailedDiff(new Diff(expectedXML, actualXML));
+        Diff diff = DiffBuilder.compare(expectedXML).withTest(actualXML)
+            .ignoreWhitespace()
+            .checkForIdentical()
+            .build();
 
-        @SuppressWarnings("unchecked")
-        List<Difference> l = diff.getAllDifferences();
-        for (Difference d : l) {
+        for (Difference d : diff.getDifferences()) {
             System.out.println(d.toString());
         }
-        XMLAssert.assertXMLEqual(message, expectedXML, actualXML);
+        assertThat(expectedXML, CompareMatcher.isIdenticalTo(actualXML).ignoreWhitespace());
     }
     
     /*
@@ -334,11 +334,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
 
                 // A great class for debugging, Defference.
 //                logger.debug("Difference, expected - actual");
-//                Graph diff = new com.hp.hpl.jena.graph.compose.Difference(expectedTriples, actualTriples);
+//                Graph diff = new org.apache.jena.graph.compose.Difference(expectedTriples, actualTriples);
 //                RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-
+//
 //                logger.debug("Difference, actual - expected");
-//                Graph diff2 = new com.hp.hpl.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//                Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
 //                RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
 
 

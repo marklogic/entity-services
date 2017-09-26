@@ -17,18 +17,17 @@ package com.marklogic.entityservices.tests;
 
 import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.client.io.DOMHandle;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
 public class TestSearchOptions extends EntityServicesTestBase {
@@ -52,9 +51,8 @@ public class TestSearchOptions extends EntityServicesTestBase {
 
         InputStream is = this.getClass().getResourceAsStream("/expected-search-options/SchemaCompleteEntityType-0.0.1.xml");
         Document filesystemXML = builder.parse(is);
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreComments(true);
-        XMLAssert.assertXMLEqual("Search options validation failed.", filesystemXML, searchOptions);
+        assertThat("Search options validation failed.", searchOptions,
+            CompareMatcher.isIdenticalTo(filesystemXML).ignoreWhitespace().ignoreComments());
 
 
         // if this call has results, the search options are not valid.

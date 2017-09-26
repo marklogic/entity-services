@@ -54,7 +54,7 @@
         "OrderID": {
           "datatype":"integer"
         },
-        "CustomerID": {
+        "hasCustomerID": {
           "$ref": "#/definitions/Customer"
         },
         "OrderDate": {
@@ -77,11 +77,11 @@
     },
     "OrderDetail": {
       "properties":{  
-        "ProductID":{  
+        "hasProductID":{  
            "$ref":"#/definitions/Product"
         },
-        "UnitPrice":{  
-           "datatype":"integer"
+        "hasUnitPrice":{  
+           "datatype":"double"
         },
         "Quantity":{  
            "datatype":"integer"
@@ -90,39 +90,39 @@
     },
     "Superstore": {
       "properties":{
-    	"OrderID":{
+    	"OrdID":{
     		"datatype":"integer"
     	},
-    	"CustomerID":{
+    	"CustID":{
     		"datatype":"string"
     	},
-    	"OrderDate":{
+    	"OrdDate":{
     		"datatype":"dateTime"
     	},
-    	"ShippedDate":{
+    	"Shipped-Date":{
     		"datatype":"dateTime"
     	},
-    	"ProductName":{
+    	"Product-Name":{
     		"datatype":"string"
     	},
-    	"UnitPrice":{
+    	"Unit-Price":{
     		"datatype":"double"
     	},
-    	"Quantity":{
+    	"Quant":{
     		"datatype":"integer"
     	},
     	"Discount":{
     		"datatype":"string"
     	},
-    	"ShipAddress":{
+    	"Ship-Address":{
     		"datatype":"array",
     		"items": {
     			"$ref": "#/definitions/ShipDetails"
     	    }
     	}
       },
-      "primaryKey": "OrderID",
-      "rangeIndex": [ "OrderID", "CustomerID", "ProductName", "Quantity" ]
+      "primaryKey": "OrdID",
+      "rangeIndex": [ "OrdID", "CustID", "Product-Name", "Quant" ]
     },
     "ShipDetails":{
     	"properties":{

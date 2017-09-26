@@ -15,27 +15,23 @@
 */
 package com.marklogic.entityservices.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.eval.ServerEvaluationCall;
+import com.marklogic.client.io.JacksonHandle;
+import com.marklogic.client.io.StringHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.marklogic.client.eval.ServerEvaluationCall;
-import org.custommonkey.xmlunit.SimpleNamespaceContext;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.exceptions.XpathException;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.JacksonHandle;
-import com.marklogic.client.io.StringHandle;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.*;
+import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 public class TestExtractionTemplates extends EntityServicesTestBase {
 
@@ -94,19 +90,21 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     @Test
     public void testExtractionTemplates() {
         for (String entityType : entityTypes) {
-            String schemaName = entityType.replaceAll("-.*$", "");
+            String baseName = entityType.replaceAll("-\\d.*$", "");
+            String schemaName = baseName.replaceAll("-","_");
+            String viewName = schemaName;
             JacksonHandle template = new JacksonHandle();
             logger.info("Testing extraction template for " + entityType);
             storeExtractionTempate(entityType);
             try {
-                template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+schemaName+"')", template);
+                template = evalOneResult("", "tde:get-view( '"+schemaName+"', '"+viewName+"')", template);
             } catch (TestEvalException e) {
-                fail("Extraction template generation failed.  View " + schemaName + " didn't exist");
+                fail("Extraction template generation failed.  View " + schemaName + "." + viewName + " didn't exist");
             }
             JsonNode schemaJson = template.get();
 
             JsonNode body = schemaJson.get("view");
-            assertEquals("View name", schemaName, body.get("name").asText());
+            assertEquals("View name", viewName, body.get("name").asText());
             assertTrue("View has columns", body.get("columns").isArray());
 
             logger.debug( body.asText() );
@@ -116,7 +114,7 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
     }
 
     @Test
-    public void templateRowMustDropArray() throws SAXException, IOException, XpathException {
+    public void templateRowMustDropArray() throws SAXException, IOException {
 
         // this one has an array of refs
         String entityTypeWithArray = "Order-0.0.4.json";
@@ -126,20 +124,23 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         Map<String, String> ctx = new HashMap<String, String>();
         ctx.put("tde", "http://marklogic.com/xdmp/tde");
 
-        XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']", arrayEntityType);
-        XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='Order']//tde:column[tde:name='hasOrderDetails']", arrayEntityType);
+        assertThat(arrayEntityType, hasXPath("//tde:row[tde:view-name='Order_hasOrderDetails']")
+            .withNamespaceContext(ctx));
+        assertThat(arrayEntityType, not(hasXPath("//tde:row[tde:view-name='Order']//tde:column[tde:name='hasOrderDetails']")
+            .withNamespaceContext(ctx)));
 
         // check scalar array
         arrayEntityType = extractionTemplates.get("SchemaCompleteEntityType-0.0.1.json").get();
 
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType_arrayKey']", arrayEntityType);
-        XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='arrayKey']", arrayEntityType);
+        assertThat( arrayEntityType, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType_arrayKey']")
+            .withNamespaceContext(ctx));
+        assertThat( arrayEntityType, not(hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='arrayKey']")
+            .withNamespaceContext(ctx)));
 
     }
 
     @Test
-    public void embedChildWithNoPrimaryKey() throws XpathException, IOException, SAXException {
+    public void embedChildWithNoPrimaryKey() throws IOException, SAXException {
         // this one has an array of refs
         String entityTypeWithArray = "Order-0.0.4.json";
         String extractionTemplate = extractionTemplates.get(entityTypeWithArray).get();
@@ -149,38 +150,75 @@ public class TestExtractionTemplates extends EntityServicesTestBase {
         //logger.debug(arrayEntityType);
 
 
-        XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", extractionTemplate);
-        XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='OrderDetails']", extractionTemplate);
+        assertThat( extractionTemplate, hasXPath("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']")
+            .withNamespaceContext(ctx));
+        assertThat( extractionTemplate, not(hasXPath("//tde:row[tde:view-name='OrderDetails']")
+            .withNamespaceContext(ctx)));
 
         // negative case -- ref with primary key in target
         entityTypeWithArray = "Order-0.0.5.json";
         extractionTemplate = extractionTemplates.get(entityTypeWithArray).get();
 
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='Order_hasOrderDetails']", extractionTemplate);
-        XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']", extractionTemplate);
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='OrderDetails']", extractionTemplate);
+        assertThat( extractionTemplate, hasXPath("//tde:row[tde:view-name='Order_hasOrderDetails']")
+            .withNamespaceContext(ctx));
+        assertThat( extractionTemplate, not(hasXPath("//tde:row[tde:view-name='Order_hasOrderDetails']//tde:column[tde:name='quantity']")
+            .withNamespaceContext(ctx)));
+        assertThat( extractionTemplate, hasXPath("//tde:row[tde:view-name='OrderDetails']")
+            .withNamespaceContext(ctx));
 
 
     }
 
     @Test
-    public void testReferences() throws SAXException, IOException, XpathException {
+    public void testNamespaces() throws SAXException, IOException {
+        String entityType  = "Person-0.0.2.json";
+
+        String template = extractionTemplates.get(entityType).get();
+
+        Map<String, String> ctx = new HashMap<String, String>();
+        ctx.put("tde", "http://marklogic.com/xdmp/tde");
+        ctx.put("p", "http://ex.org/Person");
+        //logger.debug(template);
+
+        assertThat( template, hasXPath("//tde:row[tde:view-name='Person']//tde:column[tde:name='firstName'][tde:val='p:firstName']")
+            .withNamespaceContext(ctx));
+
+        // another test case with multiple namespaces
+        entityType  = "SchemaCompleteEntityType-0.0.1.json";
+
+        template = extractionTemplates.get(entityType).get();
+
+        ctx = new HashMap<String, String>();
+        ctx.put("tde", "http://marklogic.com/xdmp/tde");
+        ctx.put("ex", "http://example.org/order-details-namespace");
+        //logger.debug(template);
+
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType_arrayreferenceInThisFile']//tde:column[tde:name='quantity'][tde:val='ex:quantity']")
+            .withNamespaceContext(ctx));
+    }
+
+
+    @Test
+    public void testReferences() throws SAXException, IOException {
         String entityType  = "SchemaCompleteEntityType-0.0.1.json";
 
         String template = extractionTemplates.get(entityType).get();
 
         Map<String, String> ctx = new HashMap<String, String>();
         ctx.put("tde", "http://marklogic.com/xdmp/tde");
-        //logger.debug(template);
+        ctx.put("ex", "http://example.org/order-details-namespace");
+        logger.debug(template);
 
 
-        XMLUnit.setXpathNamespaceContext(new SimpleNamespaceContext(ctx));
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType_externalArrayReference']//tde:column[tde:name='externalArrayReference'][tde:val='OrderDetails']", template);
-        XMLAssert.assertXpathNotExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalArrayReference'][tde:val='.']", template);
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType_externalArrayReference']//tde:column[tde:name='externalArrayReference'][tde:val='OrderDetails']")
+            .withNamespaceContext(ctx));
+        assertThat( template, not(hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalArrayReference'][tde:val='.']")
+            .withNamespaceContext(ctx)));
 
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='referenceInThisFile'][tde:val='referenceInThisFile/OrderDetails']", template);
-        XMLAssert.assertXpathExists("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalReference'][tde:val='externalReference/OrderDetails']", template);
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='referenceInThisFile'][tde:val='referenceInThisFile/ex:OrderDetails']")
+            .withNamespaceContext(ctx));
+        assertThat( template, hasXPath("//tde:row[tde:view-name='SchemaCompleteEntityType']//tde:column[tde:name='externalReference'][tde:val='externalReference/OrderDetails']")
+            .withNamespaceContext(ctx));
 
     }
 

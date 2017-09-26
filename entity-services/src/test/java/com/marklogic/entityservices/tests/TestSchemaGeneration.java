@@ -16,6 +16,21 @@
 package com.marklogic.entityservices.tests;
 
 
+import com.marklogic.client.document.JSONDocumentManager;
+import com.marklogic.client.document.XMLDocumentManager;
+import com.marklogic.client.eval.EvalResultIterator;
+import com.marklogic.client.io.DOMHandle;
+import com.marklogic.client.io.Format;
+import com.marklogic.client.io.InputStreamHandle;
+import com.marklogic.client.io.StringHandle;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+import org.xmlunit.matchers.CompareMatcher;
+
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -23,23 +38,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.marklogic.client.document.JSONDocumentManager;
-import com.marklogic.client.io.Format;
-import com.marklogic.client.io.InputStreamHandle;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import com.marklogic.client.document.XMLDocumentManager;
-import com.marklogic.client.io.DOMHandle;
-import com.marklogic.client.io.StringHandle;
-
-import javax.xml.transform.TransformerException;
-
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -103,6 +102,8 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
     public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
         for (String entityType : entityTypes) {
+            // there's a special test for SchemaComplete, which has two namespaces.
+            if (entityType.startsWith("SchemaCompleteEntityType-0.0.1")) continue;
             String testInstanceName = entityType.replaceAll("\\.(json|xml)$", "-0.xml");
 
             storeSchema(entityType, schemas.get(entityType));
@@ -111,11 +112,47 @@ public class TestSchemaGeneration extends EntityServicesTestBase {
 
             InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
             Document filesystemXML = builder.parse(is);
-            XMLUnit.setIgnoreWhitespace(true);
-            XMLAssert.assertXMLEqual("Must be no validation errors for schema " + entityType + ".", filesystemXML,
-                    validateResult.get());
+            assertThat("Must be no validation errors for schema " + entityType + ".", filesystemXML,
+                CompareMatcher.isIdenticalTo(validateResult.get()).ignoreWhitespace());
             removeSchema(entityType);
         }
+
+    }
+
+    @Test
+    public void verifyDualNamespaceModel() throws TestEvalException, SAXException, IOException {
+
+        String model = "SchemaCompleteEntityType-0.0.1.json";
+        String schema1 = "SchemaCompleteEntityType-0.0.1.xsd";
+        String schema2 = "OrderDetails-0.0.1.xsd";
+        String testInstanceName = "SchemaCompleteEntityType-0.0.1-0.xml";
+
+
+        try {
+            EvalResultIterator results = eval("", "fn:doc( '" + model + "')=>es:schema-generate()");
+            StringHandle firstResult = results.next().get(new StringHandle());
+            StringHandle secondResult = results.next().get(new StringHandle());
+
+            if (firstResult.get().contains("order-details-namespace")) {
+                storeSchema(schema2, firstResult);
+                storeSchema(schema1, secondResult);
+            } else {
+                storeSchema(schema2, secondResult);
+                storeSchema(schema1, firstResult);
+            }
+        } catch (TestEvalException e) {
+            throw new RuntimeException(e);
+        }
+
+        DOMHandle validateResult = evalOneResult("", "validate strict { doc('" + testInstanceName + "') }",
+            new DOMHandle());
+
+        InputStream is = this.getClass().getResourceAsStream("/test-instances/" + testInstanceName);
+        Document filesystemXML = builder.parse(is);
+        assertThat("Must be no validation errors for schema " + model + ".", filesystemXML,
+            CompareMatcher.isIdenticalTo(validateResult.get()).ignoreWhitespace());
+        removeSchema(schema1);
+        removeSchema(schema2);
 
     }
 

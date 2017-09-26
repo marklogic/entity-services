@@ -1,4 +1,5 @@
 (:
+
  Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,11 +26,14 @@ module namespace es-codegen = "http://marklogic.com/entity-services-codegen";
 import module namespace esi = "http://marklogic.com/entity-services-impl"
     at "entity-services-impl.xqy";
 
-import module namespace functx   = "http://www.functx.com" at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
+import module namespace functx   = "http://www.functx.com"
+    at "/MarkLogic/functx/functx-1.0-nodoc-2007-01.xqy";
+
 
 declare namespace es = "http://marklogic.com/entity-services";
 declare namespace tde = "http://marklogic.com/xdmp/tde";
 declare namespace xq = "http://www.w3.org/2012/xquery";
+
 
 declare option xdmp:mapping "false";
 declare option xq:require-feature "xdmp:three-one";
@@ -52,7 +56,7 @@ declare private function es-codegen:comment(
 };
 
 
-declare private function es-codegen:extraction-for(
+declare private function es-codegen:variable-line-for(
     $prefix as xs:string,
     $model as map:map,
     $entity-type-name as xs:string,
@@ -60,6 +64,12 @@ declare private function es-codegen:extraction-for(
 ) as xs:string
 {
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+    let $property-qname :=
+        if ($namespace)
+        then $namespace-prefix || ":" || $property-name
+        else $property-name
     let $properties := map:get($entity-type, "properties")
     let $required-properties := if (empty(map:get($entity-type, "required")))
         then ()
@@ -77,13 +87,13 @@ declare private function es-codegen:extraction-for(
             else
             if ($is-array)
             then concat("es:extract-array(", $str, ", ", $fn, if ($arrity-ok) then "#1" else (), ")")
-            else concat($fn, "(", $str, ")")
+            else concat($str, " ! ", $fn, "(.)")
         }
     let $ref :=
         if ($is-array)
         then $properties=>map:get($property-name)=>map:get("items")=>map:get("$ref")
         else $properties=>map:get($property-name)=>map:get("$ref")
-    let $path-to-property := concat("$source-node/", $property-name)
+    let $path-to-property := concat("$source-node/", $property-qname)
     let $property-comment :=
         if (empty($ref))
         then ""
@@ -94,10 +104,21 @@ declare private function es-codegen:extraction-for(
             'The following property assigment comes from an external reference.',
             'Its generated value probably requires developer attention.'))
     let $ref-name := functx:substring-after-last($ref, "/")
-    let $extract-reference-fn :=
-            concat("function($path) { json:object()",
-                      "    =>map:with('$type', '", $ref-name, "')",
-                      "    =>map:with('$ref', $path/", $ref-name, "/text() ) }")
+    let $ref-namespace-prefix :=
+        if (contains($ref, "#/definitions"))
+        then $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespacePrefix")
+        else ()
+    let $ref-namespace :=
+        if (contains($ref, "#/definitions"))
+        then $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
+        else ()
+    let $extract-reference-fn := 
+            concat("es:init-instance(?, '",$ref-name,"')",
+                if ($ref-namespace-prefix) 
+                then
+                concat("&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')")
+                else ()
+            )
     let $value :=
         if (empty($ref))
         then
@@ -109,17 +130,37 @@ declare private function es-codegen:extraction-for(
             else
                 $wrap-if-array($path-to-property, $extract-reference-fn, false())
 
-    (: if a property is required, use map:with to force inclusion :)
-    let $function-call-string :=
-        if ($is-required)
-        then "    =>   map:with("
-        else "    =>es:optional("
     return
         fn:concat( $property-comment,
-               $function-call-string,
-               functx:pad-string-to-length("'" || $property-name || "',", " ", max((  (string-length($property-name)+4), 25) )+1 ),
-               $value,
-               ")")
+                   "    let $",
+                   $property-name,
+               functx:pad-string-to-length(
+                 "  := ",
+                 " ",
+                 max( ( (string-length($property-name)+4), 16 ) )+1),
+               $value)
+};
+
+declare private function es-codegen:setter-for(
+    $prefix as xs:string,
+    $model as map:map,
+    $entity-type-name as xs:string,
+    $property-name as xs:string
+)
+{
+    (: if a property is required, use map:with to force inclusion :)
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $properties := map:get($entity-type, "properties")
+    let $required-properties := if (empty(map:get($entity-type, "required")))
+        then ()
+        else json:array-values( map:get($entity-type, "required") )
+    let $is-required := $property-name =
+            ( map:get($entity-type, "primaryKey"), $required-properties )
+    let $function-call-string :=
+        if ($is-required)
+        then "        =>   map:with("
+        else "        =>es:optional("
+    return fn:concat($function-call-string, "'", $property-name, "', $",$property-name,")")
 };
 
 declare function es-codegen:instance-converter-generate(
@@ -137,27 +178,16 @@ document {
 
 (:
  This module was generated by MarkLogic Entity Services.
- The source entity type document was {$title}-{$version}
- To use this module, examine how you wish to extract data from sources,
- and modify the various extract-instance-{{X}} functions to
- create the instances you wish.
+ The source model was {$title}-{$version}
 
- You may wish to/need to alter
- 1.  values.  For example, creating duration values from decimal months.
- 2.  references.  This conversion module assumes you want to denormalize
-     instances when storing them in documents.  You may choose to remove
-     code that denormalizes, and just include reference values in your
-     instances instead.
- 3.  Source XPath expressions.  The data coming into the extract-instance-{{X}}
-     functions will probably not be exactly what this module predicts.
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
 
  After modifying this file, put it in your project for deployment to the modules
  database of your application, and check it into your source control system.
 
- Modification History:
  Generated at timestamp: {fn:current-dateTime()}
- Persisted by AUTHOR
- Date: DATE
  :)
 
 module namespace {$prefix}
@@ -166,87 +196,171 @@ module namespace {$prefix}
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+import module namespace json = "http://marklogic.com/xdmp/json"
+    at "/MarkLogic/json/json.xqy";
+
+
+{
+  (: namespace declarations :)
+    for $entity-type-name in map:keys(map:get($model, "definitions"))
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+    return
+        if ($namespace)
+        then concat("declare namespace ",
+             $namespace-prefix,
+             " = '",
+             $namespace,
+             "';&#10;")
+        else ()
+}
+
+
 declare option xdmp:mapping 'false';
-
-
-(:
-  extract-instance-{{entity-type}} functions
-
-  These functions together take a source document and create a nested
-  map structure from it.
-  The resulting map is used by instance-to-canonical-xml to create documents
-  in the database.
-
-  It is expected that an implementer will edit at least XPath expressions in
-  the extraction functions.  It is less likely that you will want to edit
-  the instance-to-canonical-xml or envelope functions.
- :)
 
 {
     for $entity-type-name in map:keys(map:get($model, "definitions"))
     return
     <extract-instance>
 (:~
- : Creates a map:map instance from some source document.
+ : Extracts instance data, as a map:map, from some source document.
  : @param $source-node  A document or node that contains
  :   data for populating a {$entity-type-name}
  : @return A map:map instance with extracted data and
  :   metadata about the instance.
  :)
 declare function {$prefix}:extract-instance-{$entity-type-name}(
-    $source as node()?
+    $source as item()?
 ) as map:map
 {{
-    let $source-node := {$prefix}:init-source($source, '{$entity-type-name}')
-
-    let $instance := json:object()
-    (: If desired, add the original source document as an attachment. :)
-        =>{$prefix}:add-attachments($source-node, $source)
-    (: Add type information to the entity instance (required, do not change) :)
-        =>map:with('$type', '{ $entity-type-name }')
+    let $source-node := es:init-source($source, '{$entity-type-name}')
+{
+    let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+    let $properties := $entity-type=>map:get("properties")
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+    let $variable-setters :=
+        for $property-name in map:keys($properties)
+        return es-codegen:variable-line-for($prefix, $model, $entity-type-name, $property-name)
+    return (
+        fn:string-join( $variable-setters, "&#10;"),
+        "&#10;   ",
+        if ($namespace-prefix)
+        then
+            concat("let $instance := es:init-instance($source-node, '",
+                    $entity-type-name,
+                    "')",
+                    "&#10;    =>es:with-namespace('",$namespace,"','",$namespace-prefix,"')")
+        else
+            concat("let $instance := es:init-instance($source-node, '",
+                    $entity-type-name,
+                    "')")
+        )
+    }
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source)
 
     return
-
-    (: The following logic may not be required for every extraction       :)
-    (: if this $source-node has no child elements, it has a reference key :)
     if (empty($source-node/*))
-    then $instance=>map:with('$ref', $source-node/text())
-    (: Otherwise, this source node contains instance data. Populate it. :)
-    else
-
-    (:
-    The following code populates the properties of the '{$entity-type-name}'
-    entity type. Ensure that all of the property paths are correct for your
-    source data.  The general pattern is
-    =>map:with('keyName', casting-function($source-node/path/to/data))
-    but you may also wish to convert values
-    =>map:with('dateKeyName',
-          xdmp:parse-dateTime('[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01].[f1][Z]',
-          $source-node/path/to/data/in/the/source))
-    You can also implement lookup functions,
-    =>map:with('lookupKey',
-          cts:search( collection('customers'),
-              string($source-node/path/to/lookup/key))/id
-    or populate the instance with constants.
-    =>map:with('constantValue', 10)
-    The output of this function should structurally match the output of
-    es:model-get-test-instances($model)
-    :)
-
-    $instance
+    then $instance
+    else $instance
 {
     (: Begin code generation block :)
+
     let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
-    let $properties := map:get($entity-type, "properties")
+    let $properties := $entity-type=>map:get("properties")
+    let $namespace := $entity-type=>map:get("namespace")
+    let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
     let $value-lines :=
+        (
         for $property-name in map:keys($properties)
-        return es-codegen:extraction-for($prefix, $model, $entity-type-name, $property-name)
+        return es-codegen:setter-for($prefix, $model, $entity-type-name, $property-name)
+        )
     return fn:string-join($value-lines, "&#10;")
         (: end code generation block :)
     }
 }};
 </extract-instance>/text()
 }
+
+
+
+
+(:~
+ : Turns an entity instance into a canonical document structure.
+ : Results in either a JSON document, or an XML document that conforms
+ : to the entity-services schema.
+ : Using this function as-is should be sufficient for most use
+ : cases, and will play well with other generated artifacts.
+ : @param $entity-instance A map:map instance returned from one of the extract-instance
+ :    functions.
+ : @param $format Either "json" or "xml". Determines output format of function
+ : @return An XML element that encodes the instance.
+ :)
+declare function {$prefix}:instance-to-canonical(
+
+    $entity-instance as map:map,
+    $instance-format as xs:string
+) as node()
+{{
+
+        if ($instance-format eq "json")
+        then xdmp:to-json( {$prefix}:canonicalize($entity-instance) )/node()
+        else {$prefix}:instance-to-canonical-xml($entity-instance)
+}};
+
+
+(:~
+ : helper function to turn map structure of an instance, which uses specialized
+ : keys to encode metadata, into a document tree, which uses the node structure
+ : to encode all type and property information.
+ :)
+declare private function {$prefix}:canonicalize(
+    $entity-instance as map:map
+) as map:map
+{{
+    json:object()
+    =>map:with( map:get($entity-instance,'$type'),
+                if ( map:contains($entity-instance, '$ref') )
+                then fn:head( (map:get($entity-instance, '$ref'), json:object()) )
+                else
+                let $m := json:object()
+                let $_ :=
+                    for $key in map:keys($entity-instance)
+                    let $instance-property := map:get($entity-instance, $key)
+                    where ($key castable as xs:NCName)
+                    return
+                        typeswitch ($instance-property)
+                        (: This branch handles embedded objects.  You can choose to prune
+                           an entity's representation of extend it with lookups here. :)
+                        case json:object
+                            return
+                                if (empty(map:keys($instance-property)))
+                                then map:put($m, $key, json:object())
+                                else map:put($m, $key, {$prefix}:canonicalize($instance-property))
+                        (: An array can also treated as multiple elements :)
+                        case json:array
+                            return
+                                (
+                                for $val at $i in json:array-values($instance-property)
+                                return
+                                    if ($val instance of json:object)
+                                    then json:set-item-at($instance-property, $i, {$prefix}:canonicalize($val))
+                                    else (),
+                                map:put($m, $key, $instance-property)
+                                )
+
+                        (: A sequence of values should be simply treated as multiple elements :)
+                        (: TODO is this lossy? :)
+                        case item()+
+                            return
+                                for $val in $instance-property
+                                return map:put($m, $key, $val)
+                        default return map:put($m, $key, $instance-property)
+                return $m)
+}};
+
 
 
 
@@ -261,52 +375,119 @@ declare function {$prefix}:extract-instance-{$entity-type-name}(
  :    functions.
  : @return An XML element that encodes the instance.
  :)
-declare function {$prefix}:instance-to-canonical-xml(
+declare private function {$prefix}:instance-to-canonical-xml(
     $entity-instance as map:map
 ) as element()
 {{
     (: Construct an element that is named the same as the Entity Type :)
-    element {{ map:get($entity-instance, '$type') }}  {{
-        if ( map:contains($entity-instance, '$ref') )
-        then map:get($entity-instance, '$ref')
-        else
-            for $key in map:keys($entity-instance)
-            let $instance-property := map:get($entity-instance, $key)
-            where ($key castable as xs:NCName)
-            return
-                typeswitch ($instance-property)
-                (: This branch handles embedded objects.  You can choose to prune
-                   an entity's representation of extend it with lookups here. :)
-                case json:object+
-                    return
-                        for $prop in $instance-property
-                        return element {{ $key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
-                (: An array can also treated as multiple elements :)
-                case json:array
-                    return
-                        for $val in json:array-values($instance-property)
+    let $namespace := map:get($entity-instance, "$namespace")
+    let $namespace-prefix := map:get($entity-instance, "$namespacePrefix")
+    let $nsdecl :=
+        if ($namespace) then
+        namespace {{ $namespace-prefix }} {{ $namespace }}
+        else ()
+    let $type-name := map:get($entity-instance, '$type')
+    let $type-qname :=
+        if ($namespace)
+        then fn:QName( $namespace, $namespace-prefix || ":" || $type-name)
+        else $type-name
+    return
+        element {{ $type-qname }}  {{
+            $nsdecl,
+            if ( map:contains($entity-instance, '$ref') )
+            then map:get($entity-instance, '$ref')
+            else
+                for $key in map:keys($entity-instance)
+                let $instance-property := map:get($entity-instance, $key)
+                let $ns-key :=
+                    if ($namespace and $key castable as xs:NCName)
+                    then fn:QName( $namespace, $namespace-prefix || ":" || $key)
+                    else $key
+                where ($key castable as xs:NCName)
+                return
+                    typeswitch ($instance-property)
+                    (: This branch handles embedded objects.  You can choose to prune
+                       an entity's representation of extend it with lookups here. :)
+                    case json:object+
                         return
-                            if ($val instance of json:object)
-                            then element {{ $key }} {{
-                                attribute datatype {{ 'array' }},
-                                {$prefix}:instance-to-canonical-xml($val) }}
-                            else element {{ $key }} {{
-                                attribute datatype {{ 'array' }},
-                                $val }}
-                (: A sequence of values should be simply treated as multiple elements :)
-                case item()+
-                    return
-                        for $val in $instance-property
-                        return element {{ $key }} {{ $val }}
-                default return element {{ $key }} {{ $instance-property }}
+                            for $prop in $instance-property
+                            return element {{ $ns-key }} {{ {$prefix}:instance-to-canonical-xml($prop) }}
+                    (: An array can also treated as multiple elements :)
+                    case json:array
+                        return
+                            for $val in json:array-values($instance-property)
+                            return
+                                if ($val instance of json:object)
+                                then element {{ $ns-key }} {{
+                                    attribute datatype {{ 'array' }},
+                                    {$prefix}:instance-to-canonical-xml($val)
+                                }}
+                                else element {{ $ns-key }} {{
+                                    attribute datatype {{ 'array' }},
+                                    $val }}
+                    (: A sequence of values should be simply treated as multiple elements :)
+                    case item()+
+                        return
+                            for $val in $instance-property
+                            return element {{ $ns-key }} {{ $val }}
+                    default return element {{ $ns-key }} {{ $instance-property }}
+        }}
+}};
+
+
+(:
+ : Wraps a canonical instance (returned by instance-to-canonical())
+ : within an envelope patterned document, along with the source
+ : document, which is stored in an attachments section.
+ : @param $entity-instance an instance, as returned by an extract-instance
+ : function
+ : @param $entity-format Either "json" or "xml", selects the output format
+ : for the envelope
+ : @return A document which wraps both the canonical instance and source docs.
+ :)
+declare function {$prefix}:instance-to-envelope(
+    $entity-instance as map:map,
+    $envelope-format as xs:string
+) as document-node()
+{{
+    let $canonical := {$prefix}:instance-to-canonical($entity-instance, $envelope-format)
+    let $attachments := es:serialize-attachments($entity-instance, $envelope-format)
+    return
+    if ($envelope-format eq "xml")
+    then
+        document {{
+            element es:envelope {{
+                element es:instance {{
+                    element es:info {{
+                        element es:title {{ map:get($entity-instance,'$type') }},
+                        element es:version {{ '{$version}' }}
+                    }},
+                    $canonical
+                }},
+                $attachments
+            }}
+        }}
+    else
+    document {{
+        object-node {{ 'envelope' :
+            object-node {{ 'instance' :
+                object-node {{ 'info' :
+                    object-node {{
+                        'title' : map:get($entity-instance,'$type'),
+                        'version' : '{$version}'
+                    }}
+                }}
+                +
+                $canonical
+            }}
+            +
+            $attachments
+        }}
     }}
 }};
 
 
 (:
- : Wraps a canonical instance (returned by instance-to-canonical-xml())
- : within an envelope patterned document, along with the source
- : document, which is stored in an attachments section.
  : @param $entity-instance an instance, as returned by an extract-instance
  : function
  : @return A document which wraps both the canonical instance and source docs.
@@ -315,49 +496,10 @@ declare function {$prefix}:instance-to-envelope(
     $entity-instance as map:map
 ) as document-node()
 {{
-    document {{
-        element es:envelope {{
-            element es:instance {{
-                element es:info {{
-                    element es:title {{ map:get($entity-instance,'$type') }},
-                    element es:version {{ '{$version}' }}
-                }},
-                {$prefix}:instance-to-canonical-xml($entity-instance)
-            }},
-            element es:attachments {{
-                map:get($entity-instance, '$attachments')
-            }}
-        }}
-    }}
+    {$prefix}:instance-to-envelope($entity-instance, "xml")
 }};
 
 
-declare private function {$prefix}:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{{
-    if ( ($source instance of document-node())
-        or (exists
-            ($source/element()[fn:node-name(.) eq xs:QName($entity-type-name)] )))
-    then $source/node()
-    else $source
-}};
-
-
-declare private function {$prefix}:add-attachments(
-    $instance as json:object,
-    $source-node as node()*,
-    $source as node()*
-) as json:object
-{{
-    $instance
-    =>map:with('$attachments',
-        typeswitch($source-node)
-        case object-node() return xdmp:quote($source)
-        case array-node() return xdmp:quote($source)
-        default return $source)
-}};
 
 </module>/text()
 }
@@ -372,7 +514,7 @@ declare private function es-codegen:value-for-conversion(
     $target-entity-type-name as xs:string,
     $target-property-name as xs:string,
     $display-property-name as xs:string,
-    $extraction-functions as map:map
+    $let-expressions as map:map
 ) as xs:string
 {
     let $target-info := map:get($target-model, "info")
@@ -453,15 +595,13 @@ declare private function es-codegen:value-for-conversion(
             else
             if ($target-is-array)
             then concat("es:extract-array(", $str, ", ", $fn, if ($arrity-ok) then "#1" else (), ")")
-            else concat($fn, "(", $str, ")")
+            else if($source-is-array)
+            then concat("fn:head("||$str||")", " ! ", $fn, "(.)")
+            else concat($str, " ! ", $fn, "(.)")
         }
     let $is-reference-from-scalar-or-array :=
         exists($target-ref) and empty($source-ref)
 
-    let $extract-scalar-fn :=
-            concat("function($path) { json:object()",
-                      "=>map:with('$type', '", $target-ref-name, "')",
-                      "=>map:with('$ref', ", $casting-function-name, "(($path)[1]) ) }")
 
     let $comment :=
         if ($is-missing-source)
@@ -472,29 +612,67 @@ declare private function es-codegen:value-for-conversion(
         then es-codegen:comment("Warning: potential data loss, truncated array.")
         else ""
 
-    let $extract-reference-fn :=
-        map:put($extraction-functions, $target-ref-name,
-            fn:string-join(
-                (
-                concat('    let $extract-reference-',$target-ref-name,' := '),
-                if (contains($target-ref, "#/definitions"))
-                then
-                    ("        function($path) { ",
-                     "         if ($path/*)",
-                     concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
-                     "         else ",
-                     "           json:object()",
-                     concat("           =>map:with('$type', '", $target-ref-name, "')"),
-                     "           =>map:with('$ref', $path/text() ) ",
-                     "        }"
-                    )
-                else
-                    ("        function($path) { ",
-                     concat("         json:object()=>map:with('$type', '", $target-ref-name, "')"),
-                     "         =>map:with('$ref', $path/text() ) ",
-                     "        }")
-                ),
-            "&#10;")
+    let $extract-fn :=
+        if ($is-reference-from-scalar-or-array)
+        then
+            map:put($let-expressions, $target-ref-name,
+                fn:string-join(
+                    (
+                    concat('    let $extract-scalar-',$target-ref-name,' := '),
+                    if (contains($target-ref, "#/definitions"))
+                    then
+                        let $ref-namespace-prefix :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+                        let $ref-namespace :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+                        return
+                            if ($ref-namespace) 
+                            then
+                                (
+                         "        function($src-node) { ",
+                  concat("            es:init-instance($src-node, '", $target-ref-name, "')"),
+                  concat("            =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')"),
+                         "        }"
+                                )
+                            else
+                  concat( "       es:init-instance(?, '", $target-ref-name, "')")
+                    else
+                  concat( "       es:init-instance(?, '", $target-ref-name, "')"),
+                        ""
+                        ),
+                    "&#10;"))
+        else
+            map:put($let-expressions, $target-ref-name,
+                fn:string-join(
+                    (
+                    concat('    let $extract-reference-',$target-ref-name,' := '),
+                    if (contains($target-ref, "#/definitions"))
+                    then
+                        let $ref-namespace-prefix :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespacePrefix")
+                        let $ref-namespace :=
+                            $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
+                        return
+                            if ($ref-namespace)
+                            then
+                        ("        function($path) { ",
+                         "         if ($path/*)",
+                         concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                         concat("         else es:init-instance($path, '", $target-ref-name, "')",
+                                "&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')",
+                                "         }"))
+                            else
+                        ("        function($path) { ",
+                         "         if ($path/*)",
+                         concat("         then ", $module-prefix, ":convert-instance-", $target-ref-name, "($path)"),
+                         concat("         else es:init-instance($path, '", $target-ref-name, "')"),
+                        "         }")
+
+                    else
+                        concat("        es:init-instance(?, '", $target-ref-name, "')"),
+                        ""
+                    ),
+                "&#10;")
         )
 
 
@@ -503,23 +681,26 @@ declare private function es-codegen:value-for-conversion(
         then "    =>   map:with("
         else "    =>es:optional("
     let $property-padding :=
-        functx:pad-string-to-length("'" || $display-property-name || "',", " ", max((  (string-length($target-property-name)+4), 25) )+1 )
+        functx:pad-string-to-length("'" || $display-property-name || "',", " ", max((  (string-length($target-property-name)+5), 10) )+1 )
     let $value :=
         if ($is-scalar-from-array)
         then concat($casting-function-name, "( fn:head(", $path-to-property, ") )")
         else if (empty($target-ref))
         then $wrap-if-array($path-to-property, $casting-function-name, true())
         else if ($is-reference-from-scalar-or-array)
-        then $wrap-if-array($path-to-property, $extract-scalar-fn, true())
+        then $wrap-if-array($path-to-property, "$extract-scalar-" || $target-ref-name, false())
         else $wrap-if-array($path-to-property || "/*", "$extract-reference-" || $target-ref-name, false() )
 
+    let $let-expr := map:put($let-expressions, $target-property-name,
+         concat(
+            $comment,
+            "    let $", $target-property-name, " := ", $value
+            ))
     return
-        fn:string-join( ($comment,
-            $function-call-string,
+        fn:concat($function-call-string,
             $property-padding,
-            $value,
-            ")&#10;")
-          )
+            "$", $target-property-name,
+            ")","&#10;")
 };
 
 
@@ -582,11 +763,11 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     $source as node()
 ) as map:map
 {{
-    let $source-node := {$module-prefix}:init-source($source, '{$entity-type-name}')
+    let $source-node := es:init-translation-source($source, '{$entity-type-name}')
 
 {
     (: Begin code generation block :)
-    let $extraction-functions := json:object()
+    let $let-expressions := json:object()
     let $entity-type := map:get($target-definitions, $entity-type-name)
     let $source-entity-type :=
             if (map:contains($source-definitions, $entity-type-name))
@@ -619,35 +800,34 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
     let $values :=
         for $property-name in map:keys($properties)
         return
+            (: note, this call passes mutable let-expressions for modification :)
             es-codegen:value-for-conversion($source-model,
                 $target-model,
                 $entity-type-name,
                 $property-name,
                 $property-name,
-                $extraction-functions)
+                $let-expressions)
     let $missing-properties :=
         if (exists($source-entity-type))
         then
             for $property-name in map:keys(map:get($source-entity-type, "properties"))
             where not($property-name = map:keys(map:get($entity-type, "properties")))
                 return
-                    es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET", map:map())
+                    es-codegen:value-for-conversion($source-model, $target-model, $entity-type-name, $property-name, "NO TARGET", $let-expressions)
         else ()
     return
         fn:concat(
             fn:string-join(
-                for $k in map:keys($extraction-functions)
+                for $k in map:keys($let-expressions)
                 where $k ne ""
-                return map:get($extraction-functions, $k), "&#10;"),
-'    return
+                return map:get($let-expressions, $k), "&#10;"),
+'&#10;
+    return
     json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>',$module-prefix,':copy-attachments($source-node)
-    (: The following line identifies the type of this instance.  Do not change it. :)
     =>map:with("$type", "', $entity-type-name, '")
-    (: The following lines are generated from the "',$entity-type-name,'" entity type. :)',
+    (: Copy attachments from source document to the target :)
+    =>es:copy-attachments($source-node)
+    (: The following lines are generated from the "',$entity-type-name,'" entity type. :)&#10;',
             fn:string-join($values),
             if (exists($missing-properties))
             then
@@ -681,20 +861,42 @@ declare function {$module-prefix}:convert-instance-{$removed-entity-type-name}(
     $source-node as node()
 ) as map:map
 {{
-    json:object()
-    (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target
-     :)
-    =>{$module-prefix}:copy-attachments($source-node)
-    =>map:with('$type', '{ $removed-entity-type-name }')
 {
 
 map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
-let $values :=
-    for $removed-property-name in $removed-entity-type=>map:get("properties")=>map:keys()
-    return es-codegen:extraction-for($module-prefix, $source-model, $removed-entity-type-name, $removed-property-name)
-return fn:string-join($values, "&#10;")
+    let $properties := $source-model
+        =>map:get("definitions")
+        =>map:get($removed-entity-type-name)
+        =>map:get("properties")
+    let $variable-setters :=
+        for $property-name in map:keys($properties)
+        return es-codegen:variable-line-for($module-prefix, $source-model, $removed-entity-type-name, $property-name)
+    let $values :=
+        for $property-name in map:keys($properties)
+        return
+            (: note, this call passes mutable let-expressions for modification :)
+            es-codegen:value-for-conversion($source-model,
+                $source-model,
+                $removed-entity-type-name,
+                $property-name,
+                $property-name,
+                map:map())
+    return
+
+    fn:concat(
+        fn:string-join( $variable-setters, "&#10;"),
+'&#10;
+    return
+    json:object()
+    (: If the source is an envelope or part of an envelope document,
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+    =>map:with("$type", "', $removed-entity-type-name, '" )',
+    '&#10;',
+    fn:string-join($values)
+    )
 }
+}};
 :)
 </removed-type>
 
@@ -716,10 +918,12 @@ declare option xdmp:mapping 'false';
  from documents that were persisted according to model
  {$source-title || ", version " || $source-version}
 
- Modification History:
+
+ For usage and extension points, see the Entity Services Developer's Guide
+
+ https://docs.marklogic.com/guide/entity-services
+
  Generated at timestamp: {fn:current-dateTime()}
- Persisted by AUTHOR
- Date: DATE
 
  Target Model {$target-title || "-" || $target-version} Info:
 
@@ -750,26 +954,6 @@ for $c in $convert-instance order by $c return $c/text()}
 {for $r in $removed-type order by $r return $r/text()}
 
 
-declare private function {$module-prefix}:init-source(
-    $source as node()*,
-    $entity-type-name as xs:string
-) as node()*
-{{
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
-    else $source
-}};
-
-
-declare private function {$module-prefix}:copy-attachments(
-    $instance as json:object,
-    $source as node()*
-) as json:object
-{{
-    $instance
-    =>es:optional('$attachments',
-        $source ! fn:root(.)/es:envelope/es:attachments/node())
-}};
 
 
 </module>/text()

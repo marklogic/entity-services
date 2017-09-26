@@ -15,30 +15,25 @@
  */
 package com.marklogic.entityservices;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.Authentication;
 import com.marklogic.client.document.DocumentWriteSet;
 import com.marklogic.client.document.JSONDocumentManager;
+import com.marklogic.client.document.XMLDocumentManager;
 import com.marklogic.client.io.DocumentMetadataHandle;
 import com.marklogic.client.io.FileHandle;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.parsers.DocumentBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.*;
 
 
 public class TestSetup {
@@ -105,7 +100,7 @@ public class TestSetup {
         instance.loadEntityTypes();
         instance.loadInvalidEntityTypes();
         instance.loadExtraFiles();
-        instance.storeCustomConversionModules();
+        //instance.storeCustomConversionModules();
         return instance;
     }
     
@@ -137,7 +132,7 @@ public class TestSetup {
 	    
 		Collection<File> testInvalidFiles = getTestResources("/invalid-entity-types");
 		invalidFileUris = new HashSet<String>();
-		
+		logger.info("Beginning to load Invalid Entity Types");
 	    for (File f : testInvalidFiles) {
 	    	if (f.getName().startsWith(".")) { continue; }
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")||f.getName().endsWith(".jpg"))) { continue; }
@@ -146,7 +141,7 @@ public class TestSetup {
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
 	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
 	    	//if (!f.getName().startsWith("refs")) {continue; };
-	    	logger.info("Loading Invalid " + f.getName());
+	    	//logger.info("Loading Invalid " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
 	        
@@ -155,6 +150,7 @@ public class TestSetup {
 	    	invalidFileUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
+	    logger.info("Done loading Invalid Entity Types");
 	}
 	
 	private void loadEntityTypes() {
@@ -167,6 +163,7 @@ public class TestSetup {
 		testCaseFiles.addAll(getTestResources("/binary"));
 		entityTypes = new HashSet<String>();
 		
+		logger.info("Beginning to load Entity Types");
 	    for (File f : testCaseFiles) {
 	    	if (f.getName().startsWith(".")) { continue; }
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml")||f.getName().endsWith(".jpg"))) { continue; }
@@ -175,7 +172,7 @@ public class TestSetup {
 	    	// if (!f.getName().startsWith("Person-0.0.2")) {continue; };
 	    	//if (!f.getName().equals("OrderDetails-0.0.3.json")) {continue; };
 	    	//if (!f.getName().startsWith("refs")) {continue; };
-	    	logger.info("Loading ET Docs " + f.getName());
+	    	//logger.info("Loading ET Docs " + f.getName());
 	    	//docMgr.write(f.getPath(), new FileHandle(f));
 	    	DocumentMetadataHandle metadata = new DocumentMetadataHandle();
 	        metadata.getCollections().addAll(
@@ -187,6 +184,7 @@ public class TestSetup {
 	        entityTypes.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
+	    logger.info("Done loading Entity Types");
 	}
 
 	private void loadExtraFiles() {
@@ -203,18 +201,20 @@ public class TestSetup {
 	    extraDocuments.addAll(testDocuments);
 	    extraDocuments.addAll(sourceFiles);
 	    
+	    logger.info("Beginning to load Source Documents");
 	    for (File f : extraDocuments) {
 	    	if (f.getName().startsWith(".")) { continue; }
 	    	if (! ( f.getName().endsWith(".json") || f.getName().endsWith(".xml"))) { continue; }
 	    	
-	    	logger.info("Loading Extra Files " + f.getName());
+	    	//logger.info("Loading Extra Files " + f.getName());
 	    	writeSet.add(f.getName(), new FileHandle(f));
 	        sourceFileUris.add(f.getName());
 	    }
 	    docMgr.write(writeSet);
+	    logger.info("Done loading Source Documents");
 	}
 	
-    private void storeCustomConversionModules() {
+    public void storeCustomConversionModules() {
         
         JSONDocumentManager docMgr = _modulesClient.newJSONDocumentManager();
         DocumentWriteSet writeSet = docMgr.newWriteSet();
@@ -224,8 +224,24 @@ public class TestSetup {
         
             String moduleName = "/conv/" + f.getName();
             DocumentMetadataHandle metadata = new DocumentMetadataHandle();
-            logger.info("Loading customer xqy Files " + f.getName());
+            logger.info("Loading custom xqy module " + f.getName());
             writeSet.add(moduleName, metadata, new FileHandle(f));
+        }
+        docMgr.write(writeSet);
+    }
+    
+    public void storeCustomSchema() {
+        
+        XMLDocumentManager docMgr = _schemasClient.newXMLDocumentManager();
+        DocumentWriteSet writeSet = docMgr.newWriteSet();
+        Collection<File> custSchema = getTestResources("/custom-schemas");
+        
+        for (File f : custSchema) {
+        
+            String schemaName = f.getName();
+            DocumentMetadataHandle metadata = new DocumentMetadataHandle();
+            logger.info("Loading custom xsd " + f.getName());
+            writeSet.add(schemaName, metadata, new FileHandle(f));
         }
         docMgr.write(writeSet);
     }

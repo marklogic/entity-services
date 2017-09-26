@@ -1,456 +1,470 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<template xmlns="http://marklogic.com/xdmp/tde">
-  <description>Extraction Template Generated from Entity Type Document
-graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.2</description>
-  <context>//es:instance[es:info/es:version = "0.0.2"]</context>
-  <vars>
-    <var>
-      <name>RDF</name>
-      <val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</val>
-    </var>
-    <var>
-      <name>RDF_TYPE</name>
-      <val>sem:iri(concat($RDF, "type"))</val>
-    </var>
-  </vars>
-  <path-namespaces>
-    <path-namespace>
-      <prefix>es</prefix>
-      <namespace-uri>http://marklogic.com/entity-services</namespace-uri>
-    </path-namespace>
-  </path-namespaces>
-  <templates>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./SchemaCompleteEntityType</context>
-      <vars>
-        <var>
-          <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType/", fn:encode-for-uri(./orderId)))</val>
-        </var>
-      </vars>
-      <triples>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>$RDF_TYPE</val>
-          </predicate>
-          <object>
-            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType")</val>
-          </object>
-        </triple>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
-          </predicate>
-          <object>
-            <val>fn:base-uri(.)</val>
-          </object>
-        </triple>
-      </triples>
-    </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./SchemaCompleteEntityType</context>
-      <rows>
-        <row>
-          <schema-name>SchemaCompleteEntityType</schema-name>
-          <view-name>SchemaCompleteEntityType</view-name>
-          <view-layout>sparse</view-layout>
-          <columns>
-            <column>
-              <name>orderId</name>
-              <scalar-type>string</scalar-type>
-              <val>orderId</val>
-            </column>
-            <column>
-              <name>anyURIKey</name>
-              <scalar-type>anyURI</scalar-type>
-              <val>anyURIKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>base64BinaryKey</name>
-              <scalar-type>base64Binary</scalar-type>
-              <val>base64BinaryKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>booleanKey</name>
-              <scalar-type>boolean</scalar-type>
-              <val>booleanKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>byteKey</name>
-              <scalar-type>byte</scalar-type>
-              <val>byteKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>dateKey</name>
-              <scalar-type>date</scalar-type>
-              <val>dateKey</val>
-            </column>
-            <column>
-              <name>dateTimeKey</name>
-              <scalar-type>dateTime</scalar-type>
-              <val>dateTimeKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>dayTimeDurationKey</name>
-              <scalar-type>dayTimeDuration</scalar-type>
-              <val>dayTimeDurationKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>decimalKey</name>
-              <scalar-type>decimal</scalar-type>
-              <val>decimalKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>doubleKey</name>
-              <scalar-type>double</scalar-type>
-              <val>doubleKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>durationKey</name>
-              <scalar-type>duration</scalar-type>
-              <val>durationKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>floatKey</name>
-              <scalar-type>float</scalar-type>
-              <val>floatKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>gDayKey</name>
-              <scalar-type>gDay</scalar-type>
-              <val>gDayKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>gMonthKey</name>
-              <scalar-type>gMonth</scalar-type>
-              <val>gMonthKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>gMonthDayKey</name>
-              <scalar-type>gMonthDay</scalar-type>
-              <val>gMonthDayKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>gYearKey</name>
-              <scalar-type>gYear</scalar-type>
-              <val>gYearKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>gYearMonthKey</name>
-              <scalar-type>gYearMonth</scalar-type>
-              <val>gYearMonthKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>hexBinaryKey</name>
-              <scalar-type>hexBinary</scalar-type>
-              <val>hexBinaryKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>intKey</name>
-              <scalar-type>int</scalar-type>
-              <val>intKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>integerKey</name>
-              <scalar-type>integer</scalar-type>
-              <val>integerKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>negativeIntegerKey</name>
-              <scalar-type>negativeInteger</scalar-type>
-              <val>negativeIntegerKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>nonNegativeIntegerKey</name>
-              <scalar-type>nonNegativeInteger</scalar-type>
-              <val>nonNegativeIntegerKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>positiveIntegerKey</name>
-              <scalar-type>positiveInteger</scalar-type>
-              <val>positiveIntegerKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>nonPositiveIntegerKey</name>
-              <scalar-type>nonPositiveInteger</scalar-type>
-              <val>nonPositiveIntegerKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>longKey</name>
-              <scalar-type>long</scalar-type>
-              <val>longKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>shortKey</name>
-              <scalar-type>short</scalar-type>
-              <val>shortKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>stringKey</name>
-              <scalar-type>string</scalar-type>
-              <val>stringKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>timeKey</name>
-              <scalar-type>time</scalar-type>
-              <val>timeKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>unsignedByteKey</name>
-              <scalar-type>unsignedByte</scalar-type>
-              <val>unsignedByteKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>unsignedIntKey</name>
-              <scalar-type>unsignedInt</scalar-type>
-              <val>unsignedIntKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>unsignedLongKey</name>
-              <scalar-type>unsignedLong</scalar-type>
-              <val>unsignedLongKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>unsignedShortKey</name>
-              <scalar-type>unsignedShort</scalar-type>
-              <val>unsignedShortKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>yearMonthDurationKey</name>
-              <scalar-type>yearMonthDuration</scalar-type>
-              <val>yearMonthDurationKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>iriKey</name>
-              <scalar-type>IRI</scalar-type>
-              <val>iriKey</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>referenceInThisFile</name>
-              <scalar-type>integer</scalar-type>
-              <val>referenceInThisFile/OrderDetails</val>
-              <nullable>true</nullable>
-            </column>
-            <column>
-              <name>externalReference</name>
-              <scalar-type>string</scalar-type>
-              <val>externalReference/OrderDetails</val>
-              <nullable>true</nullable>
-            </column>
-          </columns>
-        </row>
-      </rows>
-      <templates>
-        <template>
-          <context>./arrayStringKey</context>
-          <rows>
-            <row>
-              <schema-name>SchemaCompleteEntityType</schema-name>
-              <view-name>SchemaCompleteEntityType_arrayStringKey</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--
+<?xml  version="1.0" encoding="UTF-8"?>
+<tde:template xmlns:tde="http://marklogic.com/xdmp/tde">
+<tde:description>
+Extraction Template Generated from Entity Type Document
+graph uri: http://marklogic.com/testing-entity-type#SchemaCompleteEntityType-0.0.2</tde:description>
+<!--
+ The following line matches JSON and XML instances, but may be slower to index documents. 
+-->
+<tde:context>//*:instance[*:info/*:version = "0.0.2"]</tde:context>
+<!--
+ Replace the above with the following line to match XML instances only.  This may speed up indexing
+        <tde:context>//es:instance[es:info/es:version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<!--
+ Replace the above with the following line to match JSON instances only.  This may speed up indexing
+        <tde:context>//instance[info/version = "{$model=>map:get("info")=>map:get("version")}"]</tde:context>
+        
+-->
+<tde:vars>
+<tde:var>
+<tde:name>RDF</tde:name>
+<tde:val>"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</tde:val>
+</tde:var>
+<tde:var>
+<tde:name>RDF_TYPE</tde:name>
+<tde:val>sem:iri(concat($RDF, "type"))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:path-namespaces>
+<tde:path-namespace>
+<tde:prefix>es</tde:prefix>
+<tde:namespace-uri>http://marklogic.com/entity-services</tde:namespace-uri>
+</tde:path-namespace>
+</tde:path-namespaces>
+<tde:templates>
+<tde:template>
+<tde:context>./SchemaCompleteEntityType</tde:context>
+<tde:vars>
+<tde:var>
+<tde:name>subject-iri</tde:name>
+<tde:val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType/", fn:encode-for-uri(./orderId)))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:triples>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>$RDF_TYPE</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/SchemaCompleteEntityType")</tde:val>
+</tde:object>
+</tde:triple>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>fn:base-uri(.)</tde:val>
+</tde:object>
+</tde:triple>
+</tde:triples>
+</tde:template>
+<tde:template>
+<tde:context>./SchemaCompleteEntityType</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>SchemaCompleteEntityType</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<tde:name>orderId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>orderId</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>anyURIKey</tde:name>
+<tde:scalar-type>anyURI</tde:scalar-type>
+<tde:val>anyURIKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>base64BinaryKey</tde:name>
+<tde:scalar-type>base64Binary</tde:scalar-type>
+<tde:val>base64BinaryKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>booleanKey</tde:name>
+<tde:scalar-type>boolean</tde:scalar-type>
+<tde:val>booleanKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>byteKey</tde:name>
+<tde:scalar-type>byte</tde:scalar-type>
+<tde:val>byteKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>dateKey</tde:name>
+<tde:scalar-type>date</tde:scalar-type>
+<tde:val>dateKey</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>dateTimeKey</tde:name>
+<tde:scalar-type>dateTime</tde:scalar-type>
+<tde:val>dateTimeKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>dayTimeDurationKey</tde:name>
+<tde:scalar-type>dayTimeDuration</tde:scalar-type>
+<tde:val>dayTimeDurationKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>decimalKey</tde:name>
+<tde:scalar-type>decimal</tde:scalar-type>
+<tde:val>decimalKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>doubleKey</tde:name>
+<tde:scalar-type>double</tde:scalar-type>
+<tde:val>doubleKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>durationKey</tde:name>
+<tde:scalar-type>duration</tde:scalar-type>
+<tde:val>durationKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>floatKey</tde:name>
+<tde:scalar-type>float</tde:scalar-type>
+<tde:val>floatKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>gDayKey</tde:name>
+<tde:scalar-type>gDay</tde:scalar-type>
+<tde:val>gDayKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>gMonthKey</tde:name>
+<tde:scalar-type>gMonth</tde:scalar-type>
+<tde:val>gMonthKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>gMonthDayKey</tde:name>
+<tde:scalar-type>gMonthDay</tde:scalar-type>
+<tde:val>gMonthDayKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>gYearKey</tde:name>
+<tde:scalar-type>gYear</tde:scalar-type>
+<tde:val>gYearKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>gYearMonthKey</tde:name>
+<tde:scalar-type>gYearMonth</tde:scalar-type>
+<tde:val>gYearMonthKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>hexBinaryKey</tde:name>
+<tde:scalar-type>hexBinary</tde:scalar-type>
+<tde:val>hexBinaryKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>intKey</tde:name>
+<tde:scalar-type>int</tde:scalar-type>
+<tde:val>intKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>integerKey</tde:name>
+<tde:scalar-type>integer</tde:scalar-type>
+<tde:val>integerKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>negativeIntegerKey</tde:name>
+<tde:scalar-type>negativeInteger</tde:scalar-type>
+<tde:val>negativeIntegerKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>nonNegativeIntegerKey</tde:name>
+<tde:scalar-type>nonNegativeInteger</tde:scalar-type>
+<tde:val>nonNegativeIntegerKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>positiveIntegerKey</tde:name>
+<tde:scalar-type>positiveInteger</tde:scalar-type>
+<tde:val>positiveIntegerKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>nonPositiveIntegerKey</tde:name>
+<tde:scalar-type>nonPositiveInteger</tde:scalar-type>
+<tde:val>nonPositiveIntegerKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>longKey</tde:name>
+<tde:scalar-type>long</tde:scalar-type>
+<tde:val>longKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>shortKey</tde:name>
+<tde:scalar-type>short</tde:scalar-type>
+<tde:val>shortKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>stringKey</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>stringKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>timeKey</tde:name>
+<tde:scalar-type>time</tde:scalar-type>
+<tde:val>timeKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>unsignedByteKey</tde:name>
+<tde:scalar-type>unsignedByte</tde:scalar-type>
+<tde:val>unsignedByteKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>unsignedIntKey</tde:name>
+<tde:scalar-type>unsignedInt</tde:scalar-type>
+<tde:val>unsignedIntKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>unsignedLongKey</tde:name>
+<tde:scalar-type>unsignedLong</tde:scalar-type>
+<tde:val>unsignedLongKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>unsignedShortKey</tde:name>
+<tde:scalar-type>unsignedShort</tde:scalar-type>
+<tde:val>unsignedShortKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>yearMonthDurationKey</tde:name>
+<tde:scalar-type>yearMonthDuration</tde:scalar-type>
+<tde:val>yearMonthDurationKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>iriKey</tde:name>
+<tde:scalar-type>IRI</tde:scalar-type>
+<tde:val>iriKey</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>referenceInThisFile</tde:name>
+<tde:scalar-type>integer</tde:scalar-type>
+<tde:val>referenceInThisFile/OrderDetails</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+<tde:column>
+<tde:name>externalReference</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>externalReference/OrderDetails</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+<tde:templates>
+<tde:template>
+<tde:context>./arrayStringKey</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>SchemaCompleteEntityType_arrayStringKey</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
 This column joins to property orderId of SchemaCompleteEntityType
 -->
-                  <name>orderId</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../orderId</val>
-                </column>
-                <column>
-                  <!--
+<tde:name>orderId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../orderId</tde:val>
+</tde:column>
+<tde:column>
+<!--
 This column holds array values from property orderId of SchemaCompleteEntityType
 -->
-                  <name>arrayStringKey</name>
-                  <scalar-type>string</scalar-type>
-                  <val>.</val>
-                  <nullable>true</nullable>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-        <template>
-          <context>./arrayreferenceInThisFile</context>
-          <rows>
-            <row>
-              <schema-name>SchemaCompleteEntityType</schema-name>
-              <view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--
+<tde:name>arrayStringKey</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>.</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+<tde:template>
+<tde:context>./arrayreferenceInThisFile</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>SchemaCompleteEntityType_arrayreferenceInThisFile</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
 This column joins to property orderId of SchemaCompleteEntityType
 -->
-                  <name>orderId</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../orderId</val>
-                </column>
-                <column>
-                  <!--
+<tde:name>orderId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../orderId</tde:val>
+</tde:column>
+<tde:column>
+<!--
 This column joins to primary key of OrderDetails
 -->
-                  <name>arrayreferenceInThisFile_quantity</name>
-                  <scalar-type>integer</scalar-type>
-                  <val>OrderDetails</val>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-        <template>
-          <context>./arrayKey</context>
-          <rows>
-            <row>
-              <schema-name>SchemaCompleteEntityType</schema-name>
-              <view-name>SchemaCompleteEntityType_arrayKey</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--
+<tde:name>arrayreferenceInThisFile_quantity</tde:name>
+<tde:scalar-type>integer</tde:scalar-type>
+<tde:val>OrderDetails</tde:val>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+<tde:template>
+<tde:context>./arrayKey</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>SchemaCompleteEntityType_arrayKey</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
 This column joins to property orderId of SchemaCompleteEntityType
 -->
-                  <name>orderId</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../orderId</val>
-                </column>
-                <column>
-                  <!--
+<tde:name>orderId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../orderId</tde:val>
+</tde:column>
+<tde:column>
+<!--
 This column holds array values from property orderId of SchemaCompleteEntityType
 -->
-                  <name>arrayKey</name>
-                  <scalar-type>long</scalar-type>
-                  <val>.</val>
-                  <nullable>true</nullable>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-        <template>
-          <context>./externalArrayReference</context>
-          <rows>
-            <row>
-              <schema-name>SchemaCompleteEntityType</schema-name>
-              <view-name>SchemaCompleteEntityType_externalArrayReference</view-name>
-              <view-layout>sparse</view-layout>
-              <columns>
-                <column>
-                  <!--
+<tde:name>arrayKey</tde:name>
+<tde:scalar-type>long</tde:scalar-type>
+<tde:val>.</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+<tde:template>
+<tde:context>./externalArrayReference</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>SchemaCompleteEntityType_externalArrayReference</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<!--
 This column joins to property orderId of SchemaCompleteEntityType
 -->
-                  <name>orderId</name>
-                  <scalar-type>string</scalar-type>
-                  <val>../orderId</val>
-                </column>
-                <column>
-                  <!--
+<tde:name>orderId</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>../orderId</tde:val>
+</tde:column>
+<tde:column>
+<!--
 This column joins to primary key of an external reference
 -->
-                  <name>externalArrayReference</name>
-                  <scalar-type>string</scalar-type>
-                  <val>OrderDetails</val>
-                  <nullable>true</nullable>
-                </column>
-              </columns>
-            </row>
-          </rows>
-        </template>
-      </templates>
-    </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./OrderDetails</context>
-      <vars>
-        <var>
-          <name>subject-iri</name>
-          <val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/", fn:encode-for-uri(xs:string(./quantity))))</val>
-        </var>
-      </vars>
-      <triples>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>$RDF_TYPE</val>
-          </predicate>
-          <object>
-            <val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails")</val>
-          </object>
-        </triple>
-        <triple>
-          <subject>
-            <val>$subject-iri</val>
-          </subject>
-          <predicate>
-            <val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</val>
-          </predicate>
-          <object>
-            <val>fn:base-uri(.)</val>
-          </object>
-        </triple>
-      </triples>
-    </template>
-    <template xmlns:tde="http://marklogic.com/xdmp/tde">
-      <context>./OrderDetails</context>
-      <rows>
-        <row>
-          <schema-name>SchemaCompleteEntityType</schema-name>
-          <view-name>OrderDetails</view-name>
-          <view-layout>sparse</view-layout>
-          <columns>
-            <column>
-              <name>quantity</name>
-              <scalar-type>integer</scalar-type>
-              <val>quantity</val>
-            </column>
-            <column>
-              <name>productName</name>
-              <scalar-type>string</scalar-type>
-              <val>productName</val>
-              <nullable>true</nullable>
-            </column>
-          </columns>
-        </row>
-      </rows>
-    </template>
-  </templates>
-</template>
+<tde:name>externalArrayReference</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>OrderDetails</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+</tde:templates>
+</tde:template>
+<tde:template>
+<tde:context>./OrderDetails</tde:context>
+<tde:vars>
+<tde:var>
+<tde:name>subject-iri</tde:name>
+<tde:val>sem:iri(concat("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails/", fn:encode-for-uri(xs:string(./quantity))))</tde:val>
+</tde:var>
+</tde:vars>
+<tde:triples>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>$RDF_TYPE</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>sem:iri("http://marklogic.com/testing-entity-type/SchemaCompleteEntityType-0.0.2/OrderDetails")</tde:val>
+</tde:object>
+</tde:triple>
+<tde:triple>
+<tde:subject>
+<tde:val>$subject-iri</tde:val>
+</tde:subject>
+<tde:predicate>
+<tde:val>sem:iri("http://www.w3.org/2000/01/rdf-schema#isDefinedBy")</tde:val>
+</tde:predicate>
+<tde:object>
+<tde:val>fn:base-uri(.)</tde:val>
+</tde:object>
+</tde:triple>
+</tde:triples>
+</tde:template>
+<tde:template>
+<tde:context>./OrderDetails</tde:context>
+<tde:rows>
+<tde:row>
+<tde:schema-name>SchemaCompleteEntityType</tde:schema-name>
+<tde:view-name>OrderDetails</tde:view-name>
+<tde:view-layout>sparse</tde:view-layout>
+<tde:columns>
+<tde:column>
+<tde:name>quantity</tde:name>
+<tde:scalar-type>integer</tde:scalar-type>
+<tde:val>quantity</tde:val>
+</tde:column>
+<tde:column>
+<tde:name>productName</tde:name>
+<tde:scalar-type>string</tde:scalar-type>
+<tde:val>productName</tde:val>
+<tde:nullable>true</tde:nullable>
+</tde:column>
+</tde:columns>
+</tde:row>
+</tde:rows>
+</tde:template>
+</tde:templates>
+</tde:template>

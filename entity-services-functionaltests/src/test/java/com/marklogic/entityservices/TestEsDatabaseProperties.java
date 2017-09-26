@@ -15,17 +15,16 @@
  */
 package com.marklogic.entityservices;
 
-import static org.junit.Assert.assertEquals;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marklogic.client.io.JacksonHandle;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marklogic.client.io.JacksonHandle;
+import static org.junit.Assert.assertEquals;
 
 public class TestEsDatabaseProperties extends EntityServicesTestBase {
 	
@@ -82,6 +81,23 @@ public class TestEsDatabaseProperties extends EntityServicesTestBase {
 		assertEquals(control,databaseConfiguration);
 
 		//org.hamcrest.MatcherAssert.assertThat("Expected: "+control+"\n\tGot: "+databaseConfiguration,control, org.hamcrest.Matchers.equalTo(databaseConfiguration));
+	}
+	
+	@Test
+	public void testDBpropNamespace() throws IOException, TestEvalException {
+		String[] eTs = {"valid-1-namespace.json","valid-2-namespace.json"};
+		
+		for (String entityType : eTs) {
+			logger.info("Validating for "+entityType);
+			JacksonHandle handle = evalOneResult("", "es:database-properties-generate(fn:doc('"+entityType+"'))", new JacksonHandle());
+			JsonNode databaseConfiguration = handle.get();
+			//logger.debug(databaseConfiguration.toString());
+
+			ObjectMapper mapper = new ObjectMapper();
+			InputStream is = this.getClass().getResourceAsStream("/test-database-properties/"+entityType);
+			JsonNode control = mapper.readValue(is, JsonNode.class);
+			assertEquals(control,databaseConfiguration);
+		}
 	}
 	
 }

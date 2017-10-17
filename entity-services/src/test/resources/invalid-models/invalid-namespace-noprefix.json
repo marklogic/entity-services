@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title":"invalid-namespace-noprefix",
+    "version": "0.0.3",
+    "description":"This invalid document has a namespace uri but no prefix."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http:///marklogic.com/an/absolute/uri"
+    }
+  }
+}

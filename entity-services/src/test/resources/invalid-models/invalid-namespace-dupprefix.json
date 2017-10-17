@@ -1,0 +1,27 @@
+{
+  "info": {
+    "title":"invalid-namespace-dupprefix",
+    "version": "0.0.3",
+    "description":"This invalid document has a duplicated prefix."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/an/absolute/uri",
+      "namespacePrefix" : "X"
+    },
+    "Another": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/another/absolute/uri",
+      "namespacePrefix" : "X"
+    }
+  }
+}

@@ -127,6 +127,18 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct");
         invalidMessages.put("invalid-ref-pk.json", "A reference cannot be primary key.");
         invalidMessages.put("invalid-ref-pk.xml", "A reference cannot be primary key.");
+        invalidMessages.put("invalid-namespace-blacklist.json", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist.xml", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist2.json", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist2.xml", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-dupprefix.json", "You cannot duplicate a namespace prefix within a model descriptor");
+        invalidMessages.put("invalid-namespace-dupprefix.xml", "You cannot duplicate a namespace prefix within a model descriptor");
+        invalidMessages.put("invalid-namespace-noprefix.json", "If a type has a namespace property, it must also have a namespacePrefix property.");
+        invalidMessages.put("invalid-namespace-noprefix.xml", "If a type has a namespace property, it must also have a namespace-prefix property.");
+        invalidMessages.put("invalid-namespace-nouri.json", "If a type has a namespacePrefix property, it must also have a namespace property.");
+        invalidMessages.put("invalid-namespace-nouri.xml", "If a type has a namespace-prefix property, it must also have a namespace property.");
+        invalidMessages.put("invalid-namespace-uri.json", "Namespace property must be a valid absolute URI.");
+        invalidMessages.put("invalid-namespace-uri.xml", "Namespace property must be a valid absolute URI.");
     }
 
 

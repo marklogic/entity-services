@@ -171,7 +171,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
             JacksonHandle handle = null;
             try {
                 handle = evalOneResult("", "es:model-validate(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
-                fail("eval should throw an exception for invalid cases." + entityType);
+
+                // ive included one false negative
+                if (! entityType.contains( "false-negative-namespace.json") ) {
+                    fail("eval should throw an exception for invalid cases." + entityType);
+                }
 
             } catch (TestEvalException e) {
                 assertTrue("Must contain invalidity message. Message was " + e.getMessage(),

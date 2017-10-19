@@ -158,7 +158,7 @@ declare private variable $esi:model-schematron :=
          <iso:assert test="not( matches( string(.), '^es|json|xsi|xs|xsd|[xX][mM][lL]$' ) )">Namespace prefix <xsl:value-of select="." /> is not valid.  It is a reserved pattern.</iso:assert>
         </iso:rule>
         <iso:rule context="/">
-         <iso:assert test="count(.//(es:namespace-prefix|namespacePrefix)) eq count(distinct-values(.//(es:namespace-prefix|namespacePrefix)))">You cannot duplicate a namespace prefix within a model descriptor.</iso:assert>
+         <iso:assert test="count(distinct-values(.//(es:namespace|namespace))) eq count(distinct-values(.//(es:namespace-prefix|namespacePrefix)))">You cannot duplicate a namespace prefix within a model descriptor.</iso:assert>
         </iso:rule>
       </iso:pattern>
     </iso:schema>

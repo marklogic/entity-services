@@ -131,8 +131,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-namespace-blacklist.xml", "It is a reserved pattern.");
         invalidMessages.put("invalid-namespace-blacklist2.json", "It is a reserved pattern.");
         invalidMessages.put("invalid-namespace-blacklist2.xml", "It is a reserved pattern.");
-        invalidMessages.put("invalid-namespace-dupprefix.json", "You cannot duplicate a namespace prefix within a model descriptor");
-        invalidMessages.put("invalid-namespace-dupprefix.xml", "You cannot duplicate a namespace prefix within a model descriptor");
+        invalidMessages.put("invalid-namespace-dupprefix.json", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupprefix.xml", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupuri.json", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupuri.xml",  "Each prefix and namespace pair must be unique.");
         invalidMessages.put("invalid-namespace-noprefix.json", "If a type has a namespace property, it must also have a namespacePrefix property.");
         invalidMessages.put("invalid-namespace-noprefix.xml", "If a type has a namespace property, it must also have a namespace-prefix property.");
         invalidMessages.put("invalid-namespace-nouri.json", "If a type has a namespacePrefix property, it must also have a namespace property.");

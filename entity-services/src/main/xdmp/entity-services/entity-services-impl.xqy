@@ -144,22 +144,32 @@ declare private variable $esi:model-schematron :=
          <iso:assert test="matches(., '^[a-z]+:')">Namespace property must be a valid absolute URI.  Value is <xsl:value-of select="." />.</iso:assert>
          <iso:assert test="../namespacePrefix">If a type has a namespace property, it must also have a namespacePrefix property.</iso:assert>
         </iso:rule>
+
         <iso:rule context="es:namespace">
          <iso:assert test="matches(., '^[a-z]+:')">Namespace property must be a valid absolute URI.  Value is <xsl:value-of select="." />.</iso:assert>
          <iso:assert test="../es:namespace-prefix">If a type has a namespace property, it must also have a namespace-prefix property.</iso:assert>
         </iso:rule>
+
         <iso:rule context="namespacePrefix">
          <iso:assert test="../namespace">If a type has a namespacePrefix property, it must also have a namespace property.</iso:assert>
         </iso:rule>
+
         <iso:rule context="es:namespace-prefix">
          <iso:assert test="../es:namespace">If a type has a namespace-prefix property, it must also have a namespace property.</iso:assert>
         </iso:rule>
+
         <iso:rule context="es:namespace-prefix|namespacePrefix">
          <iso:assert test="not( matches( string(.), '^(es|json|xsi|xs|xsd|[xX][mM][lL])$' ) )">Namespace prefix <xsl:value-of select="." /> is not valid.  It is a reserved pattern.</iso:assert>
         </iso:rule>
+
         <iso:rule context="/">
-         <iso:assert test="count(distinct-values(.//(es:namespace|namespace))) eq count(distinct-values(.//(es:namespace-prefix|namespacePrefix)))">You cannot duplicate a namespace prefix within a model descriptor.</iso:assert>
+         <iso:assert test="count(distinct-values( .//(namespace|es:namespace) 
+                                                    ! concat(../(namespacePrefix|es:namespace-prefix), .))) eq 
+                           count(distinct-values( .//(namespace|es:namespace ))) and
+                           count(distinct-values( .//(namespace|es:namespace ))) eq
+                           count(distinct-values( .//(namespacePrefix|es:namespace-prefix )))">Each prefix and namespace pair must be unique.</iso:assert>
         </iso:rule>
+        
       </iso:pattern>
     </iso:schema>
 ;

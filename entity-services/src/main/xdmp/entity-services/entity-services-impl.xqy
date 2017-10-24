@@ -142,20 +142,20 @@ declare private variable $esi:model-schematron :=
         </iso:rule>
         <iso:rule context="namespace">
          <iso:assert test="matches(., '^[a-z]+:')">Namespace property must be a valid absolute URI.  Value is <xsl:value-of select="." />.</iso:assert>
-         <iso:assert test="../namespacePrefix">If a type has a namespace property, it must also have a namespacePrefix property.</iso:assert>
+         <iso:assert test="../namespacePrefix">namespace <xsl:value-of select="."/> has no namespacePrefix property.</iso:assert>
         </iso:rule>
 
         <iso:rule context="es:namespace">
          <iso:assert test="matches(., '^[a-z]+:')">Namespace property must be a valid absolute URI.  Value is <xsl:value-of select="." />.</iso:assert>
-         <iso:assert test="../es:namespace-prefix">If a type has a namespace property, it must also have a namespace-prefix property.</iso:assert>
+         <iso:assert test="../es:namespace-prefix">namespace <xsl:value-of select="."/> has no namespace-prefix property.</iso:assert>
         </iso:rule>
 
         <iso:rule context="namespacePrefix">
-         <iso:assert test="../namespace">If a type has a namespacePrefix property, it must also have a namespace property.</iso:assert>
+         <iso:assert test="../namespace">namespacePrefix <xsl:value-of select="."/> has no namespace property.</iso:assert>
         </iso:rule>
 
         <iso:rule context="es:namespace-prefix">
-         <iso:assert test="../es:namespace">If a type has a namespace-prefix property, it must also have a namespace property.</iso:assert>
+         <iso:assert test="../es:namespace">namespace-prefix  <xsl:value-of select="."/> has no namespace property.</iso:assert>
         </iso:rule>
 
         <iso:rule context="es:namespace-prefix|namespacePrefix">

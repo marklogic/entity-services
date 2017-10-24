@@ -88,7 +88,9 @@
       "primaryKey": "pk",
       "required": ["p7","p9","p10","p12"],
       "wordLexicon": ["p9"],
-      "rangeIndex": ["p8","p9"]
+      "rangeIndex": ["p8","p9"],
+      "namespace": "http://marklogic.com/example/b",
+      "namespacePrefix":"b"
     },
     "ETThree": {
       "description": "An entity type in this version that did not exist before.",

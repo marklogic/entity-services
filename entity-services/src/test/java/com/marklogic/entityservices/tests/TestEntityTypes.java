@@ -135,10 +135,10 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-namespace-dupprefix.xml", "Each prefix and namespace pair must be unique.");
         invalidMessages.put("invalid-namespace-dupuri.json", "Each prefix and namespace pair must be unique.");
         invalidMessages.put("invalid-namespace-dupuri.xml",  "Each prefix and namespace pair must be unique.");
-        invalidMessages.put("invalid-namespace-noprefix.json", "If a type has a namespace property, it must also have a namespacePrefix property.");
-        invalidMessages.put("invalid-namespace-noprefix.xml", "If a type has a namespace property, it must also have a namespace-prefix property.");
-        invalidMessages.put("invalid-namespace-nouri.json", "If a type has a namespacePrefix property, it must also have a namespace property.");
-        invalidMessages.put("invalid-namespace-nouri.xml", "If a type has a namespace-prefix property, it must also have a namespace property.");
+        invalidMessages.put("invalid-namespace-noprefix.json", "has no namespacePrefix property.");
+        invalidMessages.put("invalid-namespace-noprefix.xml", "has no namespace-prefix property.");
+        invalidMessages.put("invalid-namespace-nouri.json", "has no namespace property.");
+        invalidMessages.put("invalid-namespace-nouri.xml", "has no namespace property.");
         invalidMessages.put("invalid-namespace-uri.json", "Namespace property must be a valid absolute URI.");
         invalidMessages.put("invalid-namespace-uri.xml", "Namespace property must be a valid absolute URI.");
     }

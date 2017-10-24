@@ -115,8 +115,8 @@ public class TestVersionTranslator extends EntityServicesTestBase {
         // debugOutput(actualDoc);
 
         assertThat("checking instance conversion to target",
-            expectedDoc,
-            CompareMatcher.isIdenticalTo(actualDoc).ignoreWhitespace());
+            actualDoc,
+            CompareMatcher.isIdenticalTo(expectedDoc).ignoreWhitespace());
         //logger.info(handle.get());
 
 

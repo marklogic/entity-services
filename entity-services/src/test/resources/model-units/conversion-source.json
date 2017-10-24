@@ -45,7 +45,9 @@
       "primaryKey": "pk",
       "required": ["p1","p2"],
       "wordLexicon": ["p2"],
-      "rangeIndex": ["p3","p4"]
+      "rangeIndex": ["p3","p4"],
+      "namespace": "http://marklogic.com/example/a",
+      "namespacePrefix":"a"
     },
     "ETTwo": {
       "properties": {

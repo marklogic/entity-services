@@ -22,7 +22,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-10-25T11:24:37.576759-07:00
+ Generated at timestamp: 2017-10-25T15:01:02.134942-07:00
 
  Target Model srcHasETTgt-0.0.2 Info:
 
@@ -90,12 +90,13 @@ declare function srcHasETTgt-from-srcHasETSrc:convert-instance-Product(
     let $UnitPrice  :=             $source-node/UnitPrice ! xs:integer(.)
     let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.)
 
+    let $instance := es:init-instance($source-node, "Product)")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "Product" )
+
     =>   map:with('ProductName',   $ProductName)
     =>es:optional('UnitPrice',   $UnitPrice)
     =>es:optional('SupplierID',   $SupplierID)

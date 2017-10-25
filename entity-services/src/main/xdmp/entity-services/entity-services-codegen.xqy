@@ -912,13 +912,13 @@ map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
     fn:concat(
         fn:string-join( $variable-setters, "&#10;"),
 '&#10;
+    let $instance := es:init-instance($source-node, "', $removed-entity-type-name, ')")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "', $removed-entity-type-name, '" )',
-    '&#10;',
+&#10;',
     fn:string-join($values)
     )
 }

@@ -15,6 +15,8 @@
  */
 package com.marklogic.entityservices;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marklogic.client.document.DocumentWriteSet;
@@ -139,15 +141,15 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
+			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
 			xqueryModule = evalOneResult("", "es:version-translator-generate( es:model-validate( fn:doc( '"+entityTypeName+"')),fn:doc( '"+entityTypeName+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
-			logger.info("Checking version translator for "+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"));
 			compareLines("/test-version-translator/"+entityTypeName.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		} catch (TestEvalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 	}
@@ -160,15 +162,15 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
+			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
 			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),es:model-validate(fn:doc( '"+target+"')))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
-			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
 			compareLines("/test-version-translator/"+target.replaceAll("\\.(xml|json)", ".xqy"), actualDoc);
 
 		} catch (TestEvalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 	}
@@ -205,21 +207,21 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			
 		StringHandle xqueryModule;
 		try {
+			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
 			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
 			String actualDoc = xqueryModule.get();
 			//logger.info(actualDoc);
-			logger.info("Checking version translator for "+target.replaceAll("\\.(xml|json)", ".xqy"));
 			compareLines("/test-version-translator/"+target.replaceAll("\\-Tgt.json", ".xqy"), actualDoc);
 
 		} catch (TestEvalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 	}
 	
 	@Test
-    public void testConvInst() throws TransformerException, IOException, SAXException {
+    public void testConvInst() throws JsonParseException, JsonMappingException, IOException {
 
         String import1 = "import module namespace locArr = 'http://localArrayRefTgt/localArrayRefTgt-0.0.2-from-localArrayRefSrc-0.0.1' at '/conv/localArrayRefs.xqy';\n" + 
                          "import module namespace locArrSrc = 'http://localArrayRefSrc/localArrayRefSrc-0.0.1' at '/conv/VT-localArrayRefs-Src.xqy';\n";
@@ -228,9 +230,9 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
         
         JacksonHandle handle;
         try {
+        	logger.info("Checking convert-instance-Order()");
             handle = evalOneResult(import1, query1, new JacksonHandle());
             JsonNode actualDoc = handle.get();
-            logger.info("Checking convert-instance-Order()");
             ObjectMapper mapper = new ObjectMapper();
             InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Order.json");
 
@@ -240,7 +242,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 
         } catch (TestEvalException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         
     }
@@ -255,9 +257,9 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
         
         JacksonHandle handle;
         try {
+        	logger.info("Checking convert-instance-Product()");
             handle = evalOneResult(import1, query1, new JacksonHandle());
             JsonNode actualDoc = handle.get();
-            logger.info("Checking convert-instance-Product()");
             ObjectMapper mapper = new ObjectMapper();
             InputStream is = this.getClass().getResourceAsStream("/test-extract-instance/convert-instance-Product.json");
 
@@ -267,9 +269,28 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 
         } catch (TestEvalException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+        	throw new RuntimeException(e);
         }
         
+    }
+    
+    @Test
+    public void testNamespace() throws IOException {
+    	
+		String source = "valid-1-namespace.json";
+		String target = "valid-2-namespace.json";
+			
+		StringHandle xqueryModule;
+		try {
+			logger.info("Checking version translator for namespaceTrans.xqy");
+			xqueryModule = evalOneResult("", "es:version-translator-generate(fn:doc( '"+source+"'),fn:doc( '"+target+"'))", new StringHandle());
+			String actualDoc = xqueryModule.get();
+			//logger.info(actualDoc);
+			compareLines("/test-version-translator/namespaceTrans.xqy", actualDoc);
+
+		} catch (TestEvalException e) {
+			throw new RuntimeException(e);
+		}
     }
 
 }

@@ -5,6 +5,8 @@ module namespace localArrayRefTgt-from-localArrayRefSrc
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+
+
 declare option xdmp:mapping 'false';
 
 (:
@@ -20,7 +22,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-07-13T16:38:42.031084-07:00
+ Generated at timestamp: 2017-10-25T14:07:47.820072-07:00
 
  Target Model localArrayRefTgt-0.0.2 Info:
 
@@ -29,12 +31,16 @@ declare option xdmp:mapping 'false';
     required: CustomerID, ( in source: CustomerID )
     range indexes: None, ( in source: CustomerID, OrderDate )
     word lexicons: CustomerID, ( in source: CustomerID, OrderDate )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
  Type OrderDetail: 
     primaryKey: ProductID, ( in source: ProductID )
     required: ProductID, ( in source: None )
     range indexes: ProductID, Quantity, ( in source: None )
     word lexicons: ProductID, Quantity, ( in source: None )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
 :)
 
@@ -70,16 +76,15 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-Order(
     let $OrderDetails := es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail)
 
     return
-    json:object()
-    =>map:with("$type", "Order")
-    (: Copy attachments from source document to the target :)
-    =>es:copy-attachments($source-node)
+        es:init-instance($source, "Order")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Order" entity type. :)
-    =>   map:with('CustomerID',  $CustomerID)
-    =>es:optional('OrderDate',  $OrderDate)
-    =>es:optional('ShipAddress',  $ShipAddress)
-    =>es:optional('arr2arr',  $arr2arr)
-    =>es:optional('OrderDetails',  $OrderDetails)
+    =>   map:with('CustomerID',   $CustomerID)
+    =>es:optional('OrderDate',   $OrderDate)
+    =>es:optional('ShipAddress',   $ShipAddress)
+    =>es:optional('arr2arr',   $arr2arr)
+    =>es:optional('OrderDetails',   $OrderDetails)
 
 };
     
@@ -105,14 +110,13 @@ declare function localArrayRefTgt-from-localArrayRefSrc:convert-instance-OrderDe
     let $Quantity := $source-node/Quantity ! xs:integer(.)
 
     return
-    json:object()
-    =>map:with("$type", "OrderDetail")
-    (: Copy attachments from source document to the target :)
-    =>es:copy-attachments($source-node)
+        es:init-instance($source, "OrderDetail")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node)
     (: The following lines are generated from the "OrderDetail" entity type. :)
-    =>   map:with('ProductID',  $ProductID)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('Quantity',  $Quantity)
+    =>   map:with('ProductID',   $ProductID)
+    =>es:optional('UnitPrice',   $UnitPrice)
+    =>es:optional('Quantity',   $Quantity)
 
 };
     

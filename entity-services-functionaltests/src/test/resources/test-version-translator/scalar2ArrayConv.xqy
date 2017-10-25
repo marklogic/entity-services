@@ -5,6 +5,8 @@ module namespace scalar2ArrayTgt-from-scalar2ArraySrc
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+
+
 declare option xdmp:mapping 'false';
 
 (:
@@ -20,7 +22,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-07-12T17:12:08.639039-07:00
+ Generated at timestamp: 2017-10-25T11:24:38.621486-07:00
 
  Target Model scalar2ArrayTgt-0.0.2 Info:
 
@@ -29,6 +31,8 @@ declare option xdmp:mapping 'false';
     required: None, ( in source: None )
     range indexes: None, ( in source: None )
     word lexicons: None, ( in source: None )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
 :)
 
@@ -56,14 +60,14 @@ declare function scalar2ArrayTgt-from-scalar2ArraySrc:convert-instance-Customer(
     let $Address := es:extract-array($source-node/Address, xs:string#1)
 
     return
-    json:object()
-    =>map:with("$type", "Customer")
-    (: Copy attachments from source document to the target :)
-    =>es:copy-attachments($source-node)
+        es:init-instance($source, "Customer")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Customer" entity type. :)
-    =>   map:with('CustomerID',  $CustomerID)
-    =>es:optional('CompanyName',  $CompanyName)
-    =>es:optional('Country',  $Country)
-    =>es:optional('Address',  $Address)
+    =>   map:with('CustomerID',   $CustomerID)
+    =>es:optional('CompanyName',   $CompanyName)
+    =>es:optional('Country',   $Country)
+    =>es:optional('Address',   $Address)
 
 };
+    

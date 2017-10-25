@@ -1,0 +1,36 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+    <es:info>
+        <es:title>invalid-same-ns</es:title>
+        <es:version>0.0.1</es:version>
+        <es:description>This document has same namespace uri</es:description>
+    </es:info>
+    <es:definitions>
+        <test1>
+            <es:properties>
+                <testa>
+                    <es:datatype>string</es:datatype>
+                </testa>
+            </es:properties>
+            <es:namespace>http://uri</es:namespace>
+            <es:namespace-prefix>invalid1</es:namespace-prefix>
+        </test1>
+        <test2>
+            <es:properties>
+                <testb>
+                    <es:datatype>string</es:datatype>
+                </testb>
+            </es:properties>
+            <es:namespace>http://uri</es:namespace>
+            <es:namespace-prefix>invalid2</es:namespace-prefix>
+        </test2>
+        <test3>
+            <es:properties>
+                <testc>
+                    <es:datatype>string</es:datatype>
+                </testc>
+            </es:properties>
+            <es:namespace>http://uri</es:namespace>
+            <es:namespace-prefix>invalid3</es:namespace-prefix>
+        </test3>
+    </es:definitions>
+</es:model>

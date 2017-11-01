@@ -50,8 +50,8 @@ declare function model_2ns:extract-instance-Customer(
     let $Address  :=             $source-node/cust:Address ! xs:string(.) 
     let $instance := es:init-instance($source-node, 'Customer')
     =>es:with-namespace('http://marklogic.com/customer','cust')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -80,8 +80,8 @@ declare function model_2ns:extract-instance-Product(
     let $UnitPrice  :=             $source-node/UnitPrice ! xs:double(.)
     let $Discontinued  :=             $source-node/Discontinued ! xs:boolean(.) 
     let $instance := es:init-instance($source-node, 'Product')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -115,8 +115,8 @@ declare function model_2ns:extract-instance-Order(
     let $OrderDetails  :=             es:extract-array($source-node/OrderDetails/*, model_2ns:extract-instance-OrderDetail#1) 
     let $instance := es:init-instance($source-node, 'Order')
     =>es:with-namespace('http://marklogic.com/order','ord')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -146,8 +146,8 @@ declare function model_2ns:extract-instance-OrderDetail(
     let $hasUnitPrice  :=             $source-node/hasUnitPrice ! xs:double(.)
     let $Quantity  :=             $source-node/Quantity ! xs:integer(.) 
     let $instance := es:init-instance($source-node, 'OrderDetail')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))

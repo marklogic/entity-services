@@ -19,12 +19,18 @@ declare function securer:delete(
 
     let $protect := function($type, $pname, $role) {
         function() {
-            sec:remove-path("//envelope/instance/" || $type || "/" || $pname, ())
+            sec:unprotect-path("//envelope/instance/" || $type || "/" || $pname, ())
+        }
+    }
+    let $remove-query-roleset := function($role) {
+        function() {
+            sec:remove-query-rolesets(sec:query-roleset($role))
         }
     }
 
     let $securing-functions :=
-        $pii-columns !  $protect(.=>map:get("type"), .=>map:get("pname"), .=>map:get("role"))
+        ($pii-columns !  $protect(.=>map:get("type"), .=>map:get("pname"), .=>map:get("role")),
+         $pii-columns !  $remove-query-roleset(.=>map:get("role")) )
 
     return
         document {
@@ -80,13 +86,20 @@ declare %rapi:transaction-mode("update") function securer:get(
                 (xdmp:permission($role, "read")))
         }
     }
+    let $add-roleset := function($role) {
+        function() {
+            sec:add-query-rolesets(sec:query-rolesets(sec:query-roleset($role)))
+        }
+    }
 
     let $securing-functions :=
         $pii-columns !  $protect(.=>map:get("type"), .=>map:get("pname"), .=>map:get("role"))
+    let $roleset-functions :=
+        $pii-columns !  $add-roleset(.=>map:get("role"))
 
     return
         document {
-            for $fn in $securing-functions
+            for $fn in ($securing-functions, $roleset-functions)
             return
                 xdmp:invoke-function($fn,
                     map:map()

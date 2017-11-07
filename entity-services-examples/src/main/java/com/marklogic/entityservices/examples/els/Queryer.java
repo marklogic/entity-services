@@ -53,6 +53,14 @@ public class Queryer {
         String resultsString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(results.get().get("results"));
         System.out.println(resultsString);
 
+
+        System.out.println("Searching for private data:");
+        qdef.setCriteria("ssn LT 100");
+        results = qmgr.search(qdef, new JacksonHandle());
+
+        resultsString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(results.get().get("results"));
+        System.out.println(resultsString);
+
     }
 
 }

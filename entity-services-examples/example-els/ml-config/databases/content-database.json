@@ -1,1 +1,21 @@
-{"database-name":"%%DATABASE%%", "schema-database":"%%SCHEMAS_DATABASE%%", "path-namespace":[{"prefix":"es", "namespace-uri":"http://marklogic.com/entity-services"}], "triple-index":true, "collection-lexicon":true}
+{
+  "database-name": "%%DATABASE%%",
+  "schema-database": "%%SCHEMAS_DATABASE%%",
+  "path-namespace": [
+    {
+      "prefix": "es",
+      "namespace-uri": "http://marklogic.com/entity-services"
+    }
+  ],
+  "range-path-index": [
+    {
+      "collation": "http://marklogic.com/collation/en",
+      "invalid-values": "reject",
+      "path-expression": "//envelope/instance/Customer/ssn",
+      "range-value-positions": false,
+      "scalar-type": "string"
+    }
+  ],
+  "triple-index": true,
+  "collection-lexicon": true
+}

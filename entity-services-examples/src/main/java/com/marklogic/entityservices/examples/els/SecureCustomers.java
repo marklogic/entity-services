@@ -42,7 +42,8 @@ public class SecureCustomers extends ResourceManager {
     public String secureElements() {
         logger.info("Securing elements based on Customer model and policy");
         RequestParameters params = new RequestParameters();
-        StringHandle result = getServices().get(params, new StringHandle());
+        StringHandle result = new StringHandle();
+        getServices().get(params, new StringHandle());
         logger.info("Done securing elements.");
         return result.get();
     }

@@ -36,6 +36,7 @@
         }
       },
       "primaryKey": "id",
+      "pathRangeIndex" : ["ssn"],
       "required": [
         "name"
       ]

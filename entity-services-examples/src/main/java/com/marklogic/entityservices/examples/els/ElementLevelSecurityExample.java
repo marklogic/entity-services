@@ -54,7 +54,7 @@ public class ElementLevelSecurityExample extends ExamplesBase {
         }
 
         batcher.flushAndWait();
-        moveMgr.stopJob(batcher);
+        //moveMgr.stopJob(batcher);
     }
 
     public static void main(String[] args) throws IOException {
@@ -70,11 +70,13 @@ public class ElementLevelSecurityExample extends ExamplesBase {
         ingester.generateOrders(100);
 
         System.out.println("Some customer data has been created, but not secured yet");
+        System.out.println("Now running query with unprivileged user over unsecured data.");
         queryer.query();
 
         String secureMessage = c.secureElements();
         System.out.println("Secure extension returned with message: " + secureMessage);
 
+        System.out.println("Now running query with unprivileged user -- data should be missing.");
         queryer.query();
 
         System.out.println("Now to run the same query with a privileged user");

@@ -42,15 +42,16 @@ thusly:
 }
 ```
 
-In this customer record, I've two properties, 'email', and 'ssn', which I want to protect.
+In this customer record, I've two properties, 'email', and 'ssn', which I want
+to protect.
 
-The document at `pii-policy.ttl` contains a set of RDF triples that define my company policy
-around personally indentifiable information.  The example loads these triples, and adds them to
-the database as metadata available to queries.
+The document at [pii-policy.ttl](pii-policy.ttl) contains a set of RDF triples that define my
+company policy around personally indentifiable information.  The example loads
+these triples, and adds them to the database as metadata available to queries.
 
-The model descriptor `Customer-pii-0.0.1.json` is quite straightforward.  We've added however two triples
-to the document in order to capture the notion that some properties in this
-model should be treated as personally-identifiable.
+The model descriptor [Customer-pii-0.0.1.json](Customer-pii-0.0.1.json) is quite straightforward.  We've
+added however two triples to the document in order to capture the notion that
+some properties in this model should be treated as personally-identifiable.
 
 ```
 ...
@@ -90,7 +91,7 @@ services model.  It contains a REST resource extension that queries the triples
 in the model and the policy in order to make calls to configure ELS.
 
 The example code at
-`src\main\java\com\marklogic\entityservices\examples\els\ElementLevelSecurityExample.java`
+[../src/main/java/com/marklogic/entityservices/examples/els/ElementLevelSecurityExample.java](ElementLevelSecurityExample.java)
 steps through the following to demonstrate securing the `email` and `ssn`
 properties:
 

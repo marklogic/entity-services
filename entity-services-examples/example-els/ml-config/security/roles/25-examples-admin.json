@@ -8,6 +8,9 @@
     { "privilege-name": "xdmp-invoke-in", "action": "http://marklogic.com/xdmp/privileges/xdmp-invoke-in", "kind": "execute"},
     { "privilege-name": "protect-path", "action": "http://marklogic.com/xdmp/privileges/protect-path", "kind": "execute"},
     { "privilege-name": "remove-path", "action": "http://marklogic.com/xdmp/privileges/remove-path", "kind": "execute"},
-    { "privilege-name": "xdmp-with-namespaces", "action": "http://marklogic.com/xdmp/privileges/xdmp-with-namespaces", "kind": "execute"}
+    { "privilege-name": "xdmp-with-namespaces", "action": "http://marklogic.com/xdmp/privileges/xdmp-with-namespaces", "kind": "execute"},
+    { "privilege-name": "database-node-query-rolesets", "action": "http://marklogic.com/xdmp/privileges/database-node-query-rolesets", "kind": "execute"},
+    { "privilege-name": "add-query-rolesets", "action": "http://marklogic.com/xdmp/privileges/add-query-rolesets", "kind": "execute"},
+    { "privilege-name": "get-role-ids", "action": "http://marklogic.com/xdmp/privileges/get-role-ids", "kind": "execute"}
   ]
 }

@@ -24,7 +24,7 @@ subprojects {
     dependencies {
         testCompile 'org.apache.httpcomponents:httpclient:4.5.3'
         testCompile 'commons-io:commons-io:2.5'
-        testCompile 'com.marklogic:marklogic-jena:3.4.0'
+        testCompile 'com.marklogic:marklogic-jena:3.0.4'
         testCompile 'io.rest-assured:rest-assured:3.0.3'
         testCompile 'org.xmlunit:xmlunit-core:2.3.0'
         testCompile 'org.xmlunit:xmlunit-matchers:2.3.0'

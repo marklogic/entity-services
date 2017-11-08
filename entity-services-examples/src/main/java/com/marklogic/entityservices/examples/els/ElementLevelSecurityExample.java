@@ -76,7 +76,7 @@ public class ElementLevelSecurityExample extends ExamplesBase {
         String secureMessage = c.secureElements();
         System.out.println("Secure extension returned with message: " + secureMessage);
 
-        System.out.println("Now running query with unprivileged user -- data should be missing.");
+        System.out.println("Now running query with unprivileged user -- data should be hidden.");
         queryer.query();
 
         System.out.println("Now to run the same query with a privileged user");

@@ -1,0 +1,36 @@
+{
+  "info": {
+    "title":"invalid-namespace-dupuri",
+    "version": "0.0.3",
+    "description":"This invalid document has a duplicated prefix."
+  },
+  "definitions": {
+    "Yo": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/an/absolute/uri",
+      "namespacePrefix" : "X"
+    },
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/an/absolute/uri",
+      "namespacePrefix" : "X"
+    },
+    "Another": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/an/absolute/uri",
+      "namespacePrefix" : "Y"
+    }
+  }
+}

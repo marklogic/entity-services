@@ -1,0 +1,11 @@
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sem="http://marklogic.com/semantics" xmlns:es="http://marklogic.com/entity-services">
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="name" type="xs:string"/>
+  <xs:complexType name="CustomerType" mixed="true">
+    <xs:sequence minOccurs="0">
+      <xs:element ref="id"/>
+      <xs:element ref="name"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Customer" type="CustomerType"/>
+</xs:schema>

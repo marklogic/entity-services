@@ -5,6 +5,8 @@ module namespace allDifferentTgt-from-allDifferentSrc
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
+
+
 declare option xdmp:mapping 'false';
 
 (:
@@ -20,7 +22,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-08-23T14:37:27.764219-07:00
+ Generated at timestamp: 2017-10-25T14:59:31.257402-07:00
 
  Target Model allDifferentTgt-0.0.2 Info:
 
@@ -30,6 +32,8 @@ declare option xdmp:mapping 'false';
     required: None, ( in source: None )
     range indexes: None, ( in source: None )
     word lexicons: None, ( in source: None )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
  Type Customer: 
     Removed Type
@@ -63,15 +67,14 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Product(
     let $Discontinued := $source-node/Discontinued ! xs:boolean(.)
 
     return
-    json:object()
-    =>map:with("$type", "Product")
-    (: Copy attachments from source document to the target :)
-    =>es:copy-attachments($source-node)
+        es:init-instance($source, "Product")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node)
     (: The following lines are generated from the "Product" entity type. :)
-    =>   map:with('ProductName',  $ProductName)
-    =>es:optional('UnitPrice',  $UnitPrice)
-    =>es:optional('SupplierID',  $SupplierID)
-    =>es:optional('Discontinued',  $Discontinued)
+    =>   map:with('ProductName',   $ProductName)
+    =>es:optional('UnitPrice',   $UnitPrice)
+    =>es:optional('SupplierID',   $SupplierID)
+    =>es:optional('Discontinued',   $Discontinued)
 
 };
     
@@ -92,16 +95,17 @@ declare function allDifferentTgt-from-allDifferentSrc:convert-instance-Customer(
     let $Country  :=             $source-node/Country ! xs:string(.)
     let $ContactName  :=             $source-node/ContactName ! xs:string(.)
 
+    let $instance := es:init-instance($source-node, "Customer)")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "Customer" )
-    =>   map:with('CustomerID',  $CustomerID)
-    =>es:optional('CompanyName',  $CompanyName)
-    =>es:optional('Country',  $Country)
-    =>es:optional('ContactName',  $ContactName)
+
+    =>   map:with('CustomerID',   $CustomerID)
+    =>es:optional('CompanyName',   $CompanyName)
+    =>es:optional('Country',   $Country)
+    =>es:optional('ContactName',   $ContactName)
 
 };
 :)

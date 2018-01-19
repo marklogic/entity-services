@@ -376,8 +376,8 @@ declare function es:init-translation-source(
     $entity-type-name as xs:string
 ) as item()*
 {
-    if ( ($source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]))
-    then $source//es:instance/element()[node-name(.) eq xs:QName($entity-type-name)]
+    if ( ($source//es:instance/element()[fn:local-name(.) eq $entity-type-name]))
+    then $source//es:instance/element()[fn:local-name(.) eq $entity-type-name]
     else $source
 };
 

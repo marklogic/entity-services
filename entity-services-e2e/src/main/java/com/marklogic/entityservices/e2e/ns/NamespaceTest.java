@@ -93,8 +93,7 @@ public class NamespaceTest extends ExamplesBase {
     public void setup() throws InterruptedException {
 
         try {
-            importJSON(Paths.get(projectDir + "/data/models/valid-1-namespace.json"), "http://marklogic.com/entity-services/models");
-            importJSON(Paths.get(projectDir + "/data/models/valid-2-namespace.json"), "http://marklogic.com/entity-services/models");
+        	importJSON(Paths.get(projectDir + "/data/models"), "http://marklogic.com/entity-services/models");
             importJSON(Paths.get(projectDir + "/data/namespace"), "raw");
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,0 +1,17 @@
+@prefix policy: <http://marklogic.com/entity-services/example-els/policy/> .
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+policy:PersonallyIdentifiableInformationProperty
+    rdfs:subPropertyOf es:Property ;
+    rdfs:comment "An entity-services property which has been marked as 'PersonallyIdentifiable' must be safeguarded from prying eyes." ;
+    rdfs:label "PersonallyIdentifiableInformationProperty" ;
+    policy:securedByRole "privileged-to-see-pii" ;
+    .
+
+policy:securedByRole rdfs:label "securedBy" ;
+    rdfs:domain policy:PersonallyIdentifiableInformationProperty ;
+    rdfs:comment "Declares the role required to view a property that has been identified as PII.  Intended for use with Element-Level Security to secure instance documents of type Customer." ;
+    .
+
+

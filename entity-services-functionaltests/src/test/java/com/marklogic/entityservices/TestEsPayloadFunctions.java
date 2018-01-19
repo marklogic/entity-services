@@ -59,6 +59,10 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 	public static void setupEntityTypes() {
 		setupClients();
 	}
+	
+    private String getMsg(TestEvalException e) {
+    	return e.getMessage().substring(133);
+    }
    
     private void checkRoundTrip(String message, JsonNode original, JsonNode actual) {
     	assertEquals(message, original, actual);
@@ -787,6 +791,150 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("property hello doesn't exist."));
     	}
     }
+    
+    @Test
+    /* testing model-validate with blacklisted namespaces */
+    public void testNamespaceBlacklist() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with blacklisted namespaces");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-ns-blacklisted.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace prefix xsd is not valid.  It is a reserved pattern. Namespace prefix json is not valid.  It is a reserved pattern. Namespace prefix es is not valid.  It is a reserved pattern. Namespace prefix xs is not valid.  It is a reserved pattern. Namespace prefix xsi is not valid.  It is a reserved pattern. Namespace prefix Xml is not valid.  It is a reserved pattern. Namespace prefix xMl is not valid.  It is a reserved pattern."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with xml invalid namespace uri*/
+    public void testInvalidURIXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with xml invalid namespace uri");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-uri.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace property must be a valid absolute URI.  Value is :/www.foo.bar/."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with json invalid namespace uri*/
+    public void testInvalidURIJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with json invalid namespace uri");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-uri.json'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace property must be a valid absolute URI.  Value is www.foo.bar."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with xml same namespaces */
+    public void testSameNsXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with xml same namespaces");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-nsURI.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with json same namespaces */
+    public void testSameNsJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with json same namespaces");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-nsURI.json'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with xml same prefix */
+    public void testSamePrefixXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with xml same prefix");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-prefix.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with json same prefix */
+    public void testSamePrefixJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with json same prefix");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-prefix.json'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with xml no prefix */
+    public void testNoPrefixXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with xml no prefix");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-prefix.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace http://uri1 has no namespace-prefix property. Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with json no prefix */
+    public void testNoPrefixJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with json no prefix");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-prefix.json'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace http://uri1 has no namespacePrefix property. Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with xml no uri */
+    public void testNoURIXML() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with xml no uri");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-uri.xml'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace-prefix  invalid1 has no namespace property. Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
+    @Test
+    /* testing model-validate with json no uri */
+    public void testNoURIJSON() throws JsonParseException, JsonMappingException, IOException, TestEvalException, SAXException, ParserConfigurationException, TransformerException {       
+    			logger.info("Checking model-validate() with json no uri");
+    			JacksonHandle handle = null;
+    			try {
+    				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-uri.json'))", new JacksonHandle());
+    			} catch (TestEvalException e) {
+    				logger.info(getMsg(e));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespacePrefix invalid1 has no namespace property. Each prefix and namespace pair must be unique."));
+    	}
+    }
+    
 /*    private void debugOutput(Document xmldoc) throws TransformerException {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = tf.newTransformer();

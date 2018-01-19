@@ -11,18 +11,18 @@
     </ETOne>
   </es:instance>
   <es:instance>
-    <ETTwo>
-      <pk>http://example.org/some-iri/2</pk>
-      <parent><ETOne>http://example.org/some-iri</ETOne></parent>
-      <p7><ETTwo>3</ETTwo></p7>
-      <p8><ETTwo>23</ETTwo></p8>
-      <p9 datatype="array"><ETTwo>19</ETTwo></p9>
-      <p9 datatype="array"><ETTwo>14</ETTwo></p9>
-      <p9 datatype="array"><ETTwo>16</ETTwo></p9>
-      <p10/>
-      <p12>100293</p12>
-      <p13 datatype="array">100293</p13>
-    </ETTwo>
+    <b:ETTwo xmlns:b="http://marklogic.com/example/b">
+      <b:pk>http://example.org/some-iri/2</b:pk>
+      <b:parent><ETOne xmlns:a="http://marklogic.com/example/a">http://example.org/some-iri</ETOne></b:parent>
+      <b:p7><b:ETTwo>3</b:ETTwo></b:p7>
+      <b:p8><b:ETTwo>23</b:ETTwo></b:p8>
+      <b:p9 datatype="array"><ETTwo>19</ETTwo></b:p9>
+      <b:p9 datatype="array"><ETTwo>14</ETTwo></b:p9>
+      <b:p9 datatype="array"><ETTwo>16</ETTwo></b:p9>
+      <b:p10/>
+      <b:p12>100293</b:p12>
+      <b:p13 datatype="array">100293</b:p13>
+    </b:ETTwo>
   </es:instance>
   <es:instance>
     <ETThree/>

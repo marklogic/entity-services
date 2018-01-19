@@ -112,9 +112,9 @@ declare private function es-codegen:variable-line-for(
         if (contains($ref, "#/definitions"))
         then $model=>map:get("definitions")=>map:get($ref-name)=>map:get("namespace")
         else ()
-    let $extract-reference-fn := 
+    let $extract-reference-fn :=
             concat("es:init-instance(?, '",$ref-name,"')",
-                if ($ref-namespace-prefix) 
+                if ($ref-namespace-prefix)
                 then
                 concat("&#10;    =>es:with-namespace('",$ref-namespace,"','",$ref-namespace-prefix,"')")
                 else ()
@@ -528,12 +528,18 @@ declare private function es-codegen:value-for-conversion(
     let $target-entity-type := $target-model
         =>map:get("definitions")
         =>map:get($target-entity-type-name)
+    let $target-namespace-prefix := $target-entity-type
+        =>map:get("namespacePrefix")
     let $target-property := $target-entity-type
         =>map:get("properties")
         =>map:get($target-property-name)
     let $source-entity-type := $source-model
         =>map:get("definitions")
         =>map:get($target-entity-type-name)    (: this function is only called with matching types/props :)
+    let $source-namespace-prefix :=
+        if (exists($source-entity-type))
+        then $source-entity-type=>map:get("namespacePrefix")
+        else ()
     let $source-properties :=
         if (exists($source-entity-type))
         then $source-entity-type=>map:get("properties")
@@ -582,12 +588,24 @@ declare private function es-codegen:value-for-conversion(
         else json:array-values( map:get($target-entity-type, "required") )
     let $is-required := $target-property-name =
             ( map:get($target-entity-type, "primaryKey"), $required-properties )
-    let $path-to-property := concat("$source-node/", $target-property-name)
+    let $prefixed-source-property-name :=
+        if ($source-namespace-prefix)
+        then $source-namespace-prefix || ":" || $target-property-name
+        else $target-property-name
+    let $path-to-property := concat("$source-node/", $prefixed-source-property-name)
     let $target-ref-name := functx:substring-after-last($target-ref, "/")
     let $source-ref-name := functx:substring-after-last($source-ref, "/")
+    let $source-ref-namespace-prefix :=
+        if (exists($source-model=>map:get("definitions")=>map:get($source-ref-name)))
+        then $source-model=>map:get("definitions")=>map:get($source-ref-name)=>map:get("namespacePrefix")
+        else ()
+    let $prefixed-source-ref-name :=
+        if ($source-ref-namespace-prefix)
+        then $source-ref-namespace-prefix || ":" || $source-ref-name
+        else $source-ref-name
     (: warning: property path override if source is ref and target is scalar :)
     let $path-to-property := if ($is-scalar-from-ref)
-                            then $path-to-property || "/" || $source-ref-name
+                            then $path-to-property || "/" || $prefixed-source-ref-name
                             else $path-to-property
     let $wrap-if-array := function($str, $fn, $arrity-ok) {
             if ($target-is-array and $is-required)
@@ -615,7 +633,7 @@ declare private function es-codegen:value-for-conversion(
     let $extract-fn :=
         if ($is-reference-from-scalar-or-array)
         then
-            map:put($let-expressions, $target-ref-name,
+            map:put($let-expressions, $target-ref,
                 fn:string-join(
                     (
                     concat('    let $extract-scalar-',$target-ref-name,' := '),
@@ -626,7 +644,7 @@ declare private function es-codegen:value-for-conversion(
                         let $ref-namespace :=
                             $target-model=>map:get("definitions")=>map:get($target-ref-name)=>map:get("namespace")
                         return
-                            if ($ref-namespace) 
+                            if ($ref-namespace)
                             then
                                 (
                          "        function($src-node) { ",
@@ -641,8 +659,9 @@ declare private function es-codegen:value-for-conversion(
                         ""
                         ),
                     "&#10;"))
-        else
-            map:put($let-expressions, $target-ref-name,
+        else if ($target-ref)
+        then
+            map:put($let-expressions, $target-ref,
                 fn:string-join(
                     (
                     concat('    let $extract-reference-',$target-ref-name,' := '),
@@ -672,8 +691,8 @@ declare private function es-codegen:value-for-conversion(
                         concat("        es:init-instance(?, '", $target-ref-name, "')"),
                         ""
                     ),
-                "&#10;")
-        )
+                "&#10;"))
+        else ()
 
 
     let $function-call-string :=
@@ -739,6 +758,8 @@ declare function es-codegen:version-translator-generate(
 (: BEGIN convert instance block :)
     let $convert-instance :=
         for $entity-type-name in $target-entity-type-names
+        let $target-namespace := $target-definitions=>map:get($entity-type-name)=>map:get("namespace")
+        let $target-namespace-prefix := $target-definitions=>map:get($entity-type-name)=>map:get("namespacePrefix")
         let $info-map := json:object()
         let $_ := map:put($target-info, $entity-type-name, $info-map)
         return
@@ -794,7 +815,9 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
                 map:put($info-map, "primaryKey: ", $compare("primaryKey")),
                 map:put($info-map, "required: ", $compare("required")),
                 map:put($info-map, "range indexes: ", $compare("rangeIndex")),
-                map:put($info-map, "word lexicons: ", $compare("wordLexicon"))
+                map:put($info-map, "word lexicons: ", $compare("wordLexicon")),
+                map:put($info-map, "namespace: ", $compare("namespace")),
+                map:put($info-map, "namespace prefix: ", $compare("namespacePrefix"))
             )
     let $properties := map:get($entity-type, "properties")
     let $values :=
@@ -823,10 +846,13 @@ declare function {$module-prefix}:convert-instance-{$entity-type-name}(
                 return map:get($let-expressions, $k), "&#10;"),
 '&#10;
     return
-    json:object()
-    =>map:with("$type", "', $entity-type-name, '")
-    (: Copy attachments from source document to the target :)
-    =>es:copy-attachments($source-node)
+        es:init-instance($source, "', $entity-type-name, '")',
+        if ($target-namespace-prefix)
+        then
+        concat("&#10;        =>es:with-namespace('",$target-namespace,"','",$target-namespace-prefix,"')")
+        else (),
+'&#10;       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node)
     (: The following lines are generated from the "',$entity-type-name,'" entity type. :)&#10;',
             fn:string-join($values),
             if (exists($missing-properties))
@@ -886,13 +912,13 @@ map:put($target-info, $removed-entity-type-name, map:entry("", "Removed Type")),
     fn:concat(
         fn:string-join( $variable-setters, "&#10;"),
 '&#10;
+    let $instance := es:init-instance($source-node, "', $removed-entity-type-name, ')")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "', $removed-entity-type-name, '" )',
-    '&#10;',
+&#10;',
     fn:string-join($values)
     )
 }
@@ -907,6 +933,39 @@ module namespace {$module-prefix}
 
 import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
+
+{
+    (: namespace declarations :)
+    let $namespace-accumulator := map:map()
+    let $_ :=
+        for $entity-type-name in $source-definitions=>map:keys()
+        let $entity-type := $source-definitions=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        return
+            if ($namespace)
+            then map:put($namespace-accumulator, $namespace-prefix, concat("declare namespace ",
+                 $namespace-prefix,
+                 " = '",
+                 $namespace,
+                 "';&#10;"))
+            else ()
+    let $_ :=
+        for $entity-type-name in $target-definitions=>map:keys()
+        let $entity-type := $target-definitions=>map:get($entity-type-name)
+        let $namespace := $entity-type=>map:get("namespace")
+        let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
+        return
+            if ($namespace)
+            then map:put($namespace-accumulator, $namespace-prefix, concat("declare namespace ",
+                 $namespace-prefix,
+                 " = '",
+                 $namespace,
+                 "';&#10;"))
+            else ()
+    return
+        map:keys($namespace-accumulator) ! map:get($namespace-accumulator, .)
+}
 
 declare option xdmp:mapping 'false';
 

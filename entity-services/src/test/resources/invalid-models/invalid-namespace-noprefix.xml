@@ -1,0 +1,17 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+    <es:info>
+        <es:title>invalid-namespace-noprefix</es:title>
+        <es:version>0.0.3</es:version>
+        <es:description>This invalid document has a namespace uri but no prefix.</es:description>
+    </es:info>
+    <es:definitions>
+        <Order>
+            <es:properties>
+                <orderId>
+                    <es:datatype>string</es:datatype>
+                </orderId>
+            </es:properties>
+            <es:namespace>http://marklogic.com/an/absolute/uri</es:namespace>
+        </Order>
+    </es:definitions>
+</es:model>

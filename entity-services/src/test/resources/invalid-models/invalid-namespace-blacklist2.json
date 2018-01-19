@@ -1,0 +1,18 @@
+{
+  "info": {
+    "title":"invalid-namespace-blacklist2",
+    "version": "0.0.3",
+    "description":"This invalid document has a blacklisted prefix."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespace" : "http://marklogic.com/donthijack",
+      "namespacePrefix" : "XmL"
+    }
+  }
+}

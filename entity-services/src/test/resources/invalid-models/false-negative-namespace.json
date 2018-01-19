@@ -1,0 +1,40 @@
+{
+  "info": {
+    "title": "Person",
+    "version": "0.0.2",
+    "baseUri" : "http://example.org/mytypeschema/"
+  },
+  "definitions": {
+    "A" : {
+      "properties":{"a":{"datatype":"string"}},
+      "namespacePrefix":"p",
+      "namespace":"http://ex.org/Person"
+    },
+    "Person": {
+      "properties": {
+        "id": {
+          "datatype": "string"
+        },
+        "firstName": {
+          "datatype": "string"
+        },
+        "lastName": {
+          "datatype": "string"
+        },
+        "fullName": {
+          "datatype": "string"
+        },
+        "address": {
+          "datatype": "string"
+        },
+        "friendOf": {
+          "$ref": "#/definitions/Person"
+        }
+      },
+      "primaryKey":"id",
+      "wordLexicon":["firstName"],
+      "namespace":"http://ex.org/Person",
+      "namespacePrefix":"p"
+    }
+  }
+}

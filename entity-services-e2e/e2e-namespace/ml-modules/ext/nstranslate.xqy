@@ -6,6 +6,9 @@ import module namespace es = 'http://marklogic.com/entity-services'
     at '/MarkLogic/entity-services/entity-services.xqy';
 
 declare namespace cust = 'http://marklogic.com/customer';
+ declare namespace sup = 'http://marklogic.com/super';
+ declare namespace ord = 'http://marklogic.com/order';
+
 
 declare option xdmp:mapping 'false';
 
@@ -22,7 +25,7 @@ declare option xdmp:mapping 'false';
 
  https://docs.marklogic.com/guide/entity-services
 
- Generated at timestamp: 2017-09-17T16:57:20.845297-07:00
+ Generated at timestamp: 2017-10-30T12:10:27.724644-07:00
 
  Target Model Model_2ns-0.0.2 Info:
 
@@ -31,24 +34,32 @@ declare option xdmp:mapping 'false';
     required: CustomerID, ( in source: CustomerID )
     range indexes: CustomerID, ( in source: CustomerID )
     word lexicons: None, ( in source: None )
+    namespace: http://marklogic.com/customer, ( in source: http://marklogic.com/customer )
+    namespace prefix: cust, ( in source: cust )
  
  Type Product: 
     primaryKey: None, ( in source: None )
     required: ProductID, ( in source: ProductID )
     range indexes: UnitPrice, ( in source: UnitPrice )
     word lexicons: None, ( in source: None )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
  Type Order: 
     primaryKey: OrderID, ( in source: None )
     required: None, ( in source: OrderID )
     range indexes: None, ( in source: OrderDate )
     word lexicons: hasCustomerID, ( in source: OrderDetails )
+    namespace: http://marklogic.com/order, ( in source: None )
+    namespace prefix: ord, ( in source: None )
  
  Type OrderDetail: 
     primaryKey: None, ( in source: None )
     required: None, ( in source: None )
     range indexes: None, ( in source: None )
     word lexicons: None, ( in source: None )
+    namespace: None, ( in source: None )
+    namespace prefix: None, ( in source: None )
  
  Type Superstore: 
     Removed Type
@@ -74,28 +85,28 @@ declare function model_2ns-from-model_1ns:convert-instance-Customer(
     $source as node()
 ) as map:map
 {
-    let $source-node := es:init-translation-source($source//es:instance, 'Customer')
+    let $source-node := es:init-translation-source($source, 'Customer')
 
-    let $CustomerID := $source-node//cust:CustomerID ! xs:string(.)
-    let $CompanyName := $source-node//cust:CompanyName ! xs:string(.)
+    let $CustomerID := $source-node/cust:CustomerID ! xs:string(.)
+    let $CompanyName := $source-node/cust:CompanyName ! xs:string(.)
     (: The following property was missing from the source type.
        The XPath will not up-convert without intervention.  :)
-    let $ContactTitle := $source//root//cust:ContactTitle ! xs:string(.)
-    let $Address := $source-node//cust:Address ! xs:string(.)
-    let $Country := $source-node//cust:Country ! xs:string(.)
+    let $ContactTitle := $source-node/cust:ContactTitle ! xs:string(.)
+    let $Address := $source-node/cust:Address ! xs:string(.)
+    let $Country := $source-node/cust:Country ! xs:string(.)
 
     return
-    json:object()
-    =>map:with("$type", "Customer")
-    (: Copy attachments from source document to the target 
-    =>es:copy-attachments($source-node) :)
+        es:init-instance($source, "Customer")
+        =>es:with-namespace('http://marklogic.com/customer','cust')
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node) 
     (: The following lines are generated from the "Customer" entity type. :)
     =>   map:with('CustomerID',   $CustomerID)
     =>es:optional('CompanyName',   $CompanyName)
     =>es:optional('ContactTitle',   $ContactTitle)
     =>es:optional('Address',   $Address)
     (: The following properties are in the source, but not the target: 
-    =>es:optional('No Target', $Country)
+    =>es:optional('NO TARGET', $Country)
   :)
 
 };
@@ -140,10 +151,10 @@ declare function model_2ns-from-model_1ns:convert-instance-Order(
     let $OrderDetails := es:extract-array($source-node/OrderDetails/*, $extract-reference-OrderDetail)
 
     return
-    json:object()
-    =>map:with("$type", "Order")
-    (: Copy attachments from source document to the target 
-    =>es:copy-attachments($source-node) :)
+        es:init-instance($source, "Order")
+        =>es:with-namespace('http://marklogic.com/order','ord')
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node) 
     (: The following lines are generated from the "Order" entity type. :)
     =>   map:with('OrderID',   $OrderID)
     =>es:optional('hasCustomerID',   $hasCustomerID)
@@ -176,10 +187,9 @@ declare function model_2ns-from-model_1ns:convert-instance-OrderDetail(
     let $Quantity := $source-node/Quantity ! xs:integer(.)
 
     return
-    json:object()
-    =>map:with("$type", "OrderDetail")
-    (: Copy attachments from source document to the target 
-    =>es:copy-attachments($source-node) :)
+        es:init-instance($source, "OrderDetail")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node) 
     (: The following lines are generated from the "OrderDetail" entity type. :)
     =>es:optional('hasProductID',   $hasProductID)
     =>es:optional('hasUnitPrice',   $hasUnitPrice)
@@ -211,10 +221,9 @@ declare function model_2ns-from-model_1ns:convert-instance-Product(
     let $SupplierID := $source-node/SupplierID ! xs:string(.)
 
     return
-    json:object()
-    =>map:with("$type", "Product")
-    (: Copy attachments from source document to the target 
-    =>es:copy-attachments($source-node) :)
+        es:init-instance($source, "Product")
+       (: Copy attachments from source document to the target :)
+        =>es:copy-attachments($source-node) 
     (: The following lines are generated from the "Product" entity type. :)
     =>es:optional('ProductName',   $ProductName)
     =>   map:with('ProductID',   $ProductID)
@@ -243,12 +252,13 @@ declare function model_2ns-from-model_1ns:convert-instance-ShipDetails(
     let $ShipMode  :=             $source-node/ShipMode ! xs:string(.)
     let $ShippingCost  :=             $source-node/ShippingCost ! xs:double(.)
 
+    let $instance := es:init-instance($source-node, "ShipDetails)")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
      : copies attachments to the target :)
     =>es:copy-attachments($source-node)
-    =>map:with("$type", "ShipDetails")
+
     =>es:optional('Province',   $Province)
     =>es:optional('Region',   $Region)
     =>es:optional('ShipMode',   $ShipMode)
@@ -280,12 +290,13 @@ declare function model_2ns-from-model_1ns:convert-instance-Superstore(
     (: The following property is a local reference.  :)
     let $Ship-Address  :=             es:extract-array($source-node/sup:Ship-Address, model_2ns-from-model_1ns:extract-instance-ShipDetails#1)
 
+    let $instance := es:init-instance($source-node, "Superstore)")
     return
-    json:object()
+    $instance
     (: If the source is an envelope or part of an envelope document,
-     : copies attachments to the target 
-    =>es:copy-attachments($source-node) :)
-    =>map:with("$type", "Superstore")
+     : copies attachments to the target :)
+    =>es:copy-attachments($source-node)
+
     =>   map:with('OrdID',   $OrdID)
     =>es:optional('CustID',   $CustID)
     =>es:optional('OrdDate',   $OrdDate)

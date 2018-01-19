@@ -1,0 +1,18 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+    <es:info>
+        <es:title>invalid-ns-uri</es:title>
+        <es:version>0.0.1</es:version>
+        <es:description>This document has invalid namespace uri</es:description>
+    </es:info>
+    <es:definitions>
+        <test>
+            <es:properties>
+                <quantity>
+                    <es:datatype>integer</es:datatype>
+                </quantity>
+            </es:properties>
+            <es:namespace>:/www.foo.bar/</es:namespace>
+            <es:namespace-prefix>invalid</es:namespace-prefix>
+        </test>
+    </es:definitions>
+</es:model>

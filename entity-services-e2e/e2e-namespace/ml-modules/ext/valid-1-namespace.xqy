@@ -50,8 +50,8 @@ declare function model_1ns:extract-instance-Customer(
     let $Address  :=             $source-node/cust:Address ! xs:string(.) 
     let $instance := es:init-instance($source-node, 'Customer')
     =>es:with-namespace('http://marklogic.com/customer','cust')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -81,8 +81,8 @@ declare function model_1ns:extract-instance-Product(
     let $SupplierID  :=             $source-node/SupplierID ! xs:integer(.)
     let $Discontinued  :=             $source-node/Discontinued ! xs:boolean(.) 
     let $instance := es:init-instance($source-node, 'Product')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -114,8 +114,8 @@ declare function model_1ns:extract-instance-Order(
     (: The following property is a local reference.  :)
     let $OrderDetails  :=             es:extract-array($source-node/OrderDetails/*, model_1ns:extract-instance-OrderDetail#1) 
     let $instance := es:init-instance($source-node, 'Order')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -144,8 +144,8 @@ declare function model_1ns:extract-instance-OrderDetail(
     let $hasUnitPrice  :=             $source-node/hasUnitPrice ! xs:double(.)
     let $Quantity  :=             $source-node/Quantity ! xs:integer(.) 
     let $instance := es:init-instance($source-node, 'OrderDetail')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -180,8 +180,8 @@ declare function model_1ns:extract-instance-Superstore(
     let $Ship-Address  :=             es:extract-array($source-node, model_1ns:extract-instance-ShipDetails#1) 
     let $instance := es:init-instance($source-node, 'Superstore')
     =>es:with-namespace('http://marklogic.com/super','sup')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source) :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source) 
 
     return
     if (empty($source-node/*))
@@ -215,8 +215,8 @@ declare function model_1ns:extract-instance-ShipDetails(
     let $ShipMode  :=             $source-node/ShipMode ! xs:string(.)
     let $ShippingCost  :=             $source-node/ShippingCost ! xs:double(.) 
     let $instance := es:init-instance($source-node, 'ShipDetails')
-    (: Comment or remove the following line to suppress attachments 
-        =>es:add-attachments($source)  :)
+    (: Comment or remove the following line to suppress attachments :)
+        =>es:add-attachments($source)  
 
     return
     if (empty($source-node/*))

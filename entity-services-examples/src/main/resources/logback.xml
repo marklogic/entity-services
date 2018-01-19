@@ -25,7 +25,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
     
-    <logger name="com.marklogic.entityservices" level="ERROR" additivity="false">
+    <logger name="com.marklogic.entityservices" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
     

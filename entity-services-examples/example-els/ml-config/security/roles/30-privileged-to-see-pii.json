@@ -1,0 +1,7 @@
+{
+  "role-name": "privileged-to-see-pii",
+  "description": "Can see properties that are marked as pii.  Otherwise, that property will be invisible",
+  "role": [],
+  "privilege": [
+  ]
+}

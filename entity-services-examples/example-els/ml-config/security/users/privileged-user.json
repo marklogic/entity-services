@@ -1,0 +1,6 @@
+{
+  "user-name": "privileged-user",
+  "description": "This user is allowed to see the contents of fields marked as 'pii' in the model",
+  "password": "xxx",
+  "role": ["examples-reader", "privileged-to-see-pii"]
+}

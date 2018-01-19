@@ -1,0 +1,17 @@
+{
+  "info": {
+    "title":"invalid-namespace-nouri",
+    "version": "0.0.3",
+    "description":"This invalid document has a namespace prefix but no uri."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "int"
+        }
+      },
+      "namespacePrefix" : "i"
+    }
+  }
+}

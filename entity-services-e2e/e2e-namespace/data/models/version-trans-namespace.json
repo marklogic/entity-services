@@ -1,0 +1,151 @@
+{  
+   "info":{  
+      "title":"Namespace_testing_version_translator",
+      "version":"0.0.1",
+      "baseUri":"http://marklogic.com/nstrans"
+   },
+   "definitions":{  
+      "Customer":{  
+         "properties":{  
+            "CustomerID":{  
+               "datatype":"string"
+            },
+            "CompanyName":{  
+               "datatype":"string"
+            },
+            "Country":{  
+               "datatype":"string"
+            },
+            "Address":{  
+               "datatype":"string"
+            }
+         },
+         "primaryKey":"CustomerID",
+         "required": ["CustomerID"],
+         "rangeIndex": [ "CustomerID" ],
+         "pathRangeIndex": [ "CompanyName" ],
+         "elementRangeIndex": [ "Country", "Address" ]
+      },
+      "Product":{  
+         "properties":{  
+            "ProductName":{  
+               "datatype":"string"
+            },
+            "ProductID":{  
+               "datatype":"integer"
+            },
+            "UnitPrice":{  
+               "datatype":"double"
+            },
+            "SupplierID":{  
+               "datatype":"integer"
+            },
+            "Discontinued":{  
+               "datatype":"boolean"
+            }
+         },
+         "namespace": "http://marklogic.com/product",
+         "namespacePrefix": "prod",
+         "required": ["ProductID"],
+         "rangeIndex": [ "UnitPrice" ],
+         "pathRangeIndex": [ "Discontinued" ],
+         "elementRangeIndex": [ "SupplierID", "ProductID" ]
+      },
+      "Order":{  
+         "properties":{  
+            "OrderID":{  
+               "datatype":"integer"
+            },
+            "hasCustomerID":{  
+               "datatype":"string"
+            },
+            "OrderDate":{  
+               "datatype":"dateTime"
+            },
+            "ShipAddress":{  
+               "datatype":"string"
+            },
+            "OrderDetails":{  
+               "datatype":"array",
+               "items":{  
+                  "$ref":"#/definitions/OrderDetail"
+               }
+            }
+         },
+         "required": ["OrderID"],
+         "rangeIndex": [ "OrderDate" ],
+         "pathRangeIndex": [ "hasCustomerID" ],
+         "elementRangeIndex": [ "ShipAddress", "OrderID" ],
+         "wordLexicon": [ "OrderDetails" ]
+      },
+      "OrderDetail":{  
+         "properties":{  
+            "hasProductID":{  
+               "datatype":"integer"
+            },
+            "hasUnitPrice":{  
+               "datatype":"double"
+            },
+            "Quantity":{  
+               "datatype":"integer"
+            }
+         }
+      },
+      "Superstore": {
+          "properties":{
+        	"OrdID":{
+        		"datatype":"integer"
+        	},
+        	"CustID":{
+        		"datatype":"string"
+        	},
+        	"OrdDate":{
+        		"datatype":"dateTime"
+        	},
+        	"ShippedDate":{
+        		"datatype":"dateTime"
+        	},
+        	"Product-Name":{
+        		"datatype":"string"
+        	},
+        	"Unit-Price":{
+        		"datatype":"double"
+        	},
+        	"Quant":{
+        		"datatype":"integer"
+        	},
+        	"Discount":{
+        		"datatype":"string"
+        	},
+        	"Ship-Address":{
+        		"datatype":"array",
+        		"items": {
+        			"$ref": "#/definitions/ShipDetails"
+        	    }
+        	}
+          },
+          "primaryKey": "OrdID",
+          "namespace": "http://marklogic.com/store",
+          "namespacePrefix": "store",
+          "pathRangeIndex": [ "Discount", "Unit-Price" ],
+          "wordLexicon": [ "Ship-Address" ],
+          "elementRangeIndex": [ "OrdID", "CustID", "Product-Name", "Quant" ]
+        },
+        "ShipDetails":{
+        	"properties":{
+    			"Province":{
+    				"datatype":"string"
+    			},
+    			"Region":{
+    				"datatype":"string"
+    			},
+    			"ShipMode":{
+    				"datatype":"string"
+    			},
+    			"ShippingCost":{
+    				"datatype":"double"
+    			}    	
+        	}
+        }
+   }
+}

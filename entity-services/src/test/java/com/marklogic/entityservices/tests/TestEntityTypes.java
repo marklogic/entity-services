@@ -127,6 +127,20 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-property-type-conflict.json", "Type names and property names must be distinct");
         invalidMessages.put("invalid-ref-pk.json", "A reference cannot be primary key.");
         invalidMessages.put("invalid-ref-pk.xml", "A reference cannot be primary key.");
+        invalidMessages.put("invalid-namespace-blacklist.json", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist.xml", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist2.json", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-blacklist2.xml", "It is a reserved pattern.");
+        invalidMessages.put("invalid-namespace-dupprefix.json", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupprefix.xml", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupuri.json", "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-dupuri.xml",  "Each prefix and namespace pair must be unique.");
+        invalidMessages.put("invalid-namespace-noprefix.json", "has no namespacePrefix property.");
+        invalidMessages.put("invalid-namespace-noprefix.xml", "has no namespace-prefix property.");
+        invalidMessages.put("invalid-namespace-nouri.json", "has no namespace property.");
+        invalidMessages.put("invalid-namespace-nouri.xml", "has no namespace property.");
+        invalidMessages.put("invalid-namespace-uri.json", "Namespace property must be a valid absolute URI.");
+        invalidMessages.put("invalid-namespace-uri.xml", "Namespace property must be a valid absolute URI.");
     }
 
 
@@ -159,7 +173,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
             JacksonHandle handle = null;
             try {
                 handle = evalOneResult("", "es:model-validate(fn:doc('"+ entityType.toString()  + "'))", new JacksonHandle());
-                fail("eval should throw an exception for invalid cases." + entityType);
+
+                // ive included one false negative
+                if (! entityType.contains( "false-negative-namespace.json") ) {
+                    fail("eval should throw an exception for invalid cases." + entityType);
+                }
 
             } catch (TestEvalException e) {
                 assertTrue("Must contain invalidity message. Message was " + e.getMessage(),

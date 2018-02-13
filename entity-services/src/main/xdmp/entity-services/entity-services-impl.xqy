@@ -1577,10 +1577,16 @@ declare function esi:search-options-generate(
 
         comment { "Change or remove this additional-query to broaden search beyond entity instance documents" },
         <search:additional-query>
-            <cts:element-query xmlns:cts="http://marklogic.com/cts">
-            <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
-            <cts:true-query/>
-            </cts:element-query>
+            <cts:or-query xmlns:cts="http://marklogic.com/cts">
+                <cts:json-property-scope-query>
+                    <cts:property>instance</cts:property>
+                    <cts:true-query/>
+                </cts:json-property-scope-query>
+                <cts:element-query>
+                    <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
+                    <cts:true-query/>
+                </cts:element-query>
+            </cts:or-query>
         </search:additional-query>,
         comment { "To return facets, change this option to 'true' and edit constraints" },
         <search:return-facets>false</search:return-facets>,

@@ -1,5 +1,5 @@
 (:
- Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved. 
+ Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ declare namespace tde = "http://marklogic.com/xdmp/tde";
 declare namespace xq = "http://www.w3.org/2012/xquery";
 
 
-import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy"; 
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
 import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
@@ -48,21 +48,24 @@ declare function inst:child-instance(
             =>map:with("$ref", $element/data())
     else
         let $child := json:object()=>map:with("$type", local-name($element))
-        let $_ := 
+        let $_ :=
             for $property in $element/*
             return
                 if (map:contains($child, local-name($property)))
-                then 
+                then
                     if (map:get($child, local-name($property)) instance of json:array)
                     then json:array-push(map:get($child, local-name($property)),
                             if ($property/element())
                             then inst:child-instance($property/*)
                             else data($property))
-                    else 
+                        else
                         let $new-array := json:array()
                         return (
                             json:array-push($new-array, map:get($child, local-name($property))),
-                            json:array-push($new-array, inst:child-instance($property/*)),
+                            json:array-push($new-array,
+                            if ($property/element())
+                            then inst:child-instance($property/*)
+                            else data($property)),
                             map:put($child, local-name($property), $new-array)
                         )
                 else
@@ -92,9 +95,8 @@ declare function inst:instance-xml-from-document(
     then $document//es:instance/(* except es:info)
     else
         let $json := inst:instance-json-from-document($document)
-        return json:transform-from-json($json, 
+        return json:transform-from-json($json,
             json:config("custom")=>map:with("element-namespace",""))
-        
 };
 
 declare private function inst:wrap-instance(
@@ -115,7 +117,7 @@ declare private function inst:wrap-instance(
                     return
                     typeswitch ($v)
                     case json:array return
-                     
+
                         if (json:array-size($v) eq 0)
                         then json:object()=>map:with($k, $v)
                         else if ($v[1] instance of json:object)

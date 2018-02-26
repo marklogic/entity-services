@@ -131,11 +131,11 @@ xquery version "1.0-ml";
 
 import module namespace race2 = "http://grechaw.github.io/entity-types#Race-0.0.1" at "/ext/entity-services/Race-0.0.1.xqy";
 
-let $doc := doc("/entity-services-examples/example-races/data/third-party/csv/2016-angel-island.csv-25.json" )
+let $doc := doc("/entity-services-examples/example-races/data/third-party/csv/2007-devil-island.csv-25.json" )
 return
 (
 $doc,
-race2:extract-instance-Angel-Island( $doc )
+race2:extract-instance-Devil-Island( $doc )
 )
 </query><query name="01. load-report" focus="false" listorder="2" taborder="2" active="true" database="2375902949254275754" server="545295666797463872" database-name="entity-services-examples-content" server-name="entity-services-examples" mode="xquery">(: This query is to verify that the example has run properly :)
 import module namespace es = "http://marklogic.com/entity-services" at "/MarkLogic/entity-services/entity-services.xqy"; 

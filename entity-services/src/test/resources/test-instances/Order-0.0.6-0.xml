@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Order>
+  <orderId>some string</orderId>
+  <orderDate datatype="array">2000-01-23</orderDate>
+</Order>
+

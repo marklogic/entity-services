@@ -62,7 +62,7 @@ public class Harmonizer extends ExamplesBase {
     public void secondSourceHarmonize() throws InterruptedException {
         StructuredQueryBuilder qb = new StructuredQueryBuilder();
         StructuredQueryDefinition qdef = qb.collection("raw", "csv");
-        ServerTransform ingester = new ServerTransform("ingester-angel-island");
+        ServerTransform ingester = new ServerTransform("ingester-devil-island");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
                 .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("batch transform SUCCESS");

@@ -114,7 +114,7 @@ declare private function race:process-duration(
  : @param $source-node  A document or node that contains data for populating a Run
  : @return A map:map instance that holds the data for this entity type.
  :)
-declare function race:extract-instance-Angel-Island(
+declare function race:extract-instance-Devil-Island(
 $source-node as node()
 ) as map:map
 {
@@ -129,7 +129,7 @@ json:object()
 =>es:optional('distanceLabel',       xs:string("Half Marathon"))
 =>es:optional('duration',            race:process-duration($source-node/Time))
 (: The following property is a local reference.                                :)
-=>map:with('runByRunner',            race:extract-instance-Angel-Island-Runner($source-node))
+=>map:with('runByRunner',            race:extract-instance-Devil-Island-Runner($source-node))
 };
 
 (:~
@@ -138,7 +138,7 @@ json:object()
  : @param $source-node  A document or node that contains data for populating a Runner
  : @return A map:map instance that holds the data for this entity type.
  :)
-declare function race:extract-instance-Angel-Island-Runner(
+declare function race:extract-instance-Devil-Island-Runner(
 $source-node as node()
 ) as map:map
 {

@@ -125,8 +125,15 @@ declare private variable $esi:model-schematron :=
          <iso:assert test="../../array-node()">value of property 'required' must be an array.</iso:assert>
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
+        <iso:rule context="pii">
+         <iso:assert test="../../array-node()">value of property 'pii' must be an array.</iso:assert>
+         <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"pii" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
+        </iso:rule>
         <iso:rule context="es:required">
          <iso:assert test="string(.) = (../es:properties/*/local-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:pii">
+         <iso:assert test="string(.) = (../es:properties/*/local-name())">"Pii" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="(pathRangeIndex|elementRangeIndex|rangeIndex)">
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
@@ -347,6 +354,7 @@ declare function esi:model-to-xml(
                 esi:key-convert-to-xml($entity-type, "description"),
                 esi:key-convert-to-xml($entity-type, "primaryKey"),
                 esi:key-convert-to-xml($entity-type, "required"),
+                esi:key-convert-to-xml($entity-type, "pii"),
                 esi:key-convert-to-xml($entity-type, "namespace"),
                 esi:key-convert-to-xml($entity-type, "namespacePrefix"),
                 esi:key-convert-to-xml($entity-type, "rangeIndex"),
@@ -393,6 +401,7 @@ declare function esi:model-from-xml(
             let $_ := map:put($entity-type, "properties", $properties)
             let $_ := esi:with-if-exists($entity-type, "primaryKey", data($entity-type-node/es:primary-key))
             let $_ := esi:with-if-exists($entity-type, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "pii", json:to-array($entity-type-node/es:pii/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "namespace", $entity-type-node/es:namespace/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "namespacePrefix", $entity-type-node/es:namespace-prefix/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
@@ -1616,4 +1625,5 @@ declare private function esi:resolve-base-prefix(
 {
     replace(esi:resolve-base-uri($info), "#", "/")
 };
+
 

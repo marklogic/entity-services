@@ -1,0 +1,8 @@
+<p:Customer-pii xmlns:p="http://ex.org/Person">
+    <p:id>some string</p:id>
+    <p:firstName>some string</p:firstName>
+    <p:lastName>some string</p:lastName>
+    <p:fullName>some string</p:fullName>
+    <p:address>some string</p:address>
+    <p:ssn>some string</p:ssn>
+</p:Customer-pii>

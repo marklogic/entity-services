@@ -1,11 +1,11 @@
 {
   "info": {
-    "title": "Customer-With-PII",
+    "title": "Customer-pii",
     "version": "0.0.4",
     "baseUri" : "http://example.org/mytypeschema/"
   },
   "definitions": {
-    "Customer": {
+    "Customer-pii": {
       "properties": {
         "id": {
           "datatype": "string"

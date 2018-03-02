@@ -3,6 +3,7 @@ package com.marklogic.entityservices.tests;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marklogic.client.io.JacksonHandle;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestPiiPolicy extends EntityServicesTestBase {
@@ -11,10 +12,12 @@ public class TestPiiPolicy extends EntityServicesTestBase {
     @BeforeClass
     public static void setup() {
         setupClients();
-        TestSetup.getInstance().loadEntityTypes("/pii-units", modelName);
+        TestSetup.getInstance().loadEntityTypes("/json-models", modelName);
     }
 
     @Test
+    @Ignore
+    // not implemented
     public void entityCreatesPolicyELSConfigurations() {
         JacksonHandle handle =
             evalOneResult("","fn:doc('"+modelName+"')=>es:pii-artifacts-generate()", new JacksonHandle());

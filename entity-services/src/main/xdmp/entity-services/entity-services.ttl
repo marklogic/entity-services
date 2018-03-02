@@ -74,6 +74,13 @@ es:RequiredProperty a owl:Class ;
     rdfs:comment "A es:RequiredProperty must be present in all instances of a given type.  Schemas and extraction templates will expect a value to be present in each instance. (EA-3)" 
 .
 
+es:PIIProperty a owl:Class ;
+    rdfs:isDefinedBy es:EntityServices ;
+    rdfs:label "PIIProperty" ;
+    rdfs:subClassOf es:Property ;
+    rdfs:comment "A es:PIIProperty indicates a property that contains personally-identifiable information, which must be secured."
+.
+
 es:title a owl:DatatypeProperty ;
     rdfs:isDefinedBy es:EntityServices ;
     rdfs:label "title" ;

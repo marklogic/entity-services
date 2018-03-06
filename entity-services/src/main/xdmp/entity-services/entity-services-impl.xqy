@@ -170,13 +170,12 @@ declare private variable $esi:model-schematron :=
         </iso:rule>
 
         <iso:rule context="/">
-         <iso:assert test="count(distinct-values( .//(namespace|es:namespace) 
-                                                    ! concat(../(namespacePrefix|es:namespace-prefix), .))) eq 
+         <iso:assert test="count(distinct-values( .//(namespace|es:namespace)
+                                                    ! concat(../(namespacePrefix|es:namespace-prefix), .))) eq
                            count(distinct-values( .//(namespace|es:namespace ))) and
                            count(distinct-values( .//(namespace|es:namespace ))) eq
                            count(distinct-values( .//(namespacePrefix|es:namespace-prefix )))">Each prefix and namespace pair must be unique.</iso:assert>
         </iso:rule>
-        
       </iso:pattern>
     </iso:schema>
 ;
@@ -1316,7 +1315,7 @@ declare function esi:extraction-template-generate(
 
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows)
-        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name) 
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
         let $namespace-uri := $entity-type=>map:get("namespace")
         let $prefix-value :=
@@ -1627,3 +1626,64 @@ declare private function esi:resolve-base-prefix(
 };
 
 
+declare function esi:pii-generate(
+    $model as map:map
+) as object-node()
+{
+    (: to generate a pii security config I need all types/namespaces + properties. :)
+    (: and I need to putput a namespace section, and several protected paths. :)
+    (: each type has its own set of paths/namespaces, so we'll iterate by type. :)
+
+    let $policy-name := $model=>map:get("info")=>map:get("title") || "-" || $model=>map:get("info")=>map:get("version")
+    let $entity-type-labels := json:array()
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
+    let $protected-paths :=
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $property-labels := json:array()
+        return
+            if (empty($entity-type=>map:get("pii")))
+            then ()
+            else
+                (
+                for $pii-property in $entity-type=>map:get("pii")=>json:array-values()
+                return
+                    (
+                    json:array-push($property-labels, $pii-property),
+                    if ($entity-type=>map:get("namespace"))
+                    then
+                      object-node {
+                        "path-namespace" : array-node {
+                            object-node { "prefix" : "es",
+                                "namespace-uri" : "http://marklogic.com/entity-services"
+                            },
+                            object-node { "prefix" : $entity-type=>map:get("namespacePrefix"),
+                                "namespace-uri" : $entity-type=>map:get("namespace")
+                            }
+                         },
+                        "path-expression" : "/es:envelope//es:instance//"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $entity-type-name || "/"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $pii-property
+                    }
+                    else
+                      object-node {
+                        "path-expression" : "/envelope//instance//" || $entity-type-name || "/" || $pii-property
+                    }
+                    ),
+                json:array-push($entity-type-labels,
+                        string-join(json:array-values($property-labels), ",") ||
+                        " of type " || $entity-type-name
+                        )
+                )
+    return
+    object-node {
+        "name" : $policy-name,
+        "desc" : "A policy that secures " || string-join(json:array-values($entity-type-labels), ", "),
+        "config" : object-node {
+            "protected-path" :  array-node { $protected-paths },
+            "query-roleset" : array-node { "pii" }
+        }
+    }
+};

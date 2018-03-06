@@ -1,0 +1,26 @@
+{
+  "name" : "Customer-pii-0.0.4",
+  "desc" : "A policy that secures address,ssn of type Customer-pii",
+  "config" : {
+    "protected-path" : [ {
+      "path-namespace" : [ {
+        "prefix" : "es",
+        "namespace-uri" : "http://marklogic.com/entity-services"
+      }, {
+        "prefix" : "p",
+        "namespace-uri" : "http://ex.org/Person"
+      } ],
+      "path-expression" : "/es:envelope//es:instance//p:Customer-pii/p:address"
+    }, {
+      "path-namespace" : [ {
+        "prefix" : "es",
+        "namespace-uri" : "http://marklogic.com/entity-services"
+      }, {
+        "prefix" : "p",
+        "namespace-uri" : "http://ex.org/Person"
+      } ],
+      "path-expression" : "/es:envelope//es:instance//p:Customer-pii/p:ssn"
+    } ],
+    "query-roleset" : [ "pii" ]
+  }
+}

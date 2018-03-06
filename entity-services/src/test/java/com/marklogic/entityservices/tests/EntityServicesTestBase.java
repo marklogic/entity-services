@@ -15,6 +15,9 @@
  */
 package com.marklogic.entityservices.tests;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.FailedRequestException;
 import com.marklogic.client.eval.EvalResult;
@@ -123,6 +126,12 @@ public abstract class EntityServicesTestBase {
         transformer.transform(new DOMSource(xmldoc), new StreamResult(os));
      }
 
+    protected void save(String path, JsonNode content) throws IOException {
+        File outputFile = new File("src/test/resources/" + path );
+        OutputStream os = new FileOutputStream(outputFile);
+        ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+        writer.writeValue(os, content);
+    }
     protected void save(String path, Document content) throws IOException, TransformerException {
         File outputFile = new File("src/test/resources/" + path );
         OutputStream os = new FileOutputStream(outputFile);

@@ -1,0 +1,14 @@
+{
+  "name" : "Order-0.0.4",
+  "desc" : "A policy that secures orderDate,hasOrderDetails of type Order, quantity of type OrderDetails",
+  "config" : {
+    "protected-path" : [ {
+      "path-expression" : "/envelope//instance//Order/orderDate"
+    }, {
+      "path-expression" : "/envelope//instance//Order/hasOrderDetails"
+    }, {
+      "path-expression" : "/envelope//instance//OrderDetails/quantity"
+    } ],
+    "query-roleset" : [ "pii" ]
+  }
+}

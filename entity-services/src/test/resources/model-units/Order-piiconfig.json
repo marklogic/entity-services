@@ -9,6 +9,6 @@
     }, {
       "path-expression" : "/envelope//instance//OrderDetails/quantity"
     } ],
-    "query-roleset" : [ "pii" ]
+    "query-roleset" : [ "pii-reader" ]
   }
 }

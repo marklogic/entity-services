@@ -21,6 +21,6 @@
       } ],
       "path-expression" : "/es:envelope//es:instance//p:Customer-pii/p:ssn"
     } ],
-    "query-roleset" : [ "pii" ]
+    "query-roleset" : [ "pii-reader" ]
   }
 }

@@ -1683,7 +1683,7 @@ declare function esi:pii-generate(
         "desc" : "A policy that secures " || string-join(json:array-values($entity-type-labels), ", "),
         "config" : object-node {
             "protected-path" :  array-node { $protected-paths },
-            "query-roleset" : array-node { "pii" }
+            "query-roleset" : array-node { "pii-reader" }
         }
     }
 };

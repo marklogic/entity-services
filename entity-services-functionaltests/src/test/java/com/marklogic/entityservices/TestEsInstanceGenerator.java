@@ -50,7 +50,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			//String entityTypeLocation = null;
 			
 			// we test that xml and json are equivalent elsewhere, so only test half.
-			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")) { continue; }
+			if (entityType.contains(".json")||entityType.contains("invalid-")||entityType.contains(".jpg")||entityType.contains("pii")) { continue; }
 			
 			String generateTestInstances = "es:model-get-test-instances( es:model-from-xml( fn:doc('"+entityType+"') ) )";
 			

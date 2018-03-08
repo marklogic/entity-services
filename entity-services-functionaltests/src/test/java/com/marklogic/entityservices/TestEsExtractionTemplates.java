@@ -178,7 +178,7 @@ public class TestEsExtractionTemplates extends EntityServicesTestBase {
 	public void verifyExtractionTemplateGenerate() throws TestEvalException, SAXException, IOException, TransformerException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("primary-key-as-a-ref")) { continue;}
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("primary-key-as-a-ref")||entityType.contains("pii")) { continue;}
 			
 
 			logger.info("Validating extraction template for:" + entityType);

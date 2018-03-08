@@ -1,0 +1,150 @@
+{
+  "info": {
+    "title": "PIITest",
+    "version": "0.0.1",
+    "baseUri":"http://marklogic.com/pii"
+  },
+  "definitions": {
+    "Customer": {
+      "properties": {
+        "CustomerID": {
+          "datatype": "string"
+        },
+        "CompanyName": {
+          "datatype": "string"
+        },
+        "Country": {
+          "datatype":"string" 
+        },
+        "ContactName":{
+          "datatype":"string" 
+        },
+        "ContactTitle":{
+          "datatype":"string"
+        },
+        "Phone":{
+          "datatype":"string"
+        }
+      },
+      "namespace": "http://marklogic.com/customer",
+      "namespacePrefix": "cust",
+      "primaryKey" : "CustomerID",
+      "pii" : [ "Country", "Phone" ],
+      "rangeIndex" : [ "CustomerID","CompanyName" ],
+      "wordLexicon" : [ "CustomerID","CompanyName" ]
+    },
+    "Product": {
+      "properties": {
+        "ProductID":{
+          "datatype":"integer"
+        },
+        "ProductName": {
+          "datatype": "string"
+        },
+        "UnitPrice": {
+          "datatype": "double"
+        },
+        "SupplierID":{
+          "datatype":"integer"
+        }
+      },
+      "primaryKey" : "ProductID",
+      "required": [ "ProductID" ],
+      "rangeIndex" : [ "ProductID" ],
+      "pii" : [ "SupplierID", "UnitPrice" ]
+    },
+    "Order": {
+      "properties": {
+        "OrderID": {
+          "datatype":"integer"
+        },
+        "hasCustomerID": {
+          "$ref": "#/definitions/Customer"
+        },
+        "OrderDate": {
+          "datatype": "dateTime"
+        },
+        "ShippedDate":{
+          "datatype":"dateTime"
+        },
+        "ShipAddress":{
+          "datatype":"string"
+        },
+        "OrderDetails":{
+          "datatype":"array",
+          "items": {
+          	 "$ref": "#/definitions/OrderDetail"
+          }
+        }      
+      },
+      "primaryKey" : "OrderID",
+      "pii" : [ "hasCustomerID", "OrderDetails", "OrderDate" ]
+    },
+    "OrderDetail": {
+      "properties":{  
+        "hasProductID":{  
+           "$ref":"#/definitions/Product"
+        },
+        "hasUnitPrice":{  
+           "datatype":"double"
+        },
+        "Quantity":{  
+           "datatype":"integer"
+        }
+      }
+    },
+    "Superstore": {
+      "properties":{
+    	"OrdID":{
+    		"datatype":"integer"
+    	},
+    	"CustID":{
+    		"datatype":"string"
+    	},
+    	"OrdDate":{
+    		"datatype":"dateTime"
+    	},
+    	"Shipped-Date":{
+    		"datatype":"dateTime"
+    	},
+    	"Product-Name":{
+    		"datatype":"string"
+    	},
+    	"Unit-Price":{
+    		"datatype":"double"
+    	},
+    	"Quant":{
+    		"datatype":"integer"
+    	},
+    	"Discount":{
+    		"datatype":"string"
+    	},
+    	"Ship-Address":{
+    		"datatype":"array",
+    		"items": {
+    			"$ref": "#/definitions/ShipDetails"
+    	    }
+    	}
+      },
+      "primaryKey": "OrdID",
+      "rangeIndex": [ "OrdID", "CustID", "Product-Name", "Quant" ],
+      "pii" : [ "OrdID", "OrdDate", "Ship-Address" ]
+    },
+    "ShipDetails":{
+    	"properties":{
+			"Province":{
+				"datatype":"string"
+			},
+			"Region":{
+				"datatype":"string"
+			},
+			"ShipMode":{
+				"datatype":"string"
+			},
+			"ShippingCost":{
+				"datatype":"double"
+			}    	
+    	}
+    }
+  }
+}

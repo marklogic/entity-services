@@ -110,7 +110,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")||entityType.contains("pii")) {
 				continue;
 			}
 			

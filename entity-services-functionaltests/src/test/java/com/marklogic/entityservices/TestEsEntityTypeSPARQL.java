@@ -263,5 +263,24 @@ public class TestEsEntityTypeSPARQL extends EntityServicesTestBase {
 		
 		assertEquals(control, bindings);
 	}
+	
+	@Test
+	public void testPII() throws JsonGenerationException, JsonMappingException, IOException {
+		
+		// This test verifies that model emits pii property as triples
+		String query =  "PREFIX t: <http://marklogic.com/pii/PIITest-0.0.1/>"
+					  + "PREFIX es: <http://marklogic.com/entity-services#>"
+					  + "SELECT ?property WHERE { ?property a es:PIIProperty }";
+					
+		JacksonHandle handle= queryMgr.executeSelect(queryMgr.newQueryDefinition(query), new JacksonHandle());
+		JsonNode results = handle.get();
+		ArrayNode bindings = (ArrayNode) results.get("results").get("bindings");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		InputStream is = this.getClass().getResourceAsStream("/test-sparql/testPII.json");
+		JsonNode control = mapper.readValue(is, JsonNode.class);
+		
+		assertEquals(control, bindings);
+	}
 
 }

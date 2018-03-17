@@ -1641,6 +1641,11 @@ declare function esi:pii-generate(
         for $entity-type-name in $entity-type-names
         let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $property-labels := json:array()
+        let $perms :=
+                    object-node {
+                        "role-name" : "pii-reader",
+                        "capability" : "read"
+                    }
         return
             if (empty($entity-type=>map:get("pii")))
             then ()
@@ -1653,6 +1658,11 @@ declare function esi:pii-generate(
                     if ($entity-type=>map:get("namespace"))
                     then
                       object-node {
+                        "path-expression" : "/es:envelope//es:instance//"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $entity-type-name || "/"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $pii-property,
                         "path-namespace" : array-node {
                             object-node { "prefix" : "es",
                                 "namespace-uri" : "http://marklogic.com/entity-services"
@@ -1661,15 +1671,13 @@ declare function esi:pii-generate(
                                 "namespace-uri" : $entity-type=>map:get("namespace")
                             }
                          },
-                        "path-expression" : "/es:envelope//es:instance//"
-                                            || $entity-type=>map:get("namespacePrefix")
-                                            || ":" || $entity-type-name || "/"
-                                            || $entity-type=>map:get("namespacePrefix")
-                                            || ":" || $pii-property
+                        "permission" : $perms
                     }
                     else
                       object-node {
-                        "path-expression" : "/envelope//instance//" || $entity-type-name || "/" || $pii-property
+                        "path-expression" : "/envelope//instance//" || $entity-type-name || "/" || $pii-property,
+                        "path-namespace" : array-node { },
+                        "permission" : $perms
                     }
                     ),
                 json:array-push($entity-type-labels,
@@ -1683,7 +1691,7 @@ declare function esi:pii-generate(
         "desc" : "A policy that secures " || string-join(json:array-values($entity-type-labels), ", "),
         "config" : object-node {
             "protected-path" :  array-node { $protected-paths },
-            "query-roleset" : array-node { "pii-reader" }
+            "query-roleset" : object-node { "role-name" : array-node { "pii-reader" } }
         }
     }
 };

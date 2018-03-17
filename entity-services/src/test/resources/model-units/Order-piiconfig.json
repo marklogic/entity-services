@@ -3,12 +3,29 @@
   "desc" : "A policy that secures orderDate,hasOrderDetails of type Order, quantity of type OrderDetails",
   "config" : {
     "protected-path" : [ {
-      "path-expression" : "/envelope//instance//Order/orderDate"
+      "path-expression" : "/envelope//instance//Order/orderDate",
+      "path-namespace" : [ ],
+      "permission" : {
+        "role-name" : "pii-reader",
+        "capability" : "read"
+      }
     }, {
-      "path-expression" : "/envelope//instance//Order/hasOrderDetails"
+      "path-expression" : "/envelope//instance//Order/hasOrderDetails",
+      "path-namespace" : [ ],
+      "permission" : {
+        "role-name" : "pii-reader",
+        "capability" : "read"
+      }
     }, {
-      "path-expression" : "/envelope//instance//OrderDetails/quantity"
+      "path-expression" : "/envelope//instance//OrderDetails/quantity",
+      "path-namespace" : [ ],
+      "permission" : {
+        "role-name" : "pii-reader",
+        "capability" : "read"
+      }
     } ],
-    "query-roleset" : [ "pii-reader" ]
+    "query-roleset" : {
+      "role-name" : [ "pii-reader" ]
+    }
   }
 }

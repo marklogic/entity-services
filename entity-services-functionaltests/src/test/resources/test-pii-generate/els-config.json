@@ -4,6 +4,7 @@
   "config":{  
     "protected-path":[  
       {  
+        "path-expression":"/es:envelope//es:instance//cust:Customer/cust:Country",
         "path-namespace":[  
           {  
             "prefix":"es",
@@ -14,9 +15,13 @@
             "namespace-uri":"http://marklogic.com/customer"
           }
         ],
-        "path-expression":"/es:envelope//es:instance//cust:Customer/cust:Country"
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
+        "path-expression":"/es:envelope//es:instance//cust:Customer/cust:Phone",
         "path-namespace":[  
           {  
             "prefix":"es",
@@ -27,35 +32,96 @@
             "namespace-uri":"http://marklogic.com/customer"
           }
         ],
-        "path-expression":"/es:envelope//es:instance//cust:Customer/cust:Phone"
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Product/SupplierID"
+        "path-expression":"/envelope//instance//Product/SupplierID",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Product/UnitPrice"
+        "path-expression":"/envelope//instance//Product/UnitPrice",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Order/hasCustomerID"
+        "path-expression":"/envelope//instance//Order/hasCustomerID",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Order/OrderDetails"
+        "path-expression":"/envelope//instance//Order/OrderDetails",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Order/OrderDate"
+        "path-expression":"/envelope//instance//Order/OrderDate",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Superstore/OrdID"
+        "path-expression":"/envelope//instance//Superstore/OrdID",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Superstore/OrdDate"
+        "path-expression":"/envelope//instance//Superstore/OrdDate",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       },
       {  
-        "path-expression":"/envelope//instance//Superstore/Ship-Address"
+        "path-expression":"/envelope//instance//Superstore/Ship-Address",
+        "path-namespace":[  
+
+        ],
+        "permission":{  
+          "role-name":"pii-reader",
+          "capability":"read"
+        }
       }
     ],
-    "query-roleset":[  
-      "pii-reader"
-    ]
+    "query-roleset":{  
+      "role-name":[  
+        "pii-reader"
+      ]
+    }
   }
 }

@@ -1,0 +1,26 @@
+<es:model xmlns:es="http://marklogic.com/entity-services">
+  <es:info>
+      <es:title>Order</es:title>
+      <es:version>0.0.6</es:version>
+      <es:base-uri>http://order6</es:base-uri>
+      <es:description>This order has been thown in to test scalar arrays and envelopes.</es:description>
+  </es:info>
+  <es:definitions>
+    <Order>
+        <es:properties>
+            <orderId>
+                <es:datatype>string</es:datatype>
+            </orderId>
+            <orderDate>
+                <es:datatype>array</es:datatype>
+                <es:items>
+                    <es:datatype>date</es:datatype>
+                </es:items>
+            </orderDate>
+        </es:properties>
+        <es:primary-key>orderId</es:primary-key>
+        <es:required>orderId</es:required>
+        <es:required>orderDate</es:required>
+    </Order>
+  </es:definitions>
+</es:model>

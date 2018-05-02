@@ -1,0 +1,49 @@
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
+@prefix es: <http://marklogic.com/entity-services#> .
+@prefix doc: <http://example.org/mytypeschema/> .
+@prefix type: <http://example.org/mytypeschema/Customer-pii-0.0.4/> .
+@prefix prop: <http://example.org/mytypeschema/Customer-pii-0.0.4/Customer-pii/> .
+
+doc:Customer-pii-0.0.4 a es:Model ;
+    es:title "Customer-pii" ;
+    es:version "0.0.4" ;
+    es:definitions type:Customer-pii .
+type:Customer-pii a es:EntityType ;
+    es:title "Customer-pii" ;
+    es:version "0.0.4" ;
+    es:namespace "http://ex.org/Person"^^xs:anyURI ;
+    es:namespacePrefix "p" ;
+    es:property
+        prop:id,
+        prop:firstName,
+        prop:lastName,
+        prop:fullName,
+        prop:address,
+        prop:ssn ;
+    es:primaryKey prop:id .
+prop:id a es:Property ;
+    a es:PrimaryKey ;
+    es:title "id" ;
+    es:datatype xs:string .
+prop:firstName a es:Property ;
+    a es:WordLexiconProperty ;
+    es:datatype xs:string ;
+    es:title "firstName" .
+prop:lastName a es:Property ;
+    a es:RequiredProperty ;
+    es:datatype xs:string ;
+    es:title "lastName" .
+prop:fullName a es:Property ;
+    es:datatype xs:string ;
+    es:title "fullName" .
+prop:address a es:Property ;
+    a es:RequiredProperty ;
+    a es:PIIProperty ;
+    es:datatype xs:string ;
+    es:title "address" .
+prop:ssn a es:Property ;
+    a es:PIIProperty ;
+    es:datatype xs:string ;
+    es:title "ssn" .
+
+

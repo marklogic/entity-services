@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 MarkLogic Corporation
+ * Copyright 2016-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public class Harmonizer extends ExamplesBase {
     public void secondSourceHarmonize() throws InterruptedException {
         StructuredQueryBuilder qb = new StructuredQueryBuilder();
         StructuredQueryDefinition qdef = qb.collection("raw", "csv");
-        ServerTransform ingester = new ServerTransform("ingester-angel-island");
+        ServerTransform ingester = new ServerTransform("ingester-devil-island");
         ApplyTransformListener listener = new ApplyTransformListener().withTransform(ingester)
                 .withApplyResult(ApplyTransformListener.ApplyResult.IGNORE).onSuccess(inPlaceBatch -> {
                     logger.debug("batch transform SUCCESS");

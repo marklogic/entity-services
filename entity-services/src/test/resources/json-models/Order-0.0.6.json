@@ -1,0 +1,24 @@
+{
+  "info": {
+    "title": "Order",
+    "version": "0.0.6",
+    "baseUri": "http://order6",
+    "description" : "This order has been thown in to test scalar arrays and envelopes."
+  },
+  "definitions": {
+    "Order": {
+      "properties": {
+        "orderId": {
+          "datatype": "string"
+        },
+        "orderDate": {
+          "datatype": "array",
+          "items" : { "datatype":"date"}
+        }
+      },
+      "primaryKey" : "orderId",
+      "required" : ["orderId", "orderDate"]
+    }
+  }
+}
+

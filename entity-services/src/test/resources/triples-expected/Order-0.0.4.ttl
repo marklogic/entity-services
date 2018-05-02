@@ -21,11 +21,13 @@ type:Order  a          es:EntityType ;
 
 order:orderDate  a   es:Property ;
         a es:RequiredProperty ;
+        a es:PIIProperty ;
         es:datatype  xsd:date ;
         es:title     "orderDate" .
 
 orderdetails:quantity
         a            es:Property ;
+        a es:PIIProperty ;
         es:datatype  xsd:integer ;
         es:title     "quantity" .
 
@@ -36,6 +38,7 @@ type:OrderDetails  a  es:EntityType ;
 
 order:hasOrderDetails
         a         es:Property, es:RequiredProperty ;
+        a es:PIIProperty ;
         es:datatype json:array ;
         es:items  <http://marklogic.com/entity-services/test/Order-0.0.4/Order/hasOrderDetails/items> ;
         es:title  "hasOrderDetails" .

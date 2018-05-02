@@ -1,5 +1,5 @@
 xquery version "1.0-ml";
-module namespace ingester = "http://marklogic.com/rest-api/transform/ingester-angel-island";
+module namespace ingester = "http://marklogic.com/rest-api/transform/ingester-devil-island";
 
 import module namespace race = "http://grechaw.github.io/entity-types#Race-0.0.1"
     at "/ext/entity-services/Race-0.0.1.xqy";
@@ -16,15 +16,15 @@ declare function ingester:transform(
 ) as document-node()?
 {
     let $uri := map:get($context, "uri")
-    let $_ := xdmp:log(("Procesing Angel Island URI " || $uri))
+    let $_ := xdmp:log(("Procesing Devil's Island URI " || $uri))
     let $_ :=
-        if (contains($uri, "angel-island"))
+        if (contains($uri, "devil-island"))
         then xdmp:document-insert(
                 concat("/runs/", $uri=>fn:substring-before(".json"), ".xml"),
                 race:instance-to-envelope(
-                race:extract-instance-Angel-Island(doc($uri))),
+                race:extract-instance-Devil-Island(doc($uri))),
                 (xdmp:permission("examples-reader", "read"), xdmp:permission("examples-writer", "insert"), xdmp:permission("examples-writer", "update")),
-                ("run-envelopes", "angel-island"))
+                ("run-envelopes", "devil-island"))
         else ()
     return document { " " }
 };

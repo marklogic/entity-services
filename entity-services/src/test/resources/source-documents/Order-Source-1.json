@@ -1,0 +1,21 @@
+{
+  "Order": {
+    "orderId": "10249",
+    "orderDate": "1996-07-05",
+    "hasOrderDetails": [
+      {
+        "OrderDetails": {
+          "quantity": "9",
+          "productName": "Chucks"
+        }
+      },
+      {
+        "OrderDetails": {
+          "quantity": "40",
+          "productName": "Capris"
+        }
+      }
+    ]
+  }
+}
+

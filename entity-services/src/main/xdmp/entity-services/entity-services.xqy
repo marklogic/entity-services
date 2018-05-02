@@ -1,5 +1,5 @@
 (:
- Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
+ Copyright 2002-2018 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -83,7 +83,6 @@ declare function es:model-to-triples(
 {
     esi:model-to-triples($model)
 };
-    
 
 (:~
  : Generates an XQuery module that can be customized and used
@@ -185,6 +184,20 @@ declare function es:version-translator-generate(
     es-codegen:version-translator-generate(
            $source-model,
            $target-model)
+};
+
+
+(:~
+ : Generates a configuration for use with ELS and the mgmt client API
+ : to secure individual properties with the 'pii' role
+ :)
+declare function es:pii-generate(
+    $model as map:map
+) as document-node()
+{
+    document {
+        esi:pii-generate($model)
+    }
 };
 
 
@@ -401,11 +414,11 @@ declare function es:copy-attachments(
 
 
 (:~
- : Serializes attachments for storage in an envelope document.  
+ : Serializes attachments for storage in an envelope document.
  : @param $instance  The isntance holding attachment data.
  : @param $format The format of the envlosing envlelope.
  : @return If the format does not match that supplied in $format, then the attachment
- :     is returned as a quoted string.  Otherwise, the attachment is returned for inline 
+ :     is returned as a quoted string.  Otherwise, the attachment is returned for inline
        inclusion as a node.
  :)
 declare function es:serialize-attachments(

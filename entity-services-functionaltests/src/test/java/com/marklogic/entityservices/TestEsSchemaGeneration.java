@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 MarkLogic Corporation
+ * Copyright 2016-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ public class TestEsSchemaGeneration extends EntityServicesTestBase {
 	public void verifySchemaValidation() throws TestEvalException, SAXException, IOException {
 
 		for (String entityType : entityTypes) {
-			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")) {
+			if (entityType.contains(".json")||entityType.contains(".jpg")||entityType.contains("namespace")||entityType.contains("pii")) {
 				continue;
 			}
 			

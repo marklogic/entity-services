@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 MarkLogic Corporation
+ * Copyright 2016-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -411,25 +411,25 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
     public void testJSONSerialization() throws IOException, ParserConfigurationException, SAXException {
 
         String initialTest = "Order-0.0.4.json";
-        String instanceDocument = "Order-Source-2.xml";
+        String instanceDocument = "Order-Source-1.xml";
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document instanceWithArrayOfOne =
-            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-2.xml"));
+            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-1.xml"));
         client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArrayOfOne));
 
         JsonNode control = new ObjectMapper()
             .readValue(
-                this.getClass().getResourceAsStream("/source-documents/Order-Source-2.json"),
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-1.json"),
                 JsonNode.class);
 
         evalOneResult(
             moduleImport(initialTest),
-            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-2.xml') ) )"
-                +"return xdmp:document-insert('Order-Source-2.xml-envelope.xml', $envelope) ",
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-1.xml') ) )"
+                +"return xdmp:document-insert('Order-Source-1.xml-envelope.xml', $envelope) ",
             new StringHandle());
 
         JacksonHandle instanceAsJSONHandle =
-            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-2.xml-envelope.xml') )", new JacksonHandle());
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-1.xml-envelope.xml') )", new JacksonHandle());
 
         JsonNode jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
@@ -456,6 +456,46 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
 
         jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(control, org.hamcrest.Matchers.equalTo(jsonInstance));
+    }
+
+    @Test
+    public void testInstanceScalarArray() throws ParserConfigurationException, IOException, SAXException {
+        String initialTest = "Order-0.0.6.json";
+        String instanceDocument = "Order-Source-6.xml";
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document instanceWithArrayOfOne =
+            builder.parse(this.getClass().getResourceAsStream("/source-documents/Order-Source-6.xml"));
+        client.newXMLDocumentManager().write(instanceDocument, new DOMHandle(instanceWithArrayOfOne));
+
+        JsonNode control = new ObjectMapper()
+            .readValue(
+                this.getClass().getResourceAsStream("/source-documents/Order-Source-6.json"),
+                JsonNode.class);
+
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-6.xml') ), 'json' )"
+                +"return xdmp:document-insert('Order-Source-6.json-envelope.json', $envelope) ",
+            new StringHandle());
+        evalOneResult(
+            moduleImport(initialTest),
+            "let $envelope := conv:instance-to-envelope( conv:extract-instance-Order( doc('Order-Source-6.xml') ) )"
+                +"return xdmp:document-insert('Order-Source-6.xml-envelope.xml', $envelope) ",
+            new StringHandle());
+
+        JacksonHandle instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-6.xml-envelope.xml') )", new JacksonHandle());
+
+        JsonNode jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
+
+        // same test from json envelope
+        instanceAsJSONHandle =
+            evalOneResult("", "es:instance-json-from-document( doc('Order-Source-6.json-envelope.json') )", new JacksonHandle());
+
+        jsonInstance = instanceAsJSONHandle.get();
+        org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
+
     }
 
     @Test
@@ -489,7 +529,7 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
     @Test
     public void testJSONObjectNodeInput() throws IOException, ParserConfigurationException, SAXException {
 
-        String initialTest = "Order-0.0.4.json";
+        String initialTest = "Order-0.0.5.json";
         String instanceDocument = "Order-Source-5.json";
 
         JsonNode instanceNode = new ObjectMapper().readTree(this.getClass().getResourceAsStream("/source-documents/" + instanceDocument));
@@ -513,8 +553,8 @@ public class TestInstanceConverterGenerator extends EntityServicesTestBase {
         JsonNode jsonInstance = instanceAsJSONHandle.get();
         org.hamcrest.MatcherAssert.assertThat(jsonInstance, org.hamcrest.Matchers.equalTo(control));
 
-        client.newJSONDocumentManager().delete(instanceDocument);
-        client.newJSONDocumentManager().delete("Order-Source-5.json-envelope.json");
+        //client.newJSONDocumentManager().delete(instanceDocument);
+        //client.newJSONDocumentManager().delete("Order-Source-5.json-envelope.json");
     }
 
     @AfterClass

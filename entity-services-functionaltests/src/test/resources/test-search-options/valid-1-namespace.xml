@@ -1,15 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <search:options xmlns:search="http://marklogic.com/appservices/search">
   <search:constraint name="entity-type">
     <search:value>
-      <search:element name="title" ns="http://marklogic.com/entity-services"/>
+      <search:element ns="http://marklogic.com/entity-services" name="title" />
     </search:value>
   </search:constraint>
   <search:constraint name="CustomerId">
     <search:value>
-      <search:element name="CustomerId" ns=""/>
+      <search:element ns="" name="CustomerId" />
     </search:value>
   </search:constraint>
-  <!--The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
+  <!--
+The name of this constraint is a duplicate in the generated XML. It is within a comment so that the XML may be valid, but you may need to edit for your use case.
  <search:constraint name="CustomerId" xmlns:search="http://marklogic.com/appservices/search">
   <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
     <search:path-index xmlns:es="http://marklogic.com/entity-services" xmlns:cust="http://marklogic.com/customer">//es:instance/cust:Customer/cust:CustomerId</search:path-index>
@@ -17,130 +19,147 @@
 </search:constraint> 
 -->
   <search:constraint name="CompanyName">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:cust="http://marklogic.com/customer" xmlns:es="http://marklogic.com/entity-services">//es:instance/cust:Customer/cust:CompanyName</search:path-index>
     </search:range>
   </search:constraint>
   <search:constraint name="Country">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="Country" ns="http://marklogic.com/customer"/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="http://marklogic.com/customer" name="Country" />
     </search:range>
   </search:constraint>
   <search:constraint name="Address">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="Address" ns="http://marklogic.com/customer"/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="http://marklogic.com/customer" name="Address" />
     </search:range>
   </search:constraint>
   <search:constraint name="UnitPrice">
-    <search:range facet="true" type="xs:double">
+    <search:range type="xs:double" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
     </search:range>
   </search:constraint>
   <search:constraint name="Discontinued">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/Discontinued</search:path-index>
     </search:range>
   </search:constraint>
   <search:constraint name="SupplierID">
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="SupplierID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="SupplierID" />
     </search:range>
   </search:constraint>
   <search:constraint name="ProductID">
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="ProductID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="ProductID" />
     </search:range>
   </search:constraint>
   <search:constraint name="OrderDate">
-    <search:range facet="true" type="xs:dateTime">
+    <search:range type="xs:dateTime" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Order/OrderDate</search:path-index>
     </search:range>
   </search:constraint>
   <search:constraint name="CustomerID">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Order/CustomerID</search:path-index>
     </search:range>
   </search:constraint>
   <search:constraint name="ShipAddress">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="ShipAddress" ns=""/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="ShipAddress" />
     </search:range>
   </search:constraint>
   <search:constraint name="OrderID">
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="OrderID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="OrderID" />
     </search:range>
   </search:constraint>
   <search:constraint name="OrderDetails">
     <search:word>
-      <search:element name="OrderDetails" ns=""/>
+      <search:element ns="" name="OrderDetails" />
     </search:word>
   </search:constraint>
   <search:tuples name="Customer">
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:cust="http://marklogic.com/customer" xmlns:es="http://marklogic.com/entity-services">//es:instance/cust:Customer/cust:CustomerId</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:cust="http://marklogic.com/customer" xmlns:es="http://marklogic.com/entity-services">//es:instance/cust:Customer/cust:CompanyName</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="Country" ns="http://marklogic.com/customer"/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="http://marklogic.com/customer" name="Country" />
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="Address" ns="http://marklogic.com/customer"/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="http://marklogic.com/customer" name="Address" />
     </search:range>
   </search:tuples>
   <search:tuples name="Product">
-    <search:range facet="true" type="xs:double">
+    <search:range type="xs:double" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/UnitPrice</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Product/Discontinued</search:path-index>
     </search:range>
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="SupplierID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="SupplierID" />
     </search:range>
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="ProductID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="ProductID" />
     </search:range>
   </search:tuples>
   <search:tuples name="Order">
-    <search:range facet="true" type="xs:dateTime">
+    <search:range type="xs:dateTime" facet="true">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Order/OrderDate</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
       <search:path-index xmlns:es="http://marklogic.com/entity-services">//es:instance/Order/CustomerID</search:path-index>
     </search:range>
-    <search:range collation="http://marklogic.com/collation/en" facet="true" type="xs:string">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="ShipAddress" ns=""/>
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/en">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="ShipAddress" />
     </search:range>
-    <search:range facet="true" type="xs:decimal">
-      <search:element xmlns:es="http://marklogic.com/entity-services" name="OrderID" ns=""/>
+    <search:range type="xs:decimal" facet="true">
+      <search:element xmlns:es="http://marklogic.com/entity-services" ns="" name="OrderID" />
     </search:range>
   </search:tuples>
-  <!--Uncomment to return no results for a blank search, rather than the default of all results
+  <!--
+Uncomment to return no results for a blank search, rather than the default of all results
  <search:term xmlns:search="http://marklogic.com/appservices/search">
   <search:empty apply="no-results"/>
 </search:term> 
 -->
   <search:values name="uris">
-    <search:uri/>
+    <search:uri />
   </search:values>
-  <!--Change to 'filtered' to exclude false-positives in certain searches-->
+  <!--
+Change to 'filtered' to exclude false-positives in certain searches
+-->
   <search:search-option>unfiltered</search:search-option>
-  <!--Modify document extraction to change results returned-->
+  <!--
+Modify document extraction to change results returned
+-->
   <search:extract-document-data selected="include">
     <search:extract-path xmlns:cust="http://marklogic.com/customer" xmlns:es="http://marklogic.com/entity-services">//es:instance/(cust:Customer|Product|Order|OrderDetail)</search:extract-path>
   </search:extract-document-data>
-  <!--Change or remove this additional-query to broaden search beyond entity instance documents-->
+  <!--
+Change or remove this additional-query to broaden search beyond entity instance documents
+-->
   <search:additional-query>
-    <cts:element-query xmlns:cts="http://marklogic.com/cts">
-      <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
-      <cts:true-query/>
-    </cts:element-query>
+    <cts:or-query xmlns:cts="http://marklogic.com/cts">
+      <cts:json-property-scope-query>
+        <cts:property>instance</cts:property>
+        <cts:true-query />
+      </cts:json-property-scope-query>
+      <cts:element-query>
+        <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
+        <cts:true-query />
+      </cts:element-query>
+    </cts:or-query>
   </search:additional-query>
-  <!--To return facets, change this option to 'true' and edit constraints-->
+  <!--
+To return facets, change this option to 'true' and edit constraints
+-->
   <search:return-facets>false</search:return-facets>
-  <!--To return snippets, comment out or remove this option-->
-  <search:transform-results apply="empty-snippet"/>
+  <!--
+To return snippets, comment out or remove this option
+-->
+  <search:transform-results apply="empty-snippet" />
 </search:options>

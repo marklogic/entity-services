@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 MarkLogic Corporation
+ * Copyright 2016-2018 MarkLogic Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,6 +141,8 @@ public class TestEntityTypes extends EntityServicesTestBase {
         invalidMessages.put("invalid-namespace-nouri.xml", "has no namespace property.");
         invalidMessages.put("invalid-namespace-uri.json", "Namespace property must be a valid absolute URI.");
         invalidMessages.put("invalid-namespace-uri.xml", "Namespace property must be a valid absolute URI.");
+        invalidMessages.put("invalid-bad-pii.json", "doesn't exist");
+        invalidMessages.put("invalid-bad-pii.xml", "doesn't exist");
     }
 
 
@@ -353,11 +355,11 @@ public class TestEntityTypes extends EntityServicesTestBase {
                 // A great class for debugging, Defference.
 //                logger.debug("Difference, expected - actual");
 //                Graph diff = new org.apache.jena.graph.compose.Difference(expectedTriples, actualTriples);
-//                RDFDataMgr.write(System.out, diff, Lang.TURTLE);
-//
-//                logger.debug("Difference, actual - expected");
-//                Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
-//                RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
+//              RDFDataMgr.write(System.out, diff, Lang.TURTLE);
+
+//              logger.debug("Difference, actual - expected");
+//              Graph diff2 = new org.apache.jena.graph.compose.Difference(actualTriples, expectedTriples);
+//              RDFDataMgr.write(System.out, diff2, Lang.TURTLE);
 
 
                 assertTrue("Graph must match expected: " + entityTypeUri, actualTriples.isIsomorphicWith(expectedTriples));

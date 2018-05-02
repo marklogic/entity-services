@@ -25,6 +25,8 @@
         <es:required>orderId</es:required>
         <es:required>orderDate</es:required>
         <es:required>hasOrderDetails</es:required>
+        <es:pii>orderDate</es:pii>
+        <es:pii>hasOrderDetails</es:pii>
     </Order>
     <OrderDetails>
         <es:properties>
@@ -35,6 +37,7 @@
                 <es:datatype>string</es:datatype>
             </productName>
         </es:properties>
+        <es:pii>quantity</es:pii>
     </OrderDetails>
   </es:definitions>
 </es:model>

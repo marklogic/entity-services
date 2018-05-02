@@ -1,5 +1,5 @@
 (:
- Copyright 2002-2017 MarkLogic Corporation.  All Rights Reserved.
+ Copyright 2002-2018 MarkLogic Corporation.  All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -125,8 +125,15 @@ declare private variable $esi:model-schematron :=
          <iso:assert test="../../array-node()">value of property 'required' must be an array.</iso:assert>
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
+        <iso:rule context="pii">
+         <iso:assert test="../../array-node()">value of property 'pii' must be an array.</iso:assert>
+         <iso:assert test="xs:QName(.) = (../../properties/*/node-name())">"pii" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
+        </iso:rule>
         <iso:rule context="es:required">
          <iso:assert test="string(.) = (../es:properties/*/local-name())">"Required" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
+        </iso:rule>
+        <iso:rule context="es:pii">
+         <iso:assert test="string(.) = (../es:properties/*/local-name())">"Pii" property <xsl:value-of select="." /> doesn't exist.</iso:assert>
         </iso:rule>
         <iso:rule context="(pathRangeIndex|elementRangeIndex|rangeIndex)">
          <iso:assert test="xs:QName(.) = (../../properties/*/node-name(.))">Range index property <xsl:value-of select="." /> doesn't exist.</iso:assert>
@@ -163,13 +170,12 @@ declare private variable $esi:model-schematron :=
         </iso:rule>
 
         <iso:rule context="/">
-         <iso:assert test="count(distinct-values( .//(namespace|es:namespace) 
-                                                    ! concat(../(namespacePrefix|es:namespace-prefix), .))) eq 
+         <iso:assert test="count(distinct-values( .//(namespace|es:namespace)
+                                                    ! concat(../(namespacePrefix|es:namespace-prefix), .))) eq
                            count(distinct-values( .//(namespace|es:namespace ))) and
                            count(distinct-values( .//(namespace|es:namespace ))) eq
                            count(distinct-values( .//(namespacePrefix|es:namespace-prefix )))">Each prefix and namespace pair must be unique.</iso:assert>
         </iso:rule>
-        
       </iso:pattern>
     </iso:schema>
 ;
@@ -347,6 +353,7 @@ declare function esi:model-to-xml(
                 esi:key-convert-to-xml($entity-type, "description"),
                 esi:key-convert-to-xml($entity-type, "primaryKey"),
                 esi:key-convert-to-xml($entity-type, "required"),
+                esi:key-convert-to-xml($entity-type, "pii"),
                 esi:key-convert-to-xml($entity-type, "namespace"),
                 esi:key-convert-to-xml($entity-type, "namespacePrefix"),
                 esi:key-convert-to-xml($entity-type, "rangeIndex"),
@@ -393,6 +400,7 @@ declare function esi:model-from-xml(
             let $_ := map:put($entity-type, "properties", $properties)
             let $_ := esi:with-if-exists($entity-type, "primaryKey", data($entity-type-node/es:primary-key))
             let $_ := esi:with-if-exists($entity-type, "required", json:to-array($entity-type-node/es:required/xs:string(.)))
+            let $_ := esi:with-if-exists($entity-type, "pii", json:to-array($entity-type-node/es:pii/xs:string(.)))
             let $_ := esi:with-if-exists($entity-type, "namespace", $entity-type-node/es:namespace/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "namespacePrefix", $entity-type-node/es:namespace-prefix/xs:string(.))
             let $_ := esi:with-if-exists($entity-type, "rangeIndex", json:to-array($entity-type-node/es:range-index/xs:string(.)))
@@ -1307,7 +1315,7 @@ declare function esi:extraction-template-generate(
 
     let $entity-type-templates :=
         for $entity-type-name in map:keys($scalar-rows)
-        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name) 
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
         let $namespace-prefix := $entity-type=>map:get("namespacePrefix")
         let $namespace-uri := $entity-type=>map:get("namespace")
         let $prefix-value :=
@@ -1577,10 +1585,16 @@ declare function esi:search-options-generate(
 
         comment { "Change or remove this additional-query to broaden search beyond entity instance documents" },
         <search:additional-query>
-            <cts:element-query xmlns:cts="http://marklogic.com/cts">
-            <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
-            <cts:true-query/>
-            </cts:element-query>
+            <cts:or-query xmlns:cts="http://marklogic.com/cts">
+                <cts:json-property-scope-query>
+                    <cts:property>instance</cts:property>
+                    <cts:true-query/>
+                </cts:json-property-scope-query>
+                <cts:element-query>
+                    <cts:element xmlns:es="http://marklogic.com/entity-services">es:instance</cts:element>
+                    <cts:true-query/>
+                </cts:element-query>
+            </cts:or-query>
         </search:additional-query>,
         comment { "To return facets, change this option to 'true' and edit constraints" },
         <search:return-facets>false</search:return-facets>,
@@ -1611,3 +1625,73 @@ declare private function esi:resolve-base-prefix(
     replace(esi:resolve-base-uri($info), "#", "/")
 };
 
+
+declare function esi:pii-generate(
+    $model as map:map
+) as object-node()
+{
+    (: to generate a pii security config I need all types/namespaces + properties. :)
+    (: and I need to putput a namespace section, and several protected paths. :)
+    (: each type has its own set of paths/namespaces, so we'll iterate by type. :)
+
+    let $policy-name := $model=>map:get("info")=>map:get("title") || "-" || $model=>map:get("info")=>map:get("version")
+    let $entity-type-labels := json:array()
+    let $entity-type-names := $model=>map:get("definitions")=>map:keys()
+    let $protected-paths :=
+        for $entity-type-name in $entity-type-names
+        let $entity-type := $model=>map:get("definitions")=>map:get($entity-type-name)
+        let $property-labels := json:array()
+        let $perms :=
+                    object-node {
+                        "role-name" : "pii-reader",
+                        "capability" : "read"
+                    }
+        return
+            if (empty($entity-type=>map:get("pii")))
+            then ()
+            else
+                (
+                for $pii-property in $entity-type=>map:get("pii")=>json:array-values()
+                return
+                    (
+                    json:array-push($property-labels, $pii-property),
+                    if ($entity-type=>map:get("namespace"))
+                    then
+                      object-node {
+                        "path-expression" : "/es:envelope//es:instance//"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $entity-type-name || "/"
+                                            || $entity-type=>map:get("namespacePrefix")
+                                            || ":" || $pii-property,
+                        "path-namespace" : array-node {
+                            object-node { "prefix" : "es",
+                                "namespace-uri" : "http://marklogic.com/entity-services"
+                            },
+                            object-node { "prefix" : $entity-type=>map:get("namespacePrefix"),
+                                "namespace-uri" : $entity-type=>map:get("namespace")
+                            }
+                         },
+                        "permission" : $perms
+                    }
+                    else
+                      object-node {
+                        "path-expression" : "/envelope//instance//" || $entity-type-name || "/" || $pii-property,
+                        "path-namespace" : array-node { },
+                        "permission" : $perms
+                    }
+                    ),
+                json:array-push($entity-type-labels,
+                        string-join(json:array-values($property-labels), ",") ||
+                        " of type " || $entity-type-name
+                        )
+                )
+    return
+    object-node {
+        "name" : $policy-name,
+        "desc" : "A policy that secures " || string-join(json:array-values($entity-type-labels), ", "),
+        "config" : object-node {
+            "protected-path" :  array-node { $protected-paths },
+            "query-roleset" : object-node { "role-name" : array-node { "pii-reader" } }
+        }
+    }
+};

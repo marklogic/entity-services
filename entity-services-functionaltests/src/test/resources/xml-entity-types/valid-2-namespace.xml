@@ -55,10 +55,10 @@
       <es:namespace-prefix>ord</es:namespace-prefix>
       <es:path-range-index>OrderID</es:path-range-index>
       <es:path-range-index>CustomerID</es:path-range-index>
-      <es:word-lexicon>CustomerID</es:word-lexicon>
       <es:element-range-index>OrderDate</es:element-range-index>
       <es:element-range-index>ShippedDate</es:element-range-index>
       <es:element-range-index>OrderDetails</es:element-range-index>
+      <es:word-lexicon>CustomerID</es:word-lexicon>
     </Order>
     <OrderDetail>
       <es:properties>
@@ -111,11 +111,11 @@
       <es:namespace-prefix>sup</es:namespace-prefix>
       <es:path-range-index>Discount</es:path-range-index>
       <es:path-range-index>UnitPrice</es:path-range-index>
-      <es:word-lexicon>Ship-Address</es:word-lexicon>
       <es:element-range-index>OrderID</es:element-range-index>
       <es:element-range-index>CustomerID</es:element-range-index>
       <es:element-range-index>ProductName</es:element-range-index>
       <es:element-range-index>Quantity</es:element-range-index>
+      <es:word-lexicon>Ship-Address</es:word-lexicon>
     </Superstore>
     <ShipDetails>
       <es:properties>

@@ -94,7 +94,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: http://123.24: ref value must end with a simple name (xs:NCName)."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: http://123.24: ref value must end with a simple name (xs:NCName)."));
 		}
 		
 		try {
@@ -102,7 +102,7 @@ public class TestEsInstanceGenerator extends EntityServicesTestBase {
 			fail("eval should throw an ES-MODEL-INVALID exception for model-get-test-instances() with a non string value as ref");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: http://123.24: ref value must end with a simple name (xs:NCName)."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: http://123.24: ref value must end with a simple name (xs:NCName)."));
 		}
 	}
 	

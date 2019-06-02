@@ -20,10 +20,10 @@
 	   		<es:datatype>string</es:datatype>
 		</Address>
      </es:properties>
-     <es:namespace>http://marklogic.com/customer</es:namespace>
-     <es:namespace-prefix>cust</es:namespace-prefix>
      <es:primary-key>CustomerId</es:primary-key>
      <es:required>CustomerId</es:required>
+     <es:namespace>http://marklogic.com/customer</es:namespace>
+     <es:namespace-prefix>cust</es:namespace-prefix>
      <es:range-index>CustomerId</es:range-index>
      <es:path-range-index>CompanyName</es:path-range-index>
      <es:element-range-index>Country</es:element-range-index>

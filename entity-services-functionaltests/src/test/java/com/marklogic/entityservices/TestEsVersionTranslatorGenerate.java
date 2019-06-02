@@ -195,7 +195,7 @@ public class TestEsVersionTranslatorGenerate extends EntityServicesTestBase {
 			fail("eval should throw an ES-MODEL-INVALID exception for version-translator-generate() with invalid document node");
 		} catch (TestEvalException e) {
 			logger.info(e.getMessage());
-			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
+			assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
 		}
 	}
 	

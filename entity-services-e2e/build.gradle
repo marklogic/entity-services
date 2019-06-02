@@ -41,5 +41,5 @@ task genCode(type: JavaExec) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.10.3'
 }

@@ -1,139 +1,128 @@
-{  
-  "database-name":"%%DATABASE%%",
-  "schema-database":"%%SCHEMAS_DATABASE%%",
-  "path-namespace":[  
-    {  
-      "prefix":"ord",
-      "namespace-uri":"http://marklogic.com/order"
+{
+  "database-name": "%%DATABASE%%",
+  "schema-database": "%%SCHEMAS_DATABASE%%",
+  "path-namespace": [{
+    "prefix": "ord",
+    "namespace-uri": "http://marklogic.com/order"
+  },
+    {
+      "prefix": "sup",
+      "namespace-uri": "http://marklogic.com/super"
     },
-    {  
-      "prefix":"sup",
-      "namespace-uri":"http://marklogic.com/super"
-    },
-    {  
-      "prefix":"es",
-      "namespace-uri":"http://marklogic.com/entity-services"
+    {
+      "prefix": "es",
+      "namespace-uri": "http://marklogic.com/entity-services"
     }
   ],
-  "element-word-lexicon":[  
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "localname":"CustomerID",
-      "namespace-uri":""
+  "element-word-lexicon": [{
+    "collation": "http://marklogic.com/collation/en",
+    "localname": "CustomerID",
+    "namespace-uri": ""
+  },
+    {
+      "collation": "http://marklogic.com/collation/en",
+      "localname": "CustomerID",
+      "namespace-uri": "http://marklogic.com/order"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "localname":"CustomerID",
-      "namespace-uri":"http://marklogic.com/order"
-    },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "localname":"Ship-Address",
-      "namespace-uri":"http://marklogic.com/super"
+    {
+      "collation": "http://marklogic.com/collation/en",
+      "localname": "Ship-Address",
+      "namespace-uri": "http://marklogic.com/super"
     }
   ],
-  "range-path-index":[  
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/Customer/CustomerID",
-      "range-value-positions":false,
-      "scalar-type":"string"
+  "range-path-index": [{
+    "invalid-values": "reject",
+    "path-expression": "//es:instance/Customer/CustomerID",
+    "range-value-positions": false,
+    "scalar-type": "string",
+    "collation": "http://marklogic.com/collation/en"
+  },
+    {
+      "invalid-values": "reject",
+      "path-expression": "//es:instance/Product/ProductID",
+      "range-value-positions": false,
+      "scalar-type": "decimal"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/Product/ProductID",
-      "range-value-positions":false,
-      "scalar-type":"decimal"
+    {
+      "invalid-values": "reject",
+      "path-expression": "//es:instance/ord:Order/ord:OrderID",
+      "range-value-positions": false,
+      "scalar-type": "decimal"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/ord:Order/ord:OrderID",
-      "range-value-positions":false,
-      "scalar-type":"decimal"
+    {
+      "invalid-values": "reject",
+      "path-expression": "//es:instance/ord:Order/ord:CustomerID",
+      "range-value-positions": false,
+      "scalar-type": "string",
+      "collation": "http://marklogic.com/collation/en"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/ord:Order/ord:CustomerID",
-      "range-value-positions":false,
-      "scalar-type":"string"
+    {
+      "invalid-values": "reject",
+      "path-expression": "//es:instance/sup:Superstore/sup:Discount",
+      "range-value-positions": false,
+      "scalar-type": "string",
+      "collation": "http://marklogic.com/collation/en"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/sup:Superstore/sup:Discount",
-      "range-value-positions":false,
-      "scalar-type":"string"
-    },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "path-expression":"//es:instance/sup:Superstore/sup:UnitPrice",
-      "range-value-positions":false,
-      "scalar-type":"double"
+    {
+      "invalid-values": "reject",
+      "path-expression": "//es:instance/sup:Superstore/sup:UnitPrice",
+      "range-value-positions": false,
+      "scalar-type": "double"
     }
   ],
-  "range-element-index":[  
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"OrderDate",
-      "namespace-uri":"http://marklogic.com/order",
-      "range-value-positions":false,
-      "scalar-type":"dateTime"
+  "range-element-index": [{
+    "invalid-values": "reject",
+    "localname": "OrderDate",
+    "namespace-uri": "http://marklogic.com/order",
+    "range-value-positions": false,
+    "scalar-type": "dateTime"
+  },
+    {
+      "invalid-values": "reject",
+      "localname": "ShippedDate",
+      "namespace-uri": "http://marklogic.com/order",
+      "range-value-positions": false,
+      "scalar-type": "dateTime"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"ShippedDate",
-      "namespace-uri":"http://marklogic.com/order",
-      "range-value-positions":false,
-      "scalar-type":"dateTime"
+    {
+      "invalid-values": "reject",
+      "localname": "OrderDetails",
+      "namespace-uri": "http://marklogic.com/order",
+      "range-value-positions": false,
+      "scalar-type": "string",
+      "collation": "http://marklogic.com/collation/en"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"OrderDetails",
-      "namespace-uri":"http://marklogic.com/order",
-      "range-value-positions":false,
-      "scalar-type":"string"
+    {
+      "invalid-values": "reject",
+      "localname": "OrderID",
+      "namespace-uri": "http://marklogic.com/super",
+      "range-value-positions": false,
+      "scalar-type": "decimal"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"OrderID",
-      "namespace-uri":"http://marklogic.com/super",
-      "range-value-positions":false,
-      "scalar-type":"decimal"
+    {
+      "invalid-values": "reject",
+      "localname": "CustomerID",
+      "namespace-uri": "http://marklogic.com/super",
+      "range-value-positions": false,
+      "scalar-type": "string",
+      "collation": "http://marklogic.com/collation/en"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"CustomerID",
-      "namespace-uri":"http://marklogic.com/super",
-      "range-value-positions":false,
-      "scalar-type":"string"
+    {
+      "invalid-values": "reject",
+      "localname": "ProductName",
+      "namespace-uri": "http://marklogic.com/super",
+      "range-value-positions": false,
+      "scalar-type": "string",
+      "collation": "http://marklogic.com/collation/en"
     },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"ProductName",
-      "namespace-uri":"http://marklogic.com/super",
-      "range-value-positions":false,
-      "scalar-type":"string"
-    },
-    {  
-      "collation":"http://marklogic.com/collation/en",
-      "invalid-values":"reject",
-      "localname":"Quantity",
-      "namespace-uri":"http://marklogic.com/super",
-      "range-value-positions":false,
-      "scalar-type":"decimal"
+    {
+      "invalid-values": "reject",
+      "localname": "Quantity",
+      "namespace-uri": "http://marklogic.com/super",
+      "range-value-positions": false,
+      "scalar-type": "decimal"
     }
   ],
-  "triple-index":true,
-  "collection-lexicon":true
+  "triple-index": true,
+  "collection-lexicon": true
 }

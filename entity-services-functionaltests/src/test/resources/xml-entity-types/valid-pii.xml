@@ -27,11 +27,11 @@
           <es:datatype>string</es:datatype>
         </Phone>
       </es:properties>
-      <es:namespace>http://marklogic.com/customer</es:namespace>
-      <es:namespace-prefix>cust</es:namespace-prefix>
       <es:primary-key>CustomerID</es:primary-key>
       <es:pii>Country</es:pii>
       <es:pii>Phone</es:pii>
+      <es:namespace>http://marklogic.com/customer</es:namespace>
+      <es:namespace-prefix>cust</es:namespace-prefix>
       <es:range-index>CustomerID</es:range-index>
       <es:range-index>CompanyName</es:range-index>
       <es:word-lexicon>CustomerID</es:word-lexicon>

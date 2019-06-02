@@ -154,7 +154,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model descriptor."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: There must be at least one entity type in a model descriptor."));
     	}
     		
     }
@@ -170,7 +170,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for zero definitions. invalid-definitions-empty.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: There must be at least one entity type in a model descriptor."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: There must be at least one entity type in a model descriptor."));
     	}
     		
     }
@@ -218,7 +218,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-casesensitive-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'datatype' has unsupported datatype: String."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'datatype' has unsupported datatype: String."));
     	}
     		
     }
@@ -261,7 +261,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' is not a reference, so it must have a datatype. Property 'orderId' must be an object with either \"datatype\" or \"$ref\" as a key."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'orderId' is not a reference, so it must have a datatype. Property 'orderId' must be an object with either \"datatype\" or \"$ref\" as a key."));
     	}
     }
     
@@ -275,7 +275,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for missing datatype");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' is not a reference, so it must have a datatype"));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'orderId' is not a reference, so it must have a datatype"));
     	}
     }
     
@@ -289,7 +289,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for unsupported datatypes");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'orderId' has unsupported datatype: botcheddt."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'orderId' has unsupported datatype: botcheddt."));
 		}
     }
     
@@ -304,7 +304,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-bad-datatype.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'datatype' has unsupported datatype: anySimpleType."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'datatype' has unsupported datatype: anySimpleType."));
     	}
     		
     }
@@ -320,7 +320,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-title-whiteSpace.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Title must have no whitespace and must start with a letter."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Title must have no whitespace and must start with a letter."));
     	}
     		
     }
@@ -336,7 +336,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-range-index.json");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Range index property hello doesn't exist. Range index property world doesn't exist."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Range index property hello doesn't exist. Range index property world doesn't exist."));
     	}
     		
     }
@@ -352,7 +352,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid cases. invalid-range-index.xml");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Range index property hello doesn't exist. Range index property world doesn't exist."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Range index property hello doesn't exist. Range index property world doesn't exist."));
     	}
     		
     }
@@ -367,7 +367,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Model descriptor must contain exactly one info section."));
 		}
     }
     
@@ -381,7 +381,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
 					fail("eval should throw an exception for missing info");
 				} catch (TestEvalException e) {
 					logger.info(e.getMessage());
-					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
+					assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Model descriptor must contain exactly one info section. Primary Key orderId doesn't exist."));
 		}
     }
     
@@ -395,7 +395,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'companyName' has $ref as a child, so it cannot have a datatype. es:ref (property '$ref') must start with \"#/definitions/\" or be an absolute IRI. Non-local reference #definitions/EntityTypeName3 must be a valid URI."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'companyName' has $ref as a child, so it cannot have a datatype. es:ref (property '$ref') must start with \"#/definitions/\" or be an absolute IRI. Non-local reference #definitions/EntityTypeName3 must be a valid URI."));
 		}
 	}
 
@@ -409,7 +409,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-datatype-ref-together.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property 'companyName' has es:ref as a child, so it cannot have a datatype. Local reference #/definitions/EntityTypeName3 must resolve to local entity type."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property 'companyName' has es:ref as a child, so it cannot have a datatype. Local reference #/definitions/EntityTypeName3 must resolve to local entity type."));
 		}
 	}
     
@@ -423,7 +423,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-title.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one title declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one title declaration."));
     	}
     }
     
@@ -437,7 +437,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-title.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one title declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one title declaration."));
     	}
     }
     
@@ -451,7 +451,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one definitions section."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Model descriptor must contain exactly one definitions section."));
     	}
     }
     
@@ -465,7 +465,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-definitions.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Model descriptor must contain exactly one definitions section."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Model descriptor must contain exactly one definitions section."));
     	}
     }
 
@@ -479,7 +479,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-version.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one version declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
     
@@ -493,7 +493,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-version.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one version declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
     
@@ -507,7 +507,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-multiple-primarykey.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type ('Customer'), only one primary key allowed."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: For each Entity Type ('Customer'), only one primary key allowed."));
     	}
     }
     
@@ -522,7 +522,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-multiple-pkey.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: For each Entity Type ('Customer'), only one primary key allowed. Primary Key CustomerId doesn't exist. Primary Key CompanyName doesn't exist."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: For each Entity Type ('Customer'), only one primary key allowed. Primary Key CustomerId doesn't exist. Primary Key CompanyName doesn't exist."));
     	}
     }
      
@@ -536,7 +536,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-info-notobject.json");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one title declaration. \"info\" section must be an object and contain exactly one version declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one title declaration. \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
     
@@ -550,7 +550,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-info-notobject.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one title declaration. \"info\" section must be an object and contain exactly one version declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one title declaration. \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
     
@@ -579,7 +579,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-items-when-datatype-array.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
     	}
     }
     
@@ -593,7 +593,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an exception for invalid cases: invalid-missing-items-datatype.xml");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
+    				assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Property OrderDetail is of type \"array\" and must contain a valid \"items\" declaration."));
     	}
     }
 
@@ -607,7 +607,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw an ES-MODEL-INVALID exception for model-validate() with a document");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: Valid models must be JSON, XML or map:map"));
+    				assertTrue("Must contain ES-MODEL-INVALID error message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: Valid models must be JSON, XML, or map:map"));
     	}
     }   
     
@@ -649,7 +649,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				fail("eval should throw ES-MODEL-INVALID  exception for model-validate() with schematron error");
     			} catch (TestEvalException e) {
     				logger.info(e.getMessage());
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("ES-MODEL-INVALID: \"info\" section must be an object and contain exactly one version declaration."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), e.getMessage().contains("Invalid model: \"info\" section must be an object and contain exactly one version declaration."));
     	}
     }
     
@@ -801,7 +801,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-ns-blacklisted.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace prefix xsd is not valid.  It is a reserved pattern. Namespace prefix json is not valid.  It is a reserved pattern. Namespace prefix es is not valid.  It is a reserved pattern. Namespace prefix xs is not valid.  It is a reserved pattern. Namespace prefix xsi is not valid.  It is a reserved pattern. Namespace prefix Xml is not valid.  It is a reserved pattern. Namespace prefix xMl is not valid.  It is a reserved pattern."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Namespace prefix xsd is not valid.  It is a reserved pattern. Namespace prefix json is not valid.  It is a reserved pattern. Namespace prefix es is not valid.  It is a reserved pattern. Namespace prefix xs is not valid.  It is a reserved pattern. Namespace prefix xsi is not valid.  It is a reserved pattern. Namespace prefix Xml is not valid.  It is a reserved pattern. Namespace prefix xMl is not valid.  It is a reserved pattern."));
     	}
     }
     
@@ -814,7 +814,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-uri.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace property must be a valid absolute URI.  Value is :/www.foo.bar/."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Namespace property must be a valid absolute URI.  Value is :/www.foo.bar/."));
     	}
     }
     
@@ -827,7 +827,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-uri.json'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Namespace property must be a valid absolute URI.  Value is www.foo.bar."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Namespace property must be a valid absolute URI.  Value is www.foo.bar."));
     	}
     }
     
@@ -840,7 +840,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-nsURI.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique."));
     	}
     }
     
@@ -853,7 +853,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-nsURI.json'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique."));
     	}
     }
     
@@ -866,7 +866,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-prefix.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique."));
     	}
     }
     
@@ -879,7 +879,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-same-prefix.json'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique."));
     	}
     }
     
@@ -892,7 +892,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-prefix.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace http://uri1 has no namespace-prefix property. Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique. namespace http://uri1 has no namespace-prefix property."));
     	}
     }
     
@@ -905,7 +905,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-prefix.json'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace http://uri1 has no namespacePrefix property. Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique. namespace http://uri1 has no namespacePrefix property."));
     	}
     }
     
@@ -918,7 +918,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-uri.xml'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespace-prefix  invalid1 has no namespace property. Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique. namespace-prefix  invalid1 has no namespace property."));
     	}
     }
     
@@ -931,7 +931,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
     				handle = evalOneResult("", "es:model-validate(fn:doc('invalid-no-uri.json'))", new JacksonHandle());
     			} catch (TestEvalException e) {
     				logger.info(getMsg(e));
-    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contentEquals("ES-MODEL-INVALID: namespacePrefix invalid1 has no namespace property. Each prefix and namespace pair must be unique."));
+    				assertTrue("Must contain ES-MODEL-INVALID  error message but got: "+e.getMessage(), getMsg(e).contains("Invalid model: Each prefix and namespace pair must be unique. namespacePrefix invalid1 has no namespace property."));
     	}
     }
     

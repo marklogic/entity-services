@@ -202,7 +202,7 @@ public class TestEsPayloadFunctions extends EntityServicesTestBase {
             		fail("eval should throw an exception for invalid ET.");
         		} catch (TestEvalException e) {
         			logger.info(e.getMessage());
-        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Property 'primaryKey' must be an object with either \"datatype\" or \"$ref\" as a key. Type names and property names must be distinct ('OrderDetails'). Primary Key orderId doesn't exist. value of property 'required' must be an array. \"Required\" property OrderID doesn't exist."));    		
+        			assertTrue("Must contain invalidity message but got: "+e.getMessage(), e.getMessage().contains("Property 'primaryKey' is not a reference, so it must have a datatype. Property 'primaryKey' must be an object with either \"datatype\" or \"$ref\" as a key. Type names and property names must be distinct ('OrderDetails'). value of property 'required' must be an array. \"Required\" property OrderID doesn't exist."));
     	}
     		
     }
